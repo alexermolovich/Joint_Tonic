@@ -14,7 +14,8 @@
     "worker": "python apps/worker/server.py",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "test:content": "node --test tests/validate-content.test.mjs"
+    "test:content": "node --test tests/validate-content.test.mjs",
+    "test:settings": "node --test tests/settings-name.test.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "4.7.0",
