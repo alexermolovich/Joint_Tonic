@@ -266,7 +266,7 @@ Paper card: `research/papers/vla-embodied/2025-gr00t-n1.md`
 
 - `[paper]` Route Inputs Through a Dual-System Policy Interface
 - `[paper]` Build a Heterogeneous Real, Video, and Synthetic Batch
-- `[paper]` Compute a Diffusion-Transformer Action-Chunk Loss
+- `[paper]` Compute a Masked Action Flow-Matching Loss
 - `[paper]` Report Metrics by Source and Embodiment
 - `[systems]` Gate a Humanoid Policy Release on Safety Slices
 
