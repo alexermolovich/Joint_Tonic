@@ -3,6 +3,7 @@ export type ProblemMeta = {
   difficulty: "Easy" | "Medium" | "Hard"; domain: string; topics: string[];
   minutes: number; framework: string; entrypoint: string; paperIds: string[];
   prerequisites: string[]; visualization: string; summary: string;
+  simulator?: { backend: string };
 };
 export type Problem = ProblemMeta & { problem: string; theory: string; starter: string; solution: string; reference: string };
 export type PaperFlowNode = { id: string; title: string; detail: string; column: number; row: number; section: string; problem_slugs: string[]; planned_problems?: string[] };

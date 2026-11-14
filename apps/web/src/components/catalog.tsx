@@ -28,6 +28,7 @@ export function Catalog({ problems, systems = false, tracks = [] }: { problems: 
   const framework = selected("framework", frameworks);
   const difficulty = selected("difficulty", difficulties);
   const status = selected("status", statuses);
+  const simulator = selected("simulator", ["all", "mujoco"]);
   const sort = selected("sort", sorts);
   const path = systems ? "/systems" : "/problems";
 
@@ -46,6 +47,7 @@ export function Catalog({ problems, systems = false, tracks = [] }: { problems: 
   const visible = base.filter(problem =>
     (domain === "All topics" || problem.domain === domain) &&
     (framework === "All" || problem.framework === framework) &&
+    (simulator === "all" || problem.simulator?.backend === simulator) &&
     (difficulty === "All difficulties" || problem.difficulty === difficulty) &&
     (status === "All status" || (status === "Solved" ? state.solved.includes(problem.slug) : !state.solved.includes(problem.slug))) &&
     `${problem.title} ${problem.summary} ${problem.topics.join(" ")} ${problem.framework} ${problem.paperIds.join(" ")}`.toLowerCase().includes(q.toLowerCase().trim())
@@ -54,7 +56,7 @@ export function Catalog({ problems, systems = false, tracks = [] }: { problems: 
     : sort === "Shortest first" ? a.minutes - b.minutes || a.number - b.number : a.number - b.number);
   const solved = base.filter(problem => state.solved.includes(problem.slug)).length;
   const percentage = base.length ? Math.round(solved / base.length * 100) : 0;
-  const filtered = !!q || domain !== "All topics" || framework !== "All" || difficulty !== "All difficulties" || status !== "All status";
+  const filtered = !!q || domain !== "All topics" || framework !== "All" || simulator !== "all" || difficulty !== "All difficulties" || status !== "All status";
   const nextProblem = base.find(problem => !state.solved.includes(problem.slug));
 
   return <main id="main" className="page jt-catalog">
@@ -90,6 +92,7 @@ export function Catalog({ problems, systems = false, tracks = [] }: { problems: 
           <label className="jt-search"><Search size={17} /><input aria-label="Search problems" placeholder="Search problems, concepts, papers…" value={q} onChange={event => filter("q", event.target.value)} />{q && <button aria-label="Clear search" onClick={() => filter("q", "")}><X size={15} /></button>}</label>
           <select aria-label="Filter difficulty" value={difficulty} onChange={event => filter("difficulty", event.target.value, difficulties[0])}>{difficulties.map(value => <option key={value}>{value}</option>)}</select>
           <select aria-label="Filter solve status" value={status} onChange={event => filter("status", event.target.value, statuses[0])}>{statuses.map(value => <option key={value}>{value}</option>)}</select>
+          <select aria-label="Filter simulator" value={simulator} onChange={event => filter("simulator", event.target.value, "all")}><option value="all">All simulators</option><option value="mujoco">MuJoCo</option></select>
         </div>
         <div className="jt-results-caption">
           <span role="status" aria-live="polite"><strong>{visible.length}</strong> {visible.length === 1 ? "problem" : "problems"}{filtered && <button onClick={clearFilters}>Clear filters <X size={11} /></button>}</span>

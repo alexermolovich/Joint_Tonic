@@ -97,6 +97,8 @@ Every paper flow stage associates exercises with the mechanism explained by that
 
 The catalog must support:
 
+- A simulator filter with All simulators and MuJoCo. MuJoCo matches explicit `simulator.backend: "mujoco"` metadata, combines with the other filters, and persists as `?simulator=mujoco`. This identifies simulator-backed exercises, independent of whether a hosted simulator is available.
+
 - Full-text search over title, summary, concept, paper, and tags.
 - Filters for domain, topic, difficulty, runtime, framework, modality, estimated time, paper, and status.
 - Sort by recommended, newest, difficulty, duration, and completion.
