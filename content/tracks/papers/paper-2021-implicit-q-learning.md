@@ -16,8 +16,13 @@
     "robot-learning-rl",
     "implicit-q-learning"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "iql-expectile-regression",
+    "soft-value-bellman-target",
+    "iql-offline-dataset-split",
+    "iql-advantage-action-weights"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Fit an expectile value → Back up the critic 
 
 Source cards: [2021-implicit-q-learning](../../../research/papers/robot-learning-rl/2021-implicit-q-learning.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +75,7 @@ Weight positive and negative residuals asymmetrically.
 
 [Study the mechanism and math](/projects/2021-implicit-q-learning#paper-section-fit-an-expectile-value).
 
-- **Proposed component, not runnable:** Compute an Expectile Regression Loss.
+- **Runnable paper-associated component:** [Compute an Expectile Regression Loss](/problems/iql-expectile-regression). An expectile emphasizes one side of a squared residual.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +87,8 @@ Use the learned value without sampling an out-of-dataset maximizer.
 
 [Study the mechanism and math](/projects/2021-implicit-q-learning#paper-section-back-up-the-critic).
 
-- **Proposed component, not runnable:** Build IQL Critic Targets with Terminal Masks.
-- **Proposed component, not runnable:** Validate an Offline Dataset Split.
+- **Runnable paper-associated component:** [Compute an Entropy-Regularized Bellman Target](/problems/soft-value-bellman-target). One-step critic targets combine immediate reward with a value estimate of the next physical state.
+- **Runnable paper-associated component:** [Validate an Offline Dataset Split](/problems/iql-offline-dataset-split). A robot episode can contain many correlated transitions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Prefer better logged actions while retaining supervised fitting.
 
 [Study the mechanism and math](/projects/2021-implicit-q-learning#paper-section-extract-an-advantage-weighted-policy).
 
-- **Proposed component, not runnable:** Build Advantage-Weighted Action Weights.
+- **Runnable paper-associated component:** [Build Advantage-Weighted Action Weights](/problems/iql-advantage-action-weights). Offline policy fitting can prefer logged actions that look better than the state-value baseline.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

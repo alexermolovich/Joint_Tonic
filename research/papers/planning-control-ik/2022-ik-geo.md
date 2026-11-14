@@ -16,7 +16,7 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Express axis geometry","detail":"Represent revolute joints through axes and link offsets.","column":0,"row":0,"section":"Express axis geometry","problem_slugs":["se3-transform-points"],"planned_problems":["Express Revolute Joint-Axis Geometry"]},{"id":"stage-2","title":"Solve geometric subproblems","detail":"Reduce joint angles to circle and plane intersections.","column":1,"row":0,"section":"Solve geometric subproblems","problem_slugs":[],"planned_problems":["Solve a Circle-Plane Rotation Subproblem"]},{"id":"stage-3","title":"Assemble and verify branches","detail":"Combine subproblem roots into full joint solutions.","column":2,"row":0,"section":"Assemble and verify branches","problem_slugs":[],"planned_problems":["Enumerate Valid Joint-Angle Branches","Verify IK Solutions with Forward Kinematics"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"axis relationships"},{"from":"stage-2","to":"stage-3","label":"candidate angles"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Express axis geometry","detail":"Represent revolute joints through axes and link offsets.","column":0,"row":0,"section":"Express axis geometry","problem_slugs":["se3-transform-points"],"planned_problems":["Express Revolute Joint-Axis Geometry"]},{"id":"stage-2","title":"Solve geometric subproblems","detail":"Reduce joint angles to circle and plane intersections.","column":1,"row":0,"section":"Solve geometric subproblems","problem_slugs":["serial-chain-forward-kinematics","joint-limit-collision-ik-candidates"],"planned_problems":["Solve a Circle-Plane Rotation Subproblem"]},{"id":"stage-3","title":"Assemble and verify branches","detail":"Combine subproblem roots into full joint solutions.","column":2,"row":0,"section":"Assemble and verify branches","problem_slugs":[],"planned_problems":["Enumerate Valid Joint-Angle Branches","Verify IK Solutions with Forward Kinematics"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"axis relationships"},{"from":"stage-2","to":"stage-3","label":"candidate angles"}]}
 ---
 
 ## Core paper explanation
@@ -49,6 +49,11 @@ Axial components and perpendicular lengths must agree for an exact solution; sin
 **Component practice**
 
 - Solve a Circle-Plane Rotation Subproblem — unreviewed idea; contract and evaluator required.
+
+Here $p_1,p_2,u,v\in\mathbb R^3$ are offset vectors in meters, expressed in one common right-handed frame about the chosen axis origin. The axis $k\in\mathbb R^3$ is dimensionless with unit norm, and the returned $\theta$ is in radians. With $k=(0,0,1)$, $p_1=(1,0,0)$, and $p_2=(0,1,0)$, the numerator is one square meter and the denominator zero, so $\theta=\pi/2$. If both perpendicular vectors vanish, the displayed atan2 expression cannot determine a unique angle.
+
+[Compute Forward Kinematics for a Serial Chain](/problems/serial-chain-forward-kinematics) and [Enforce Joint Limits and Collision Constraints in IK](/problems/joint-limit-collision-ik-candidates) practice forward verification and bounded candidate filtering. The latter uses a planar teaching arm and explicit obstacles, not IK-Geo's full six-axis branch enumeration.
+
 
 ### Assemble and verify branches
 

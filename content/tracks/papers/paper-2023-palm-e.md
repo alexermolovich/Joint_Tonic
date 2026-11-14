@@ -19,9 +19,13 @@
     "positive transfer"
   ],
   "runnable_problem_slugs": [
-    "palm-e-project-sensor-features"
+    "palm-e-project-sensor-features",
+    "palm-e-sensor-readiness",
+    "palm-e-interleave-modal-tokens",
+    "palm-e-collate-multimodal-sequences",
+    "palm-e-multimodal-causal-mask"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +58,7 @@ The implementation path follows **Embed sensor evidence → Interleave modalitie
 
 Source cards: [2023-palm-e](../../../research/papers/vla-embodied/2023-palm-e.md).
 
-**Available now:** 1 paper-associated runnable component; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -75,7 +79,7 @@ Project visual or state features into the language model’s token width.
 [Study the mechanism and math](/projects/2023-palm-e#paper-section-embed-sensor-evidence).
 
 - **Runnable paper-associated component:** [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features). Isolate a supplied affine projection into a language embedding width.
-- **Proposed component, not runnable:** Validate Missing-Modality and Stale-Sensor Inputs.
+- **Runnable paper-associated component:** [Validate Missing-Modality and Stale-Sensor Inputs](/problems/palm-e-sensor-readiness). A tensor with the right shape may still describe the robot’s past.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -87,8 +91,8 @@ Construct an ordered sequence whose positions preserve observation context.
 
 [Study the mechanism and math](/projects/2023-palm-e#paper-section-interleave-modalities-and-text).
 
-- **Proposed component, not runnable:** Interleave Image, State, and Text Tokens.
-- **Proposed component, not runnable:** Collate Variable Multimodal Sequences.
+- **Runnable paper-associated component:** [Interleave Image, State, and Text Tokens](/problems/palm-e-interleave-modal-tokens). A language model can consume image, state and text embeddings in one sequence when they share a feature width.
+- **Runnable paper-associated component:** [Collate Variable Multimodal Sequences](/problems/palm-e-collate-multimodal-sequences). Different observations can produce different token counts.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,7 +104,7 @@ Predict language conditioned on the assembled embodied context.
 
 [Study the mechanism and math](/projects/2023-palm-e#paper-section-generate-the-requested-output).
 
-- **Proposed component, not runnable:** Build a Multimodal Causal Attention Mask.
+- **Runnable paper-associated component:** [Build a Multimodal Causal Attention Mask](/problems/palm-e-multimodal-causal-mask). Putting sensors into a language sequence must not let a prediction read future tokens.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

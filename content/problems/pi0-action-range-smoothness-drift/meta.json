@@ -1,0 +1,76 @@
+{
+  "slug": "pi0-action-range-smoothness-drift",
+  "title": "Monitor Continuous-Action Range and Smoothness Drift",
+  "version": "1.0.0",
+  "number": 249,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2024-pi0",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "action_drift",
+  "paperIds": [
+    "2024-pi0"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An action can stay inside its allowed range yet jump too quickly between control ticks.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Normalized action units; timestamps seconds; max_speed normalized action units per second. Inputs must use the same normalization and controller frame as the baseline."
+    },
+    "axes": "Explicit batch, sequence and channel axes defined in the contract",
+    "timestamp_assumptions": "Caller-synchronized observations; generation time and physical control time are distinct.",
+    "batching": "Explicit batch, sequence and channel axes defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "6d533490cc5cef3df3c2ba5722dca8101bc92dfd37894222f8ed6f2527aa14dd"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded engineering component motivated by the paper; no pretrained model or benchmark reproduction is implied.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2410.24164v4"
+    ],
+    "paper_card": "research/papers/vla-embodied/2024-pi0.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

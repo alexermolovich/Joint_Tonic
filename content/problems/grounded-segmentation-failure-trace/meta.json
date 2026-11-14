@@ -1,0 +1,84 @@
+{
+  "slug": "grounded-segmentation-failure-trace",
+  "title": "Build a Grounded Segmentation Pipeline and Trace Failures",
+  "version": "1.0.0",
+  "number": 165,
+  "difficulty": "Medium",
+  "domain": "Perception",
+  "topics": [
+    "grounding-dino",
+    "grounded-segmentation-failure-trace"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "grounded_segmentation",
+  "paperIds": [
+    "2023-grounding-dino",
+    "2023-segment-anything"
+  ],
+  "prerequisites": [
+    "grounding-phrase-box-decoding",
+    "sam-mask-ranking"
+  ],
+  "visualization": "markdown",
+  "summary": "Compose supplied grounding and segmentation outputs while preserving failure reasons per query.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Original image pixels; query/mask identity aligned"
+    ],
+    "units": {
+      "values": "probabilities and pixel areas/centers"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "dfbd2b3006cacb3b62aae0de314588f211f4a347e63221f2177a65a427faf107"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2303.05499",
+      "https://arxiv.org/abs/2304.02643"
+    ],
+    "implementation_urls": []
+  }
+}

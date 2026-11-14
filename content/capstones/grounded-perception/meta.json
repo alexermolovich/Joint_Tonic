@@ -1,0 +1,37 @@
+{
+  "slug": "grounded-perception",
+  "title": "Build a Grounded Robot Perception Pipeline",
+  "summary": "Fuse supplied phrase-mask predictions into a calibrated occupancy map and evaluate a synthetic perception release.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "capstone-grounded-perception",
+  "paperIds": [
+    "2023-grounding-dino",
+    "2023-segment-anything",
+    "2022-bevformer"
+  ],
+  "stages": [
+    {
+      "title": "Ground phrases and masks",
+      "description": "Follow supplied query outputs and diagnose missing evidence.",
+      "problemSlugs": [
+        "grounding-phrase-box-decoding",
+        "grounded-segmentation-failure-trace"
+      ]
+    },
+    {
+      "title": "Calibrate and fuse",
+      "description": "Unproject masks, apply world transforms, and fuse a count map.",
+      "problemSlugs": [
+        "project-camera-points",
+        "bev-temporal-fusion"
+      ]
+    },
+    {
+      "title": "Evaluate and gate",
+      "description": "Combine invalid evidence, latency, and rollback state.",
+      "problemSlugs": [
+        "edge-inference-release-gate"
+      ]
+    }
+  ]
+}

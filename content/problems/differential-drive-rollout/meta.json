@@ -1,0 +1,75 @@
+{
+  "slug": "differential-drive-rollout",
+  "title": "Compute a Differential-Drive Rollout",
+  "version": "1.0.0",
+  "number": 52,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "planning-control"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "differential_drive_rollout",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Integrate piecewise-constant wheel rates into an exact planar differential-drive pose sequence.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "fixed right-handed world xy plane",
+      "robot body forward x, left y"
+    ],
+    "units": {
+      "pose": "x,y metres; yaw radians",
+      "wheel_rates": "left,right radians/second",
+      "dt": "seconds",
+      "radius,track": "metres"
+    },
+    "axes": "Positive yaw is counterclockwise; faster right wheel increases yaw.",
+    "timestamp_assumptions": "One common monotonic clock in seconds.",
+    "batching": "initial_pose(3,), wheel_rates(T,2), dt/radius/track scalar -> float64(T+1,3)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "c5e28b2854533ef50824a2df479237f5004f7bcfd474abd86931106a81a909ee"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

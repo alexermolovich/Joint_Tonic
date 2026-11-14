@@ -2,7 +2,7 @@
 
 This directory is the curated research corpus used to design Joint Tonic paper tracks and standalone physical-AI problems. It is intentionally organized for both humans and coding agents.
 
-Current inventory: **156 distinct primary papers and 157 paired Markdown/PDF artifacts**. The pre-existing duplicate Open X-Embodiment topic card is preserved. The [balanced six-paper expansion](manifests/balanced-expansion-156.md) adds geometry, planning, perception, mobile manipulation, dataset infrastructure and evaluation uncertainty. These sources do not automatically expand the approved 189-problem curriculum.
+Current inventory: **156 distinct primary papers and 157 paired Markdown/PDF artifacts**. The pre-existing duplicate Open X-Embodiment topic card is preserved. The [balanced six-paper expansion](manifests/balanced-expansion-156.md) adds geometry, planning, perception, mobile manipulation, dataset infrastructure and evaluation uncertainty. These sources do not automatically expand the approved 190-problem curriculum. The [library integrity audit](manifests/library-integrity-2026-11-14.md) verifies all local PDF/card pairs against their recorded hashes, sizes and page counts.
 
 ## Library map
 

@@ -21,9 +21,11 @@
   "runnable_problem_slugs": [
     "vit-patchify-reconstruct",
     "vit-patch-class-tokens",
-    "vit-position-interpolation"
+    "vit-position-interpolation",
+    "vit-pre-norm-block",
+    "vit-resolution-profile"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Patchify the image â†’ Mix patch information â
 
 Source cards: [2021-vision-transformer](../../../research/papers/vision-vlm-3d/2021-vision-transformer.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -91,8 +93,8 @@ Attention exchanges information globally; an MLP transforms each token.
 
 [Study the mechanism and math](/projects/2021-vision-transformer#paper-section-mix-patch-information).
 
-- **Proposed component, not runnable:** Assemble a Pre-Norm Vision Transformer Block.
-- **Proposed component, not runnable:** Profile Token Count, Memory, and Latency by Resolution.
+- **Runnable paper-associated component:** [Assemble a Pre-Norm Vision Transformer Block](/problems/vit-pre-norm-block). Implement a single-head, dropout-free pre-norm transformer encoder block with supplied parameters.
+- **Runnable paper-associated component:** [Profile Token Count, Memory, and Latency by Resolution](/problems/vit-resolution-profile). Calculate explicit attention-score storage and summarize measured latency for each image resolution.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

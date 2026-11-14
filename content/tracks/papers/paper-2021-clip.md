@@ -22,9 +22,10 @@
     "clip-normalize-embeddings",
     "clip-symmetric-loss",
     "clip-retrieval-recall",
-    "clip-prompt-ensemble"
+    "clip-prompt-ensemble",
+    "clip-prompt-class-drift"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,13 +58,14 @@ The implementation path follows **Encode and normalize → Train on paired simil
 
 Source cards: [2021-clip](../../../research/papers/vision-vlm-3d/2021-clip.md).
 
-**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Encode and normalize** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Normalize Image and Text Embeddings](/problems/clip-normalize-embeddings). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build a Prompt-Ensembled Zero-Shot Classifier](/problems/clip-prompt-ensemble). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -103,7 +105,7 @@ Compare an image against candidate text descriptions.
 
 - **Runnable paper-associated component:** [Evaluate Cross-Modal Retrieval Recall at K](/problems/clip-retrieval-recall). Evaluate Cross-Modal Retrieval Recall at K
 - **Runnable paper-associated component:** [Build a Prompt-Ensembled Zero-Shot Classifier](/problems/clip-prompt-ensemble). Build a Prompt-Ensembled Zero-Shot Classifier
-- **Proposed component, not runnable:** Detect Prompt and Class Distribution Drift.
+- **Runnable paper-associated component:** [Detect Prompt and Class Distribution Drift](/problems/clip-prompt-class-drift). Separate changed text prototypes from changed predicted-class frequencies.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

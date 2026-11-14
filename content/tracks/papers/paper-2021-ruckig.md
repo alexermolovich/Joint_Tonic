@@ -16,7 +16,10 @@
     "planning-control-ik",
     "ruckig"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "time-parameterized-trajectory",
+    "velocity-acceleration-command-limits"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Specify bounded endpoint states → Integrate 
 
 Source cards: [2021-ruckig](../../../research/papers/planning-control-ik/2021-ruckig.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Specify bounded endpoint states** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,6 +86,8 @@ Construct candidate switching profiles analytically.
 
 [Study the mechanism and math](/projects/2021-ruckig#paper-section-integrate-constant-jerk-segments).
 
+- **Runnable supporting prerequisite:** [Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory). Sample a piecewise-linear joint trajectory and its segment velocity at requested times.
+- **Runnable supporting prerequisite:** [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits). Generate joint commands by projecting requested velocities into velocity and acceleration limits.
 - **Proposed component, not runnable:** Integrate a Constant-Jerk Motion Segment.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

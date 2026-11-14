@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LoaderCircle, Pause, Play, RotateCcw } from "lucide-react";
 import type { Job } from "@/lib/types";
+import { workspaceRequestHeaders } from "@/lib/local-workspace";
 import "./robot-simulator.css";
 
 type Camera = { azimuth: number; elevation: number; distance: number };
@@ -55,7 +56,7 @@ export function RobotSimulator({ visible, result, draft, evaluating, playJobId, 
         setBusy(true); setError("");
         try {
           const response = await fetch("/api/simulator/fr3", {
-            method: "POST", headers: { "Content-Type": "application/json" },
+            method: "POST", headers: { "Content-Type": "application/json", ...await workspaceRequestHeaders() },
             body: JSON.stringify({ q: desiredPose.current, camera: camera.current }),
             signal: AbortSignal.any([controller.signal, AbortSignal.timeout(35000)]),
           });

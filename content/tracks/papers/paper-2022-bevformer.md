@@ -22,10 +22,14 @@
   "runnable_problem_slugs": [
     "se3-transform-points",
     "project-camera-points",
+    "bev-project-reference-points",
+    "bev-visibility-mask",
+    "bev-camera-health-diagnostics",
     "bev-weighted-camera-features",
-    "bev-ego-motion-warp"
+    "bev-ego-motion-warp",
+    "bev-temporal-fusion"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +62,7 @@ The implementation path follows **Project BEV reference points → Gather camera
 
 Source cards: [2022-bevformer](../../../research/papers/vision-vlm-3d/2022-bevformer.md).
 
-**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 6 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -66,6 +70,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Project BEV Reference Points into Calibrated Cameras](/problems/bev-project-reference-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Warp a Previous BEV with Ego Motion](/problems/bev-ego-motion-warp). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -81,9 +87,9 @@ Use extrinsics and intrinsics to find where a 3D reference point is visible.
 
 - **Runnable supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Move camera-frame points into the world frame using a rigid transform.
 - **Runnable supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Project camera-frame points and separate depth validity from image bounds.
-- **Proposed component, not runnable:** Project BEV Reference Points into Calibrated Cameras.
-- **Proposed component, not runnable:** Mask Out-of-View and Behind-Camera Samples.
-- **Proposed component, not runnable:** Diagnose Camera Dropout and Calibration Drift in BEV.
+- **Runnable paper-associated component:** [Project BEV Reference Points into Calibrated Cameras](/problems/bev-project-reference-points). Project ego-frame reference points into every camera without clipping image bounds.
+- **Runnable paper-associated component:** [Mask Out-of-View and Behind-Camera Samples](/problems/bev-visibility-mask). Build a per-camera visibility mask from projections and signed optical depth.
+- **Runnable paper-associated component:** [Diagnose Camera Dropout and Calibration Drift in BEV](/problems/bev-camera-health-diagnostics). Distinguish missing camera frames from high reprojection residuals in a synchronized window.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -109,7 +115,7 @@ Align earlier BEV features to the current ego frame and combine them with curren
 [Study the mechanism and math](/projects/2022-bevformer#paper-section-fuse-temporal-bev-state).
 
 - **Runnable paper-associated component:** [Warp a Previous BEV with Ego Motion](/problems/bev-ego-motion-warp). Warp a Previous BEV with Ego Motion
-- **Proposed component, not runnable:** Fuse Temporal BEV State.
+- **Runnable paper-associated component:** [Fuse Temporal BEV State](/problems/bev-temporal-fusion). Fuse already aligned BEV history with current features using a supplied scalar gate per cell.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

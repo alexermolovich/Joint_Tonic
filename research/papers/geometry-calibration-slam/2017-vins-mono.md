@@ -16,7 +16,7 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Initialize visual-inertial state","detail":"Align visual motion with inertial scale, gravity, and bias.","column":0,"row":0,"section":"Initialize visual-inertial state","problem_slugs":[],"planned_problems":["Detect Unobservable Initialization Motion"]},{"id":"stage-2","title":"Optimize coupled residuals","detail":"Combine visual, inertial, and retained-prior information.","column":1,"row":0,"section":"Optimize coupled residuals","problem_slugs":[],"planned_problems":["Preintegrate a Short IMU Window","Build a Visual-Inertial Residual"]},{"id":"stage-3","title":"Marginalize and correct drift","detail":"Retain old information and use loop constraints.","column":2,"row":0,"section":"Marginalize and correct drift","problem_slugs":[],"planned_problems":["Marginalize a Visual-Inertial Window with a Schur Complement"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"initialized state"},{"from":"stage-2","to":"stage-3","label":"optimized window"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Initialize visual-inertial state","detail":"Align visual motion with inertial scale, gravity, and bias.","column":0,"row":0,"section":"Initialize visual-inertial state","problem_slugs":["trace-perception-frame-graph","estimate-clock-offset-paired-events"],"planned_problems":["Detect Unobservable Initialization Motion"]},{"id":"stage-2","title":"Optimize coupled residuals","detail":"Combine visual, inertial, and retained-prior information.","column":1,"row":0,"section":"Optimize coupled residuals","problem_slugs":[],"planned_problems":["Preintegrate a Short IMU Window","Build a Visual-Inertial Residual"]},{"id":"stage-3","title":"Marginalize and correct drift","detail":"Retain old information and use loop constraints.","column":2,"row":0,"section":"Marginalize and correct drift","problem_slugs":[],"planned_problems":["Marginalize a Visual-Inertial Window with a Schur Complement"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"initialized state"},{"from":"stage-2","to":"stage-3","label":"optimized window"}]}
 ---
 
 ## Core paper explanation
@@ -35,6 +35,11 @@ Here $p,v,g$ are world-frame metric position, velocity, and gravity; $R_i$ maps 
 
 
 **Planned component problems:** Detect Unobservable Initialization Motion. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+
+Here $p_i,p_j,v_i,g\in\mathbb R^3$, $R_i\in\mathbb R^{3\times3}$, and the interval $\Delta t$ is in seconds. The preintegrated $\Delta p_{ij}$ is in the initial body frame and excludes gravity; multiplying by $R_i$ puts it in the world frame. For $v_i=0$, $\Delta t=0.1$, world gravity $(0,0,-9.81)$, identity $R_i$, and stationary-sensor increment $\Delta p_{ij}=(0,0,0.04905)$ meters, the gravity and specific-force contributions cancel, giving zero displacement. This checks a sign convention, not initialization observability.
+
+[Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph) practices composition of sensor extrinsics, and [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events) practices synchronization before combining camera and inertial evidence. These supporting exercises do not solve monocular scale or the sliding-window estimator.
+
 
 ### Optimize coupled residuals
 

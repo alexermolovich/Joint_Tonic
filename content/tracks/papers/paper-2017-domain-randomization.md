@@ -19,8 +19,14 @@
     "perception",
     "robustness"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 6,
+  "runnable_problem_slugs": [
+    "seeded-visual-randomization",
+    "stratify-visual-factors",
+    "version-simulation-distribution",
+    "shift-bucket-performance",
+    "scenario-coverage-confidence"
+  ],
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +59,7 @@ The implementation path follows **Sample appearance parameters → Train across 
 
 Source cards: [2017-domain-randomization](../../../research/papers/mlops-sim2real/2017-domain-randomization.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 6 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -73,9 +79,9 @@ Choose a reproducible distribution over simulator visual factors.
 
 [Study the mechanism and math](/projects/2017-domain-randomization#paper-section-sample-appearance-parameters).
 
-- **Proposed component, not runnable:** Build a Seeded Visual Randomization Sampler.
-- **Proposed component, not runnable:** Stratify Texture, Lighting, Camera, and Distractor Factors.
-- **Proposed component, not runnable:** Version a Simulation Scenario Distribution.
+- **Runnable paper-associated component:** [Build a Seeded Visual Randomization Sampler](/problems/seeded-visual-randomization). Build a Seeded Visual Randomization Sampler
+- **Runnable paper-associated component:** [Stratify Texture, Lighting, Camera, and Distractor Factors](/problems/stratify-visual-factors). Stratify Texture, Lighting, Camera, and Distractor Factors
+- **Runnable paper-associated component:** [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Version a Simulation Scenario Distribution
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -99,8 +105,8 @@ Report behavior across factor ranges rather than only a pooled average.
 
 [Study the mechanism and math](/projects/2017-domain-randomization#paper-section-measure-transfer-and-coverage).
 
-- **Proposed component, not runnable:** Measure Performance Across Shift Buckets.
-- **Proposed component, not runnable:** Estimate Scenario Coverage and Confidence Intervals.
+- **Runnable paper-associated component:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Measure Performance Across Shift Buckets
+- **Runnable paper-associated component:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Estimate Scenario Coverage and Confidence Intervals
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

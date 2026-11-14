@@ -1,0 +1,28 @@
+[Unit]
+Description=Joint Tonic authenticated isolated evaluator
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=joint-tonic
+Group=joint-tonic
+SupplementaryGroups=docker
+WorkingDirectory=/opt/joint-tonic
+EnvironmentFile=/etc/joint-tonic/worker.env
+ExecStart=/opt/joint-tonic/.venv/bin/python -u apps/worker/production_server.py
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/joint-tonic/.local /tmp
+MemoryMax=6G
+TasksMax=128
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target

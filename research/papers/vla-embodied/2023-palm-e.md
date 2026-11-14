@@ -1,30 +1,74 @@
 ---
 schema_version: 1
-paper_id: "2023-palm-e"
-title: "PaLM-E: An Embodied Multimodal Language Model"
+paper_id: 2023-palm-e
+title: 'PaLM-E: An Embodied Multimodal Language Model'
 authors:
-  - "Danny Driess et al."
+  - Danny Driess et al.
 year: 2023
-venue_or_status: "ICML 2023"
-primary_url: "https://arxiv.org/abs/2303.03378"
-pdf_url: "https://arxiv.org/pdf/2303.03378"
-local_pdf: "./2023-palm-e.pdf"
-sha256: "535cc3c7fe1ae7428b9ac7d6a3738a0529975aadc372b2229ea0cb2ce724576a"
+venue_or_status: ICML 2023
+primary_url: 'https://arxiv.org/abs/2303.03378'
+pdf_url: 'https://arxiv.org/pdf/2303.03378'
+local_pdf: ./2023-palm-e.pdf
+sha256: 535cc3c7fe1ae7428b9ac7d6a3738a0529975aadc372b2229ea0cb2ce724576a
 bytes: 10707237
 pages: 18
 topics:
-  - "embodied language model"
-  - "multimodal tokens"
-  - "robot planning"
-  - "positive transfer"
+  - embodied language model
+  - multimodal tokens
+  - robot planning
+  - positive transfer
 modalities:
-  - "text"
-  - "RGB images"
-  - "continuous state estimates"
-track_role: "core"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Continuous observations become language-width embeddings, those embeddings are interleaved with text, and the language model predicts the requested output. Any downstream robot skill execution remains a separate interface.","nodes":[{"id":"stage-1","title":"Embed sensor evidence","detail":"Project visual or state features into the language model’s token width.","column":0,"row":0,"section":"Embed sensor evidence","problem_slugs":["palm-e-project-sensor-features"],"planned_problems":["Validate Missing-Modality and Stale-Sensor Inputs"]},{"id":"stage-2","title":"Interleave modalities and text","detail":"Construct an ordered sequence whose positions preserve observation context.","column":1,"row":0,"section":"Interleave modalities and text","problem_slugs":[],"planned_problems":["Interleave Image, State, and Text Tokens","Collate Variable Multimodal Sequences"]},{"id":"stage-3","title":"Generate the requested output","detail":"Predict language conditioned on the assembled embodied context.","column":2,"row":0,"section":"Generate the requested output","problem_slugs":[],"planned_problems":["Build a Multimodal Causal Attention Mask"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"sensor embeddings"},{"from":"stage-2","to":"stage-3","label":"multimodal sequence"}]}
+  - text
+  - RGB images
+  - continuous state estimates
+track_role: core
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Continuous observations become language-width embeddings, those embeddings
+    are interleaved with text, and the language model predicts the requested
+    output. Any downstream robot skill execution remains a separate interface.
+  nodes:
+    - id: stage-1
+      title: Embed sensor evidence
+      detail: Project visual or state features into the language model’s token width.
+      column: 0
+      row: 0
+      section: Embed sensor evidence
+      problem_slugs:
+        - palm-e-project-sensor-features
+        - palm-e-sensor-readiness
+      planned_problems: []
+    - id: stage-2
+      title: Interleave modalities and text
+      detail: >-
+        Construct an ordered sequence whose positions preserve observation
+        context.
+      column: 1
+      row: 0
+      section: Interleave modalities and text
+      problem_slugs:
+        - palm-e-interleave-modal-tokens
+        - palm-e-collate-multimodal-sequences
+      planned_problems: []
+    - id: stage-3
+      title: Generate the requested output
+      detail: Predict language conditioned on the assembled embodied context.
+      column: 2
+      row: 0
+      section: Generate the requested output
+      problem_slugs:
+        - palm-e-multimodal-causal-mask
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: sensor embeddings
+    - from: stage-2
+      to: stage-3
+      label: multimodal sequence
 ---
 ## Core paper explanation
 
@@ -46,7 +90,7 @@ Here $n_m$ is that modality’s token count and $d_{\mathrm{LM}}$ is the languag
 
 <!-- joint-tonic-component:stage-1 -->
 - **Implement this component:** [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features).
-- **Planned component:** Validate Missing-Modality and Stale-Sensor Inputs. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Validate Missing-Modality and Stale-Sensor Inputs](/problems/palm-e-sensor-readiness). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ### Interleave modalities and text
@@ -60,8 +104,8 @@ $$
 Its total length is the sum of all inserted token counts. Position IDs, causal masks, and target-label positions must follow this assembled order. Dropping an image block without updating those arrays can train the model against the wrong output positions even though every tensor has a valid dtype.
 
 <!-- joint-tonic-component:stage-2 -->
-- **Planned component:** Interleave Image, State, and Text Tokens. This is an idea or blueprint, not a runnable exercise yet.
-- **Planned component:** Collate Variable Multimodal Sequences. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Interleave Image, State, and Text Tokens](/problems/palm-e-interleave-modal-tokens). See its contract for deliberate teaching simplifications.
+- **Implement this bounded component:** [Collate Variable Multimodal Sequences](/problems/palm-e-collate-multimodal-sequences). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ### Generate the requested output
@@ -75,16 +119,21 @@ $$
 The target mask excludes prompt and sensor positions from output-token supervision. If the output is a plan, validate each proposed skill against the available skill library and current state. The probability of a sentence is not the probability that a controller can perform it.
 
 <!-- joint-tonic-component:stage-3 -->
-- **Planned component:** Build a Multimodal Causal Attention Mask. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Build a Multimodal Causal Attention Mask](/problems/palm-e-multimodal-causal-mask). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ## Implement the components
+
+- [Validate Missing-Modality and Stale-Sensor Inputs](/problems/palm-e-sensor-readiness)
+- [Interleave Image, State, and Text Tokens](/problems/palm-e-interleave-modal-tokens)
+- [Collate Variable Multimodal Sequences](/problems/palm-e-collate-multimodal-sequences)
+- [Build a Multimodal Causal Attention Mask](/problems/palm-e-multimodal-causal-mask)
 
 Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
 - [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features)
 
-Planned components: Validate Missing-Modality and Stale-Sensor Inputs; Interleave Image, State, and Text Tokens; Collate Variable Multimodal Sequences; Build a Multimodal Causal Attention Mask. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
+All components currently named in this paper’s curriculum tree have a runnable bounded exercise. This does not reproduce the complete paper or its headline results.
 
 [Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 

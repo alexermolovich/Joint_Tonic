@@ -16,7 +16,7 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Specify bounded endpoint states","detail":"Provide position, velocity, acceleration, and directional limits.","column":0,"row":0,"section":"Specify bounded endpoint states","problem_slugs":[],"planned_problems":["Validate a Trajectory Against Derivative Limits"]},{"id":"stage-2","title":"Integrate constant-jerk segments","detail":"Construct candidate switching profiles analytically.","column":1,"row":0,"section":"Integrate constant-jerk segments","problem_slugs":[],"planned_problems":["Integrate a Constant-Jerk Motion Segment"]},{"id":"stage-3","title":"Synchronize and sample","detail":"Choose a common feasible duration and evaluate each joint trajectory.","column":2,"row":0,"section":"Synchronize and sample","problem_slugs":[],"planned_problems":["Synchronize Multi-Joint Motion Durations"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"bounded states"},{"from":"stage-2","to":"stage-3","label":"candidate profiles"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Specify bounded endpoint states","detail":"Provide position, velocity, acceleration, and directional limits.","column":0,"row":0,"section":"Specify bounded endpoint states","problem_slugs":[],"planned_problems":["Validate a Trajectory Against Derivative Limits"]},{"id":"stage-2","title":"Integrate constant-jerk segments","detail":"Construct candidate switching profiles analytically.","column":1,"row":0,"section":"Integrate constant-jerk segments","problem_slugs":["time-parameterized-trajectory","velocity-acceleration-command-limits"],"planned_problems":["Integrate a Constant-Jerk Motion Segment"]},{"id":"stage-3","title":"Synchronize and sample","detail":"Choose a common feasible duration and evaluate each joint trajectory.","column":2,"row":0,"section":"Synchronize and sample","problem_slugs":[],"planned_problems":["Synchronize Multi-Joint Motion Durations"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"bounded states"},{"from":"stage-2","to":"stage-3","label":"candidate profiles"}]}
 ---
 
 ## Core paper explanation
@@ -47,6 +47,11 @@ Ruckig searches valid profile structures and switching times rather than fitting
 **Component practice**
 
 - Integrate a Constant-Jerk Motion Segment — unreviewed idea; contract and evaluator required.
+
+In these scalar equations, $q_0,v_0,a_0$ are position, velocity, and acceleration at the segment start, $j$ is its constant jerk, and $t\ge0$ is elapsed time in seconds. For a rotational joint initially at rest with $j=2$ radians per second cubed and $t=0.5$ seconds, the end state is $a=1$ radian per second squared, $v=0.25$ radians per second, and $q=1/24\approx0.041667$ radians. Every joint has its own segment state; independent endpoint calculations do not establish synchronized feasibility.
+
+[Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory) and [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits) provide lower-order trajectory and command-bound practice. Their documented interpolation and clipping policies do not implement Ruckig's jerk-limited profile search or its time-optimality guarantee.
+
 
 ### Synchronize and sample
 

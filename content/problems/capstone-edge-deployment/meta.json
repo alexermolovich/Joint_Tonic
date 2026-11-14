@@ -1,0 +1,83 @@
+{
+  "slug": "capstone-edge-deployment",
+  "title": "Package and Gate an Edge Perception Release",
+  "version": "1.0.0",
+  "number": 702,
+  "difficulty": "Hard",
+  "domain": "Integrated robotics projects",
+  "topics": [
+    "capstone",
+    "edge-deployment"
+  ],
+  "minutes": 90,
+  "framework": "NumPy",
+  "entrypoint": "edge_deployment",
+  "paperIds": [
+    "2020-once-for-all"
+  ],
+  "prerequisites": [
+    "reuse-tensor-buffers",
+    "pareto-edge-model-selection",
+    "package-edge-model-artifact"
+  ],
+  "visualization": "markdown",
+  "summary": "Select an edge model from measured evidence, reuse tensor buffers, and package a synthetic signed release with a drift gate.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared optical camera/world frames or explicitly nonspatial feature axes"
+    ],
+    "units": {
+      "values": "Meters, pixels, milliseconds, normalized features and rates as defined in the contract"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two end-to-end worked examples"
+    ],
+    "hidden_case_families": [
+      "Independent scalar mechanism oracle",
+      "Failure path and missing evidence",
+      "Invalid inputs",
+      "Noncontiguous realistic scale and preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "0dbba8caa719e67ef6dc05ab3a63c07f11788a0916a5b72ce675ea6336e37efe"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original cross-paper synthetic integration. Its stage contracts, limits, diagnostics and release policies are teaching choices, not a reproduced trained model or permission to deploy hardware.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1908.09791"
+    ],
+    "implementation_urls": []
+  }
+}

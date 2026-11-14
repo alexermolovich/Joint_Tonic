@@ -1,0 +1,79 @@
+{
+  "slug": "pointcloud-density-conventions",
+  "title": "Validate Point-Cloud Density and Coordinate Conventions",
+  "version": "1.0.0",
+  "number": 155,
+  "difficulty": "Medium",
+  "domain": "Perception",
+  "topics": [
+    "pointnet",
+    "pointcloud-density-conventions"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "audit_cloud",
+  "paperIds": [
+    "2017-pointnet"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Report declared coordinate compatibility and spatial sampling density without guessing a frame from geometry.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared frame, never inferred"
+    ],
+    "units": {
+      "values": "input m/cm/mm; output meters and points per voxel"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "87d907d5a915e652f979e1a99a9783f3e228c87a18c7ccb2f6aa2425eb92a3bc"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1612.00593"
+    ],
+    "implementation_urls": []
+  }
+}

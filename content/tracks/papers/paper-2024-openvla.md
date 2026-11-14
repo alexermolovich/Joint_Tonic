@@ -19,10 +19,15 @@
     "efficient fine-tuning"
   ],
   "runnable_problem_slugs": [
+    "openvla-fuse-visual-streams",
     "rt1-action-codec",
-    "edge-inference-release-gate"
+    "openvla-training-quantile-action-bins",
+    "openvla-action-token-training-batch",
+    "edge-inference-release-gate",
+    "openvla-lora-policy-layer",
+    "openvla-quantized-serving-budget"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +60,7 @@ The implementation path follows **Fuse visual representations → Quantize and p
 
 Source cards: [2024-openvla](../../../research/papers/vla-embodied/2024-openvla.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -63,6 +68,7 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Quantize and Decode Robot Actions](/problems/rt1-action-codec). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -76,7 +82,7 @@ Align complementary visual feature streams and project them into language contex
 
 [Study the mechanism and math](/projects/2024-openvla#paper-section-fuse-visual-representations).
 
-- **Proposed component, not runnable:** Fuse Two Visual Feature Streams Safely.
+- **Runnable paper-associated component:** [Fuse Two Visual Feature Streams Safely](/problems/openvla-fuse-visual-streams). Fuse Two Visual Feature Streams Safely
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -89,8 +95,8 @@ Use uniform bins within robust per-channel action bounds.
 [Study the mechanism and math](/projects/2024-openvla#paper-section-quantize-and-predict-actions).
 
 - **Runnable supporting prerequisite:** [Quantize and Decode Robot Actions](/problems/rt1-action-codec). Scale to [0,1], take floor(bins * scaled), clamp bin IDs to [0,bins-1], add offset, reconstruct bin centers.
-- **Proposed component, not runnable:** Quantize Actions from Training-Set Quantiles.
-- **Proposed component, not runnable:** Build a VLA Action-Token Training Batch.
+- **Runnable paper-associated component:** [Quantize Actions from Training-Set Quantiles](/problems/openvla-training-quantile-action-bins). Rare training outliers should not consume most action-bin resolution.
+- **Runnable paper-associated component:** [Build a VLA Action-Token Training Batch](/problems/openvla-action-token-training-batch). A robot policy should learn action tokens without being asked to reconstruct its instruction as part of this objective.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -103,8 +109,8 @@ Preserve visual preprocessing, tokenizer mapping, action statistics, and compute
 [Study the mechanism and math](/projects/2024-openvla#paper-section-adapt-and-serve-consistently).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Add Low-Rank Adaptation to a Policy Layer.
-- **Proposed component, not runnable:** Estimate Memory, Latency, and Quantized Serving Budgets.
+- **Runnable paper-associated component:** [Add Low-Rank Adaptation to a Policy Layer](/problems/openvla-lora-policy-layer). Add Low-Rank Adaptation to a Policy Layer
+- **Runnable paper-associated component:** [Estimate Memory, Latency, and Quantized Serving Budgets](/problems/openvla-quantized-serving-budget). Four-bit weights occupy fewer bytes, but packed storage and kernel speed are separate questions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

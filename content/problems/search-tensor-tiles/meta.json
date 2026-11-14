@@ -1,0 +1,82 @@
+{
+  "slug": "search-tensor-tiles",
+  "title": "Search Tensor Tile Sizes with a Toy Cost Model",
+  "version": "1.0.0",
+  "number": 339,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "2018-tvm"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "select_tensor_tile",
+  "paperIds": [
+    "2018-tvm"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Search Tensor Tile Sizes with a Toy Cost Model",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "No spatial transform; named records retain their supplied identity"
+    ],
+    "units": {
+      "memory_bytes": "bytes",
+      "shape": "matrix element counts",
+      "launch_cost": "dimensionless toy cost units",
+      "cost": "dimensionless toy cost units"
+    },
+    "axes": "A(M,K) @ B(K,N); candidate order is (tm,tn,tk).",
+    "timestamp_assumptions": "No wall-clock timestamps; deterministic logical inputs only.",
+    "batching": "A(M,K) @ B(K,N); candidate order is (tm,tn,tk)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "evaluator_sha256": "4e1d58b379206cb2d1319488b38ef700eb09f0aa5bdac516fbe049700847f4b0",
+    "performance_class": "none; no timing leaderboard"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "This original bounded component is motivated by [2018-tvm](https://www.usenix.org/conference/osdi18/presentation/chen). It does not reproduce the full paper, trained model or benchmark protocol.",
+    "primary_urls": [
+      "https://www.usenix.org/conference/osdi18/presentation/chen"
+    ],
+    "paper_card": "research/papers/mlops-sim2real/2018-tvm.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

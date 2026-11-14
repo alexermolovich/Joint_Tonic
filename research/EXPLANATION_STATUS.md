@@ -1,178 +1,23 @@
 # Paper explanation and component-map status
 
-157 of 157 paper cards have original reader-facing explanations, defined mathematics, execution flows and implemented/planned component guidance. The library contains 156 distinct primary papers; Open X-Embodiment retains two existing topic cards.
+All **157 paper cards** have original explanations, defined mathematics, execution flows and component guidance. The library contains **156 distinct primary papers**; Open X-Embodiment retains two existing topic cards. The application now contains **193 runnable problems**, including all 190 named curriculum exercises.
 
-The latest balanced expansion adds six papers: micro Lie theory, TrajOpt, masked autoencoders, Mobile ALOHA, RLDS and statistical-precipice/rliable evaluation. [Acquisition and validation manifest](manifests/balanced-expansion-156.md). These are research inputs; new candidate exercises require reviewed blueprints before they enter the curriculum.
+These are explanations of selected mechanisms, not exhaustive derivations or full-paper reproductions. A linked exercise may implement a component or teach a supporting prerequisite. Each flow node distinguishes runnable exercises from proposed ideas. See [the complete component map](FLOW_PROBLEM_MAP.md), [paper tracks](../content/PAPER_TRACKS.md), and [curriculum completion](../content/CURRICULUM_COMPLETION.md).
 
-Selected-mechanism explanations are not exhaustive derivations or full-paper reproductions. The current application has 49 runnable problem packages; source association may mean a supporting prerequisite rather than reproduction of that paper's method. See [the live component map](FLOW_PROBLEM_MAP.md) for per-node status. Runnable/planned flow associations are audited separately by scripts/audit-paper-links.ts.
+## Verification — 2026-11-14
 
-## Verification
+- Content validation: 193 problem packages and 157 paper cards passed.
+- Paper-card KaTeX syntax: 334 display equations and 1,212 inline expressions parsed without errors.
+- All 684 in-article problem links resolve to published slugs.
+- All 156 generated tracks passed validation across 1,778 checked links. Their 474 explained stages and 318 graph connections have complete component coverage: 318 runnable exercise associations and 450 explicitly proposed associations. Associations are not unique-problem counts.
+- All 157 PDF/card pairs passed PDF signature, recorded byte/page count, and SHA-256 checks and opened with Poppler. The artifacts contain 3,411 pages. This is parser and integrity verification, not a visual review of every page. See the [artifact manifest](manifests/library-integrity-2026-11-14.md).
+- This completion pass filled 19 display-math gaps and refreshed perception, VLA and MLOps explanations and exercise links. Operational formalizations and simplified teaching components are identified explicitly.
+- Source-fidelity review clarified GR00T flow-matching conventions and latent-action supervision, pi0 attention blocks, and simplified OFA kernel extraction.
 
-- Content validator: 49 problems and 157 cards.
-- All 157 paired local PDFs exist. The six new PDFs have checked signatures, all-page parser readability, first-page visual renders, page/byte counts and SHA-256 values; existing PDF artifacts were preserved.
-- KaTeX parses 298 display equations and 953 inline expressions without errors.
-- All 333 in-article problem links resolve to published slugs.
-- The 474 execution stages retain heading references; complete runnable/planned coverage is reported by the separate component-map audit.
-- No original research figures, prose blocks, datasets or implementation code were copied into the new cards. Original mathematics and operational formalizations are labeled.
+Syntax and link checks do not independently validate every derivation. Selected additions received source review and numerical-example checks; published exercises received the separate peer-review and isolated-evaluator workflow. Existing PDFs remain local authoring references, not redistributable product assets.
 
-These checks establish syntax, references and artifact integrity, not independent expert validation of every derivation. The new explanations were checked against primary manuscripts; published problem contracts receive the separate peer-review and isolated-evaluator workflow.
+## Remaining scope
 
-## Completed cards
+The named curriculum exercises are complete. Additional proposed graph components, full-paper integration experiments, and cross-paper capstone assessments remain future work and are labeled accordingly. Completing a component does not establish reproduction of the paper's published benchmark results.
 
-- [2015-on-manifold-preintegration](research/papers/geometry-calibration-slam/2015-on-manifold-preintegration.md) — 4 display equations.
-- [2016-bundlefusion](research/papers/geometry-calibration-slam/2016-bundlefusion.md) — 2 display equations.
-- [2016-direct-sparse-odometry](research/papers/geometry-calibration-slam/2016-direct-sparse-odometry.md) — 2 display equations.
-- [2016-orb-slam-2](research/papers/geometry-calibration-slam/2016-orb-slam-2.md) — 2 display equations.
-- [2017-superpoint](research/papers/geometry-calibration-slam/2017-superpoint.md) — 2 display equations.
-- [2017-vins-mono](research/papers/geometry-calibration-slam/2017-vins-mono.md) — 3 display equations.
-- [2018-micro-lie-theory](research/papers/geometry-calibration-slam/2018-micro-lie-theory.md) — 3 display equations.
-- [2019-superglue](research/papers/geometry-calibration-slam/2019-superglue.md) — 1 display equations.
-- [2019-vins-fusion](research/papers/geometry-calibration-slam/2019-vins-fusion.md) — 1 display equations.
-- [2020-lio-sam](research/papers/geometry-calibration-slam/2020-lio-sam.md) — 1 display equations.
-- [2020-orb-slam-3](research/papers/geometry-calibration-slam/2020-orb-slam-3.md) — 1 display equations.
-- [2021-droid-slam](research/papers/geometry-calibration-slam/2021-droid-slam.md) — 2 display equations.
-- [2021-fast-lio-2](research/papers/geometry-calibration-slam/2021-fast-lio-2.md) — 2 display equations.
-- [2021-imap](research/papers/geometry-calibration-slam/2021-imap.md) — 2 display equations.
-- [2021-loftr](research/papers/geometry-calibration-slam/2021-loftr.md) — 2 display equations.
-- [2021-nice-slam](research/papers/geometry-calibration-slam/2021-nice-slam.md) — 2 display equations.
-- [2018-deepmimic](research/papers/humanoid-dexterity-tactile/2018-deepmimic.md) — 1 display equations.
-- [2018-learning-dexterous-manipulation](research/papers/humanoid-dexterity-tactile/2018-learning-dexterous-manipulation.md) — 1 display equations.
-- [2020-digit-tactile-sensor](research/papers/humanoid-dexterity-tactile/2020-digit-tactile-sensor.md) — 0 display equations.
-- [2021-adversarial-motion-priors](research/papers/humanoid-dexterity-tactile/2021-adversarial-motion-priors.md) — 2 display equations.
-- [2021-dexmv](research/papers/humanoid-dexterity-tactile/2021-dexmv.md) — 1 display equations.
-- [2021-learning-to-walk-in-minutes](research/papers/humanoid-dexterity-tactile/2021-learning-to-walk-in-minutes.md) — 0 display equations.
-- [2021-rapid-motor-adaptation](research/papers/humanoid-dexterity-tactile/2021-rapid-motor-adaptation.md) — 1 display equations.
-- [2022-dexpoint](research/papers/humanoid-dexterity-tactile/2022-dexpoint.md) — 1 display equations.
-- [2022-perceptive-locomotion](research/papers/humanoid-dexterity-tactile/2022-perceptive-locomotion.md) — 1 display equations.
-- [2015-deep-compression](research/papers/mlops-data-deployment/2015-deep-compression.md) — 1 display equations.
-- [2017-ray](research/papers/mlops-data-deployment/2017-ray.md) — 1 display equations.
-- [2017-rllib](research/papers/mlops-data-deployment/2017-rllib.md) — 0 display equations.
-- [2018-datasheets-for-datasets](research/papers/mlops-data-deployment/2018-datasheets-for-datasets.md) — 0 display equations.
-- [2018-model-cards](research/papers/mlops-data-deployment/2018-model-cards.md) — 1 display equations.
-- [2018-roboturk](research/papers/mlops-data-deployment/2018-roboturk.md) — 0 display equations.
-- [2019-robonet](research/papers/mlops-data-deployment/2019-robonet.md) — 0 display equations.
-- [2021-calvin](research/papers/mlops-data-deployment/2021-calvin.md) — 1 display equations.
-- [2021-ego4d](research/papers/mlops-data-deployment/2021-ego4d.md) — 1 display equations.
-- [2021-rlds](research/papers/mlops-data-deployment/2021-rlds.md) — 4 display equations.
-- [2021-rliable-statistical-precipice](research/papers/mlops-data-deployment/2021-rliable-statistical-precipice.md) — 4 display equations.
-- [2022-smoothquant](research/papers/mlops-data-deployment/2022-smoothquant.md) — 2 display equations.
-- [2023-awq](research/papers/mlops-data-deployment/2023-awq.md) — 1 display equations.
-- [2023-bridgedata-v2](research/papers/mlops-data-deployment/2023-bridgedata-v2.md) — 1 display equations.
-- [2023-ego-exo4d](research/papers/mlops-data-deployment/2023-ego-exo4d.md) — 1 display equations.
-- [2023-libero](research/papers/mlops-data-deployment/2023-libero.md) — 1 display equations.
-- [2024-droid](research/papers/mlops-data-deployment/2024-droid.md) — 1 display equations.
-- [2024-robocasa](research/papers/mlops-data-deployment/2024-robocasa.md) — 0 display equations.
-- [2015-hidden-technical-debt](research/papers/mlops-sim2real/2015-hidden-technical-debt.md) — 3 display equations.
-- [2017-domain-randomization](research/papers/mlops-sim2real/2017-domain-randomization.md) — 3 display equations.
-- [2017-ml-test-score](research/papers/mlops-sim2real/2017-ml-test-score.md) — 3 display equations.
-- [2017-tfx-production-ml-platform](research/papers/mlops-sim2real/2017-tfx-production-ml-platform.md) — 3 display equations.
-- [2018-dynamics-randomization](research/papers/mlops-sim2real/2018-dynamics-randomization.md) — 1 display equations.
-- [2018-tvm](research/papers/mlops-sim2real/2018-tvm.md) — 2 display equations.
-- [2019-data-validation-for-ml](research/papers/mlops-sim2real/2019-data-validation-for-ml.md) — 2 display equations.
-- [2019-mlperf-inference](research/papers/mlops-sim2real/2019-mlperf-inference.md) — 3 display equations.
-- [2020-once-for-all](research/papers/mlops-sim2real/2020-once-for-all.md) — 2 display equations.
-- [2021-robomimic](research/papers/mlops-sim2real/2021-robomimic.md) — 3 display equations.
-- [2023-robotperf](research/papers/mlops-sim2real/2023-robotperf.md) — 2 display equations.
-- [2024-open-x-embodiment](research/papers/mlops-sim2real/2024-open-x-embodiment.md) — 3 display equations.
-- [2015-faster-r-cnn](research/papers/perception-3d/2015-faster-r-cnn.md) — 3 display equations.
-- [2015-ssd](research/papers/perception-3d/2015-ssd.md) — 2 display equations.
-- [2016-feature-pyramid-networks](research/papers/perception-3d/2016-feature-pyramid-networks.md) — 3 display equations.
-- [2017-focal-loss-retinanet](research/papers/perception-3d/2017-focal-loss-retinanet.md) — 3 display equations.
-- [2017-mask-r-cnn](research/papers/perception-3d/2017-mask-r-cnn.md) — 2 display equations.
-- [2017-pointnet-plus-plus](research/papers/perception-3d/2017-pointnet-plus-plus.md) — 3 display equations.
-- [2018-yolov3](research/papers/perception-3d/2018-yolov3.md) — 3 display equations.
-- [2020-raft](research/papers/perception-3d/2020-raft.md) — 3 display equations.
-- [2021-dense-prediction-transformers](research/papers/perception-3d/2021-dense-prediction-transformers.md) — 3 display equations.
-- [2021-masked-autoencoders](research/papers/perception-3d/2021-masked-autoencoders.md) — 3 display equations.
-- [2023-3d-gaussian-splatting](research/papers/perception-3d/2023-3d-gaussian-splatting.md) — 3 display equations.
-- [2024-depth-anything-v2](research/papers/perception-3d/2024-depth-anything-v2.md) — 3 display equations.
-- [2024-sam-2](research/papers/perception-3d/2024-sam-2.md) — 2 display equations.
-- [2010-rrt-star](research/papers/planning-control-ik/2010-rrt-star.md) — 1 display equations.
-- [2014-trajopt](research/papers/planning-control-ik/2014-trajopt.md) — 4 display equations.
-- [2015-path-integral-mpc](research/papers/planning-control-ik/2015-path-integral-mpc.md) — 2 display equations.
-- [2017-gaussian-process-motion-planning](research/papers/planning-control-ik/2017-gaussian-process-motion-planning.md) — 2 display equations.
-- [2018-motion-planning-networks](research/papers/planning-control-ik/2018-motion-planning-networks.md) — 1 display equations.
-- [2018-rmpflow](research/papers/planning-control-ik/2018-rmpflow.md) — 2 display equations.
-- [2021-ikflow](research/papers/planning-control-ik/2021-ikflow.md) — 1 display equations.
-- [2021-ruckig](research/papers/planning-control-ik/2021-ruckig.md) — 2 display equations.
-- [2022-diffuser](research/papers/planning-control-ik/2022-diffuser.md) — 2 display equations.
-- [2022-ik-geo](research/papers/planning-control-ik/2022-ik-geo.md) — 2 display equations.
-- [2023-curobo](research/papers/planning-control-ik/2023-curobo.md) — 1 display equations.
-- [2023-motion-planning-diffusion](research/papers/planning-control-ik/2023-motion-planning-diffusion.md) — 2 display equations.
-- [2024-diffusion-es](research/papers/planning-control-ik/2024-diffusion-es.md) — 1 display equations.
-- [2017-dex-net-2](research/papers/robot-learning-rl/2017-dex-net-2.md) — 1 display equations.
-- [2017-proximal-policy-optimization](research/papers/robot-learning-rl/2017-proximal-policy-optimization.md) — 1 display equations.
-- [2018-soft-actor-critic](research/papers/robot-learning-rl/2018-soft-actor-critic.md) — 2 display equations.
-- [2020-conservative-q-learning](research/papers/robot-learning-rl/2020-conservative-q-learning.md) — 1 display equations.
-- [2020-data-regularized-q](research/papers/robot-learning-rl/2020-data-regularized-q.md) — 2 display equations.
-- [2020-transporter-networks](research/papers/robot-learning-rl/2020-transporter-networks.md) — 1 display equations.
-- [2021-cliport](research/papers/robot-learning-rl/2021-cliport.md) — 1 display equations.
-- [2021-implicit-q-learning](research/papers/robot-learning-rl/2021-implicit-q-learning.md) — 3 display equations.
-- [2022-peract](research/papers/robot-learning-rl/2022-peract.md) — 1 display equations.
-- [2022-r3m](research/papers/robot-learning-rl/2022-r3m.md) — 1 display equations.
-- [2023-dreamerv3](research/papers/robot-learning-rl/2023-dreamerv3.md) — 1 display equations.
-- [2023-eureka](research/papers/robot-learning-rl/2023-eureka.md) — 0 display equations.
-- [2023-td-mpc2](research/papers/robot-learning-rl/2023-td-mpc2.md) — 1 display equations.
-- [2024-3d-diffusion-policy](research/papers/robot-learning-rl/2024-3d-diffusion-policy.md) — 1 display equations.
-- [2024-dr-eureka](research/papers/robot-learning-rl/2024-dr-eureka.md) — 0 display equations.
-- [2024-hil-serl](research/papers/robot-learning-rl/2024-hil-serl.md) — 0 display equations.
-- [2024-mobile-aloha](research/papers/robot-learning-rl/2024-mobile-aloha.md) — 4 display equations.
-- [2024-serl](research/papers/robot-learning-rl/2024-serl.md) — 0 display equations.
-- [2024-umi](research/papers/robot-learning-rl/2024-umi.md) — 1 display equations.
-- [2017-ai2thor](research/papers/simulation-sim2real/2017-ai2thor.md) — 0 display equations.
-- [2018-deepmind-control-suite](research/papers/simulation-sim2real/2018-deepmind-control-suite.md) — 1 display equations.
-- [2019-habitat](research/papers/simulation-sim2real/2019-habitat.md) — 1 display equations.
-- [2019-rlbench](research/papers/simulation-sim2real/2019-rlbench.md) — 0 display equations.
-- [2020-igibson](research/papers/simulation-sim2real/2020-igibson.md) — 0 display equations.
-- [2020-robosuite](research/papers/simulation-sim2real/2020-robosuite.md) — 1 display equations.
-- [2020-sapien](research/papers/simulation-sim2real/2020-sapien.md) — 0 display equations.
-- [2021-brax](research/papers/simulation-sim2real/2021-brax.md) — 1 display equations.
-- [2021-habitat-2](research/papers/simulation-sim2real/2021-habitat-2.md) — 0 display equations.
-- [2021-isaac-gym](research/papers/simulation-sim2real/2021-isaac-gym.md) — 0 display equations.
-- [2021-maniskill](research/papers/simulation-sim2real/2021-maniskill.md) — 1 display equations.
-- [2023-habitat-3](research/papers/simulation-sim2real/2023-habitat-3.md) — 0 display equations.
-- [2023-maniskill-2](research/papers/simulation-sim2real/2023-maniskill-2.md) — 0 display equations.
-- [2016-yolo-v1](research/papers/vision-vlm-3d/2016-yolo-v1.md) — 4 display equations.
-- [2017-pointnet](research/papers/vision-vlm-3d/2017-pointnet.md) — 4 display equations.
-- [2020-detr](research/papers/vision-vlm-3d/2020-detr.md) — 3 display equations.
-- [2020-nerf](research/papers/vision-vlm-3d/2020-nerf.md) — 4 display equations.
-- [2021-clip](research/papers/vision-vlm-3d/2021-clip.md) — 3 display equations.
-- [2021-vision-transformer](research/papers/vision-vlm-3d/2021-vision-transformer.md) — 3 display equations.
-- [2022-bevformer](research/papers/vision-vlm-3d/2022-bevformer.md) — 3 display equations.
-- [2023-dinov2](research/papers/vision-vlm-3d/2023-dinov2.md) — 3 display equations.
-- [2023-grounding-dino](research/papers/vision-vlm-3d/2023-grounding-dino.md) — 3 display equations.
-- [2023-segment-anything](research/papers/vision-vlm-3d/2023-segment-anything.md) — 3 display equations.
-- [2022-rt-1](research/papers/vla-embodied/2022-rt-1.md) — 3 display equations.
-- [2023-aloha-act](research/papers/vla-embodied/2023-aloha-act.md) — 3 display equations.
-- [2023-diffusion-policy](research/papers/vla-embodied/2023-diffusion-policy.md) — 9 display equations.
-- [2023-open-x-embodiment](research/papers/vla-embodied/2023-open-x-embodiment.md) — 3 display equations.
-- [2023-palm-e](research/papers/vla-embodied/2023-palm-e.md) — 3 display equations.
-- [2023-rt-2](research/papers/vla-embodied/2023-rt-2.md) — 3 display equations.
-- [2024-octo](research/papers/vla-embodied/2024-octo.md) — 3 display equations.
-- [2024-openvla](research/papers/vla-embodied/2024-openvla.md) — 4 display equations.
-- [2024-pi0](research/papers/vla-embodied/2024-pi0.md) — 4 display equations.
-- [2025-gr00t-n1](research/papers/vla-embodied/2025-gr00t-n1.md) — 3 display equations.
-- [2022-code-as-policies](research/papers/vla-generalist/2022-code-as-policies.md) — 1 display equations.
-- [2022-gato](research/papers/vla-generalist/2022-gato.md) — 2 display equations.
-- [2022-saycan](research/papers/vla-generalist/2022-saycan.md) — 1 display equations.
-- [2022-vima](research/papers/vla-generalist/2022-vima.md) — 2 display equations.
-- [2023-robocat](research/papers/vla-generalist/2023-robocat.md) — 2 display equations.
-- [2024-rt-h](research/papers/vla-generalist/2024-rt-h.md) — 2 display equations.
-- [2024-tinyvla](research/papers/vla-generalist/2024-tinyvla.md) — 2 display equations.
-- [2025-fast-action-tokenization](research/papers/vla-generalist/2025-fast-action-tokenization.md) — 2 display equations.
-- [2025-openvla-oft](research/papers/vla-generalist/2025-openvla-oft.md) — 1 display equations.
-- [2025-pi0-5](research/papers/vla-generalist/2025-pi0-5.md) — 2 display equations.
-- [2025-smolvla](research/papers/vla-generalist/2025-smolvla.md) — 2 display equations.
-- [2021-align](research/papers/vlm-grounding/2021-align.md) — 2 display equations.
-- [2021-glip](research/papers/vlm-grounding/2021-glip.md) — 2 display equations.
-- [2022-blip](research/papers/vlm-grounding/2022-blip.md) — 3 display equations.
-- [2022-flamingo](research/papers/vlm-grounding/2022-flamingo.md) — 3 display equations.
-- [2022-owl-vit](research/papers/vlm-grounding/2022-owl-vit.md) — 2 display equations.
-- [2022-pali](research/papers/vlm-grounding/2022-pali.md) — 3 display equations.
-- [2023-blip-2](research/papers/vlm-grounding/2023-blip-2.md) — 2 display equations.
-- [2023-florence-2](research/papers/vlm-grounding/2023-florence-2.md) — 3 display equations.
-- [2023-kosmos-2](research/papers/vlm-grounding/2023-kosmos-2.md) — 3 display equations.
-- [2023-llava](research/papers/vlm-grounding/2023-llava.md) — 2 display equations.
-- [2023-pali-3](research/papers/vlm-grounding/2023-pali-3.md) — 2 display equations.
-- [2023-siglip](research/papers/vlm-grounding/2023-siglip.md) — 3 display equations.
-- [2024-paligemma](research/papers/vlm-grounding/2024-paligemma.md) — 2 display equations.
+The [grouped paper inventory](../content/PAPER_TRACKS.md) links every canonical track. The [flow map](FLOW_PROBLEM_MAP.md) links its explanations and runnable or proposed components. Provenance and licensing records remain in `manifests/`, with each original summary beside its PDF in `papers/`.

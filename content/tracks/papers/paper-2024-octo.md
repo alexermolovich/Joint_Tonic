@@ -20,9 +20,14 @@
   ],
   "runnable_problem_slugs": [
     "validate-robot-episodes",
-    "diffusion-action-noising"
+    "octo-assemble-token-groups",
+    "octo-missing-modality-block-mask",
+    "diffusion-action-noising",
+    "octo-dataset-specific-action-heads",
+    "octo-frozen-backbone-adaptation",
+    "octo-verify-finetuning-artifacts"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +60,7 @@ The implementation path follows **Tokenize available modalities → Apply group-
 
 Source cards: [2024-octo](../../../research/papers/vla-embodied/2024-octo.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -77,7 +82,7 @@ Keep task, observation, and padding information explicit in token groups.
 [Study the mechanism and math](/projects/2024-octo#paper-section-tokenize-available-modalities).
 
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
-- **Proposed component, not runnable:** Assemble Observation and Task Token Groups.
+- **Runnable paper-associated component:** [Assemble Observation and Task Token Groups](/problems/octo-assemble-token-groups). A policy sees several token groups, such as a language goal, a camera and a state sensor.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -89,7 +94,7 @@ Use explicit visibility rules and readout tokens to form policy conditioning.
 
 [Study the mechanism and math](/projects/2024-octo#paper-section-apply-group-aware-attention).
 
-- **Proposed component, not runnable:** Build Block Masks for Missing Sensors and Goals.
+- **Runnable paper-associated component:** [Build Block Masks for Missing Sensors and Goals](/problems/octo-missing-modality-block-mask). Attention visibility is a directed permission rule.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -102,9 +107,9 @@ Use the transformer readout to condition an action denoiser.
 [Study the mechanism and math](/projects/2024-octo#paper-section-generate-a-conditioned-chunk).
 
 - **Runnable supporting prerequisite:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Gather one cumulative signal coefficient per batch item and broadcast over horizon/action axes; mix clean actions and supplied noise with square-root weights.
-- **Proposed component, not runnable:** Route Tokens into Dataset-Specific Action Heads.
-- **Proposed component, not runnable:** Add a Frozen-Backbone Adaptation Module.
-- **Proposed component, not runnable:** Verify Trainable Parameters and Fine-Tuning Artifacts.
+- **Runnable paper-associated component:** [Route Tokens into Dataset-Specific Action Heads](/problems/octo-dataset-specific-action-heads). Two robots can share a policy representation while having different action widths.
+- **Runnable paper-associated component:** [Add a Frozen-Backbone Adaptation Module](/problems/octo-frozen-backbone-adaptation). A small residual adapter can learn a correction while a useful pretrained map stays fixed.
+- **Runnable paper-associated component:** [Verify Trainable Parameters and Fine-Tuning Artifacts](/problems/octo-verify-finetuning-artifacts). A fine-tuning artifact should contain exactly the learned parameter subset and identify the frozen model it extends.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -1,0 +1,79 @@
+{
+  "slug": "fuse-asynchronous-position-velocity",
+  "title": "Fuse Asynchronous Position and Velocity Sensors",
+  "version": "1.0.0",
+  "number": 50,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "state-estimation"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "fuse_async_sensors",
+  "paperIds": [],
+  "prerequisites": [
+    "kalman-filter-predict-step",
+    "kalman-filter-measurement-update"
+  ],
+  "visualization": "markdown",
+  "summary": "Predict to each sensor timestamp and fuse scalar position or velocity observations in arrival order.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "one fixed world axis"
+    ],
+    "units": {
+      "state": "position metres, velocity metres/second",
+      "time": "seconds",
+      "variances": "m\u00b2 for position, m\u00b2/s\u00b2 for velocity",
+      "spectral_density": "m\u00b2/s\u00b3"
+    },
+    "axes": "Positive position and velocity share the same axis.",
+    "timestamp_assumptions": "Nondecreasing event timestamps >=start_time. Simultaneous events are processed in supplied row order.",
+    "batching": "x(2,), P(2,2), events(N,3), variances(N,) -> means float64(N,2), covariances float64(N,2,2)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "18d6b418342b5495a226198e57376094862b30daab23bd8ce5bf17fab5931642"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://www.cs.cmu.edu/~motionplanning/papers/sbp_papers/kalman/welch_intro_kalman.pdf"
+    ],
+    "implementation_urls": []
+  }
+}

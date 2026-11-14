@@ -1,0 +1,76 @@
+{
+  "slug": "rt1-task-balanced-trajectories",
+  "title": "Sample a Task-Balanced Trajectory Batch",
+  "version": "1.0.0",
+  "number": 222,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2022-rt-1",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "sample_task_balanced",
+  "paperIds": [
+    "2022-rt-1"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A common task can dominate training when sampling trajectories uniformly.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "IDs and sampling fractions are dimensionless; trajectory indices preserve the caller dataset ordering."
+    },
+    "axes": "task_ids(M), uniforms(N,2) -> trajectory_indices(N)",
+    "timestamp_assumptions": "One row is one independent draw with replacement, not a control timestep.",
+    "batching": "task_ids(M), uniforms(N,2) -> trajectory_indices(N)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "ce4f92fa63dec9646acfac9ec2a4ff9c8004571d0be3fe394fdb3c2d5ae2b6b3"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original task-balanced sampler motivated by multi-task RT-1 data; the exact two-stage inverse-CDF contract is a teaching choice, not a reproduction of its dataset distribution.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2212.06817"
+    ],
+    "paper_card": "research/papers/vla-embodied/2022-rt-1.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

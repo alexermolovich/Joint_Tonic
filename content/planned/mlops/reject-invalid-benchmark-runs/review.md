@@ -1,22 +1,7 @@
-# Author and independent review
+# Independent review and runtime verification
 
-Status: drafted; independent contract review pending.
+Status: reviewed and implemented. Contract draft author: prior code_issue_scout. Implementation: curriculum_continuation. Independent reviewer: perception_completion.
 
-## Proof of success
+Reviewer approved all statements, examples, theory, reference implementations and evaluator cases, checking physical/type contracts, bounds, deterministic ordering and numerical examples. Masks exclude unavailable nonfinite placeholders; transfer pools integer trial counts; schema compares physical meaning and validates unexpected datasets; FCFS retains arbitrary-size integer time; benchmark gates report all independent failures; traces preserve request/clock identity and nanosecond precision.
 
-Recompute both evidence tables, equality acceptance, independent model/scenario failures and malformed counter/type cases. Check list order and input preservation.
-
-## Author evidence
-
-Read the paired card and manifest; verified the mechanism or motivation against the primary source. Inputs/examples/diagram are original. Shared structural validator passed all six packages and27 LaTeX expressions. Author independently recomputed all12 examples: selective masked values, pooled success rates, schema changes, FCFS schedules, run-accounting gates and exact correlated timestamp differences. No evaluator or publication claim is made.
-
-## Question answer key
-
-1. It violates the meaning of disjoint completed and failed counts and cannot describe the declared run.
-
-2. No. The validator compares supplied metadata; measurement integrity and cryptographic provenance are separate.
-
-## Review risks
-
-Do not call this official compliance or treat hash equality as measurement authentication.
-
+The reference passed its public Run and full public/hidden Submit through the actual existing bubblewrap sandbox. The starter was rejected; a plausible erroneous mutant was also rejected for this task. Cases cover worked examples, invalid boundaries, minimal/empty cases, preservation and independent or scale evidence. The six-problem batch has31 unique casefamilies (12publicRun plus31Submit). Runtime is Python3.12.3/NumPy2.2.4, 18s wall,10s CPU,4096MiB address-space,64KiB output, no network. No evaluator/runtime changes. OCI digest remains pending; this is the pinned local baseline.

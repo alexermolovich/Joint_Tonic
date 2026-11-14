@@ -16,7 +16,10 @@
     "geometry-calibration-slam",
     "on-manifold-preintegration"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "match-approximate-sensor-timestamps",
+    "estimate-clock-offset-paired-events"
+  ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Integrate relative rotation → Integrate velo
 
 Source cards: [2015-on-manifold-preintegration](../../../research/papers/geometry-calibration-slam/2015-on-manifold-preintegration.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Integrate relative rotation** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,6 +86,8 @@ Accumulate specific force in the starting body frame.
 
 [Study the mechanism and math](/projects/2015-on-manifold-preintegration#paper-section-integrate-velocity-and-position).
 
+- **Runnable supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Associate each query with its nearest reference timestamp within a fixed tolerance.
+- **Runnable supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Estimate a constant clock offset from corresponding event timestamps using a robust median.
 - **Proposed component, not runnable:** Preintegrate Bias-Corrected IMU Velocity and Position.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

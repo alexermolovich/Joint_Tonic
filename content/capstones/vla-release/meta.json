@@ -1,0 +1,37 @@
+{
+  "slug": "vla-release",
+  "title": "Build and Evaluate a Bounded VLA Release",
+  "summary": "Train a bounded policy adapter, generate action tokens, and evaluate held-out robot episodes before a synthetic release.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "capstone-vla-release",
+  "paperIds": [
+    "2024-openvla",
+    "2022-rt-1"
+  ],
+  "stages": [
+    {
+      "title": "Validate episode partitions",
+      "description": "Keep padded and training slots out of held-out evidence.",
+      "problemSlugs": [
+        "build-robot-sequence-validity-masks",
+        "window-episode-without-crossing-boundaries"
+      ]
+    },
+    {
+      "title": "Adapt and generate",
+      "description": "Update a small adapter and interpret action tokens with robot bounds.",
+      "problemSlugs": [
+        "openvla-lora-policy-layer",
+        "rt1-action-codec"
+      ]
+    },
+    {
+      "title": "Slice and package evidence",
+      "description": "Inspect task/embodiment error, latency, clipping and parameter fingerprints.",
+      "problemSlugs": [
+        "per-embodiment-transfer-matrix",
+        "package-edge-model-artifact"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "slug": "iql-expectile-regression",
+  "title": "Compute an Expectile Regression Loss",
+  "version": "1.0.0",
+  "number": 508,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2021-implicit-q-learning",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "expectile_loss",
+  "paperIds": [
+    "2021-implicit-q-learning"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An expectile emphasizes one side of a squared residual.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Reward and value share fixed reward units; log densities and entropy are in natural-log units; normalized action coordinates are dimensionless."
+    },
+    "axes": "Explicit batch/sample/channel axes defined in the contract",
+    "timestamp_assumptions": "One aligned transition per record; true termination differs from time-limit truncation. No physical simulator runs.",
+    "batching": "Explicit batch/sample/channel axes defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "8acfbcce0849dd472de08987a95613bbbe63623b9e650de6c5e355411620b9ff"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component using supplied policy/value data. No online learning, external model weights or full-paper benchmark reproduction.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2110.06169"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2021-implicit-q-learning.md",
+    "manifest": "research/IMPLEMENTATION_BACKLOG.md"
+  }
+}

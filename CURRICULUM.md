@@ -1,14 +1,14 @@
 # Joint Tonic curriculum tree
 
-**Status:** Named implementation roadmap  
-**Version:** 0.1.0  
-**Legend:** `[foundation]` is paper-independent, `[paper]` is derived from a checked-in paper card, `[systems]` is an operational scenario, and all entries are **planned** until a completed problem blueprint says otherwise.
+**Status:** Original 190 problems and four bounded capstones implemented; paper-library expansion underway
+**Version:** 1.0.0
+**Legend:** `[foundation]` is paper-independent, `[paper]` is derived from a checked-in paper card, and `[systems]` is an operational scenario. Every named problem in sections 1–4 now maps to a reviewed runnable package in [the implementation index](content/AUTHORING_STATUS.md). Section 5 has four bounded runnable integrations. Reviewed paper-library additions appear in section 7; other proposed flow ideas remain in the explicit backlog.
 
 This is the single navigational tree for topics, tracks, and named problems. It describes practical components to implement; it does not imply full reproduction of every paper. Each future problem begins as a Markdown file based on `research/templates/problem-blueprint.md`.
 
-Current inventory: **190 named problems** across **38 topic/track groups**, plus four ordered cross-paper capstone sequences. The immediate implementation subset is defined in `MVP_10.md`.
+Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **209 runnable packages** at this release checkpoint: 12 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
 
-The ten runnable problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
+The original ten launch problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
 
 The learner-facing **Projects** catalog presents the paper corpus in nine topic sheets: Computer vision & perception; Vision-language-action models; Robotics MLOps & datasets; Geometry, calibration & SLAM; Planning, control & kinematics; Robot learning & reinforcement learning; Vision-language grounding; Manipulation, humanoids & touch; and Simulation & sim-to-real. These are navigation groups over the existing paper folders, not additional implemented tracks. Each project retains its source paper ID and links to the available component problems. Cards without a reviewed model explanation remain marked in preparation.
 
@@ -271,7 +271,7 @@ Paper card: `research/papers/vla-embodied/2025-gr00t-n1.md`
 
 - `[paper]` Route Inputs Through a Dual-System Policy Interface
 - `[paper]` Build a Heterogeneous Real, Video, and Synthetic Batch
-- `[paper]` Compute a Diffusion-Transformer Action-Chunk Loss
+- `[paper]` Compute a Masked Action Flow-Matching Loss
 - `[paper]` Report Metrics by Source and Embodiment
 - `[systems]` Gate a Humanoid Policy Release on Safety Slices
 
@@ -372,7 +372,11 @@ Paper card: `research/papers/mlops-sim2real/2018-dynamics-randomization.md`
 
 ## 5. Cross-paper capstone tracks
 
+All four now have runnable bounded integrations, evaluation cases and reproducibility templates. Open [the capstone catalog](/projects/capstones). These synthetic projects do not reproduce the full underlying trained models or establish real-robot release safety.
+
 ### 5.1 Grounded robot perception
+
+Integration: [Build a Grounded Robot Perception Pipeline](content/problems/capstone-grounded-perception/problem.md).
 
 1. `[foundation]` Calibrated image and transform contracts.
 2. `[paper]` Open-vocabulary boxes from Grounding DINO.
@@ -383,6 +387,8 @@ Paper card: `research/papers/mlops-sim2real/2018-dynamics-randomization.md`
 
 ### 5.2 Production-ready VLA
 
+Integration: [Build and Evaluate a Bounded VLA Release](content/problems/capstone-vla-release/problem.md). The title of this track describes the learning path; its fixture is a small frozen-feature adapter and action-codec exercise.
+
 1. `[foundation]` Validate and window multimodal robot episodes.
 2. `[paper]` Normalize cross-embodiment observations and actions.
 3. `[paper]` Implement discrete-token or continuous-flow action generation.
@@ -392,6 +398,8 @@ Paper card: `research/papers/mlops-sim2real/2018-dynamics-randomization.md`
 
 ### 5.3 Edge perception deployment
 
+Integration: [Package and Gate an Edge Perception Release](content/problems/capstone-edge-deployment/problem.md).
+
 1. `[paper]` Define a valid latency/quality benchmark.
 2. `[paper]` Optimize compute graph and buffer reuse.
 3. `[paper]` Select a hardware-aware subnet/model configuration.
@@ -400,6 +408,8 @@ Paper card: `research/papers/mlops-sim2real/2018-dynamics-randomization.md`
 6. `[systems]` Detect drift and roll back safely.
 
 ### 5.4 Sim-to-real reliability
+
+Integration: [Evaluate Sim-to-Real Release Evidence](content/problems/capstone-sim-to-real/problem.md).
 
 1. `[paper]` Version visual and dynamics factor distributions.
 2. `[paper]` Generate stratified, deterministic scenarios.
@@ -415,7 +425,30 @@ Tracks follow the paper's explained execution stages. Runnable exercises link to
 
 Coverage spans perception, vision-language grounding, VLA, geometry/SLAM, planning/control, robot learning, manipulation/tactile sensing, MLOps/data, and simulation. The component inventory and associations are in [the full paper-to-code map](research/FLOW_PROBLEM_MAP.md). These track plans organize the existing research backlog; proposed ideas do not silently become additions to the 190 approved roadmap candidates above.
 
-## 7. Maintenance rules
+<!-- reviewed-expansion:start -->
+
+## 7. Reviewed paper-library expansion
+
+The user authorized the remaining paper backlog after the original 190-problem curriculum. This generated section lists reviewed additions with published evaluators. The complete proposed inventory and source associations remain in [the implementation backlog](research/IMPLEMENTATION_BACKLOG.md); a proposed title is not a completed exercise.
+
+### 7.1 Robot Learning
+
+- `[paper]` Compute the Clipped Policy Surrogate
+- `[paper]` Normalize Batched Advantages
+- `[paper]` Report Policy Update Clip Fractions
+- `[paper]` Compute Value Targets Across Episode Boundaries
+- `[paper]` Compute an Entropy-Regularized State Value
+- `[paper]` Compute an Entropy-Regularized Bellman Target
+- `[paper]` Apply Tanh Action Log-Probability Correction
+- `[paper]` Update a Temperature Objective (later SAC extension)
+- `[paper]` Compute an Expectile Regression Loss
+- `[paper]` Build Advantage-Weighted Action Weights
+- `[paper]` Validate an Offline Dataset Split
+- `[paper]` Train and Evaluate a Tiny PPO Joint Controller
+
+<!-- reviewed-expansion:end -->
+
+## 8. Maintenance rules
 
 - Add a named problem here when its paper card contains enough evidence to define a practical contract.
 - A name becomes an implementation commitment only after a problem-blueprint Markdown file is reviewed.

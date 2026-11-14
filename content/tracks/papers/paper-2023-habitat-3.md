@@ -16,7 +16,10 @@
     "simulation-sim2real",
     "habitat-3"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "shift-bucket-performance",
+    "scenario-coverage-confidence"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Represent both agents → Coordinate interacti
 
 Source cards: [2023-habitat-3](../../../research/papers/simulation-sim2real/2023-habitat-3.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Represent both agents** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -94,6 +98,8 @@ Measure task outcomes with unseen partners and human participants.
 
 [Study the mechanism and math](/projects/2023-habitat-3#paper-section-evaluate-collaboration).
 
+- **Runnable supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Measure Performance Across Shift Buckets
+- **Runnable supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Estimate Scenario Coverage and Confidence Intervals
 - **Proposed component, not runnable:** Evaluate a Cooperative Interaction Episode.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

@@ -1,0 +1,73 @@
+{
+  "slug": "time-parameterized-trajectory",
+  "title": "Interpolate a Time-Parameterized Trajectory",
+  "version": "1.0.0",
+  "number": 51,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "planning-control"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "sample_trajectory",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Sample a piecewise-linear joint trajectory and its segment velocity at requested times.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "robot joint coordinates"
+    ],
+    "units": {
+      "times,queries": "seconds",
+      "positions": "radians",
+      "velocity": "radians/second"
+    },
+    "axes": "Each column is one joint with its declared positive rotation direction.",
+    "timestamp_assumptions": "One common monotonic clock in seconds.",
+    "batching": "times(T,), positions(T,D), queries(M,) -> float64 position(M,D), velocity(M,D)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "786aa11ca5b014120e1241255583158c53645b2637849b3e3f7939c0ed39b787"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

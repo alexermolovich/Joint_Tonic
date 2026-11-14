@@ -21,10 +21,12 @@
   "runnable_problem_slugs": [
     "rt1-action-codec",
     "rt2-serialize-action-tokens",
+    "rt2-mix-web-robot-batches",
     "rt2-parse-action-grammar",
-    "rt2-constrained-action-decoding"
+    "rt2-constrained-action-decoding",
+    "rt2-action-generalization-slices"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,7 +59,7 @@ The implementation path follows **Represent actions as tokens → Co-fine-tune t
 
 Source cards: [2023-rt-2](../../../research/papers/vla-embodied/2023-rt-2.md).
 
-**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -92,7 +94,7 @@ Train robot-action sequences alongside retained vision-language examples.
 
 [Study the mechanism and math](/projects/2023-rt-2#paper-section-co-fine-tune-the-model).
 
-- **Proposed component, not runnable:** Mix Web and Robot Batches at a Target Ratio.
+- **Runnable paper-associated component:** [Mix Web and Robot Batches at a Target Ratio](/problems/rt2-mix-web-robot-batches). Co-training mixes robot examples with web supervision, but a ratio alone does not specify finite batch rounding or what happens when a source is small.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -106,7 +108,7 @@ Validate field order, category membership, and physical command bounds.
 
 - **Runnable paper-associated component:** [Parse and Validate an Action-Token Grammar](/problems/rt2-parse-action-grammar). Parse and Validate an Action-Token Grammar
 - **Runnable paper-associated component:** [Constrain Autoregressive Decoding to Valid Actions](/problems/rt2-constrained-action-decoding). Mask language-model logits to valid action tokens and decode one deterministic action field.
-- **Proposed component, not runnable:** Monitor Invalid Actions and Semantic Generalization Slices.
+- **Runnable paper-associated component:** [Monitor Invalid Actions and Semantic Generalization Slices](/problems/rt2-action-generalization-slices). An overall success percentage can hide a policy that emits malformed commands on unfamiliar instructions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

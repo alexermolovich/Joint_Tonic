@@ -1,0 +1,36 @@
+{
+  "slug": "edge-deployment",
+  "title": "Package and Gate an Edge Perception Release",
+  "summary": "Select an edge model from measured evidence, reuse tensor buffers, and package a synthetic signed release with a drift gate.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "capstone-edge-deployment",
+  "paperIds": [
+    "2020-once-for-all"
+  ],
+  "stages": [
+    {
+      "title": "Measure and optimize",
+      "description": "Use comparable measurements and deterministic tensor lifetimes.",
+      "problemSlugs": [
+        "reject-invalid-benchmark-runs",
+        "reuse-tensor-buffers"
+      ]
+    },
+    {
+      "title": "Select a candidate",
+      "description": "Apply quality, latency and arena capacity constraints.",
+      "problemSlugs": [
+        "pareto-edge-model-selection",
+        "graph-throughput-jitter"
+      ]
+    },
+    {
+      "title": "Bind and monitor the artifact",
+      "description": "Bind preprocessing and model identity, then gate drift.",
+      "problemSlugs": [
+        "package-edge-model-artifact",
+        "edge-inference-release-gate"
+      ]
+    }
+  ]
+}

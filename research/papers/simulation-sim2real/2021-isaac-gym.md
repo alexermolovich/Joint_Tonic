@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Create parallel environments","detail":"Instantiate batched robots with explicit state indexing.","column":0,"row":0,"section":"Create parallel environments","problem_slugs":[],"planned_problems":["Batch Independent Simulator States"]},{"id":"stage-2","title":"Step physics and policy on device","detail":"Keep observations, actions, and rollouts resident on the GPU.","column":1,"row":0,"section":"Step physics and policy on device","problem_slugs":[],"planned_problems":["Measure Simulation and Learning Throughput"]},{"id":"stage-3","title":"Reset and train reproducibly","detail":"Apply per-environment resets and log randomized parameters.","column":2,"row":0,"section":"Reset and train reproducibly","problem_slugs":[],"planned_problems":["Reset Completed Environments Selectively"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"physics tensors"},{"from":"stage-2","to":"stage-3","label":"batched rollouts"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Create parallel environments", "detail": "Instantiate batched robots with explicit state indexing.", "column": 0, "row": 0, "section": "Create parallel environments", "problem_slugs": [], "planned_problems": ["Batch Independent Simulator States"]}, {"id": "stage-2", "title": "Step physics and policy on device", "detail": "Keep observations, actions, and rollouts resident on the GPU.", "column": 1, "row": 0, "section": "Step physics and policy on device", "problem_slugs": [], "planned_problems": ["Measure Simulation and Learning Throughput"]}, {"id": "stage-3", "title": "Reset and train reproducibly", "detail": "Apply per-environment resets and log randomized parameters.", "column": 2, "row": 0, "section": "Reset and train reproducibly", "problem_slugs": ["window-episode-without-crossing-boundaries", "build-robot-sequence-validity-masks"], "planned_problems": ["Reset Completed Environments Selectively"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "physics tensors"}, {"from": "stage-2", "to": "stage-3", "label": "batched rollouts"}]}
 ---
 
 ## Core paper explanation
@@ -49,6 +49,19 @@ A useful timing model is $T_{\mathrm{iter}}=T_{\mathrm{physics}}+T_{\mathrm{poli
 
 Reset mask $m_b$ selects which states return to initialized values; continuing environments must retain their trajectories. Store randomization distributions, simulator version, solver parameters, and control decimation. High samples per second is not equivalent to high sample efficiency.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Reset only the environments that ended
+
+For a teaching state buffer $X\in\mathbb R^{B\times D}$, reset states $X^0$ of the same shape, and boolean reset mask $m\in\{0,1\}^B$, masked replacement is
+
+$$X'_{bd}=m_bX^0_{bd}+(1-m_b)X_{bd}.$$
+
+This equation is a logical tensor operation, not an instruction to bypass Isaac Gym's documented state-buffer/update API. Each column retains its own declared physical unit. For two environments with rows $[1,2]$ and $[3,4]$, zero reset states and mask $[1,0]$, the output is $[0,0]$ and $[3,4]$. Resetting the whole batch would erase the continuing trajectory.
+
+Control interval is $\Delta t_{\mathrm{control}}=d\Delta t_{\mathrm{physics}}$ for integer decimation $d\ge1$, both times in seconds. With 0.002-second physics steps and d=5, control updates occur every 0.01 seconds. [Episode-boundary windows](/problems/window-episode-without-crossing-boundaries) and [validity masks](/problems/build-robot-sequence-validity-masks) preserve reset boundaries in training data; they are not a GPU simulator integration.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

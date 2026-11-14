@@ -1,0 +1,81 @@
+{
+  "slug": "ppo-joint-controller-integration",
+  "title": "Train and Evaluate a Tiny PPO Joint Controller",
+  "version": "1.0.0",
+  "number": 511,
+  "difficulty": "Hard",
+  "domain": "Robot Learning",
+  "topics": [
+    "2017-proximal-policy-optimization",
+    "policy-components"
+  ],
+  "minutes": 60,
+  "framework": "NumPy",
+  "entrypoint": "train_joint_controller",
+  "paperIds": [
+    "2017-proximal-policy-optimization"
+  ],
+  "prerequisites": [
+    "ppo-boundary-value-targets",
+    "ppo-normalize-batched-advantages",
+    "ppo-clipped-policy-surrogate",
+    "ppo-policy-update-clip-fractions"
+  ],
+  "visualization": "markdown",
+  "summary": "A policy loss is only one part of reinforcement learning.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Normalized joint position q; normalized velocity action units per second; dt=0.1 seconds; Gaussian action standard deviation0.2 normalized velocity units."
+    },
+    "axes": "noise(I,B,T), goals(B), theta(2), held-out goals(M); returned policy/history and evaluation traces",
+    "timestamp_assumptions": "Fixed-step synthetic episodes reset q=0 each training iteration and held-out evaluation. The T-step horizon is a true terminal.",
+    "batching": "noise(I,B,T), goals(B), theta(2), held-out goals(M); returned policy/history and evaluation traces"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "fe4abc6142cc75bec863b021df1a90854bd8e05ff3994065484582645aeecc39"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original executable PPO training loop for a scalar integrator and linear Gaussian controller. It omits neural perception, a critic network, entropy bonus, MuJoCo and real hardware; it is not a VLA or a reproduction of published locomotion scores.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1707.06347"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2017-proximal-policy-optimization.md",
+    "manifest": "research/IMPLEMENTATION_BACKLOG.md"
+  }
+}

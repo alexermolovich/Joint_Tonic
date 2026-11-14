@@ -1,0 +1,76 @@
+{
+  "slug": "rt1-control-latency-dropouts",
+  "title": "Measure Closed-Loop Latency and Action Dropouts",
+  "version": "1.0.0",
+  "number": 223,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2022-rt-1",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "control_latency_report",
+  "paperIds": [
+    "2022-rt-1"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An inference that finishes after its control deadline is not equivalent to an action applied on time.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "All times and deadline are milliseconds on one synchronized monotonic clock; rates dimensionless."
+    },
+    "axes": "observed_ms(T), applied_ms(T) -> latency_ms(T) and summary scalars",
+    "timestamp_assumptions": "Each applied entry corresponds to exactly its observed entry; no timestamp matching is inferred.",
+    "batching": "observed_ms(T), applied_ms(T) -> latency_ms(T) and summary scalars"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "2edf983e03915f6a31012877cdd9ac0202cb2fb3661055a9ff93467dbb63cf0e"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original measurement exercise motivated by RT-1 control-time efficiency; no proprietary robot telemetry or published latency number is reproduced.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2212.06817"
+    ],
+    "paper_card": "research/papers/vla-embodied/2022-rt-1.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

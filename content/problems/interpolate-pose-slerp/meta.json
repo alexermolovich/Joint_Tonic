@@ -1,0 +1,74 @@
+{
+  "slug": "interpolate-pose-slerp",
+  "title": "Interpolate a Pose with SLERP",
+  "version": "1.0.0",
+  "number": 59,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "geometry"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "interpolate_pose",
+  "paperIds": [],
+  "prerequisites": [
+    "normalize-multiply-quaternions"
+  ],
+  "visualization": "markdown",
+  "summary": "Interpolate translation linearly and orientation along the shortest quaternion arc.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "fixed right-handed world frame"
+    ],
+    "units": {
+      "positions": "metres",
+      "quaternions,fraction": "dimensionless"
+    },
+    "axes": "Quaternions are scalar-first Hamilton (w,x,y,z), active rotations into world coordinates.",
+    "timestamp_assumptions": "fraction parametrizes two synchronized endpoint poses; no timestamp extrapolation.",
+    "batching": "positions(3,), quaternions(4,), scalar fraction -> (float64 position(3,), quaternion(4,))."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "335e0eda6d7786d9db5d9bd27b9cc4580b451b150361dc5b2a36f3185044cc90"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

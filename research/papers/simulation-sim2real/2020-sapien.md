@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Represent articulated assets","detail":"Describe links, joints, and motion constraints.","column":0,"row":0,"section":"Represent articulated assets","problem_slugs":["se3-transform-points"],"planned_problems":["Validate an Articulated Object Schema","Compute Joint-Conditioned Object State"]},{"id":"stage-2","title":"Render part-level observations","detail":"Generate visual evidence for parts and articulation.","column":1,"row":0,"section":"Render part-level observations","problem_slugs":["project-camera-points","unproject-depth-map"],"planned_problems":["Project a Tracked Point Across Views"]},{"id":"stage-3","title":"Test interactive behavior","detail":"Evaluate whether perception supports the intended object motion.","column":2,"row":0,"section":"Test interactive behavior","problem_slugs":[],"planned_problems":["Build a Reproducible Interaction Scenario"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"articulated state"},{"from":"stage-2","to":"stage-3","label":"estimated parts and actions"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Represent articulated assets", "detail": "Describe links, joints, and motion constraints.", "column": 0, "row": 0, "section": "Represent articulated assets", "problem_slugs": ["se3-transform-points"], "planned_problems": ["Validate an Articulated Object Schema", "Compute Joint-Conditioned Object State"]}, {"id": "stage-2", "title": "Render part-level observations", "detail": "Generate visual evidence for parts and articulation.", "column": 1, "row": 0, "section": "Render part-level observations", "problem_slugs": ["project-camera-points", "unproject-depth-map", "trace-perception-frame-graph", "geometric-jacobian-joint-axes"], "planned_problems": ["Project a Tracked Point Across Views"]}, {"id": "stage-3", "title": "Test interactive behavior", "detail": "Evaluate whether perception supports the intended object motion.", "column": 2, "row": 0, "section": "Test interactive behavior", "problem_slugs": [], "planned_problems": ["Build a Reproducible Interaction Scenario"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "articulated state"}, {"from": "stage-2", "to": "stage-3", "label": "estimated parts and actions"}]}
 ---
 
 ## Core paper explanation
@@ -42,6 +42,19 @@ For a kinematic chain, link pose is $T_{WL}=T_{W0}\prod_iT_i(q_i)$. Revolute $q_
 
 A part point maps to camera coordinates as $p_C=T_{CW}T_{WL}p_L$. RGB, depth, and part labels provide different information. Ground-truth part IDs or joint parameters are privileged annotations unless the learner contract includes them.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Articulation changes the transform chain
+
+For homogeneous part point $\widetilde p_L=[x,y,z,1]^\top$, use
+
+$$\widetilde p_C=T_{CW}T_{WL}(q)\widetilde p_L,\qquad (u,v)=\left(f_x\frac{X_C}{Z_C}+c_x,\ f_y\frac{Y_C}{Z_C}+c_y\right).$$
+
+$T_{WL}(q)$ maps articulated-link coordinates to world, $T_{CW}$ world to camera, translations are metres, and camera coordinates have +z forward. Intrinsics $f_x,f_y,c_x,c_y$ are pixels; projection requires $Z_C>0$ and the displayed equation assumes zero skew/distortion. Articulation q uses radians for hinges and metres for slides. A camera point $(0.1,0,1)$ metres with $f_x=500,c_x=320,c_y=240$ projects to $(370,240)$ pixels.
+
+[Frame-graph transforms](/problems/trace-perception-frame-graph), [geometric Jacobians](/problems/geometric-jacobian-joint-axes), and [camera projection](/problems/project-camera-points) implement supporting geometry. They do not infer the hidden joint graph or reproduce SAPIEN's rendering/contact engine.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

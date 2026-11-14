@@ -160,7 +160,7 @@ Runnable components and supporting prerequisites are attached to their matching 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 - **Runnable component:** [Split Robot Trajectories Without Scene Leakage](/problems/scene-safe-trajectory-split).
 
-**Planned component problems:**
+**Component implementation map:**
 
 - Runnable component: [Batch Variable-Length Episodes with Masks](/problems/batch-variable-robot-episodes). Uses the bounded contract; no full paper reproduction is claimed.
 - Compute a Masked Behavior-Cloning Log-Likelihood — unreviewed idea; contract and evaluator required.

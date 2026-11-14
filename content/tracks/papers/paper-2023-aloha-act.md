@@ -20,10 +20,12 @@
   ],
   "runnable_problem_slugs": [
     "act-sliding-action-chunks",
+    "act-teleoperation-quality",
     "act-cvae-loss",
-    "act-temporal-ensembling"
+    "act-temporal-ensembling",
+    "act-chunk-compounding-error"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Encode demonstration variation → Decode an a
 
 Source cards: [2023-aloha-act](../../../research/papers/vla-embodied/2023-aloha-act.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -78,7 +80,7 @@ During training, infer a latent distribution from the demonstrated chunk.
 [Study the mechanism and math](/projects/2023-aloha-act#paper-section-encode-demonstration-variation).
 
 - **Runnable paper-associated component:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks). Extract fixed-horizon action windows from one episode while marking right-padding and preserving requested start order.
-- **Proposed component, not runnable:** Detect Teleoperation Demonstration Quality Failures.
+- **Runnable paper-associated component:** [Detect Teleoperation Demonstration Quality Failures](/problems/act-teleoperation-quality). A demonstration can look smooth in video while its logged joint stream contains impossible jumps or missing observations.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -103,7 +105,7 @@ Average predictions made for the same physical control time.
 [Study the mechanism and math](/projects/2023-aloha-act#paper-section-ensemble-overlapping-predictions).
 
 - **Runnable paper-associated component:** [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling). Align predictions to one target control tick and combine eligible chunks with ACT’s oldest-first exponential weighting.
-- **Proposed component, not runnable:** Evaluate Chunk Length Against Compounding Error.
+- **Runnable paper-associated component:** [Evaluate Chunk Length Against Compounding Error](/problems/act-chunk-compounding-error). Open-loop action errors accumulate until feedback corrects them.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

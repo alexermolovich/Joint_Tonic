@@ -17,7 +17,10 @@
     "rllib"
   ],
   "runnable_problem_slugs": [
-    "validate-robot-episodes"
+    "validate-robot-episodes",
+    "window-episode-without-crossing-boundaries",
+    "build-robot-sequence-validity-masks",
+    "graph-throughput-jitter"
   ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
@@ -52,13 +55,16 @@ The implementation path follows **Collect policy experience → Aggregate algori
 
 Source cards: [2017-rllib](../../../research/papers/mlops-data-deployment/2017-rllib.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Collect policy experience** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -85,6 +91,8 @@ Combine samples or gradients according to the chosen RL method.
 
 [Study the mechanism and math](/projects/2017-rllib#paper-section-aggregate-algorithm-updates).
 
+- **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
+- **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
 - **Proposed component, not runnable:** Aggregate Weighted Learner Gradients.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -97,6 +105,7 @@ Update workers and monitor policy lag.
 
 [Study the mechanism and math](/projects/2017-rllib#paper-section-distribute-new-parameters).
 
+- **Runnable supporting prerequisite:** [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Measure Throughput and Jitter Across a ROS-Style Graph
 - **Proposed component, not runnable:** Track Policy Version Staleness.
 - **Proposed component, not runnable:** Measure Sampling and Learning Throughput.
 

@@ -1,33 +1,80 @@
 ---
 schema_version: 1
-paper_id: "2023-aloha-act"
-title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
+paper_id: 2023-aloha-act
+title: Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware
 authors:
-  - "Tony Z. Zhao"
-  - "Vikash Kumar"
-  - "Sergey Levine"
-  - "Chelsea Finn"
+  - Tony Z. Zhao
+  - Vikash Kumar
+  - Sergey Levine
+  - Chelsea Finn
 year: 2023
-venue_or_status: "RSS 2023"
-primary_url: "https://arxiv.org/abs/2304.13705"
-pdf_url: "https://arxiv.org/pdf/2304.13705"
-local_pdf: "./2023-aloha-act.pdf"
-sha256: "2e2fe25860f5f9cee9e655a2714e9f2264a7a5078bcd267c16d3f39af461345a"
+venue_or_status: RSS 2023
+primary_url: 'https://arxiv.org/abs/2304.13705'
+pdf_url: 'https://arxiv.org/pdf/2304.13705'
+local_pdf: ./2023-aloha-act.pdf
+sha256: 2e2fe25860f5f9cee9e655a2714e9f2264a7a5078bcd267c16d3f39af461345a
 bytes: 5353485
 pages: 18
 topics:
-  - "action chunking"
-  - "bimanual manipulation"
-  - "imitation learning"
-  - "conditional VAE"
+  - action chunking
+  - bimanual manipulation
+  - imitation learning
+  - conditional VAE
 modalities:
-  - "multi-camera RGB"
-  - "joint state"
-  - "bimanual actions"
-track_role: "core"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Training encodes a demonstrated action chunk into a latent variable. The policy decodes a future chunk, and inference combines overlapping predictions for the current control time. The demonstration encoder is not required to consume future actions at deployment.","nodes":[{"id":"stage-1","title":"Encode demonstration variation","detail":"During training, infer a latent distribution from the demonstrated chunk.","column":0,"row":0,"section":"Encode demonstration variation","problem_slugs":["act-sliding-action-chunks"],"planned_problems":["Detect Teleoperation Demonstration Quality Failures"]},{"id":"stage-2","title":"Decode an action chunk","detail":"Predict a sequence and train with reconstruction plus latent regularization.","column":1,"row":0,"section":"Decode an action chunk","problem_slugs":["act-cvae-loss"],"planned_problems":[]},{"id":"stage-3","title":"Ensemble overlapping predictions","detail":"Average predictions made for the same physical control time.","column":2,"row":0,"section":"Ensemble overlapping predictions","problem_slugs":["act-temporal-ensembling"],"planned_problems":["Evaluate Chunk Length Against Compounding Error"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"latent and observation"},{"from":"stage-2","to":"stage-3","label":"overlapping chunks"}]}
+  - multi-camera RGB
+  - joint state
+  - bimanual actions
+track_role: core
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Training encodes a demonstrated action chunk into a latent variable. The
+    policy decodes a future chunk, and inference combines overlapping
+    predictions for the current control time. The demonstration encoder is not
+    required to consume future actions at deployment.
+  nodes:
+    - id: stage-1
+      title: Encode demonstration variation
+      detail: >-
+        During training, infer a latent distribution from the demonstrated
+        chunk.
+      column: 0
+      row: 0
+      section: Encode demonstration variation
+      problem_slugs:
+        - act-sliding-action-chunks
+        - act-teleoperation-quality
+      planned_problems: []
+    - id: stage-2
+      title: Decode an action chunk
+      detail: >-
+        Predict a sequence and train with reconstruction plus latent
+        regularization.
+      column: 1
+      row: 0
+      section: Decode an action chunk
+      problem_slugs:
+        - act-cvae-loss
+      planned_problems: []
+    - id: stage-3
+      title: Ensemble overlapping predictions
+      detail: Average predictions made for the same physical control time.
+      column: 2
+      row: 0
+      section: Ensemble overlapping predictions
+      problem_slugs:
+        - act-temporal-ensembling
+        - act-chunk-compounding-error
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: latent and observation
+    - from: stage-2
+      to: stage-3
+      label: overlapping chunks
 ---
 ## Core paper explanation
 
@@ -50,7 +97,7 @@ The reparameterization makes gradients flow through $\mu$ and $\sigma$. The late
 
 <!-- joint-tonic-component:stage-1 -->
 - **Implement this component:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks).
-- **Planned component:** Detect Teleoperation Demonstration Quality Failures. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Detect Teleoperation Demonstration Quality Failures](/problems/act-teleoperation-quality). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ### Decode an action chunk
@@ -81,10 +128,13 @@ Here $w_0$ belongs to the oldest prediction. Increasing $m$ therefore increases 
 
 <!-- joint-tonic-component:stage-3 -->
 - **Implement this component:** [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling).
-- **Planned component:** Evaluate Chunk Length Against Compounding Error. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Evaluate Chunk Length Against Compounding Error](/problems/act-chunk-compounding-error). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ## Implement the components
+
+- [Detect Teleoperation Demonstration Quality Failures](/problems/act-teleoperation-quality)
+- [Evaluate Chunk Length Against Compounding Error](/problems/act-chunk-compounding-error)
 
 Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
@@ -92,7 +142,7 @@ Runnable exercises are attached beside the relevant equations above and in the e
 - [Compute a Masked CVAE Reconstruction and KL Loss](/problems/act-cvae-loss)
 - [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling)
 
-Planned components: Detect Teleoperation Demonstration Quality Failures; Evaluate Chunk Length Against Compounding Error. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
+All components currently named in this paper’s curriculum tree have a runnable bounded exercise. This does not reproduce the complete paper or its headline results.
 
 [Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 

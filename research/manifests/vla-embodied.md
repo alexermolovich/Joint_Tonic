@@ -21,7 +21,7 @@ All local artifacts were downloaded from the paper's arXiv record. The landing-p
 | 7 | Octo: An Open-Source Generalist Robot Policy | Octo Model Team, Dibya Ghosh et al. | 2024 | RSS 2024 | [arXiv:2405.12213](https://arxiv.org/abs/2405.12213) | [PDF](https://arxiv.org/pdf/2405.12213) | [`2024-octo.pdf`](../papers/vla-embodied/2024-octo.pdf) | Provides an open transformer policy pretrained on Open X-Embodiment and designed to adapt to new sensors, action spaces, and goals. | Assemble Octo-style observation/task token groups and masks; implement dataset-specific action heads; add a frozen-backbone adapter and verify trainable-parameter counts. |
 | 8 | OpenVLA: An Open-Source Vision-Language-Action Model | Moo Jin Kim et al. | 2024 | CoRL 2024 | [arXiv:2406.09246](https://arxiv.org/abs/2406.09246) | [PDF](https://arxiv.org/pdf/2406.09246) | [`2024-openvla.pdf`](../papers/vla-embodied/2024-openvla.pdf) | Releases a 7B VLA with fused pretrained visual features, action-token prediction, and efficient fine-tuning and serving recipes. | Fuse two visual feature streams with shape-safe projection; implement action quantization using training-set quantiles; calculate LoRA parameter/memory savings and quantized serving budgets. |
 | 9 | $\pi_0$: A Vision-Language-Action Flow Model for General Robot Control | Kevin Black et al. | 2024 | arXiv 2024; RSS 2025 | [arXiv:2410.24164](https://arxiv.org/abs/2410.24164) | [PDF](https://arxiv.org/pdf/2410.24164) | [`2024-pi0.pdf`](../papers/vla-embodied/2024-pi0.pdf) | Couples a pretrained vision-language backbone to a flow-matching action expert for dexterous, cross-embodiment robot control. | Sample flow-matching interpolation states and targets; implement Euler integration for action generation; construct block attention masks between VLM and action-expert tokens. |
-| 10 | GR00T N1: An Open Foundation Model for Generalist Humanoid Robots | NVIDIA, Johan Bjorck et al. | 2025 | arXiv technical report | [arXiv:2503.14734](https://arxiv.org/abs/2503.14734) | [PDF](https://arxiv.org/pdf/2503.14734) | [`2025-gr00t-n1.pdf`](../papers/vla-embodied/2025-gr00t-n1.pdf) | Combines a vision-language reasoning system with a diffusion-transformer action system trained on real, human-video, and synthetic data. | Route multimodal inputs through a dual-system interface; implement a diffusion-transformer action-chunk loss; build a heterogeneous batch sampler with source-ratio and embodiment metrics. |
+| 10 | GR00T N1: An Open Foundation Model for Generalist Humanoid Robots | NVIDIA, Johan Bjorck et al. | 2025 | arXiv technical report | [arXiv:2503.14734](https://arxiv.org/abs/2503.14734) | [PDF](https://arxiv.org/pdf/2503.14734) | [`2025-gr00t-n1.pdf`](../papers/vla-embodied/2025-gr00t-n1.pdf) | Combines a vision-language reasoning system with a diffusion-transformer action system trained with flow matching on real, human-video, and synthetic data. | Route multimodal inputs through a dual-system interface; implement a masked action flow-matching loss; build a heterogeneous batch sampler with source-ratio and embodiment metrics. |
 
 ## Companion agent paper cards
 
@@ -47,7 +47,7 @@ Every PDF has a same-basename Markdown card beside it. Cards are original teachi
 3. **Language and semantic grounding:** PaLM-E, then RT-2. Learners move from multimodal token construction to action-as-language training.
 4. **Data engineering and transfer:** Open X-Embodiment, then Octo. This is the strongest bridge to dataset versioning, schema validation, sampling, and adaptation-oriented MLOps problems.
 5. **Open VLA implementation:** OpenVLA, then $\pi_0$. These expose practical fine-tuning/serving tradeoffs and two major action-generation families: discrete tokens and continuous flow matching.
-6. **Humanoid integration:** GR00T N1. Treat it as a capstone joining heterogeneous data, a dual-system architecture, action diffusion, and deployment constraints.
+6. **Humanoid integration:** GR00T N1. Treat it as a capstone joining heterogeneous data, a dual-system architecture, action flow matching, and deployment constraints.
 
 ## Artifact validation
 
@@ -69,3 +69,18 @@ Validation was performed on 2026-11-13. Every file begins with the ASCII `%PDF-`
 ## Important product boundary
 
 The papers are source material, not permission to copy their prose, diagrams, or code. Joint Tonic problems should use original explanations, independently written starter code and tests, and short attributed quotations only when essential. Link back to the canonical paper and respect each linked code repository's license separately.
+
+
+## Curriculum implementation audit — 2026-11-14
+
+All currently named section 3 curriculum components now resolve to published bounded problems. The existing RT-1 codec covers the curriculum alias “Quantize and Dequantize Continuous Robot Actions.” This pass added 35 packages, IDs 220–254, across the ten papers above. Each has original theory, worked examples, source scope, a reviewed implementation, public/hidden cases and isolated-worker negative controls. Paper cards attach runnable components to their relevant execution stages; two extra Diffusion Policy ideas remain explicitly proposed outside the approved tree.
+
+Source-fidelity boundaries verified during authoring:
+
+- OpenVLA's robust percentile bounds are distinct from equal-probability quantile bins. The exercise uses an explicitly defined uniform K-bin codec and does not claim released-tokenizer compatibility.
+- The pi0 paper uses three attention blocks (VLM context, robot state, actions). The bounded attention exercise uses a declared two-block conditioning interface; the card explains the difference.
+- GR00T N1 uses learned latent actions for human video. The direct-actuator batch exercise intentionally masks video actuator labels and omits latent-action learning.
+- GR00T N1 v1 prints noise-minus-action with a noise-to-data path. The exercise explicitly uses the path derivative action-minus-noise and does not claim checkpoint compatibility. The pi0 card separately identifies its pinned v4 sign convention.
+- Octo's residual-adapter update is an original linear teaching module, not a claim to reproduce its official fine-tuning architecture.
+
+Verification: all 35 reference solutions passed actual bubblewrap Run and Submit; each empty starter and a mechanism-specific mutant failed. Focused review additionally caught and fixed zero-weight sampler selection at a floating-point CDF boundary. Strict KaTeX rendering passed 135 expressions across these problem packages. No PDFs, pretrained weights or external datasets were added in this implementation pass.

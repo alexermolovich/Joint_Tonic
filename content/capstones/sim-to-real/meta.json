@@ -1,0 +1,35 @@
+{
+  "slug": "sim-to-real",
+  "title": "Evaluate Sim-to-Real Release Evidence",
+  "summary": "Generate deterministic stratified simulation factors and compare synthetic simulator, replay, shadow, and real-domain evidence.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "capstone-sim-to-real",
+  "paperIds": [
+    "2017-domain-randomization"
+  ],
+  "stages": [
+    {
+      "title": "Version and stratify scenarios",
+      "description": "Pin joint-factor coverage and seeded variation.",
+      "problemSlugs": [
+        "version-simulation-distribution",
+        "stratify-visual-factors"
+      ]
+    },
+    {
+      "title": "Compare evaluation domains",
+      "description": "Keep observation masks and scenario identities across domains.",
+      "problemSlugs": [
+        "shift-bucket-performance",
+        "scenario-coverage-confidence"
+      ]
+    },
+    {
+      "title": "Report release evidence",
+      "description": "Expose uncertainty, worst buckets, latency and transfer gaps.",
+      "problemSlugs": [
+        "edge-inference-release-gate"
+      ]
+    }
+  ]
+}

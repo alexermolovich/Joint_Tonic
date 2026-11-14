@@ -17,7 +17,9 @@
     "ik-geo"
   ],
   "runnable_problem_slugs": [
-    "se3-transform-points"
+    "se3-transform-points",
+    "serial-chain-forward-kinematics",
+    "joint-limit-collision-ik-candidates"
   ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
@@ -52,13 +54,15 @@ The implementation path follows **Express axis geometry → Solve geometric subp
 
 Source cards: [2022-ik-geo](../../../research/papers/planning-control-ik/2022-ik-geo.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Express axis geometry** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Compute Forward Kinematics for a Serial Chain](/problems/serial-chain-forward-kinematics). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Enforce Joint Limits and Collision Constraints in IK](/problems/joint-limit-collision-ik-candidates). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -85,6 +89,8 @@ Reduce joint angles to circle and plane intersections.
 
 [Study the mechanism and math](/projects/2022-ik-geo#paper-section-solve-geometric-subproblems).
 
+- **Runnable supporting prerequisite:** [Compute Forward Kinematics for a Serial Chain](/problems/serial-chain-forward-kinematics). Compute every joint endpoint and the tool pose of a planar serial chain.
+- **Runnable supporting prerequisite:** [Enforce Joint Limits and Collision Constraints in IK](/problems/joint-limit-collision-ik-candidates). Reject planar IK candidates violating joint limits or link-obstacle clearance, then rank the survivors.
 - **Proposed component, not runnable:** Solve a Circle-Plane Rotation Subproblem.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

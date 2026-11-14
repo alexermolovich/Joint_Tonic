@@ -1,0 +1,81 @@
+{
+  "slug": "vit-pre-norm-block",
+  "title": "Assemble a Pre-Norm Vision Transformer Block",
+  "version": "1.0.0",
+  "number": 168,
+  "difficulty": "Hard",
+  "domain": "Perception",
+  "topics": [
+    "vision-transformer",
+    "vit-pre-norm-block"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "vit_block",
+  "paperIds": [
+    "2021-vision-transformer"
+  ],
+  "prerequisites": [
+    "vit-patch-class-tokens"
+  ],
+  "visualization": "markdown",
+  "summary": "Implement a single-head, dropout-free pre-norm transformer encoder block with supplied parameters.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Ordered patch/class token features"
+    ],
+    "units": {
+      "values": "dimensionless embeddings"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "f6f93716ed3c89e7241f94f7aae612db9f9f67d7f6b13bcfcaf281df697ae2e8"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2010.11929"
+    ],
+    "implementation_urls": []
+  }
+}

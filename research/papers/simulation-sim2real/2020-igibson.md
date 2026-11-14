@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build an interactive scene","detail":"Load rigid and articulated assets with physical properties.","column":0,"row":0,"section":"Build an interactive scene","problem_slugs":[],"planned_problems":["Validate a Scene Interaction Graph"]},{"id":"stage-2","title":"Randomize and observe","detail":"Vary visual and physical conditions while generating sensor data.","column":1,"row":0,"section":"Randomize and observe","problem_slugs":["validate-robot-episodes"],"planned_problems":["Replay Sensor Streams from a Fixed Seed"]},{"id":"stage-3","title":"Interact and evaluate transfer","detail":"Test tasks on declared scene and parameter holdouts.","column":2,"row":0,"section":"Interact and evaluate transfer","problem_slugs":[],"planned_problems":["Measure Domain Shift Between Simulated Scenes"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"scene state"},{"from":"stage-2","to":"stage-3","label":"policy actions"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Build an interactive scene", "detail": "Load rigid and articulated assets with physical properties.", "column": 0, "row": 0, "section": "Build an interactive scene", "problem_slugs": [], "planned_problems": ["Validate a Scene Interaction Graph"]}, {"id": "stage-2", "title": "Randomize and observe", "detail": "Vary visual and physical conditions while generating sensor data.", "column": 1, "row": 0, "section": "Randomize and observe", "problem_slugs": ["validate-robot-episodes", "seeded-visual-randomization", "sample-dynamics-distributions"], "planned_problems": ["Replay Sensor Streams from a Fixed Seed"]}, {"id": "stage-3", "title": "Interact and evaluate transfer", "detail": "Test tasks on declared scene and parameter holdouts.", "column": 2, "row": 0, "section": "Interact and evaluate transfer", "problem_slugs": [], "planned_problems": ["Measure Domain Shift Between Simulated Scenes"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "scene state"}, {"from": "stage-2", "to": "stage-3", "label": "policy actions"}]}
 ---
 
 ## Core paper explanation
@@ -40,6 +40,19 @@ An articulated object state contains joint coordinates $q_o$ in addition to its 
 
 Training samples parameters $\theta\sim p(\theta)$ and observations from the resulting environment. A teaching objective is $\mathbb E_{\theta,\tau\sim\pi,P_\theta}[R(\tau)]$. Appearance randomization and dynamics randomization alter different parts of the agent's problem.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Separate appearance from transition changes
+
+Let $\theta_v$ denote visual parameters (lighting/textures/camera) and $\theta_d$ physical parameters (mass/friction/actuation). A teaching factorization is
+
+$$s_{t+1}\sim P_{\theta_d}(\cdot\mid s_t,a_t),\qquad o_t\sim O_{\theta_v}(\cdot\mid s_t).$$
+
+State $s_t$ contains poses and articulated joint coordinates; observation $o_t$ may include RGB/depth/proprioception with separately declared units. This separation is conceptual: camera placement can affect observability, and a complete simulator may couple some parameters. Increasing texture brightness need not change a rigid body's trajectory; changing friction may change both its trajectory and resulting images.
+
+For independently sampled scenarios $\theta_i$ and episodic returns $R_i$, a Monte Carlo mean is $\bar R=N^{-1}\sum_iR_i$. The randomization distribution defines what this average measures. [Seeded visual sampling](/problems/seeded-visual-randomization) and [dynamics sampling](/problems/sample-dynamics-distributions) implement separate bounded parameter contracts, not iGibson's complete configuration system.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

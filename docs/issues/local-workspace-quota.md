@@ -1,6 +1,6 @@
 # Handle local storage exhaustion without losing completed results
 
-**Status:** Local issue draft. No GitHub issue was created; the existing remote publishing block remains in effect.
+**Status:** Fixed locally during account persistence work. Per-scope in-memory fallback now preserves the latest drafts/results when storage throws; the UI says “Not saved to this device” and directs export. A subsequent successful write restores durable storage. Focused actual-module regression: `node --test tests/workspace-storage.test.mjs`. No GitHub issue or PR was created.
 
 `apps/web/src/lib/local-workspace.ts:8` writes drafts, settings, solved progress, and up to 100 complete submission snapshots to one localStorage entry without handling quota errors. A valid history can exceed storage capacity before the record-count limit is reached.
 

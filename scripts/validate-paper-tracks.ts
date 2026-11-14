@@ -18,7 +18,9 @@ for(const [url,group] of canonical){
   check(fs.existsSync(file),'Missing track '+id);if(!fs.existsSync(file))continue;
   const {data,content}=matter(fs.readFileSync(file,'utf8'));
   check(data.primary_url===url&&data.paper_id===id,'Identity mismatch '+id);
-  check(data.status==='planned'&&data.integration_status==='proposed'&&data.assessment_status==='proposed','Completion claim '+id);
+  const integrationFile='content/paper-projects/'+id+'/meta.json';
+  const integration=fs.existsSync(integrationFile)?JSON.parse(fs.readFileSync(integrationFile,'utf8')):null;
+  check(integration ? data.status==='bounded-integration-available'&&data.integration_status==='runnable'&&data.assessment_status==='runnable'&&data.integration_problem_slug===integration.integrationProblemSlug&&catalog.some(p=>p.slug===integration.integrationProblemSlug) : data.status==='planned'&&data.integration_status==='proposed'&&data.assessment_status==='proposed','Completion claim '+id);
   check(index.includes('(tracks/papers/paper-'+id+'.md)'),'Missing index entry '+id);
   const expected=group.flatMap(c=>c.data.execution_flow.nodes.map((n:any)=>({card:c.id,node:n.id})));
   check(JSON.stringify(expected)===JSON.stringify(data.source_flow_nodes),'Missing or reordered source identity '+id);
@@ -34,7 +36,7 @@ for(const [url,group] of canonical){
   for(const heading of ['Orientation and scope','Prerequisites and diagnostic','Ordered mechanisms and component tasks','Integration exercise','Evaluation and failure analysis','Reproducibility deliverable'])check(content.includes('## '+heading+'\n'),'Missing section '+id+'/'+heading);
   for(const heading of ['Integration exercise','Evaluation and failure analysis','Reproducibility deliverable']){
     const section=content.split('## '+heading+'\n')[1]?.split('\n## ')[0]||'';
-    check(section.includes('Proposed'),'Section status missing '+id+'/'+heading);
+    check(section.includes(integration?'Runnable':'Proposed'),'Section status missing '+id+'/'+heading);
     check(!/\]\((?:\.\.|content|research)/.test(section),'Local URL in UI section '+id+'/'+heading);
   }
   check(!content.includes('undefined')&&!content.includes('[object Object]'),'Serialization text leak '+id);

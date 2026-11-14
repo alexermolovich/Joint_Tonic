@@ -75,10 +75,10 @@
         "column": 2,
         "row": 0,
         "section": "Check swept motion",
-        "problem_slugs": [],
-        "planned_problems": [
-          "Check a Segment Against Occupancy Cells"
-        ]
+        "problem_slugs": [
+          "segment-occupancy-cell-check"
+        ],
+        "planned_problems": []
       }
     ],
     "edges": [
@@ -112,7 +112,7 @@ J_{\mathrm{smooth}}(Q)=\sum_{t=0}^{T-1}
 (\mathbf q_{t+1}-\mathbf q_t)^\top W(\mathbf q_{t+1}-\mathbf q_t).
 $$
 
-$W$ is a positive semidefinite weighting matrix chosen to make mixed channel scales meaningful. This illustrative cost is one trajectory component, not a complete reproduction of every cost configuration in the paper. [Planar Two-Link IK](/problems/planar-two-link-ik) is a kinematic prerequisite for constructing small synthetic robot trajectories. Planned component: **Build a Joint-Space Smoothness Cost**.
+$W$ is a positive semidefinite weighting matrix chosen to make mixed channel scales meaningful. This illustrative cost is one trajectory component, not a complete reproduction of every cost configuration in the paper. [Solve Closed-Form IK for a Planar Two-Link Arm](/problems/planar-two-link-ik) is a kinematic prerequisite for constructing small synthetic robot trajectories. Planned component: **Build a Joint-Space Smoothness Cost**.
 
 ### Linearize signed-distance penalties
 
@@ -142,7 +142,7 @@ $$
 \min_{\alpha\in[0,1]} d(\mathbf q(\alpha))\ge d_{\mathrm{safe}}.
 $$
 
-The paper develops convex collision-checking formulations for motion segments. A grid exercise such as the planned **Check a Segment Against Occupancy Cells** is a simpler prerequisite with a different geometry contract; it must not be advertised as that continuous articulated-body checker.
+The paper develops convex collision-checking formulations for motion segments. A grid exercise such as **Check a Segment Against Occupancy Cells** is a simpler prerequisite with a different geometry contract; it must not be advertised as that continuous articulated-body checker.
 
 | Stage | Evidence | Failure to detect |
 |---|---|---|
@@ -150,13 +150,16 @@ The paper develops convex collision-checking formulations for motion segments. A
 | Local convex model | Predicted penalty decrease | Linearization error |
 | Accepted motion | Rechecked true constraints | Stale scene/calibration |
 
+[Check a Segment Against Occupancy Cells](/problems/segment-occupancy-cell-check) is now runnable. It checks closed line-segment intersections against occupied square cells in a two-dimensional grid, including boundary contact. Its unit-cell geometry and interpolation are explicit; it does not certify an articulated robot's swept volume. This is a prerequisite for understanding why collision checking must examine the path between safe endpoints.
+
+
 ## Why this matters on a robot
 
 An optimizer may converge to a local result that depends on initialization, collision geometry and trust-region settings. Declare obstacle snapshots, link models, safety margins and interpolation rules. Numerical success is not permission to bypass a robot's independent safety system.
 
 ## Implement the components
 
-Only the linked kinematic prerequisite is currently runnable. The listed optimization components are research candidates requiring reviewed contracts and fixtures. The source PDF is an openly accessible author manuscript of the2014 journal paper; the2013 filename does not change the publication identity.
+The linked kinematic and grid segment-checking prerequisites are runnable. The listed optimization components remain research candidates requiring reviewed contracts and fixtures. The source PDF is an openly accessible author manuscript of the2014 journal paper; the2013 filename does not change the publication identity.
 
 
 ## Sources and scope

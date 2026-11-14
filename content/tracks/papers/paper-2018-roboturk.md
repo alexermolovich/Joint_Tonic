@@ -18,6 +18,10 @@
   ],
   "runnable_problem_slugs": [
     "se3-transform-points",
+    "trace-perception-frame-graph",
+    "velocity-acceleration-command-limits",
+    "estimate-clock-offset-paired-events",
+    "detect-dropped-duplicated-sensor-frames",
     "validate-robot-episodes"
   ],
   "proposed_component_count": 4,
@@ -53,13 +57,17 @@ The implementation path follows **Map operator motion → Stream control and fee
 
 Source cards: [2018-roboturk](../../../research/papers/mlops-data-deployment/2018-roboturk.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 6 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Map operator motion** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
@@ -75,6 +83,8 @@ Translate mobile-device motion into a robot control reference.
 [Study the mechanism and math](/projects/2018-roboturk#paper-section-map-operator-motion).
 
 - **Runnable supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Move camera-frame points into the world frame using a rigid transform.
+- **Runnable supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Resolve a rigid transform between two frames in a validated acyclic frame forest.
+- **Runnable supporting prerequisite:** [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits). Generate joint commands by projecting requested velocities into velocity and acceleration limits.
 - **Proposed component, not runnable:** Map Operator Motion into a Robot Control Frame.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -87,6 +97,8 @@ Run a session with synchronized actions and visual observations.
 
 [Study the mechanism and math](/projects/2018-roboturk#paper-section-stream-control-and-feedback).
 
+- **Runnable supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Estimate a constant clock offset from corresponding event timestamps using a robust median.
+- **Runnable supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Report missing frame identifiers and repeated identifiers in an ordered sensor log.
 - **Proposed component, not runnable:** Detect Paused or Corrupted Action Segments.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

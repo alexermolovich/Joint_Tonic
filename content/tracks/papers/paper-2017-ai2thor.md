@@ -16,7 +16,10 @@
     "simulation-sim2real",
     "ai2thor"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "validate-robot-episodes",
+    "detect-dropped-duplicated-sensor-frames"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Observe scene and objects → Apply a valid in
 
 Source cards: [2017-ai2thor](../../../research/papers/simulation-sim2real/2017-ai2thor.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Observe scene and objects** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,6 +86,8 @@ Check action preconditions and report success or failure.
 
 [Study the mechanism and math](/projects/2017-ai2thor#paper-section-apply-a-valid-interaction).
 
+- **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
+- **Runnable supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Report missing frame identifiers and repeated identifiers in an ordered sensor log.
 - **Proposed component, not runnable:** Validate a Simulator Action Grammar.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

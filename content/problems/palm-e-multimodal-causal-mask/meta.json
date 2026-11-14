@@ -1,0 +1,76 @@
+{
+  "slug": "palm-e-multimodal-causal-mask",
+  "title": "Build a Multimodal Causal Attention Mask",
+  "version": "1.0.0",
+  "number": 229,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-palm-e",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "multimodal_causal_mask",
+  "paperIds": [
+    "2023-palm-e"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Putting sensors into a language sequence must not let a prediction read future tokens.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "All axes are token positions and dimensionless modality identifiers; no actuator units."
+    },
+    "axes": "modalities(L), present(B,L) -> allowed(B,L,L)",
+    "timestamp_assumptions": "Sequence order defines causality. Tokens may describe multiple sensors but callers must synchronize them before this function.",
+    "batching": "modalities(L), present(B,L) -> allowed(B,L,L)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "66e39b12a07743c2019548387e23f557a0de8fa12f048d7cea8240a007b58e39"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original dense causal-mask component for a PaLM-E-style interleaved sequence. This declares ordinary autoregressive causality, not bidirectional vision blocks or a full model attention implementation.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2303.03378"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-palm-e.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

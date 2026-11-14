@@ -16,7 +16,7 @@ modalities: ["3D point cloud"]
 track_role: "Foundational unordered 3D perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
-execution_flow: {"title":"Core execution flow","description":"Transform each point with shared weights, aggregate a permutation-invariant set description, and attach either a global or point-wise prediction head.","nodes":[{"id":"stage-1","title":"Encode each point","detail":"Apply one shared feature map to every point in the cloud.","column":0,"row":0,"section":"Encode each point","problem_slugs":["pointnet-transform-regularizer"],"planned_problems":["Build a Shared Point MLP and Global Feature","Validate Point-Cloud Density and Coordinate Conventions"]},{"id":"stage-2","title":"Pool the point set","detail":"Channel-wise maximum removes dependence on point ordering.","column":1,"row":0,"section":"Pool the point set","problem_slugs":["pointnet-symmetric-pooling"],"planned_problems":[]},{"id":"stage-3","title":"Classify or segment","detail":"Use a global head or combine local and global features at every point.","column":2,"row":0,"section":"Classify or segment","problem_slugs":["pointnet-local-global-features"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"point features"},{"from":"stage-2","to":"stage-3","label":"global descriptor"}]}
+execution_flow: {"title":"Core execution flow","description":"Transform each point with shared weights, aggregate a permutation-invariant set description, and attach either a global or point-wise prediction head.","nodes":[{"id":"stage-1","title":"Encode each point","detail":"Apply one shared feature map to every point in the cloud.","column":0,"row":0,"section":"Encode each point","problem_slugs":["pointnet-transform-regularizer","pointnet-shared-mlp","pointcloud-density-conventions"],"planned_problems":[]},{"id":"stage-2","title":"Pool the point set","detail":"Channel-wise maximum removes dependence on point ordering.","column":1,"row":0,"section":"Pool the point set","problem_slugs":["pointnet-symmetric-pooling"],"planned_problems":[]},{"id":"stage-3","title":"Classify or segment","detail":"Use a global head or combine local and global features at every point.","column":2,"row":0,"section":"Classify or segment","problem_slugs":["pointnet-local-global-features"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"point features"},{"from":"stage-2","to":"stage-3","label":"global descriptor"}]}
 ---
 
 ## Core paper explanation
@@ -43,7 +43,7 @@ $$
 
 **New runnable component:** [Regularize a Learned Feature Transform](/problems/pointnet-transform-regularizer). The exercise implements its stated bounded component with original synthetic fixtures.
 
-**Planned component problems:** Build a Shared Point MLP and Global Feature; Validate Point-Cloud Density and Coordinate Conventions. These are not runnable; titles without reviewed blueprints remain unreviewed ideas.
+**Implement these components:** [Build a Shared Point MLP and Global Feature](/problems/pointnet-shared-mlp) · [Validate Point-Cloud Density and Coordinate Conventions](/problems/pointcloud-density-conventions). Each exercise specifies its bounded scope; diagnostic and simplified variants do not reproduce the full model.
 
 ### Pool the point set
 
@@ -78,20 +78,24 @@ Segmentation is permutation equivariant: permuting inputs must permute outputs t
 
 **Implement this component:** [Concatenate Local and Global Features for Segmentation](/problems/pointnet-local-global-features). Feature concatenation supplies the segmentation interface, not the segmentation head.
 
+#### Complete the feature path and audit its input
+
+[Build the shared point MLP](/problems/pointnet-shared-mlp) supplies the missing per-point feature stage before symmetric pooling: $H=\max(0,XW+b)$ for $X\in\mathbb R^{N\times D}$, $W\in\mathbb R^{D\times F}$ and $b\in\mathbb R^F$. Its one-layer teaching contract omits T-Nets and batch normalization. [Local/global concatenation](/problems/pointnet-local-global-features) then preserves each point's identity while providing cloud context.
+
+[Validate density and coordinate conventions](/problems/pointcloud-density-conventions) is an original data-quality diagnostic. After declared unit conversion to meter coordinates $x_i$, voxel side $h$ meters gives
+$$v_i=\lfloor x_i/h\rfloor,\qquad \rho=N/|\{v_i\}|.$$
+Here $\rho$ is points per occupied voxel, with zero for an empty cloud, not physical volume density. Frame compatibility is checked from explicit labels; geometry cannot establish that two frame names represent the same physical coordinates.
+
+
 ## Implement the components
 
-- **Runnable component:** [Concatenate Local and Global Features for Segmentation](/problems/pointnet-local-global-features). This is a bounded synthetic component, not a complete trained model.
+The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
-- **Runnable component:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling). This isolates one reviewed mechanism with synthetic fixtures; it does not reproduce the paper’s complete model or benchmark.
-
-- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
-
-**Planned components:**
-
-- Build a Shared Point MLP and Global Feature.
-- Validate Point-Cloud Density and Coordinate Conventions.
-
-[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
+- [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling) — Easy.
+- [Concatenate Local and Global Features for Segmentation](/problems/pointnet-local-global-features) — Easy.
+- [Regularize a Learned Feature Transform](/problems/pointnet-transform-regularizer) — Easy.
+- [Build a Shared Point MLP and Global Feature](/problems/pointnet-shared-mlp) — Medium.
+- [Validate Point-Cloud Density and Coordinate Conventions](/problems/pointcloud-density-conventions) — Medium.
 
 ## Why this matters on a robot
 

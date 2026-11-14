@@ -16,7 +16,11 @@
     "mlops-data-deployment",
     "datasheets-for-datasets"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "infer-robot-episode-schema",
+    "robot-feature-anomalies",
+    "record-artifact-lineage"
+  ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +54,15 @@ The implementation path follows **Record collection context → Describe composi
 
 Source cards: [2018-datasheets-for-datasets](../../../research/papers/mlops-data-deployment/2018-datasheets-for-datasets.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Record collection context** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Infer a Schema from Robot Episodes](/problems/infer-robot-episode-schema). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Detect Missing, Range, Domain, and Shape Anomalies](/problems/robot-feature-anomalies). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -83,6 +89,8 @@ Quantify coverage while preserving qualitative limitations.
 
 [Study the mechanism and math](/projects/2018-datasheets-for-datasets#paper-section-describe-composition-and-gaps).
 
+- **Runnable supporting prerequisite:** [Infer a Schema from Robot Episodes](/problems/infer-robot-episode-schema). Propose signal shapes, metadata and per-channel observed ranges from a bounded collection of robot episodes.
+- **Runnable supporting prerequisite:** [Detect Missing, Range, Domain, and Shape Anomalies](/problems/robot-feature-anomalies). Return located schema violations from robot feature records without treating malformed data as valid zero values.
 - **Proposed component, not runnable:** Compute Collector and Task Coverage.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -95,6 +103,7 @@ Document intended uses, distribution, updates, and known risks.
 
 [Study the mechanism and math](/projects/2018-datasheets-for-datasets#paper-section-publish-maintenance-guidance).
 
+- **Runnable supporting prerequisite:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Build a dependency-complete provenance record for one artifact while preserving the identity of every upstream input.
 - **Proposed component, not runnable:** Generate a Data-Use Risk Report.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

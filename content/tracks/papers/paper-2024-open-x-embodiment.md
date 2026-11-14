@@ -25,9 +25,17 @@
   "runnable_problem_slugs": [
     "validate-robot-episodes",
     "map-shared-robot-episode",
-    "balance-multidataset-batch"
+    "dataset-version-schema-drift",
+    "balance-multidataset-batch",
+    "mask-unavailable-action-dimensions",
+    "per-embodiment-transfer-matrix",
+    "oxe-normalize-observation-schema",
+    "oxe-version-dataset-manifest",
+    "oxe-balanced-dataset-sampling",
+    "oxe-normalize-action-spaces",
+    "oxe-embodiment-transfer-metrics"
   ],
-  "proposed_component_count": 8,
+  "proposed_component_count": 0,
   "source_flow_node_count": 6,
   "source_flow_nodes": [
     {
@@ -72,7 +80,7 @@ The implementation path follows **Preserve episode semantics → Sample a traini
 
 Source cards: [2024-open-x-embodiment](../../../research/papers/mlops-sim2real/2024-open-x-embodiment.md) · [2023-open-x-embodiment](../../../research/papers/vla-embodied/2023-open-x-embodiment.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 8 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 11 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -98,7 +106,7 @@ Map observations and actions into explicit schema fields without dropping proven
 
 - **Runnable paper-associated component:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
 - **Runnable paper-associated component:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode). Reorder scalar robot channels, perform declared compatible unit conversions and retain episode provenance.
-- **Proposed component, not runnable:** Detect Dataset-Version and Schema Drift.
+- **Runnable paper-associated component:** [Detect Dataset-Version and Schema Drift](/problems/dataset-version-schema-drift). Report version and physical-schema changes without mistaking a matching shape for semantic compatibility.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -122,8 +130,8 @@ Score supported action dimensions and report performance by embodiment and task.
 
 [Study the mechanism and math](/projects/2024-open-x-embodiment#paper-section-mask-and-evaluate-transfer).
 
-- **Proposed component, not runnable:** Mask Unavailable Action Dimensions.
-- **Proposed component, not runnable:** Build a Per-Embodiment Transfer Matrix.
+- **Runnable paper-associated component:** [Mask Unavailable Action Dimensions](/problems/mask-unavailable-action-dimensions). Replace unavailable action channels with zeros without letting invalid placeholder values contaminate valid data.
+- **Runnable paper-associated component:** [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Aggregate source-policy and target-robot evaluation evidence into a matrix while distinguishing unmeasured cells.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -145,8 +153,8 @@ Map observations and actions into explicit schema fields without dropping proven
 Study **Preserve episode semantics** in the [supplemental source card](../../../research/papers/vla-embodied/2023-open-x-embodiment.md); the [canonical website graph](/projects/2024-open-x-embodiment) uses the primary flow.
 
 - **Runnable paper-associated component:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
-- **Proposed component, not runnable:** Normalize Heterogeneous Robot Observation Schemas.
-- **Proposed component, not runnable:** Version a Cross-Robot Dataset Manifest.
+- **Runnable paper-associated component:** [Normalize Heterogeneous Robot Observation Schemas](/problems/oxe-normalize-observation-schema). Robot datasets often describe the same signal under different keys and units.
+- **Runnable paper-associated component:** [Version a Cross-Robot Dataset Manifest](/problems/oxe-version-dataset-manifest). A mixed dataset needs an identity that includes its versions, embodiments and calibration.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -158,7 +166,7 @@ Choose source datasets deliberately rather than letting file counts determine tr
 
 Study **Sample a training mixture** in the [supplemental source card](../../../research/papers/vla-embodied/2023-open-x-embodiment.md); the [canonical website graph](/projects/2024-open-x-embodiment) uses the primary flow.
 
-- **Proposed component, not runnable:** Sample a Balanced Multi-Dataset Mixture.
+- **Runnable paper-associated component:** [Sample a Balanced Multi-Dataset Mixture](/problems/oxe-balanced-dataset-sampling). Large datasets should not automatically dominate every mixed batch.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -170,8 +178,8 @@ Score supported action dimensions and report performance by embodiment and task.
 
 Study **Mask and evaluate transfer** in the [supplemental source card](../../../research/papers/vla-embodied/2023-open-x-embodiment.md); the [canonical website graph](/projects/2024-open-x-embodiment) uses the primary flow.
 
-- **Proposed component, not runnable:** Normalize and Mask Embodiment-Specific Action Spaces.
-- **Proposed component, not runnable:** Compute Per-Embodiment and Transfer Metrics.
+- **Runnable paper-associated component:** [Normalize and Mask Embodiment-Specific Action Spaces](/problems/oxe-normalize-action-spaces). A shared model can reserve channels that some robots do not possess.
+- **Runnable paper-associated component:** [Compute Per-Embodiment and Transfer Metrics](/problems/oxe-embodiment-transfer-metrics). A single average hides whether a shared policy succeeds only on the embodiment it was trained for.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

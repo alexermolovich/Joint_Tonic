@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { backendConnection, WorkspaceAuthError } from "@/lib/backend-connection";
 
 export const runtime = "nodejs";
 
@@ -28,13 +29,13 @@ export async function POST(request: NextRequest) {
       const bounds: [string, number, number][] = [["azimuth", -360, 360], ["elevation", -85, 85], ["distance", .5, 4]];
       if (!c || typeof c !== "object" || Array.isArray(c) || Object.keys(c).length !== 3 || bounds.some(([key, low, high]) => typeof c[key] !== "number" || !Number.isFinite(c[key]) || c[key] < low || c[key] > high)) return respond({ error: "Invalid orbit camera" }, 400);
     }
-    const endpoint = new URL(process.env.SIMULATOR_URL || "http://127.0.0.1:8766");
-    if (endpoint.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].includes(endpoint.hostname)) throw new Error("Simulator must be local");
-    const response = await fetch(new URL("/v1/fr3/frame", endpoint), { method: "POST", headers: { "Content-Type": "application/json", "x-correlation-id": correlationId }, body: JSON.stringify(body), signal: AbortSignal.timeout(30000), cache: "no-store" });
+    const connection = await backendConnection(request, "simulator");
+    const response = await fetch(new URL("/v1/fr3/frame", connection.endpoint), { method: "POST", headers: { ...connection.headers, "x-correlation-id": correlationId }, body: JSON.stringify(body), signal: AbortSignal.timeout(30000), cache: "no-store" });
     const data = await response.json();
     console.info(JSON.stringify({ event: "simulator.frame", correlation_id: correlationId, status: response.status }));
     return respond(data, response.status);
   } catch (error) {
+    if (error instanceof WorkspaceAuthError) return respond({ error: error.message }, error.status);
     if (error instanceof SyntaxError) return respond({ error: "Invalid pose JSON" }, 400);
     console.warn(JSON.stringify({ event: "simulator.unavailable", correlation_id: correlationId }));
     return respond({ error: "MuJoCo is unavailable. Start the local simulator using the setup instructions, then retry." }, 503);

@@ -1,0 +1,83 @@
+{
+  "slug": "openvla-lora-policy-layer",
+  "title": "Add Low-Rank Adaptation to a Policy Layer",
+  "version": "1.0.0",
+  "number": 221,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2024-openvla",
+    "policy-interface"
+  ],
+  "minutes": 40,
+  "framework": "PyTorch",
+  "entrypoint": "lora_policy_linear",
+  "paperIds": [
+    "2024-openvla"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Add Low-Rank Adaptation to a Policy Layer",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Learned feature coordinates; no physical coordinate transform"
+    ],
+    "units": {
+      "features": "dimensionless",
+      "weights": "dimensionless"
+    },
+    "axes": "x(B,T,I), base_weight(O,I), adapter_down(r,I), adapter_up(O,r), output(B,T,O)",
+    "timestamp_assumptions": "Same aligned observation context is supplied; no internal clock",
+    "batching": "Nonempty bounded batch; exact axis bounds in statement"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "exact_fields": [],
+    "public_case_families": [
+      "two-worked-examples",
+      "minimal-shape"
+    ],
+    "hidden_case_families": [
+      "typed-boundary-validation",
+      "noncontiguous-inputs",
+      "independent-oracle",
+      "storage-and-nonmutation",
+      "gradients-where-required",
+      "realistic-scale"
+    ],
+    "evaluator_sha256": "a57ea7135b94b29ff633cdd87768d408e3e549986f99e2acf07b9671c6570e20"
+  },
+  "fixtures": {
+    "source": "Original synthetic inputs",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded contract; source mechanisms and teaching deviations are explicit. No full trained policy or paper benchmark is reproduced.",
+    "primary_urls": [
+      "https://arxiv.org/html/2406.09246v3"
+    ],
+    "paper_card": "research/papers/vla-embodied/2024-openvla.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

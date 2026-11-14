@@ -17,7 +17,9 @@
     "igibson"
   ],
   "runnable_problem_slugs": [
-    "validate-robot-episodes"
+    "validate-robot-episodes",
+    "seeded-visual-randomization",
+    "sample-dynamics-distributions"
   ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
@@ -52,13 +54,15 @@ The implementation path follows **Build an interactive scene → Randomize and o
 
 Source cards: [2020-igibson](../../../research/papers/simulation-sim2real/2020-igibson.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Build an interactive scene** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build a Seeded Visual Randomization Sampler](/problems/seeded-visual-randomization). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -85,6 +89,8 @@ Vary visual and physical conditions while generating sensor data.
 [Study the mechanism and math](/projects/2020-igibson#paper-section-randomize-and-observe).
 
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
+- **Runnable supporting prerequisite:** [Build a Seeded Visual Randomization Sampler](/problems/seeded-visual-randomization). Build a Seeded Visual Randomization Sampler
+- **Runnable supporting prerequisite:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Convert reproducible unit draws into valid, explicitly typed per-episode physical parameter configurations.
 - **Proposed component, not runnable:** Replay Sensor Streams from a Fixed Seed.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

@@ -16,7 +16,7 @@ modalities: ["RGB image", "point prompts", "box prompts", "mask prompts"]
 track_role: "Promptable pixel-level perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace. The SA-1B dataset has separate access terms and is not included here."
-execution_flow: {"title":"Core execution flow","description":"Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.","nodes":[{"id":"stage-1","title":"Encode and cache the image","detail":"Compute reusable spatial image features with a fixed preprocessing transform.","column":0,"row":0,"section":"Encode and cache the image","problem_slugs":[],"planned_problems":["Reuse Image Embeddings Without Stale-Cache Errors"]},{"id":"stage-2","title":"Encode prompts and ambiguity","detail":"Represent positive/negative points, boxes, or masks for the decoder.","column":1,"row":0,"section":"Encode prompts and ambiguity","problem_slugs":[],"planned_problems":["Encode Positive and Negative Point Prompts","Encode a Box Prompt with Positional Features","Transform Prompt Coordinates Through Image Preprocessing"]},{"id":"stage-3","title":"Rank and filter masks","detail":"Use predicted quality and stability while keeping mask geometry explicit.","column":2,"row":0,"section":"Rank and filter masks","problem_slugs":["sam-mask-ranking","sam-stability-overlap-filter"],"planned_problems":["Build a Grounded Segmentation Pipeline and Trace Failures"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"cached features"},{"from":"stage-2","to":"stage-3","label":"candidate masks"}]}
+execution_flow: {"title":"Core execution flow","description":"Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.","nodes":[{"id":"stage-1","title":"Encode and cache the image","detail":"Compute reusable spatial image features with a fixed preprocessing transform.","column":0,"row":0,"section":"Encode and cache the image","problem_slugs":[],"planned_problems":["Reuse Image Embeddings Without Stale-Cache Errors"]},{"id":"stage-2","title":"Encode prompts and ambiguity","detail":"Represent positive/negative points, boxes, or masks for the decoder.","column":1,"row":0,"section":"Encode prompts and ambiguity","problem_slugs":["sam-point-prompt-encoding","sam-box-prompt-encoding"],"planned_problems":["Transform Prompt Coordinates Through Image Preprocessing"]},{"id":"stage-3","title":"Rank and filter masks","detail":"Use predicted quality and stability while keeping mask geometry explicit.","column":2,"row":0,"section":"Rank and filter masks","problem_slugs":["sam-mask-ranking","sam-stability-overlap-filter","grounded-segmentation-failure-trace"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"cached features"},{"from":"stage-2","to":"stage-3","label":"candidate masks"}]}
 ---
 
 ## Core paper explanation
@@ -38,7 +38,7 @@ $$
 The stored feature grid and prompt coordinates must refer to the same transformed image. Caching by filename alone is unsafe if cropping, resizing, or image contents change.
 
 
-**Planned component problems:** Reuse Image Embeddings Without Stale-Cache Errors. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Planned components:** Reuse Image Embeddings Without Stale-Cache Errors. These remain unreviewed ideas without runnable exercises.
 
 ### Encode prompts and ambiguity
 
@@ -51,7 +51,18 @@ $$
 where $F_{\mathrm{up}}$ is the upscaled image feature map and $M_k$ is a mask logit. Multiple $k$ values can represent different valid interpretations of one prompt; they should not be averaged into an arbitrary blended object.
 
 
-**Planned component problems:** Encode Positive and Negative Point Prompts; Encode a Box Prompt with Positional Features; Transform Prompt Coordinates Through Image Preprocessing. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding) · [Encode a Box Prompt with Positional Features](/problems/sam-box-prompt-encoding). Each exercise specifies its bounded scope; diagnostic and simplified variants do not reproduce the full model.
+
+**Planned components:** Transform Prompt Coordinates Through Image Preprocessing. These remain unreviewed ideas without runnable exercises.
+
+#### Implement sparse prompt coordinates and semantics
+
+[Point prompt encoding](/problems/sam-point-prompt-encoding) and [box prompt encoding](/problems/sam-box-prompt-encoding) use supplied positional-frequency and learned type vectors. For pixel-index point $p=(x,y)$ in an already resized image of width $W$ and height $H$,
+$$q=2(p+0.5)/[W,H]-1,\qquad \theta=2\pi qB,\qquad z=[\sin\theta;\cos\theta]+e_{\mathrm{type}}.$$
+Division is coordinatewise; $B\in\mathbb R^{2\times F}$ maps normalized coordinates to $F$ phases and $e_{\mathrm{type}}\in\mathbb R^{2F}$ adds prompt meaning. Channels concatenate all sine values followed by all cosine values. Point types distinguish negative/positive prompts; box types distinguish top-left/bottom-right corners. These dimensionless embeddings preserve location and semantic role separately.
+
+The half-pixel shift, normalized Fourier map and distinct type vectors are checked against the [official prompt encoder](https://github.com/facebookresearch/segment-anything/blob/main/segment_anything/modeling/prompt_encoder.py). Exercises use original code and synthetic parameters; they omit padding tokens, image encoding and mask decoding. A one-pixel image has centered normalized coordinate zero, giving sine zero and cosine one before its type vector is added.
+
 
 ### Rank and filter masks
 
@@ -66,7 +77,7 @@ Define the empty-denominator policy. This measures sensitivity to a small thresh
 
 **Implement this component:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). Each linked exercise implements its stated bounded subcomponent; completing it is not a full-paper reproduction.
 
-**Planned component problems:** Build a Grounded Segmentation Pipeline and Trace Failures. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace). Each exercise specifies its bounded scope; diagnostic and simplified variants do not reproduce the full model.
 
 
 **Runnable component:** [Filter Automatic Masks by Stability and Overlap](/problems/sam-stability-overlap-filter). This uses an explicit binary-mask IoU suppression variant, not the original automatic generator’s box-based NMS.
@@ -74,19 +85,18 @@ Define the empty-denominator policy. This measures sensitivity to a small thresh
 
 ## Implement the components
 
-- **Runnable component:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). This is a bounded synthetic component, not a complete trained model.
+The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
-The component below is runnable. Other component ideas remain planned.
+- [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking) — Easy.
+- [Filter Automatic Masks by Stability and Overlap](/problems/sam-stability-overlap-filter) — Hard.
+- [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding) — Medium.
+- [Encode a Box Prompt with Positional Features](/problems/sam-box-prompt-encoding) — Medium.
+- [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace) — Medium.
 
-**Planned components:**
+**Further ideas outside the approved runnable scope:**
 
 - Reuse Image Embeddings Without Stale-Cache Errors.
-- Encode Positive and Negative Point Prompts.
-- Encode a Box Prompt with Positional Features.
 - Transform Prompt Coordinates Through Image Preprocessing.
-- Build a Grounded Segmentation Pipeline and Trace Failures.
-
-[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
 ## Why this matters on a robot
 

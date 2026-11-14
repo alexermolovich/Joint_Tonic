@@ -172,7 +172,7 @@ Runnable components and supporting prerequisites are attached to their matching 
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 - **Supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate).
 
-**Planned component problems:**
+**Component implementation map:**
 
 - Supporting prerequisite: [Infer a Schema from Robot Episodes](/problems/infer-robot-episode-schema). Uses the bounded contract; no full paper reproduction is claimed.
 

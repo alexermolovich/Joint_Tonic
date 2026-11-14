@@ -45,8 +45,8 @@ execution_flow:
       problem_slugs:
         - validate-robot-episodes
         - map-shared-robot-episode
-      planned_problems:
-        - Detect Dataset-Version and Schema Drift
+        - dataset-version-schema-drift
+      planned_problems: []
     - id: stage-2
       title: Sample a training mixture
       detail: >-
@@ -66,10 +66,10 @@ execution_flow:
       column: 2
       row: 0
       section: Mask and evaluate transfer
-      problem_slugs: []
-      planned_problems:
-        - Mask Unavailable Action Dimensions
-        - Build a Per-Embodiment Transfer Matrix
+      problem_slugs:
+        - mask-unavailable-action-dimensions
+        - per-embodiment-transfer-matrix
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -102,7 +102,7 @@ The acceptance tolerance is a dataset/control requirement, not a universal numbe
 
 - Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
 - Runnable component: [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode). Uses the bounded contract; no full paper reproduction is claimed.
-- Detect Dataset-Version and Schema Drift — unreviewed idea; contract and evaluator required.
+- Runnable component: [Detect Dataset-Version and Schema Drift](/problems/dataset-version-schema-drift). Implements the explicit bounded contract, not the complete source system.
 
 ### Sample a training mixture
 
@@ -132,8 +132,8 @@ Require a nonzero denominator. Masking an unavailable channel excludes it from s
 
 **Component practice**
 
-- Mask Unavailable Action Dimensions — unreviewed idea; contract and evaluator required.
-- Build a Per-Embodiment Transfer Matrix — unreviewed idea; contract and evaluator required.
+- Runnable component: [Mask Unavailable Action Dimensions](/problems/mask-unavailable-action-dimensions). Implements the explicit bounded contract, not the complete source system.
+- Runnable component: [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Implements the explicit bounded contract, not the complete source system.
 
 ## Implement the components
 
@@ -143,11 +143,11 @@ Runnable components and supporting prerequisites are attached to their matching 
 - **Runnable component:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode).
 - **Runnable component:** [Balance a Multi-Dataset Training Mixture](/problems/balance-multidataset-batch).
 
-**Planned component problems:**
+**Component implementation map:**
 
-- Detect Dataset-Version and Schema Drift — unreviewed idea; contract and evaluator required.
-- Mask Unavailable Action Dimensions — unreviewed idea; contract and evaluator required.
-- Build a Per-Embodiment Transfer Matrix — unreviewed idea; contract and evaluator required.
+- Runnable component: [Detect Dataset-Version and Schema Drift](/problems/dataset-version-schema-drift). Implements the explicit bounded contract, not the complete source system.
+- Runnable component: [Mask Unavailable Action Dimensions](/problems/mask-unavailable-action-dimensions). Implements the explicit bounded contract, not the complete source system.
+- Runnable component: [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Implements the explicit bounded contract, not the complete source system.
 
 These exercises implement their stated contracts, not a complete paper reproduction.
 

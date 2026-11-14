@@ -1,0 +1,73 @@
+{
+  "slug": "mask-unavailable-action-dimensions",
+  "title": "Mask Unavailable Action Dimensions",
+  "version": "1.0.0",
+  "number": 330,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "cross-embodiment",
+    "action-masks"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "mask_action_dimensions",
+  "paperIds": [
+    "2024-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Replace unavailable action channels with zeros without letting invalid placeholder values contaminate valid data.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; baseline worker exists",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker limits; verified before publication"
+  },
+  "physical_contract": "Input metadata defines each robot's channels and task protocol. The function preserves supplied meanings; no robot kinematics, coordinate conversion, clock alignment or hardware execution occurs.",
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "different available channels per robot",
+      "masked NaN/infinity placeholders",
+      "empty batch"
+    ],
+    "hidden_case_families": [
+      "all unavailable rows and valid zero",
+      "noncontiguous input/output ownership",
+      "shape/dtype/value bounds"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "2c349dd89bbacab917bed8bc169ee4f780381ac098d6b9275a15e6a21f7733a7"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "mlops-batch5-draft-0.1.0",
+    "evaluator_sha256": null
+  },
+  "provenance": {
+    "authoring_notes": "Open X-Embodiment motivates preserving heterogeneous data meaning and reporting cross-embodiment results. This bounded deterministic interface is an original teaching decomposition, not the full RT-X model, dataset tooling or experimental protocol.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2024-open-x-embodiment.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

@@ -18,7 +18,10 @@
   ],
   "runnable_problem_slugs": [
     "validate-robot-episodes",
-    "map-shared-robot-episode"
+    "map-shared-robot-episode",
+    "window-episode-without-crossing-boundaries",
+    "build-robot-sequence-validity-masks",
+    "per-embodiment-transfer-matrix"
   ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
@@ -53,7 +56,7 @@ The implementation path follows **Unify heterogeneous episodes → Learn interac
 
 Source cards: [2019-robonet](../../../research/papers/mlops-data-deployment/2019-robonet.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +64,9 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -87,6 +93,8 @@ Predict future observations or infer actions between observations.
 
 [Study the mechanism and math](/projects/2019-robonet#paper-section-learn-interaction-models).
 
+- **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
+- **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
 - **Proposed component, not runnable:** Align Actions and Images in a Video Window.
 - **Proposed component, not runnable:** Compute a Masked Video-Prediction Loss.
 
@@ -100,6 +108,7 @@ Separate held-out robots and environments from training coverage.
 
 [Study the mechanism and math](/projects/2019-robonet#paper-section-evaluate-transfer).
 
+- **Runnable supporting prerequisite:** [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Aggregate source-policy and target-robot evaluation evidence into a matrix while distinguishing unmeasured cells.
 - **Proposed component, not runnable:** Measure Cross-Robot Prediction Error.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

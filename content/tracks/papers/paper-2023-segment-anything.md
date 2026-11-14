@@ -19,10 +19,13 @@
     "data engine"
   ],
   "runnable_problem_slugs": [
+    "sam-point-prompt-encoding",
+    "sam-box-prompt-encoding",
     "sam-mask-ranking",
-    "sam-stability-overlap-filter"
+    "sam-stability-overlap-filter",
+    "grounded-segmentation-failure-trace"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,13 +58,15 @@ The implementation path follows **Encode and cache the image → Encode prompts 
 
 Source cards: [2023-segment-anything](../../../research/papers/vision-vlm-3d/2023-segment-anything.md).
 
-**Available now:** 2 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Encode and cache the image** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
+- **Supporting prerequisite:** [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Decode Phrase-Labeled Boxes](/problems/grounding-phrase-box-decoding). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -87,8 +92,8 @@ Represent positive/negative points, boxes, or masks for the decoder.
 
 [Study the mechanism and math](/projects/2023-segment-anything#paper-section-encode-prompts-and-ambiguity).
 
-- **Proposed component, not runnable:** Encode Positive and Negative Point Prompts.
-- **Proposed component, not runnable:** Encode a Box Prompt with Positional Features.
+- **Runnable paper-associated component:** [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding). Encode supplied positive/negative point coordinates with random Fourier features and learned-type vectors.
+- **Runnable paper-associated component:** [Encode a Box Prompt with Positional Features](/problems/sam-box-prompt-encoding). Encode top-left and bottom-right box corners as distinct prompt tokens.
 - **Proposed component, not runnable:** Transform Prompt Coordinates Through Image Preprocessing.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -103,7 +108,7 @@ Use predicted quality and stability while keeping mask geometry explicit.
 
 - **Runnable paper-associated component:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). Rank Candidate Masks with Predicted IoU
 - **Runnable paper-associated component:** [Filter Automatic Masks by Stability and Overlap](/problems/sam-stability-overlap-filter). Filter Automatic Masks by Stability and Overlap
-- **Proposed component, not runnable:** Build a Grounded Segmentation Pipeline and Trace Failures.
+- **Runnable paper-associated component:** [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace). Compose supplied grounding and segmentation outputs while preserving failure reasons per query.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

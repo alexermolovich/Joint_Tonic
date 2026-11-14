@@ -6,6 +6,8 @@ import { findProject, linkedProjectProblems, projectSheet } from "@/lib/projects
 import { Markdown } from "@/components/markdown";
 import { PaperExecutionFlow } from "@/components/paper-execution-flow";
 import { PaperReaderProgress } from "@/components/paper-reader-progress";
+import { getPaperIntegration } from "@/lib/integrated-projects";
+import { IntegratedProject } from "@/components/integrated-project";
 import "@/components/projects.css";
 import "@/components/paper-reader.css";
 
@@ -24,6 +26,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const problems = linkedProjectProblems(paper, allProblems);
   const relatedTracks = tracks.filter(track => track.slugs.some(id => problems.some(problem => problem.slug === id)));
   const sheet = projectSheet(paper.category);
+  const integration = getPaperIntegration(paper.id);
   return <main id="main" className="paper-reader-page">
     <div className="paper-reader-content">
       <header className="paper-detail-header">
@@ -37,6 +40,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </div>
       </header>
       {paper.executionFlow && <PaperExecutionFlow flow={paper.executionFlow} paperId={paper.id} problems={allProblems} />}
+      {integration && <IntegratedProject project={integration} />}
       <section className="paper-reader-material" aria-label="Paper explanation and mathematics">
         {paper.executionFlow ? <Markdown paperAnchors>{paper.content.replace(/^# [^\n]+\r?\n/, "")}</Markdown> : <div className="project-preparing"><h2>Project in preparation</h2><p>The source paper is available above. We are developing an original explanation with mathematics, a model execution graph, and links to practical exercises. Available related problems appear below.</p></div>}
       </section>

@@ -77,7 +77,7 @@ export function AccountPage({ resetPassword = false }: { resetPassword?: boolean
         {user && <div className="jt-auth-actions"><Link className="text-link" href="/auth/reset-password">Change password</Link><button type="button" className="button secondary" disabled={busy} onClick={() => { void act(async () => { const { error } = await getSupabaseBrowserClient()!.auth.signOut({ scope: "local" }); if (error) throw error; setPassword(""); setMessage("Signed out on this device."); }); }}>Sign out</button></div>}
       </>}
     </section>}
-    <p className="jt-auth-note">Your account and display name are saved with Supabase. Drafts, notes, submissions, and progress still belong to this browser workspace; signing in does not upload or transfer them.</p>
+    <p className="jt-auth-note">Your account has a separate saved workspace. Drafts, notes and bookmarks sync when connected; verified submissions and progress come from the evaluation service. Signed-out browser work is never imported automatically.</p>
     <Link className="text-link" href="/progress">View this device’s progress</Link>
   </main>;
 }

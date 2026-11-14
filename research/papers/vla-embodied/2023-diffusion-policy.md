@@ -1,37 +1,129 @@
 ---
 schema_version: 1
-paper_id: "2023-diffusion-policy"
-title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+paper_id: 2023-diffusion-policy
+title: 'Diffusion Policy: Visuomotor Policy Learning via Action Diffusion'
 authors:
-  - "Cheng Chi"
-  - "Zhenjia Xu"
-  - "Siyuan Feng"
-  - "Eric Cousineau"
-  - "Yilun Du"
-  - "Benjamin Burchfiel"
-  - "Russ Tedrake"
-  - "Shuran Song"
+  - Cheng Chi
+  - Zhenjia Xu
+  - Siyuan Feng
+  - Eric Cousineau
+  - Yilun Du
+  - Benjamin Burchfiel
+  - Russ Tedrake
+  - Shuran Song
 year: 2023
-venue_or_status: "RSS 2023; later IJRR"
-primary_url: "https://arxiv.org/abs/2303.04137"
-pdf_url: "https://arxiv.org/pdf/2303.04137"
-local_pdf: "./2023-diffusion-policy.pdf"
-sha256: "b65c474b696a4802d8f1457d86b637ce2c5521412570d3aa928cd54563babc8f"
+venue_or_status: RSS 2023; later IJRR
+primary_url: 'https://arxiv.org/abs/2303.04137'
+pdf_url: 'https://arxiv.org/pdf/2303.04137'
+local_pdf: ./2023-diffusion-policy.pdf
+sha256: b65c474b696a4802d8f1457d86b637ce2c5521412570d3aa928cd54563babc8f
 bytes: 6192199
 pages: 19
 topics:
-  - "diffusion policy"
-  - "visuomotor control"
-  - "receding horizon"
-  - "multimodal actions"
+  - diffusion policy
+  - visuomotor control
+  - receding horizon
+  - multimodal actions
 modalities:
-  - "RGB images"
-  - "robot state"
-  - "continuous action sequences"
-track_role: "core"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"From observations to a denoised action chunk","description":"Training constructs noisy demonstrations and learns to predict their noise. Inference starts from fresh noise, repeatedly denoises, and executes only a short action prefix before observing again.","nodes":[{"id":"observation-context","title":"Encode observations","detail":"Images and robot state become conditioning features shared across the denoising steps.","column":0,"row":0,"section":"Observation conditioning","problem_slugs":[],"planned_problems":["Encode Synchronized Observations for an Action Denoiser"]},{"id":"forward-noising","title":"Noise a demonstration","detail":"Gather one cumulative schedule value per batch item and broadcast over the action horizon.","column":0,"row":1,"section":"Forward noising","problem_slugs":["diffusion-action-noising"],"planned_problems":[]},{"id":"conditional-denoiser","title":"Predict the noise","detail":"A conditional network receives a noisy action chunk, diffusion index, and observation features.","column":1,"row":0,"section":"Conditional denoiser","problem_slugs":[],"planned_problems":["Build a Conditional Action Denoiser"]},{"id":"training-loss","title":"Fit the denoiser","detail":"Training compares predicted noise with the noise used to corrupt the demonstration.","column":1,"row":1,"section":"Training objective","problem_slugs":["diffusion-conditional-noise-loss"],"planned_problems":[]},{"id":"reverse-sampling","title":"Denoise an action chunk","detail":"Inference starts from Gaussian noise and applies the trained network through the reverse schedule.","column":2,"row":0,"section":"Reverse sampling","problem_slugs":[],"planned_problems":["Sample an Action Trajectory with DDPM Steps"]},{"id":"receding-horizon","title":"Execute and replan","detail":"Execute a short valid prefix, capture new observations, and plan the next overlapping chunk.","column":2,"row":1,"section":"Receding-horizon execution","problem_slugs":["diffusion-receding-horizon-window"],"planned_problems":["Budget Denoising Steps Against Control Frequency"]}],"edges":[{"from":"observation-context","to":"conditional-denoiser","label":"context"},{"from":"forward-noising","to":"conditional-denoiser","label":"noisy actions"},{"from":"conditional-denoiser","to":"training-loss","label":"predicted noise"},{"from":"forward-noising","to":"training-loss","label":"target noise"},{"from":"conditional-denoiser","to":"reverse-sampling","label":"trained network"},{"from":"reverse-sampling","to":"receding-horizon","label":"action chunk"}]}
+  - RGB images
+  - robot state
+  - continuous action sequences
+track_role: core
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: From observations to a denoised action chunk
+  description: >-
+    Training constructs noisy demonstrations and learns to predict their noise.
+    Inference starts from fresh noise, repeatedly denoises, and executes only a
+    short action prefix before observing again.
+  nodes:
+    - id: observation-context
+      title: Encode observations
+      detail: >-
+        Images and robot state become conditioning features shared across the
+        denoising steps.
+      column: 0
+      row: 0
+      section: Observation conditioning
+      problem_slugs: []
+      planned_problems:
+        - Encode Synchronized Observations for an Action Denoiser
+    - id: forward-noising
+      title: Noise a demonstration
+      detail: >-
+        Gather one cumulative schedule value per batch item and broadcast over
+        the action horizon.
+      column: 0
+      row: 1
+      section: Forward noising
+      problem_slugs:
+        - diffusion-action-noising
+      planned_problems: []
+    - id: conditional-denoiser
+      title: Predict the noise
+      detail: >-
+        A conditional network receives a noisy action chunk, diffusion index,
+        and observation features.
+      column: 1
+      row: 0
+      section: Conditional denoiser
+      problem_slugs: []
+      planned_problems:
+        - Build a Conditional Action Denoiser
+    - id: training-loss
+      title: Fit the denoiser
+      detail: >-
+        Training compares predicted noise with the noise used to corrupt the
+        demonstration.
+      column: 1
+      row: 1
+      section: Training objective
+      problem_slugs:
+        - diffusion-conditional-noise-loss
+      planned_problems: []
+    - id: reverse-sampling
+      title: Denoise an action chunk
+      detail: >-
+        Inference starts from Gaussian noise and applies the trained network
+        through the reverse schedule.
+      column: 2
+      row: 0
+      section: Reverse sampling
+      problem_slugs:
+        - diffusion-ddpm-action-sampler
+      planned_problems: []
+    - id: receding-horizon
+      title: Execute and replan
+      detail: >-
+        Execute a short valid prefix, capture new observations, and plan the
+        next overlapping chunk.
+      column: 2
+      row: 1
+      section: Receding-horizon execution
+      problem_slugs:
+        - diffusion-receding-horizon-window
+        - diffusion-denoising-budget
+      planned_problems: []
+  edges:
+    - from: observation-context
+      to: conditional-denoiser
+      label: context
+    - from: forward-noising
+      to: conditional-denoiser
+      label: noisy actions
+    - from: conditional-denoiser
+      to: training-loss
+      label: predicted noise
+    - from: forward-noising
+      to: training-loss
+      label: target noise
+    - from: conditional-denoiser
+      to: reverse-sampling
+      label: trained network
+    - from: reverse-sampling
+      to: receding-horizon
+      label: action chunk
 ---
 ## Core paper explanation
 
@@ -116,7 +208,7 @@ $$
 {D\sum_{b,h}M_{bh}}.
 $$
 
-This expression assumes at least one valid horizon slot; an all-padding batch must be rejected or explicitly skipped. The target is $E$, not the corrupted action and not the clean action. Training averages this loss over demonstrations, sampled noise, and diffusion indices. The current problem prepares the input/target pair; this loss and parameter optimization remain planned components.
+This expression assumes at least one valid horizon slot; an all-padding batch must be rejected or explicitly skipped. The target is $E$, not the corrupted action and not the clean action. Training averages this loss over demonstrations, sampled noise, and diffusion indices. The forward-noising exercise prepares the input/target pair; the linked noise-loss exercise evaluates this objective with supplied predictions. Training a complete conditional denoiser and optimizing its parameters remain outside those bounded exercises.
 
 <!-- joint-tonic-component:training-loss -->
 - **Implement this component:** [Compute a Conditional Noise-Prediction Loss](/problems/diffusion-conditional-noise-loss).
@@ -138,7 +230,7 @@ $$
 where $Z_k$ is fresh standard-normal noise and $\sigma_k$ is set by the chosen reverse schedule. The final step normally omits stochastic noise. This is a clear reference parameterization, not a requirement to use this sampler for every Diffusion Policy deployment: accelerated sampling schedules can change the update and number of network calls. Sampler, schedule, prediction type, and checkpoint must agree.
 
 <!-- joint-tonic-component:reverse-sampling -->
-- **Planned component:** Sample an Action Trajectory with DDPM Steps. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Sample an Action Trajectory with DDPM Steps](/problems/diffusion-ddpm-action-sampler). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ### Receding-horizon execution
@@ -153,7 +245,7 @@ For $H_p=16$, $H_a=4$, and $\Delta t=0.05$ seconds, the action chunk spans $0.8$
 
 <!-- joint-tonic-component:receding-horizon -->
 - **Implement this component:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window).
-- **Planned component:** Budget Denoising Steps Against Control Frequency. This is an idea or blueprint, not a runnable exercise yet.
+- **Implement this bounded component:** [Budget Denoising Steps Against Control Frequency](/problems/diffusion-denoising-budget). See its contract for deliberate teaching simplifications.
 <!-- /joint-tonic-component -->
 
 ## Worked tensor example
@@ -174,13 +266,16 @@ Action-sequence generation can represent multimodal demonstrations while keeping
 
 ## Implement the components
 
+- [Sample an Action Trajectory with DDPM Steps](/problems/diffusion-ddpm-action-sampler)
+- [Budget Denoising Steps Against Control Frequency](/problems/diffusion-denoising-budget)
+
 Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
 - [Add Noise to an Action Sequence](/problems/diffusion-action-noising)
 - [Compute a Conditional Noise-Prediction Loss](/problems/diffusion-conditional-noise-loss)
 - [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window)
 
-Planned components: Encode Synchronized Observations for an Action Denoiser; Build a Conditional Action Denoiser; Sample an Action Trajectory with DDPM Steps; Budget Denoising Steps Against Control Frequency. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
+Remaining proposed components: Encode Synchronized Observations for an Action Denoiser; Build a Conditional Action Denoiser. These are not published exercises; source preparation and a reviewed blueprint are still required.
 
 [Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 

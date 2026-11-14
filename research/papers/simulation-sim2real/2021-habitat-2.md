@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Configure a rearrangement task","detail":"Set object, receptacle, articulation, and robot states.","column":0,"row":0,"section":"Configure a rearrangement task","problem_slugs":[],"planned_problems":["Construct a Rearrangement Goal Graph","Validate Object Reset States"]},{"id":"stage-2","title":"Compose skills","detail":"Transfer control between navigation, grasping, and placement.","column":1,"row":0,"section":"Compose skills","problem_slugs":[],"planned_problems":["Validate Skill Preconditions in a Rearrangement Plan"]},{"id":"stage-3","title":"Evaluate long-horizon outcomes","detail":"Measure task completion and diagnose handoff failures.","column":2,"row":0,"section":"Evaluate long-horizon outcomes","problem_slugs":[],"planned_problems":["Score Chained Task Success"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"task state"},{"from":"stage-2","to":"stage-3","label":"skill sequence"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Configure a rearrangement task", "detail": "Set object, receptacle, articulation, and robot states.", "column": 0, "row": 0, "section": "Configure a rearrangement task", "problem_slugs": [], "planned_problems": ["Construct a Rearrangement Goal Graph", "Validate Object Reset States"]}, {"id": "stage-2", "title": "Compose skills", "detail": "Transfer control between navigation, grasping, and placement.", "column": 1, "row": 0, "section": "Compose skills", "problem_slugs": ["slice-infrastructure-release-gate", "sim-to-real-robustness-gate"], "planned_problems": ["Validate Skill Preconditions in a Rearrangement Plan"]}, {"id": "stage-3", "title": "Evaluate long-horizon outcomes", "detail": "Measure task completion and diagnose handoff failures.", "column": 2, "row": 0, "section": "Evaluate long-horizon outcomes", "problem_slugs": [], "planned_problems": ["Score Chained Task Success"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "task state"}, {"from": "stage-2", "to": "stage-3", "label": "skill sequence"}]}
 ---
 
 ## Core paper explanation
@@ -42,6 +42,19 @@ A target can require $\|p_o-p_o^*\|_2<\epsilon$ together with predicates for pla
 
 For skill $k$, a termination set $\mathcal T_k$ must produce states inside the next skill's valid initiation set $\mathcal I_{k+1}$. The inclusion $\mathcal T_k\subseteq\mathcal I_{k+1}$ is an ideal compositional contract, not an automatic property of independently trained skills.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Composition depends on conditional success
+
+Let $S_k$ denote success of required skill k in an ordered sequence of K skills. The chain rule gives
+
+$$P(S_1\cap\cdots\cap S_K)=\prod_{k=1}^{K}P(S_k\mid S_1,\ldots,S_{k-1}).$$
+
+This identity does not assume independent skills. Multiplying isolated benchmark rates generally estimates a different quantity, because successful navigation produces a particular distribution of manipulation start states. If navigation succeeds with probability 0.9 and grasping succeeds with probability 0.8 conditional on that navigation outcome, joint success is 0.72. An isolated grasp rate of 0.95 at hand-picked starts cannot replace the conditional 0.8.
+
+The termination/initiation-set inclusion above is an ideal contract; practical systems must measure handoff failures. [Slice release gates](/problems/slice-infrastructure-release-gate) and [robustness evidence gates](/problems/sim-to-real-robustness-gate) practice explicit coverage and threshold checks, not skill planning or a proof of safe composition.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

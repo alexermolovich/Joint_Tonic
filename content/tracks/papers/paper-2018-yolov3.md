@@ -18,7 +18,9 @@
   ],
   "runnable_problem_slugs": [
     "box-iou-broadcast",
-    "class-aware-nms"
+    "class-aware-nms",
+    "detection-precision-recall-map",
+    "detector-accuracy-latency-frontier"
   ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
@@ -53,7 +55,7 @@ The implementation path follows **Decode anchor parameters → Merge prediction 
 
 Source cards: [2018-yolov3](../../../research/papers/perception-3d/2018-yolov3.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +63,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Run Class-Aware Non-Maximum Suppression](/problems/class-aware-nms). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Evaluate Detection with IoU, Precision-Recall, and mAP](/problems/detection-precision-recall-map). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Benchmark Detector Accuracy Against Edge Latency](/problems/detector-accuracy-latency-frontier). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -100,6 +104,8 @@ Use logistic class scores and objectness to filter candidate boxes.
 
 - **Runnable supporting prerequisite:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). Build a pairwise overlap matrix for two sets of image-space boxes.
 - **Runnable supporting prerequisite:** [Run Class-Aware Non-Maximum Suppression](/problems/class-aware-nms). Suppress redundant same-class boxes with deterministic greedy ordering.
+- **Runnable supporting prerequisite:** [Evaluate Detection with IoU, Precision-Recall, and mAP](/problems/detection-precision-recall-map). Evaluate class-aware image-local detection precision/recall and interpolated AP at ONE IoU threshold.
+- **Runnable supporting prerequisite:** [Benchmark Detector Accuracy Against Edge Latency](/problems/detector-accuracy-latency-frontier). Find accuracy/latency Pareto candidates and choose a feasible detector from supplied measurements.
 - **Proposed component, not runnable:** Construct objectness and independent class targets.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

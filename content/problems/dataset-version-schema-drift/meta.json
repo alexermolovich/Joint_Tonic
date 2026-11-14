@@ -1,0 +1,73 @@
+{
+  "slug": "dataset-version-schema-drift",
+  "title": "Detect Dataset-Version and Schema Drift",
+  "version": "1.0.0",
+  "number": 332,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "dataset-versioning",
+    "schema-drift",
+    "physical-metadata"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "dataset_contract_drift",
+  "paperIds": [
+    "2024-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Report version and physical-schema changes without mistaking a matching shape for semantic compatibility.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; baseline worker exists",
+    "dependencies": {},
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker limits; verified before publication"
+  },
+  "physical_contract": "Input metadata defines each robot's channels and task protocol. The function preserves supplied meanings; no robot kinematics, coordinate conversion, clock alignment or hardware execution occurs.",
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "version plus unit/frame change",
+      "added and removed datasets/features",
+      "identical snapshots"
+    ],
+    "hidden_case_families": [
+      "one reason per changed field and sorted order",
+      "shape/dtype distinctions",
+      "malformed snapshot/schema validation",
+      "empty snapshots and preserved inputs"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "275fa864621b4f6e1241a0b2f84acfd7a0dd4a2612a26819cd53a7a36207d937"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "mlops-batch5-draft-0.1.0",
+    "evaluator_sha256": null
+  },
+  "provenance": {
+    "authoring_notes": "Open X-Embodiment motivates preserving heterogeneous data meaning and reporting cross-embodiment results. This bounded deterministic interface is an original teaching decomposition, not the full RT-X model, dataset tooling or experimental protocol.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2024-open-x-embodiment.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

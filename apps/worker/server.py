@@ -61,7 +61,7 @@ def validate_report(report, expected_tests):
 
 def save(job):
     target = STORE / (job['id'] + '.json')
-    temp = target.with_suffix('.tmp')
+    temp = target.with_suffix('.' + uuid4().hex + '.tmp')
     temp.write_text(json.dumps(job), encoding='utf-8')
     temp.replace(target)
 

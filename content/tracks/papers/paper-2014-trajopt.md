@@ -18,9 +18,10 @@
     "sequential convex optimization"
   ],
   "runnable_problem_slugs": [
-    "planar-two-link-ik"
+    "planar-two-link-ik",
+    "segment-occupancy-cell-check"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,13 +54,14 @@ The implementation path follows **Score a trajectory → Linearize signed-distan
 
 Source cards: [2014-trajopt](../../../research/papers/planning-control-ik/2014-trajopt.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Score a trajectory** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Solve Closed-Form IK for a Planar Two-Link Arm](/problems/planar-two-link-ik). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Check a Segment Against Occupancy Cells](/problems/segment-occupancy-cell-check). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -99,7 +101,7 @@ Check swept motion. See the original explanation and component status below.
 
 [Study the mechanism and math](/projects/2014-trajopt#paper-section-check-swept-motion).
 
-- **Proposed component, not runnable:** Check a Segment Against Occupancy Cells.
+- **Runnable supporting prerequisite:** [Check a Segment Against Occupancy Cells](/problems/segment-occupancy-cell-check). Check a continuous point-robot segment against closed occupied grid cells, including grazing contact.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

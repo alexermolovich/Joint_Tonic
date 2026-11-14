@@ -1,6 +1,7 @@
 """Loopback-only, bounded MuJoCo forward-kinematics renderer. No learner code."""
 import base64
 import hashlib
+import hmac
 import io
 import json
 import math
@@ -153,6 +154,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def local_request(self):
         try:
+            token = os.environ.get("SIMULATOR_SERVICE_TOKEN", "")
+            if token:
+                # An authenticated web proxy owns identity; no learner code enters this service.
+                return len(token) >= 32 and hmac.compare_digest(self.headers.get("Authorization", ""), "Bearer " + token)
             host = urlsplit("http://" + self.headers.get("Host", "")).hostname
             origin = self.headers.get("Origin")
             return host in {"localhost", "127.0.0.1", "::1"} and (not origin or origin in {

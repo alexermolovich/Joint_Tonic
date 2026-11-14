@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Represent both agents","detail":"Track robot, human, and shared scene state.","column":0,"row":0,"section":"Represent both agents","problem_slugs":[],"planned_problems":["Synchronize Human and Robot Agent States"]},{"id":"stage-2","title":"Coordinate interaction","detail":"Navigate or rearrange while responding to a partner.","column":1,"row":0,"section":"Coordinate interaction","problem_slugs":[],"planned_problems":["Measure Human-Robot Proximity Events"]},{"id":"stage-3","title":"Evaluate collaboration","detail":"Measure task outcomes with unseen partners and human participants.","column":2,"row":0,"section":"Evaluate collaboration","problem_slugs":[],"planned_problems":["Evaluate a Cooperative Interaction Episode"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"joint scene"},{"from":"stage-2","to":"stage-3","label":"interaction episodes"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Represent both agents", "detail": "Track robot, human, and shared scene state.", "column": 0, "row": 0, "section": "Represent both agents", "problem_slugs": [], "planned_problems": ["Synchronize Human and Robot Agent States"]}, {"id": "stage-2", "title": "Coordinate interaction", "detail": "Navigate or rearrange while responding to a partner.", "column": 1, "row": 0, "section": "Coordinate interaction", "problem_slugs": [], "planned_problems": ["Measure Human-Robot Proximity Events"]}, {"id": "stage-3", "title": "Evaluate collaboration", "detail": "Measure task outcomes with unseen partners and human participants.", "column": 2, "row": 0, "section": "Evaluate collaboration", "problem_slugs": ["shift-bucket-performance", "scenario-coverage-confidence"], "planned_problems": ["Evaluate a Cooperative Interaction Episode"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "joint scene"}, {"from": "stage-2", "to": "stage-3", "label": "interaction episodes"}]}
 ---
 
 ## Core paper explanation
@@ -49,6 +49,19 @@ A diagnostic separation is $d_t=\|p_t^R-p_t^H\|_2$ in meters. Distance alone is 
 
 Report completion and interaction failures by partner type. A teaching average $\mathbb E_{h\sim p(h)}[S\mid h]$ depends on the tested partner distribution $p(h)$. Efficient completion does not establish comfort or social acceptability; those require their own evaluation.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### A partner mixture changes the reported result
+
+Let partner class h have declared deployment weight $w_h\ge0$, with $\sum_hw_h=1$, and measured conditional success $\widehat p_h$. An original evaluation formalization is
+
+$$\widehat p_{\mathrm{mix}}=\sum_hw_h\widehat p_h.$$
+
+For two partner classes with success 0.9 and 0.5, equal weights yield 0.7; weights 0.8/0.2 yield 0.82. Reporting only the pooled score can conceal a failure for the less frequent partner class. Neither score captures comfort, yielding behavior, or collision risk without separate metrics.
+
+An instantaneous separation $d_t=\|p_t^R-p_t^H\|_2$ uses robot/human positions in the same world frame, in metres. A minimum-distance threshold is an operational diagnostic, not a universal social-safety boundary. [Performance by shift bucket](/problems/shift-bucket-performance) and [scenario coverage](/problems/scenario-coverage-confidence) implement bounded per-slice summaries; partner policy design remains outside those exercises.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

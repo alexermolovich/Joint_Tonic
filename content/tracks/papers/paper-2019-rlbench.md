@@ -17,7 +17,10 @@
     "rlbench"
   ],
   "runnable_problem_slugs": [
-    "validate-robot-episodes"
+    "validate-robot-episodes",
+    "time-parameterized-trajectory",
+    "joint-limit-collision-ik-candidates",
+    "scenario-coverage-confidence"
   ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
@@ -52,13 +55,16 @@ The implementation path follows **Instantiate a task variation → Generate demo
 
 Source cards: [2019-rlbench](../../../research/papers/simulation-sim2real/2019-rlbench.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Instantiate a task variation** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Enforce Joint Limits and Collision Constraints in IK](/problems/joint-limit-collision-ik-candidates). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -85,6 +91,8 @@ Use authored waypoints and motion planning to collect trajectories.
 [Study the mechanism and math](/projects/2019-rlbench#paper-section-generate-demonstrations).
 
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
+- **Runnable supporting prerequisite:** [Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory). Sample a piecewise-linear joint trajectory and its segment velocity at requested times.
+- **Runnable supporting prerequisite:** [Enforce Joint Limits and Collision Constraints in IK](/problems/joint-limit-collision-ik-candidates). Reject planar IK candidates violating joint limits or link-obstacle clearance, then rank the survivors.
 - **Proposed component, not runnable:** Validate Demonstration Waypoints.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -97,6 +105,7 @@ Measure task success under the declared observation and action interface.
 
 [Study the mechanism and math](/projects/2019-rlbench#paper-section-evaluate-held-out-behavior).
 
+- **Runnable supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Estimate Scenario Coverage and Confidence Intervals
 - **Proposed component, not runnable:** Score Multi-Stage Task Completion.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

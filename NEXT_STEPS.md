@@ -1,17 +1,24 @@
-# Current preview and next step
+# Current release work
 
-The Tracks catalog now keeps the three introductory paths and adds one paper track per canonical source. Search papers or component names, filter by topic/availability, and open `/tracks/paper-{paper-id}` for prerequisites, runnable exercises, proposed steps and a planned integration/evaluation/reproducibility assessment. The left tree groups paper tracks by topic. Full Markdown plans and the grouped inventory live in `content/tracks/papers/` and `content/PAPER_TRACKS.md`; available exercise progress never counts unfinished assessments as complete.
+The original 190 named curriculum problems are implemented. The current checkpoint has 209 runnable packages: the original193, four bounded capstones and12RL additions including a tiny PPO controller integration. The reviewed expansion is indexed in CURRICULUM.md section7; pending paper ideas remain explicitly tracked in research/IMPLEMENTATION_BACKLOG.md.
 
-Implemented locally: Gruvbox Dark, Slate Dark, Warm Light, and optional Graphite themes; a shared left navigation tree; project and paper views; and Theory inside the left problem pane with the editor visible on the right. The runnable catalog is expanding beyond the original ten; current counts and file links are generated in `content/AUTHORING_STATUS.md`. Learning paths show solved/difficulty counts and the user's robot-arm image on the VLM/VLA card. Progress uses actual local learning statistics. Joint Tonic retains its own branding, copy, diagrams, and problem content.
+## Implemented in this release pass
 
-All 157 paper cards now have original explanations, component mathematics, execution graphs, and source/problem links (156 distinct papers). Every explained flow stage has a runnable exercise or an explicitly planned component idea. The graph exposes direct implementation links and stage exercise lists; planned work never opens a nonexistent problem. See `research/FLOW_PROBLEM_MAP.md` for the complete generated mapping and `research/EXPLANATION_STATUS.md` for verification and limitations.
+- Account-scoped draft, note and bookmark sync with Supabase Auth/RLS, revision conflicts, guest isolation and quota recovery. Database migrations and published catalog versions are prerequisites for hosted use.
+- Service-only atomic evaluation history and verified progress recording; browser claims cannot create scores. The worker reports through the authenticated web control plane and has no general database key.
+- Four runnable capstones and a PPO paper integration, each with original theory, evaluation/failure cases and a reproducibility template. Projects and Tracks distinguish runnable integrations from proposals.
+- A prepared authenticated Linux backend topology and experimental data-only grader. The existing local native runner remains available.
 
-Current work: three implementation agents own perception, VLA, and robotics MLOps, while the main agent implements robotics foundations and integrates the catalog. Each batch receives independent cross-review and focused isolated Run/Submit checks. The complete 189-item scope and file links are in `content/AUTHORING_STATUS.md`; remaining foundations and capstones stay visible in that queue. Every runnable package includes original math-rich theory, a visual trace/table, worked examples, starter/reference code, and public/hidden tests. Drafts remain distinct from runnable content.
+## Still in progress
 
-Refresh the board with `node scripts/update-authoring-status.mjs`; validate draft structure and math with `node scripts/validate-drafts.mjs`. Those checks do not replace source fidelity, numerical-example, or pedagogy review.
+- Additional paper-component batches: research-curator owns RL/humanoid and registry/source review; perception agent owns geometry/planning; MLOps agent owns data/deployment/simulation. The backlog contains hundreds of proposed titles; reviewed reuse and publication reduce it explicitly.
+- Further paper-specific integrations. One executable PPO paper project is available; the other paper integration proposals are not automatically complete because atomic problems exist.
+- A production grading boundary compatible with native mutation/aliasing/autograd contracts. The experimental value-only transport cannot qualify the existing catalog by weakening those guarantees. See deploy/README.md.
+- Applying hosted Supabase migrations/catalog: CLI authentication or a database connection is still required. A publishable key alone cannot apply schema changes.
+- Selecting the Linux backend host and qualifying its actual image, containment and cleanup. The user requested deployment preparation and will choose hosting.
 
-Validate all flow sections, runnable links, planned titles and stage coverage with `npm run validate:paper-links`. Add `-- --write` to regenerate the complete Markdown map. The six new PDFs in the balanced expansion remain local authoring references; their source and integrity records are in `research/manifests/balanced-expansion-156.md`.
+## Verification and publishing
 
-Issue workflow: scouts coordinate findings; a dedicated worker fixes one issue on an isolated branch, prepares a PR, and the main agent reviews focused checks and merges ready fixes under the user's authorization. The content-validator fix in PR #3 has been reviewed and merged into `main` at `63f77ef`.
+The four capstones passed actual Run/Submit, starter and mechanism-mutant checks and independent review. The first12RL additions passed their focused isolated checks. Account sync passed browser conflict/account-switch tests, unit/auth tests and44 PostgreSQL assertions in an isolated PGlite database. Hosted PostgREST/migration behavior remains unverified until connected. The209-problem content validator, five-project validator, paper-track/link validators and production build pass at this checkpoint.
 
-GitHub issue/PR posting currently has no available authenticated interface. An earlier credential-access request was rejected by automatic approval review; that method is not retried. Concrete local issue drafts are in `docs/issues/`. The GR00T loss-objective correction is pushed on `codex/gr00t-flow-objective` at `12fb5c3`, with PR text in its isolated worktree. A pushed branch is not an opened or merged PR.
+GitHub issue/PR posting has no authenticated interface in this workspace. Keep concrete issue drafts without retrying the previously rejected credential-access method. Ordinary Git commit/push remains available. A local fix, pushed branch and merged PR are different states; do not conflate them.

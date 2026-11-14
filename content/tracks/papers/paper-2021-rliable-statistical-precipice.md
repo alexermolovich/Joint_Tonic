@@ -19,9 +19,11 @@
     "performance profiles"
   ],
   "runnable_problem_slugs": [
-    "edge-inference-release-gate"
+    "robot-episode-confidence-intervals",
+    "edge-inference-release-gate",
+    "slice-metrics-regressions"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,13 +56,15 @@ The implementation path follows **Preserve task and seed strata → Aggregate ro
 
 Source cards: [2021-rliable-statistical-precipice](../../../research/papers/mlops-data-deployment/2021-rliable-statistical-precipice.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Preserve task and seed strata** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
+- **Supporting prerequisite:** [Compute Confidence Intervals Across Robot Episodes](/problems/robot-episode-confidence-intervals). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Compare Slice Metrics Without Hiding Regressions](/problems/slice-metrics-regressions). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -74,7 +78,7 @@ Preserve task and seed strata. See the original explanation and component status
 
 [Study the mechanism and math](/projects/2021-rliable-statistical-precipice#paper-section-preserve-task-and-seed-strata).
 
-- **Proposed component, not runnable:** Compute Confidence Intervals Across Robot Episodes.
+- **Runnable supporting prerequisite:** [Compute Confidence Intervals Across Robot Episodes](/problems/robot-episode-confidence-intervals). Compute Confidence Intervals Across Robot Episodes
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -99,7 +103,7 @@ Compare distributions and uncertainty. See the original explanation and componen
 [Study the mechanism and math](/projects/2021-rliable-statistical-precipice#paper-section-compare-distributions-and-uncertainty).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Compare Slice Metrics Without Hiding Regressions.
+- **Runnable supporting prerequisite:** [Compare Slice Metrics Without Hiding Regressions](/problems/slice-metrics-regressions). Compare Slice Metrics Without Hiding Regressions
 - **Proposed component, not runnable:** Bootstrap a Stratified Performance Profile.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

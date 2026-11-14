@@ -1,101 +1,93 @@
 ---
-{
-  "schema_version": 1,
-  "paper_id": "2024-mobile-aloha",
-  "title": "Mobile ALOHA: Learning Bimanual Mobile Manipulation with Low-Cost Whole-Body Teleoperation",
-  "authors": [
-    "Zipeng Fu",
-    "Tony Z. Zhao",
-    "Chelsea Finn"
-  ],
-  "year": 2024,
-  "venue_or_status": "arXiv2024 v1",
-  "primary_url": "https://arxiv.org/abs/2401.02117",
-  "pdf_url": "https://arxiv.org/pdf/2401.02117v1",
-  "local_pdf": "./2024-mobile-aloha.pdf",
-  "sha256": "ad457dae227c27b0c2a15badfea5abbc6b0802877b25feceedeb770f0ebdb604",
-  "bytes": 4357808,
-  "pages": 20,
-  "topics": [
-    "mobile manipulation",
-    "bimanual imitation learning",
-    "whole-body teleoperation"
-  ],
-  "modalities": [
-    "multi-camera RGB",
-    "joint states",
-    "base commands",
-    "action chunks"
-  ],
-  "track_role": "supporting",
-  "open_access_status": "open-access-preprint",
-  "redistribution_note": "Local research reference only. Open-access source verified; downstream redistribution rights have not been audited. The PDF is not a public product asset.",
-  "acquired_on": "2026-11-13",
-  "source_verification": "Primary title/authors and version checked; PDF signature, all-page parser readability, first-page visual render, count and SHA-256 validated.",
-  "execution_flow": {
-    "title": "Selected mechanism and implementation path",
-    "description": "A whole-body teleoperation and imitation-learning system combining bimanual arm control with mobile-base commands, with co-training from stationary ALOHA demonstrations.",
-    "nodes": [
-      {
-        "id": "align",
-        "title": "Align whole-body demonstrations",
-        "detail": "Align whole-body demonstrations. See the original explanation and component status below.",
-        "column": 0,
-        "row": 0,
-        "section": "Align whole-body demonstrations",
-        "problem_slugs": [
-          "interpolate-joint-state",
-          "validate-robot-episodes"
-        ],
-        "planned_problems": [
-          "Normalize Heterogeneous Robot Observation Schemas"
-        ]
-      },
-      {
-        "id": "learn",
-        "title": "Learn coordinated action chunks",
-        "detail": "Learn coordinated action chunks. See the original explanation and component status below.",
-        "column": 1,
-        "row": 0,
-        "section": "Learn coordinated action chunks",
-        "problem_slugs": [
-          "act-sliding-action-chunks",
-          "act-cvae-loss"
-        ],
-        "planned_problems": [
-          "Mix Static and Mobile Demonstration Batches"
-        ]
-      },
-      {
-        "id": "control",
-        "title": "Execute coordinated feedback",
-        "detail": "Execute coordinated feedback. See the original explanation and component status below.",
-        "column": 2,
-        "row": 0,
-        "section": "Execute coordinated feedback",
-        "problem_slugs": [
-          "act-temporal-ensembling",
-          "diffusion-receding-horizon-window"
-        ],
-        "planned_problems": [
-          "Measure Closed-Loop Latency and Action Dropouts"
-        ]
-      }
-    ],
-    "edges": [
-      {
-        "from": "align",
-        "to": "learn",
-        "label": "validated component output"
-      },
-      {
-        "from": "learn",
-        "to": "control",
-        "label": "validated component output"
-      }
-    ]
-  }
-}
+schema_version: 1
+paper_id: 2024-mobile-aloha
+title: >-
+  Mobile ALOHA: Learning Bimanual Mobile Manipulation with Low-Cost Whole-Body
+  Teleoperation
+authors:
+  - Zipeng Fu
+  - Tony Z. Zhao
+  - Chelsea Finn
+year: 2024
+venue_or_status: arXiv2024 v1
+primary_url: 'https://arxiv.org/abs/2401.02117'
+pdf_url: 'https://arxiv.org/pdf/2401.02117v1'
+local_pdf: ./2024-mobile-aloha.pdf
+sha256: ad457dae227c27b0c2a15badfea5abbc6b0802877b25feceedeb770f0ebdb604
+bytes: 4357808
+pages: 20
+topics:
+  - mobile manipulation
+  - bimanual imitation learning
+  - whole-body teleoperation
+modalities:
+  - multi-camera RGB
+  - joint states
+  - base commands
+  - action chunks
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: >-
+  Local research reference only. Open-access source verified; downstream
+  redistribution rights have not been audited. The PDF is not a public product
+  asset.
+acquired_on: '2026-11-13'
+source_verification: >-
+  Primary title/authors and version checked; PDF signature, all-page parser
+  readability, first-page visual render, count and SHA-256 validated.
+execution_flow:
+  title: Selected mechanism and implementation path
+  description: >-
+    A whole-body teleoperation and imitation-learning system combining bimanual
+    arm control with mobile-base commands, with co-training from stationary
+    ALOHA demonstrations.
+  nodes:
+    - id: align
+      title: Align whole-body demonstrations
+      detail: >-
+        Align whole-body demonstrations. See the original explanation and
+        component status below.
+      column: 0
+      row: 0
+      section: Align whole-body demonstrations
+      problem_slugs:
+        - interpolate-joint-state
+        - validate-robot-episodes
+        - oxe-normalize-observation-schema
+      planned_problems: []
+    - id: learn
+      title: Learn coordinated action chunks
+      detail: >-
+        Learn coordinated action chunks. See the original explanation and
+        component status below.
+      column: 1
+      row: 0
+      section: Learn coordinated action chunks
+      problem_slugs:
+        - act-sliding-action-chunks
+        - act-cvae-loss
+      planned_problems:
+        - Mix Static and Mobile Demonstration Batches
+    - id: control
+      title: Execute coordinated feedback
+      detail: >-
+        Execute coordinated feedback. See the original explanation and component
+        status below.
+      column: 2
+      row: 0
+      section: Execute coordinated feedback
+      problem_slugs:
+        - act-temporal-ensembling
+        - diffusion-receding-horizon-window
+        - rt1-control-latency-dropouts
+      planned_problems: []
+  edges:
+    - from: align
+      to: learn
+      label: validated component output
+    - from: learn
+      to: control
+      label: validated component output
 ---
 
 ## Core paper explanation

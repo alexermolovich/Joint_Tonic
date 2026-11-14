@@ -20,10 +20,12 @@
   ],
   "runnable_problem_slugs": [
     "pointnet-transform-regularizer",
+    "pointnet-shared-mlp",
+    "pointcloud-density-conventions",
     "pointnet-symmetric-pooling",
     "pointnet-local-global-features"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,14 +58,14 @@ The implementation path follows **Encode each point → Pool the point set → C
 
 Source cards: [2017-pointnet](../../../research/papers/vision-vlm-3d/2017-pointnet.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Encode each point** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -78,8 +80,8 @@ Apply one shared feature map to every point in the cloud.
 [Study the mechanism and math](/projects/2017-pointnet#paper-section-encode-each-point).
 
 - **Runnable paper-associated component:** [Regularize a Learned Feature Transform](/problems/pointnet-transform-regularizer). Regularize a Learned Feature Transform
-- **Proposed component, not runnable:** Build a Shared Point MLP and Global Feature.
-- **Proposed component, not runnable:** Validate Point-Cloud Density and Coordinate Conventions.
+- **Runnable paper-associated component:** [Build a Shared Point MLP and Global Feature](/problems/pointnet-shared-mlp). Apply one shared affine/ReLU layer to every point, then max-pool each feature channel.
+- **Runnable paper-associated component:** [Validate Point-Cloud Density and Coordinate Conventions](/problems/pointcloud-density-conventions). Report declared coordinate compatibility and spatial sampling density without guessing a frame from geometry.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

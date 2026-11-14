@@ -1,0 +1,76 @@
+{
+  "slug": "oxe-normalize-observation-schema",
+  "title": "Normalize Heterogeneous Robot Observation Schemas",
+  "version": "1.0.0",
+  "number": 234,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-open-x-embodiment",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "normalize_observations",
+  "paperIds": [
+    "2023-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Robot datasets often describe the same signal under different keys and units.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Caller supplies multiplicative conversion factors such as centimeters to meters0.01 or degrees to radianspi/180; output units are the declared canonical units."
+    },
+    "axes": "raw fields(T,Df), timestamps(T) -> canonical feature dict(T,Df) and timestamps(T)",
+    "timestamp_assumptions": "One synchronized strictly increasing timestamp vector applies to every field; this function cannot align unsynchronized records.",
+    "batching": "raw fields(T,Df), timestamps(T) -> canonical feature dict(T,Df) and timestamps(T)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "f7765fb99133edddffe236c5253471e78c9f8920c386e4f030f8102423b7e833"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original shared-schema adapter motivated by Open X-Embodiment dataset standardization. Field mapping and scaling are explicit educational policy, not the complete OXE dataset transforms.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-open-x-embodiment.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

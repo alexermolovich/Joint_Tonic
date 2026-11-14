@@ -1,32 +1,75 @@
 ---
 schema_version: 1
-paper_id: "2019-mlperf-inference"
-title: "MLPerf Inference Benchmark"
+paper_id: 2019-mlperf-inference
+title: MLPerf Inference Benchmark
 authors:
-  - "Vijay Janapa Reddi et al. (MLPerf consortium)"
+  - Vijay Janapa Reddi et al. (MLPerf consortium)
 year: 2019
-venue_or_status: "arXiv 2019; industry benchmark paper"
-primary_url: "https://arxiv.org/abs/1911.02549"
-pdf_url: "https://arxiv.org/pdf/1911.02549"
-local_pdf: "./2019-mlperf-inference.pdf"
-sha256: "ab71faac2c06fa5c317f559e3e96c7baa24a7d15bcf757efcee085ee1a3a1efd"
+venue_or_status: arXiv 2019; industry benchmark paper
+primary_url: 'https://arxiv.org/abs/1911.02549'
+pdf_url: 'https://arxiv.org/pdf/1911.02549'
+local_pdf: ./2019-mlperf-inference.pdf
+sha256: ab71faac2c06fa5c317f559e3e96c7baa24a7d15bcf757efcee085ee1a3a1efd
 bytes: 1185996
 pages: 15
 topics:
-  - "benchmarking"
-  - "inference"
-  - "latency"
-  - "throughput"
-  - "reproducibility"
+  - benchmarking
+  - inference
+  - latency
+  - throughput
+  - reproducibility
 modalities:
-  - "queries"
-  - "timing-events"
-  - "predictions"
-  - "quality-metrics"
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Choose a workload and arrival scenario, capture end-to-end query timing, and accept performance results only when quality and benchmark conditions hold.","nodes":[{"id":"stage-1","title":"Specify the load scenario","detail":"Define how requests arrive and what counts as a completed query.","column":0,"row":0,"section":"Specify the load scenario","problem_slugs":[],"planned_problems":["Simulate Single-Stream and Server Load"]},{"id":"stage-2","title":"Measure query performance","detail":"Record latency distributions, completed work, and measurement scope.","column":1,"row":0,"section":"Measure query performance","problem_slugs":["inference-latency-percentiles"],"planned_problems":["Compute Inference Throughput from Query Traces"]},{"id":"stage-3","title":"Apply quality and latency gates","detail":"Reject configurations that trade away required correctness or miss scenario limits.","column":2,"row":0,"section":"Apply quality and latency gates","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Reject Invalid Benchmark Runs"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"query trace"},{"from":"stage-2","to":"stage-3","label":"quality and timing"}]}
+  - queries
+  - timing-events
+  - predictions
+  - quality-metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Choose a workload and arrival scenario, capture end-to-end query timing, and
+    accept performance results only when quality and benchmark conditions hold.
+  nodes:
+    - id: stage-1
+      title: Specify the load scenario
+      detail: Define how requests arrive and what counts as a completed query.
+      column: 0
+      row: 0
+      section: Specify the load scenario
+      problem_slugs:
+        - simulate-inference-load
+      planned_problems: []
+    - id: stage-2
+      title: Measure query performance
+      detail: 'Record latency distributions, completed work, and measurement scope.'
+      column: 1
+      row: 0
+      section: Measure query performance
+      problem_slugs:
+        - inference-latency-percentiles
+      planned_problems:
+        - Compute Inference Throughput from Query Traces
+    - id: stage-3
+      title: Apply quality and latency gates
+      detail: >-
+        Reject configurations that trade away required correctness or miss
+        scenario limits.
+      column: 2
+      row: 0
+      section: Apply quality and latency gates
+      problem_slugs:
+        - edge-inference-release-gate
+        - reject-invalid-benchmark-runs
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: query trace
+    - from: stage-2
+      to: stage-3
+      label: quality and timing
 ---
 
 ## Core paper explanation
@@ -51,7 +94,7 @@ Single-stream issues the next query after the preceding one completes; offline s
 
 **Component practice**
 
-- Simulate Single-Stream and Server Load — unreviewed idea; contract and evaluator required.
+- Runnable component: [Simulate Single-Stream and Server Load](/problems/simulate-inference-load). Implements the explicit bounded contract, not the complete source system.
 
 
 ### Measure query performance
@@ -86,21 +129,21 @@ $$
 **Component practice**
 
 - Runnable component: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Implements the bounded learning contract linked here, not the complete paper.
-- Reject Invalid Benchmark Runs — unreviewed idea; contract and evaluator required.
+- Runnable component: [Reject Invalid Benchmark Runs](/problems/reject-invalid-benchmark-runs). Implements the explicit bounded contract, not the complete source system.
 
 
 ## Implement the components
 
-Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
+Execution-flow nodes link runnable component exercises. Any additional research ideas remain explicitly labeled as future work and do not imply a complete paper reproduction.
 
 - **Runnable component:** [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles).
 - **Runnable component:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 
-**Planned component problems:**
+**Component implementation map:**
 
-- Simulate Single-Stream and Server Load — unreviewed idea; contract and evaluator required.
+- Runnable component: [Simulate Single-Stream and Server Load](/problems/simulate-inference-load). Implements the explicit bounded contract, not the complete source system.
 - Compute Inference Throughput from Query Traces — unreviewed idea; contract and evaluator required.
-- Reject Invalid Benchmark Runs — unreviewed idea; contract and evaluator required.
+- Runnable component: [Reject Invalid Benchmark Runs](/problems/reject-invalid-benchmark-runs). Implements the explicit bounded contract, not the complete source system.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 

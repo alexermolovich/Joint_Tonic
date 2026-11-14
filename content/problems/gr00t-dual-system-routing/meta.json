@@ -1,0 +1,76 @@
+{
+  "slug": "gr00t-dual-system-routing",
+  "title": "Route Inputs Through a Dual-System Policy Interface",
+  "version": "1.0.0",
+  "number": 250,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2025-gr00t-n1",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "route_dual_system",
+  "paperIds": [
+    "2025-gr00t-n1"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A semantic model and a motor model need different inputs and may run at different rates.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Normalized sensor features/actions are dimensionless; embodiment IDs are schema indices, not physical coordinates."
+    },
+    "axes": "Explicit batch, time, embodiment and channel axes defined in the contract",
+    "timestamp_assumptions": "Physical timestamps and maximum context age are seconds on one synchronized monotonic clock; no cross-device clock correction.",
+    "batching": "Explicit batch, time, embodiment and channel axes defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "3b77cf1f71eaccc3965c4605ea472a8147ccdbbf77812b155e4675bb7503a0f7"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded interface/diagnostic inspired by GR00T N1, not a full model reproduction or real-hardware safety certification.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2503.14734"
+    ],
+    "paper_card": "research/papers/vla-embodied/2025-gr00t-n1.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

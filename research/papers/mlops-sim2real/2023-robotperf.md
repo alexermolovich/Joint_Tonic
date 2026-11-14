@@ -1,32 +1,78 @@
 ---
 schema_version: 1
-paper_id: "2023-robotperf"
-title: "RobotPerf: An Open-Source, Vendor-Agnostic, Benchmarking Suite for Evaluating Robotics Computing System Performance"
+paper_id: 2023-robotperf
+title: >-
+  RobotPerf: An Open-Source, Vendor-Agnostic, Benchmarking Suite for Evaluating
+  Robotics Computing System Performance
 authors:
-  - "Victor Mayoral-Vilches et al."
+  - Victor Mayoral-Vilches et al.
 year: 2023
-venue_or_status: "arXiv 2023; open benchmark suite"
-primary_url: "https://arxiv.org/abs/2309.09212"
-pdf_url: "https://arxiv.org/pdf/2309.09212"
-local_pdf: "./2023-robotperf.pdf"
-sha256: "fd61fd4331f547382bcc0063221c13f11c8c6953848c95eab1249e6ca71418b9"
+venue_or_status: arXiv 2023; open benchmark suite
+primary_url: 'https://arxiv.org/abs/2309.09212'
+pdf_url: 'https://arxiv.org/pdf/2309.09212'
+local_pdf: ./2023-robotperf.pdf
+sha256: fd61fd4331f547382bcc0063221c13f11c8c6953848c95eab1249e6ca71418b9
 bytes: 2271155
 pages: 9
 topics:
-  - "robotics-benchmarking"
-  - "ros2"
-  - "tracing"
-  - "latency"
-  - "hardware-acceleration"
+  - robotics-benchmarking
+  - ros2
+  - tracing
+  - latency
+  - hardware-acceleration
 modalities:
-  - "ros2-events"
-  - "computation-graphs"
-  - "timing-traces"
-  - "power-metrics"
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Declare a robotics workload, correlate trace events through the graph, and compare quality-constrained timing on identified hardware.","nodes":[{"id":"stage-1","title":"Declare workload boundaries","detail":"Specify inputs, outputs, graph stages, rates, and measurement scope.","column":0,"row":0,"section":"Declare workload boundaries","problem_slugs":[],"planned_problems":["Declare Reproducible Robotics Benchmark Boundaries"]},{"id":"stage-2","title":"Analyze the timed graph","detail":"Separate processing time, waiting, transfer, and parallel work.","column":1,"row":0,"section":"Analyze the timed graph","problem_slugs":["inference-latency-percentiles"],"planned_problems":["Derive End-to-End Latency from Robotics Trace Events","Measure Throughput and Jitter Across a ROS-Style Graph"]},{"id":"stage-3","title":"Compare valid runs","detail":"Report distributions and configuration identity rather than a context-free speed number.","column":2,"row":0,"section":"Compare valid runs","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Compare Black-Box and Grey-Box Pipeline Measurements"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"correlated traces"},{"from":"stage-2","to":"stage-3","label":"timing distributions"}]}
+  - ros2-events
+  - computation-graphs
+  - timing-traces
+  - power-metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Declare a robotics workload, correlate trace events through the graph, and
+    compare quality-constrained timing on identified hardware.
+  nodes:
+    - id: stage-1
+      title: Declare workload boundaries
+      detail: 'Specify inputs, outputs, graph stages, rates, and measurement scope.'
+      column: 0
+      row: 0
+      section: Declare workload boundaries
+      problem_slugs: []
+      planned_problems:
+        - Declare Reproducible Robotics Benchmark Boundaries
+    - id: stage-2
+      title: Analyze the timed graph
+      detail: 'Separate processing time, waiting, transfer, and parallel work.'
+      column: 1
+      row: 0
+      section: Analyze the timed graph
+      problem_slugs:
+        - inference-latency-percentiles
+        - robotics-trace-end-to-end-latency
+        - graph-throughput-jitter
+      planned_problems: []
+    - id: stage-3
+      title: Compare valid runs
+      detail: >-
+        Report distributions and configuration identity rather than a
+        context-free speed number.
+      column: 2
+      row: 0
+      section: Compare valid runs
+      problem_slugs:
+        - edge-inference-release-gate
+        - compare-pipeline-measurements
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: correlated traces
+    - from: stage-2
+      to: stage-3
+      label: timing distributions
 ---
 
 ## Core paper explanation
@@ -66,8 +112,8 @@ Parallel graphs require critical-path reasoning rather than summing every event 
 **Component practice**
 
 - Supporting prerequisite: [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
-- Derive End-to-End Latency from Robotics Trace Events — unreviewed idea; contract and evaluator required.
-- Measure Throughput and Jitter Across a ROS-Style Graph — unreviewed idea; contract and evaluator required.
+- Runnable component: [Derive End-to-End Latency from Robotics Trace Events](/problems/robotics-trace-end-to-end-latency). Implements the explicit bounded contract, not the complete source system.
+- Runnable component: [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Implements the bounded learning contract linked here, not the complete paper.
 
 ### Compare valid runs
 
@@ -77,27 +123,31 @@ Throughput is completed work divided by observation time; latency is time per co
 **Component practice**
 
 - Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
-- Compare Black-Box and Grey-Box Pipeline Measurements — unreviewed idea; contract and evaluator required.
+- Runnable component: [Compare Black-Box and Grey-Box Pipeline Measurements](/problems/compare-pipeline-measurements). Implements the bounded learning contract linked here, not the complete paper.
 
 ## Implement the components
 
-Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
+Execution-flow nodes link runnable component exercises. Any additional research ideas remain explicitly labeled as future work and do not imply a complete paper reproduction.
 
 - **Supporting prerequisite:** [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles).
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 
-**Planned component problems:**
+**Component implementation map:**
 
 - Declare Reproducible Robotics Benchmark Boundaries — unreviewed idea; contract and evaluator required.
-- Derive End-to-End Latency from Robotics Trace Events — unreviewed idea; contract and evaluator required.
-- Measure Throughput and Jitter Across a ROS-Style Graph — unreviewed idea; contract and evaluator required.
-- Compare Black-Box and Grey-Box Pipeline Measurements — unreviewed idea; contract and evaluator required.
+- Runnable component: [Derive End-to-End Latency from Robotics Trace Events](/problems/robotics-trace-end-to-end-latency). Implements the explicit bounded contract, not the complete source system.
+- Runnable component: [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Compare Black-Box and Grey-Box Pipeline Measurements](/problems/compare-pipeline-measurements). Implements the bounded learning contract linked here, not the complete paper.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
 ## Why this matters on a robot
 
 Robotics graphs include sensors, middleware, transfers, accelerators, and controllers. Measuring one kernel can miss the bottleneck that delays an actual command. Trace loss, clock mismatch, and dropped messages must be reported rather than silently discarded.
+
+## Scope of the runnable engineering components
+
+The linked timing exercises use supplied, common-clock nanosecond events. [Graph throughput and jitter](/problems/graph-throughput-jitter) counts completions in a half-open observation window and reports population interval variation. [Pipeline measurement comparison](/problems/compare-pipeline-measurements) computes the union of instrumented spans; parallel overlap is not a critical path. These original diagnostics do not implement RobotPerf instrumentation or establish benchmark compliance.
 
 ## Sources and scope
 

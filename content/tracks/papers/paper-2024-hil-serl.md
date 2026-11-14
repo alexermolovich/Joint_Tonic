@@ -16,7 +16,9 @@
     "robot-learning-rl",
     "hil-serl"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "offline-rollout-checkpoint-gate"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +52,13 @@ The implementation path follows **Collect policy and corrective actions → Lear
 
 Source cards: [2024-hil-serl](../../../research/papers/robot-learning-rl/2024-hil-serl.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Collect policy and corrective actions** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -94,6 +96,7 @@ Distribute new policies and track success without assistance.
 
 [Study the mechanism and math](/projects/2024-hil-serl#paper-section-update-and-evaluate-autonomy).
 
+- **Runnable supporting prerequisite:** [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Choose a candidate only when offline loss, rollout coverage and exact success-rate gates all pass.
 - **Proposed component, not runnable:** Gate an Online Policy Update.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

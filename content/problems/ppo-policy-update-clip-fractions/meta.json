@@ -1,0 +1,76 @@
+{
+  "slug": "ppo-policy-update-clip-fractions",
+  "title": "Report Policy Update Clip Fractions",
+  "version": "1.0.0",
+  "number": 502,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2017-proximal-policy-optimization",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "policy_clip_metrics",
+  "paperIds": [
+    "2017-proximal-policy-optimization"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A probability ratio outside the clipping interval does not always change PPO\u2019s objective.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Log densities and ratios are dimensionless; advantage/value/return terms use the caller-fixed reward units."
+    },
+    "axes": "B rollout streams, T samples; scalar reductions only over Boolean-valid entries",
+    "timestamp_assumptions": "Ordered transition indices at a fixed caller-declared control interval; terminal events differ from time limits.",
+    "batching": "B rollout streams, T samples; scalar reductions only over Boolean-valid entries"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "95f8fe28d55102c27df0ca2a415e045ab52ff9d77cbc7b58291ea8c39d9395d4"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded PPO component. Normalization, boundary handling and diagnostic conventions are explicitly supplied; this does not train a complete locomotion policy.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1707.06347"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2017-proximal-policy-optimization.md",
+    "manifest": "research/IMPLEMENTATION_BACKLOG.md"
+  }
+}

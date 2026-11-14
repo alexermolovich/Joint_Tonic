@@ -1,0 +1,76 @@
+{
+  "slug": "robot-episode-confidence-intervals",
+  "title": "Compute Confidence Intervals Across Robot Episodes",
+  "version": "1.0.0",
+  "number": 84,
+  "difficulty": "Medium",
+  "domain": "Robotics Foundations",
+  "topics": [
+    "robotics-foundations",
+    "numerics-evaluation"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "episode_mean_interval",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compute Confidence Intervals Across Robot Episodes",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-aligned robot sensor/controller frames; no implicit transform"
+    ],
+    "units": {
+      "mean/standard_error/interval": "caller-declared metric unit per column",
+      "critical": "dimensionless multiplier"
+    },
+    "axes": "Input(E,M), independent episode summaries by metric; interval(M,2) lower then upper",
+    "timestamp_assumptions": "Episodes and fixed sample ordering supplied; no wall clock or timing inference.",
+    "batching": "Input(E,M), independent episode summaries by metric; interval(M,2) lower then upper"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "evaluator_sha256": "551a40c26963ad9893376e8c9871ee8a394f9fcdbe5ba3c3e57fc4e1bfcf398f",
+    "performance_class": "none; no timing leaderboard"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics foundation with synthetic fixtures; no paper-derived implementation.",
+    "primary_urls": [
+      "https://numpy.org/doc/2.2/reference/"
+    ]
+  }
+}

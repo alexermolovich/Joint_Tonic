@@ -20,12 +20,14 @@
   "runnable_problem_slugs": [
     "interpolate-joint-state",
     "validate-robot-episodes",
+    "oxe-normalize-observation-schema",
     "act-sliding-action-chunks",
     "act-cvae-loss",
     "act-temporal-ensembling",
-    "diffusion-receding-horizon-window"
+    "diffusion-receding-horizon-window",
+    "rt1-control-latency-dropouts"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +60,7 @@ The implementation path follows **Align whole-body demonstrations → Learn coor
 
 Source cards: [2024-mobile-aloha](../../../research/papers/robot-learning-rl/2024-mobile-aloha.md).
 
-**Available now:** 0 paper-associated runnable components; 6 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 8 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -66,10 +68,12 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Interpolate Joint State at Camera Time](/problems/interpolate-joint-state). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Normalize Heterogeneous Robot Observation Schemas](/problems/oxe-normalize-observation-schema). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Compute a Masked CVAE Reconstruction and KL Loss](/problems/act-cvae-loss). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Measure Closed-Loop Latency and Action Dropouts](/problems/rt1-control-latency-dropouts). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -85,7 +89,7 @@ Align whole-body demonstrations. See the original explanation and component stat
 
 - **Runnable supporting prerequisite:** [Interpolate Joint State at Camera Time](/problems/interpolate-joint-state). Align unwrapped encoder angles to camera timestamps without crossing sensor dropouts.
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
-- **Proposed component, not runnable:** Normalize Heterogeneous Robot Observation Schemas.
+- **Runnable supporting prerequisite:** [Normalize Heterogeneous Robot Observation Schemas](/problems/oxe-normalize-observation-schema). Robot datasets often describe the same signal under different keys and units.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -113,7 +117,7 @@ Execute coordinated feedback. See the original explanation and component status 
 
 - **Runnable supporting prerequisite:** [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling). Align predictions to one target control tick and combine eligible chunks with ACT’s oldest-first exponential weighting.
 - **Runnable supporting prerequisite:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window). Extract the controller-supported prefix of a predicted future trajectory after a specified alignment offset.
-- **Proposed component, not runnable:** Measure Closed-Loop Latency and Action Dropouts.
+- **Runnable supporting prerequisite:** [Measure Closed-Loop Latency and Action Dropouts](/problems/rt1-control-latency-dropouts). An inference that finishes after its control deadline is not equivalent to an action applied on time.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

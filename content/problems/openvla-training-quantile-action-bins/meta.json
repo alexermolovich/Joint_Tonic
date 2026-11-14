@@ -1,0 +1,76 @@
+{
+  "slug": "openvla-training-quantile-action-bins",
+  "title": "Quantize Actions from Training-Set Quantiles",
+  "version": "1.0.0",
+  "number": 244,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2024-openvla",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "quantize_training_actions",
+  "paperIds": [
+    "2024-openvla"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Rare training outliers should not consume most action-bin resolution.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Normalized actions and token features are dimensionless; physical calibration is supplied upstream."
+    },
+    "axes": "Explicit batch, sequence and channel axes defined in the contract",
+    "timestamp_assumptions": "Caller-synchronized observations; generation time and physical control time are distinct.",
+    "batching": "Explicit batch, sequence and channel axes defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "f92cec5cd56f3639204f98ef6ffa378a4266b71fb9a975ce62fd593fd5be53e3"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded engineering component motivated by the paper; no pretrained model or benchmark reproduction is implied.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2406.09246"
+    ],
+    "paper_card": "research/papers/vla-embodied/2024-openvla.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

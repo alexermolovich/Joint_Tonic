@@ -16,7 +16,7 @@ modalities: ["RGB image"]
 track_role: "Backbone prerequisite for transformer-based perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
-execution_flow: {"title":"Core execution flow","description":"The inference path converts image patches to tokens, applies transformer blocks, and reads a classification representation. Training optimizes the chosen supervised head; robotics reuse may retain patch features instead.","nodes":[{"id":"stage-1","title":"Patchify the image","detail":"Flatten fixed image patches and project them into token embeddings.","column":0,"row":0,"section":"Patchify the image","problem_slugs":["vit-patchify-reconstruct","vit-patch-class-tokens","vit-position-interpolation"],"planned_problems":[]},{"id":"stage-2","title":"Mix patch information","detail":"Attention exchanges information globally; an MLP transforms each token.","column":1,"row":0,"section":"Mix patch information","problem_slugs":[],"planned_problems":["Assemble a Pre-Norm Vision Transformer Block","Profile Token Count, Memory, and Latency by Resolution"]},{"id":"stage-3","title":"Read out a representation","detail":"Use the class token for classification or retain spatial tokens for later tasks.","column":2,"row":0,"section":"Read out a representation","problem_slugs":[],"planned_problems":["Read a Normalized Class Token with a Linear Head"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"patch tokens"},{"from":"stage-2","to":"stage-3","label":"encoded tokens"}]}
+execution_flow: {"title":"Core execution flow","description":"The inference path converts image patches to tokens, applies transformer blocks, and reads a classification representation. Training optimizes the chosen supervised head; robotics reuse may retain patch features instead.","nodes":[{"id":"stage-1","title":"Patchify the image","detail":"Flatten fixed image patches and project them into token embeddings.","column":0,"row":0,"section":"Patchify the image","problem_slugs":["vit-patchify-reconstruct","vit-patch-class-tokens","vit-position-interpolation"],"planned_problems":[]},{"id":"stage-2","title":"Mix patch information","detail":"Attention exchanges information globally; an MLP transforms each token.","column":1,"row":0,"section":"Mix patch information","problem_slugs":["vit-pre-norm-block","vit-resolution-profile"],"planned_problems":[]},{"id":"stage-3","title":"Read out a representation","detail":"Use the class token for classification or retain spatial tokens for later tasks.","column":2,"row":0,"section":"Read out a representation","problem_slugs":[],"planned_problems":["Read a Normalized Class Token with a Linear Head"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"patch tokens"},{"from":"stage-2","to":"stage-3","label":"encoded tokens"}]}
 ---
 
 ## Core paper explanation
@@ -59,7 +59,16 @@ $$
 Each attention head computes $\operatorname{softmax}(QK^\top/\sqrt{d_k})V$. The attention matrix is $(N+1)\times(N+1)$, so doubling both image dimensions at fixed patch size multiplies its element count by approximately sixteen. That resolution choice can dominate an edge robot’s memory budget.
 
 
-**Planned component problems:** Assemble a Pre-Norm Vision Transformer Block; Profile Token Count, Memory, and Latency by Resolution. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Assemble a Pre-Norm Vision Transformer Block](/problems/vit-pre-norm-block) · [Profile Token Count, Memory, and Latency by Resolution](/problems/vit-resolution-profile). Each exercise specifies its bounded scope; diagnostic and simplified variants do not reproduce the full model.
+
+#### Implement the block and measure resolution cost
+
+[Assemble a pre-norm block](/problems/vit-pre-norm-block) executes the actual two residual branches with supplied projections, affine layer norms and exact GELU. Its one-head, dropout-free NumPy contract isolates ordering and shapes; it is not a trained multi-head ViT checkpoint.
+
+[Profile resolution](/problems/vit-resolution-profile) separates an explicit tensor-memory estimate from supplied latency measurements. For patch side $P$ pixels, image dimensions $H,W$ pixels, $A$ attention heads and $b$ bytes per score,
+$$L=(H/P)(W/P)+1,\qquad M=A L^2 b.$$
+$L$ includes the class token; $M$ counts bytes in one image/layer's explicit attention-score tensor. It excludes weights, gradients and other activations, and fused kernels may avoid materializing it. The latency output is a documented nearest-rank p95 of actual supplied measurements; token count is not treated as a latency prediction.
+
 
 ### Read out a representation
 
@@ -74,23 +83,21 @@ Changing image resolution changes the patch grid. When interpolating learned spa
 
 
 
-**Planned component problem:** Read a Normalized Class Token with a Linear Head. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
+**Planned components:** Read a Normalized Class Token with a Linear Head. These remain unreviewed ideas without runnable exercises.
 
 ## Implement the components
 
-- **Runnable component:** [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens). This is a bounded synthetic component, not a complete trained model.
+The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
-- **Runnable component:** [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct). This isolates one reviewed mechanism with synthetic fixtures; it does not reproduce the paper’s complete model or benchmark.
+- [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct) — Easy.
+- [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens) — Easy.
+- [Interpolate 2D Positional Embeddings](/problems/vit-position-interpolation) — Medium.
+- [Profile Token Count, Memory, and Latency by Resolution](/problems/vit-resolution-profile) — Medium.
+- [Assemble a Pre-Norm Vision Transformer Block](/problems/vit-pre-norm-block) — Hard.
 
-The component below is runnable. The other ideas remain planned and do not yet have published evaluators.
+**Further ideas outside the approved runnable scope:**
 
-**Planned components:**
-
-- Assemble a Pre-Norm Vision Transformer Block.
-- Profile Token Count, Memory, and Latency by Resolution.
 - Read a Normalized Class Token with a Linear Head.
-
-[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
 ## Why this matters on a robot
 

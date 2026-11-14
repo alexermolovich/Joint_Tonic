@@ -1,0 +1,76 @@
+{
+  "slug": "oxe-normalize-action-spaces",
+  "title": "Normalize and Mask Embodiment-Specific Action Spaces",
+  "version": "1.0.0",
+  "number": 235,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-open-x-embodiment",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "normalize_action_spaces",
+  "paperIds": [
+    "2023-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A shared model can reserve channels that some robots do not possess.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Each action channel retains its declared controller unit in inputs; per-channel mean/std use that unit, output is dimensionless."
+    },
+    "axes": "actions(B,H,D), available/mean/std(B,D) -> normalized/mask(B,H,D)",
+    "timestamp_assumptions": "H is an equally spaced action horizon supplied by the dataset; normalization does not change timing or controller frames.",
+    "batching": "actions(B,H,D), available/mean/std(B,D) -> normalized/mask(B,H,D)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "824cda09962b84401c3b5c976c33a772c3adda2037f9f919c351bda82acbdde5"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original normalization/masking component inspired by OXE cross-embodiment learning. Missing dimensions are masked, not treated as observed zero commands.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-open-x-embodiment.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

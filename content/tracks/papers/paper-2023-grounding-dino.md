@@ -18,8 +18,13 @@
     "vision-language fusion",
     "object detection"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 6,
+  "runnable_problem_slugs": [
+    "grounding-language-query-selection",
+    "grounding-token-phrase-map",
+    "grounding-phrase-box-decoding",
+    "grounded-segmentation-failure-trace"
+  ],
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,13 +57,15 @@ The implementation path follows **Encode image and text features → Select lang
 
 Source cards: [2023-grounding-dino](../../../research/papers/vision-vlm-3d/2023-grounding-dino.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 6 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Encode image and text features** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Map Text Tokens to Grounded Phrases](/problems/grounding-token-phrase-map). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Decode Phrase-Labeled Boxes](/problems/grounding-phrase-box-decoding). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -84,7 +91,7 @@ Use compatibility with valid text tokens to prioritize candidate image locations
 
 [Study the mechanism and math](/projects/2023-grounding-dino#paper-section-select-language-guided-queries).
 
-- **Proposed component, not runnable:** Select Language-Guided Object Queries.
+- **Runnable paper-associated component:** [Select Language-Guided Object Queries](/problems/grounding-language-query-selection). Select visual queries by their strongest usable text-token compatibility.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -96,9 +103,9 @@ Decode spatial predictions and aggregate scores over the requested phrase spans.
 
 [Study the mechanism and math](/projects/2023-grounding-dino#paper-section-resolve-boxes-to-phrases).
 
-- **Proposed component, not runnable:** Map Text Tokens to Grounded Phrases.
-- **Proposed component, not runnable:** Decode Phrase-Labeled Boxes.
-- **Proposed component, not runnable:** Build a Grounded Segmentation Pipeline and Trace Failures.
+- **Runnable paper-associated component:** [Map Text Tokens to Grounded Phrases](/problems/grounding-token-phrase-map). Map character spans to tokens with an explicit half-open overlap rule.
+- **Runnable paper-associated component:** [Decode Phrase-Labeled Boxes](/problems/grounding-phrase-box-decoding). Associate each normalized box with its strongest phrase, then return thresholded pixel boxes.
+- **Runnable paper-associated component:** [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace). Compose supplied grounding and segmentation outputs while preserving failure reasons per query.
 - **Proposed component, not runnable:** Evaluate Localization and Phrase Grounding Separately.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

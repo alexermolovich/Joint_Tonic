@@ -18,7 +18,9 @@
   ],
   "runnable_problem_slugs": [
     "validate-robot-episodes",
-    "se3-transform-points"
+    "se3-transform-points",
+    "shift-bucket-performance",
+    "scenario-coverage-confidence"
   ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
@@ -53,7 +55,7 @@ The implementation path follows **Choose task and controller → Collect visual 
 
 Source cards: [2023-maniskill-2](../../../research/papers/simulation-sim2real/2023-maniskill-2.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +63,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -100,6 +104,8 @@ Keep geometry splits and physical success checks explicit.
 
 [Study the mechanism and math](/projects/2023-maniskill-2#paper-section-evaluate-object-and-task-generalization).
 
+- **Runnable supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Measure Performance Across Shift Buckets
+- **Runnable supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Estimate Scenario Coverage and Confidence Intervals
 - **Proposed component, not runnable:** Validate Task-Specific Success Predicates.
 - **Proposed component, not runnable:** Report Generalization by Object Split.
 

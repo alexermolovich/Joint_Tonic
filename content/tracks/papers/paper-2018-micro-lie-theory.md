@@ -20,9 +20,12 @@
   ],
   "runnable_problem_slugs": [
     "compose-frame-transforms",
-    "normalize-multiply-quaternions"
+    "normalize-multiply-quaternions",
+    "interpolate-pose-slerp",
+    "kalman-filter-measurement-update",
+    "finite-difference-gradient-check"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +58,7 @@ The implementation path follows **Represent a pose â†’ Apply a tangent update â†
 
 Source cards: [2018-micro-lie-theory](../../../research/papers/geometry-calibration-slam/2018-micro-lie-theory.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -63,6 +66,9 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Normalize and Multiply Quaternions](/problems/normalize-multiply-quaternions). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [One Kalman Filter Measurement Update](/problems/kalman-filter-measurement-update). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Finite-Difference Gradient Check](/problems/finite-difference-gradient-check). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -78,7 +84,7 @@ Represent a pose. See the original explanation and component status below.
 
 - **Runnable supporting prerequisite:** [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms). Compose timestamped, frame-labeled rigid transforms and construct the inverse in the correct frame.
 - **Runnable supporting prerequisite:** [Normalize and Multiply Quaternions](/problems/normalize-multiply-quaternions). Normalize scalar-first quaternions safely and compose active rotations in the declared order.
-- **Proposed component, not runnable:** Interpolate a Pose with SLERP.
+- **Runnable supporting prerequisite:** [Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp). Interpolate translation linearly and orientation along the shortest quaternion arc.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -102,8 +108,8 @@ Linearize an estimation residual. See the original explanation and component sta
 
 [Study the mechanism and math](/projects/2018-micro-lie-theory#paper-section-linearize-an-estimation-residual).
 
-- **Proposed component, not runnable:** Finite-Difference Gradient Check.
-- **Proposed component, not runnable:** One Kalman Filter Measurement Update.
+- **Runnable supporting prerequisite:** [One Kalman Filter Measurement Update](/problems/kalman-filter-measurement-update). Fuse a linear sensor measurement using a stable Kalman gain and Joseph covariance update.
+- **Runnable supporting prerequisite:** [Finite-Difference Gradient Check](/problems/finite-difference-gradient-check). Finite-Difference Gradient Check
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

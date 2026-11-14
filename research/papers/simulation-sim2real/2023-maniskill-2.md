@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Choose task and controller","detail":"Specify embodiment, object dynamics, and action semantics.","column":0,"row":0,"section":"Choose task and controller","problem_slugs":[],"planned_problems":["Validate a Robot-Controller-Task Configuration"]},{"id":"stage-2","title":"Collect visual experience","detail":"Use RGB-D or point clouds and versioned demonstrations.","column":1,"row":0,"section":"Collect visual experience","problem_slugs":["validate-robot-episodes","se3-transform-points"],"planned_problems":["Build a Vectorized Manipulation Batch"]},{"id":"stage-3","title":"Evaluate object and task generalization","detail":"Keep geometry splits and physical success checks explicit.","column":2,"row":0,"section":"Evaluate object and task generalization","problem_slugs":[],"planned_problems":["Validate Task-Specific Success Predicates","Report Generalization by Object Split"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"environment transitions"},{"from":"stage-2","to":"stage-3","label":"policy rollouts"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Choose task and controller", "detail": "Specify embodiment, object dynamics, and action semantics.", "column": 0, "row": 0, "section": "Choose task and controller", "problem_slugs": [], "planned_problems": ["Validate a Robot-Controller-Task Configuration"]}, {"id": "stage-2", "title": "Collect visual experience", "detail": "Use RGB-D or point clouds and versioned demonstrations.", "column": 1, "row": 0, "section": "Collect visual experience", "problem_slugs": ["validate-robot-episodes", "se3-transform-points"], "planned_problems": ["Build a Vectorized Manipulation Batch"]}, {"id": "stage-3", "title": "Evaluate object and task generalization", "detail": "Keep geometry splits and physical success checks explicit.", "column": 2, "row": 0, "section": "Evaluate object and task generalization", "problem_slugs": ["shift-bucket-performance", "scenario-coverage-confidence"], "planned_problems": ["Validate Task-Specific Success Predicates", "Report Generalization by Object Split"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "environment transitions"}, {"from": "stage-2", "to": "stage-3", "label": "policy rollouts"}]}
 ---
 
 ## Core paper explanation
@@ -51,6 +51,19 @@ A trajectory stores $(o_t,a_t,r_t,\mathrm{terminal}_t)$ with simulator state nee
 
 For held-out object set $\mathcal O$, a teaching object-balanced score is $|\mathcal O|^{-1}\sum_{o\in\mathcal O}\hat p_o$. State whether the actual benchmark uses this or another aggregation. Soft-body tasks need deformation-aware goals; rigid-pose error alone cannot score them correctly.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Object-balanced and episode-pooled scores differ
+
+For held-out object o with $n_o>0$ trials and success count $k_o$, let $\widehat p_o=k_o/n_o$. Two original reporting choices are
+
+$$\widehat p_{\mathrm{object}}=\frac1{|\mathcal O|}\sum_{o\in\mathcal O}\widehat p_o,\qquad \widehat p_{\mathrm{episode}}=\frac{\sum_ok_o}{\sum_on_o}.$$
+
+$\mathcal O$ is the declared evaluated object set; these scores are dimensionless. One object at 8/10 and another at 0/2 gives object-balanced 0.4 versus episode-pooled 8/12. This comparison illustrates aggregation semantics, not a claim about which score every official ManiSkill2 task uses. Missing objects must remain visible, and soft-object goals need task-specific deformation/contact measures.
+
+[Shift-bucket metrics](/problems/shift-bucket-performance) makes per-object error summaries explicit; [scenario confidence intervals](/problems/scenario-coverage-confidence) handles success counts and missing buckets. Neither converts controller modes or implements the simulation benchmark itself.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

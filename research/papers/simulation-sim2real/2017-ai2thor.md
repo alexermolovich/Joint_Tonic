@@ -16,7 +16,7 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Observe scene and objects","detail":"Expose camera observations and declared object state.","column":0,"row":0,"section":"Observe scene and objects","problem_slugs":[],"planned_problems":["Track Object-State Preconditions"]},{"id":"stage-2","title":"Apply a valid interaction","detail":"Check action preconditions and report success or failure.","column":1,"row":0,"section":"Apply a valid interaction","problem_slugs":[],"planned_problems":["Validate a Simulator Action Grammar"]},{"id":"stage-3","title":"Evaluate embodied tasks","detail":"Measure goal completion with controlled scene splits.","column":2,"row":0,"section":"Evaluate embodied tasks","problem_slugs":[],"planned_problems":["Detect an Invalid Interaction Transition"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"selected action"},{"from":"stage-2","to":"stage-3","label":"interaction trace"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Observe scene and objects", "detail": "Expose camera observations and declared object state.", "column": 0, "row": 0, "section": "Observe scene and objects", "problem_slugs": [], "planned_problems": ["Track Object-State Preconditions"]}, {"id": "stage-2", "title": "Apply a valid interaction", "detail": "Check action preconditions and report success or failure.", "column": 1, "row": 0, "section": "Apply a valid interaction", "problem_slugs": ["validate-robot-episodes", "detect-dropped-duplicated-sensor-frames"], "planned_problems": ["Validate a Simulator Action Grammar"]}, {"id": "stage-3", "title": "Evaluate embodied tasks", "detail": "Measure goal completion with controlled scene splits.", "column": 2, "row": 0, "section": "Evaluate embodied tasks", "problem_slugs": [], "planned_problems": ["Detect an Invalid Interaction Transition"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "selected action"}, {"from": "stage-2", "to": "stage-3", "label": "interaction trace"}]}
 ---
 
 ## Core paper explanation
@@ -40,6 +40,19 @@ A partially observed interaction model is $o_t\sim O(\cdot\mid s_t)$, where $s_t
 
 An action $a$ has a precondition $P_a(s)$ and transition $s'=F(s,a)$ when valid. Opening an object and picking it up are different state changes. An invalid action should produce an explicit outcome; assuming every command changes the world corrupts training labels.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Action validity is part of the transition label
+
+An original deterministic teaching interface separates the requested action from its outcome. Let $s_t$ be complete simulator state, $a_t$ a requested interaction, $P(s_t,a_t)\in\{0,1\}$ its precondition, and $F$ the valid transition:
+
+$$s_{t+1}=\begin{cases}F(s_t,a_t)&P(s_t,a_t)=1,\\s_t&P(s_t,a_t)=0.\end{cases}$$
+
+Also record $v_t=P(s_t,a_t)$ as a separate validity flag. This no-op-on-failure rule is a simplified contract, not a promise about every simulator action/API version. If a drawer is already closed and a Close request is invalid, a repeated image may reflect an invalid request rather than a dropped camera frame. Keep action outcome and observation transport diagnostics distinct.
+
+For $T$ requests, valid-action fraction is $T^{-1}\sum_t v_t$ when $T>0$; it is not task success. [Episode-schema validation](/problems/validate-robot-episodes) is a supporting data-contract exercise, while [frame-counter auditing](/problems/detect-dropped-duplicated-sensor-frames) detects transport repetition rather than semantic no-ops.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

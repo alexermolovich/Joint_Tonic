@@ -16,7 +16,10 @@
     "simulation-sim2real",
     "habitat-2"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "slice-infrastructure-release-gate",
+    "sim-to-real-robustness-gate"
+  ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Configure a rearrangement task → Compose ski
 
 Source cards: [2021-habitat-2](../../../research/papers/simulation-sim2real/2021-habitat-2.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Configure a rearrangement task** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Gate Sim-to-Real Release with Robustness Evidence](/problems/sim-to-real-robustness-gate). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -83,6 +87,8 @@ Transfer control between navigation, grasping, and placement.
 
 [Study the mechanism and math](/projects/2021-habitat-2#paper-section-compose-skills).
 
+- **Runnable supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Reject a candidate when any required scenario or infrastructure check lacks current passing evidence.
+- **Runnable supporting prerequisite:** [Gate Sim-to-Real Release with Robustness Evidence](/problems/sim-to-real-robustness-gate). Gate Sim-to-Real Release with Robustness Evidence
 - **Proposed component, not runnable:** Validate Skill Preconditions in a Rearrangement Plan.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

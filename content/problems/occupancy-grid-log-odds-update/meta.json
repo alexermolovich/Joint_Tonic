@@ -1,0 +1,74 @@
+{
+  "slug": "occupancy-grid-log-odds-update",
+  "title": "Update Occupancy Grid Log Odds",
+  "version": "1.0.0",
+  "number": 49,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "mapping"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "update_occupancy",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Accumulate repeated occupancy observations in log-odds space with explicit clipping.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "grid row-column index frame"
+    ],
+    "units": {
+      "log_odds": "dimensionless",
+      "observations": "row, column, occupied probability",
+      "prior": "occupied probability",
+      "limit": "absolute log odds"
+    },
+    "axes": "Rows increase down; columns increase right. Cell dimensions are outside this component.",
+    "timestamp_assumptions": "Observation rows are processed in arrival order; repeated cells accumulate evidence sequentially.",
+    "batching": "log_odds(H,W), observations(N,3) -> fresh float64(H,W), H,W>=1."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "ef3ccf7817158f4f23a448bd71d767800f2121d90ff734e43bb9e027fd044266"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

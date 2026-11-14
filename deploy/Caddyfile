@@ -1,0 +1,13 @@
+{$WORKER_DOMAIN} {
+    request_body {
+        max_size 100KB
+    }
+    reverse_proxy 127.0.0.1:8765
+}
+
+{$SIMULATOR_DOMAIN} {
+    request_body {
+        max_size 2KB
+    }
+    reverse_proxy 127.0.0.1:8766
+}

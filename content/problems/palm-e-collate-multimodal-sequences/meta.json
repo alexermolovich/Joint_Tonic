@@ -1,0 +1,76 @@
+{
+  "slug": "palm-e-collate-multimodal-sequences",
+  "title": "Collate Variable Multimodal Sequences",
+  "version": "1.0.0",
+  "number": 230,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-palm-e",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "collate_multimodal",
+  "paperIds": [
+    "2023-palm-e"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Different observations can produce different token counts.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Features are projected dimensionless embeddings; modality codes0image/1state/2text carry no physical units."
+    },
+    "axes": "B sequences(Li,E) -> padded tokens(B,Lmax,E), masks/IDs(B,Lmax), lengths(B)",
+    "timestamp_assumptions": "Each example retains its supplied token order; no cross-example temporal relationship is implied.",
+    "batching": "B sequences(Li,E) -> padded tokens(B,Lmax,E), masks/IDs(B,Lmax), lengths(B)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "a86b810803b363d9db4b7a96af53583845d1e7fc8c7ada0df651fdcafd2a4736"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original collator for PaLM-E-style multimodal embeddings. It does not tokenize text, encode images or insert supervision labels.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2303.03378"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-palm-e.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

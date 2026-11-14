@@ -19,7 +19,9 @@
   "runnable_problem_slugs": [
     "se3-transform-points",
     "project-camera-points",
-    "unproject-depth-map"
+    "unproject-depth-map",
+    "trace-perception-frame-graph",
+    "geometric-jacobian-joint-axes"
   ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
@@ -54,7 +56,7 @@ The implementation path follows **Represent articulated assets → Render part-l
 
 Source cards: [2020-sapien](../../../research/papers/simulation-sim2real/2020-sapien.md).
 
-**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -63,6 +65,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Unproject a Depth Map into a Point Cloud](/problems/unproject-depth-map). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Compute a Geometric Jacobian from Joint Axes](/problems/geometric-jacobian-joint-axes). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -92,6 +96,8 @@ Generate visual evidence for parts and articulation.
 
 - **Runnable supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Project camera-frame points and separate depth validity from image bounds.
 - **Runnable supporting prerequisite:** [Unproject a Depth Map into a Point Cloud](/problems/unproject-depth-map). Turn optical-axis depth into an organized camera-frame point cloud while preserving missing-pixel masks.
+- **Runnable supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Resolve a rigid transform between two frames in a validated acyclic frame forest.
+- **Runnable supporting prerequisite:** [Compute a Geometric Jacobian from Joint Axes](/problems/geometric-jacobian-joint-axes). Convert base-frame joint axes and origins into a linear-first tool geometric Jacobian.
 - **Proposed component, not runnable:** Project a Tracked Point Across Views.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

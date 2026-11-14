@@ -2,9 +2,9 @@
 
 Generated from `CURRICULUM.md`, published metadata, and existing draft folders. Refresh with `node scripts/update-authoring-status.mjs`. A complete file package is **not** an independent review or a published evaluator.
 
-Scope: **190 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
+Scope: **202 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
 
-Coverage: 75 named entries map directly to published tasks; 2 have independently reviewed drafts; 6 have draft packages awaiting review; 1 have earlier plans; 106 remain queued. The application has 78 published problems; some are supporting components rather than identical named roadmap entries.
+Coverage: 202 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 209 published problems; some are supporting components rather than identical named roadmap entries.
 
 ## Work and review lanes
 
@@ -25,103 +25,103 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 
 | Problem | Group | State |
 |---|---|---|
-| Broadcast Batched Sensor Features | 1.1 | Queued |
-| Stable Softmax for Masked Sequences | 1.1 | Queued |
-| Finite-Difference Gradient Check | 1.1 | Queued |
-| Seed a Deterministic Evaluation Run | 1.1 | Queued |
-| Compute Confidence Intervals Across Robot Episodes | 1.1 | Queued |
-| Compare Slice Metrics Without Hiding Regressions | 1.1 | Queued |
+| [Broadcast Batched Sensor Features](problems/broadcast-batched-sensor-features/) | 1.1 | Runnable |
+| [Stable Softmax for Masked Sequences](problems/stable-masked-softmax/) | 1.1 | Runnable |
+| [Finite-Difference Gradient Check](problems/finite-difference-gradient-check/) | 1.1 | Runnable |
+| [Seed a Deterministic Evaluation Run](problems/seed-deterministic-evaluation/) | 1.1 | Runnable |
+| [Compute Confidence Intervals Across Robot Episodes](problems/robot-episode-confidence-intervals/) | 1.1 | Runnable |
+| [Compare Slice Metrics Without Hiding Regressions](problems/slice-metrics-regressions/) | 1.1 | Runnable |
 | [Apply an SE(3) Transform to Batched Points](problems/se3-transform-points/) | 1.2 | Runnable |
 | [Compose and Invert Coordinate Transforms](problems/compose-frame-transforms/) | 1.2 | Runnable |
 | [Normalize and Multiply Quaternions](problems/normalize-multiply-quaternions/) | 1.2 | Runnable |
-| Interpolate a Pose with SLERP | 1.2 | Queued |
+| [Interpolate a Pose with SLERP](problems/interpolate-pose-slerp/) | 1.2 | Runnable |
 | [Project Camera Points into Pixels](problems/project-camera-points/) | 1.2 | Runnable |
 | [Unproject a Depth Map into a Point Cloud](problems/unproject-depth-map/) | 1.2 | Runnable |
-| Apply Radial and Tangential Lens Distortion | 1.2 | Queued |
-| Validate a Camera Calibration Matrix | 1.2 | Queued |
-| Solve a Small Hand-Eye Calibration Residual | 1.2 | Queued |
-| Trace Frames Through a Robot Perception Graph | 1.2 | Queued |
+| [Apply Radial and Tangential Lens Distortion](problems/radial-tangential-lens-distortion/) | 1.2 | Runnable |
+| [Validate a Camera Calibration Matrix](problems/validate-camera-calibration-matrix/) | 1.2 | Runnable |
+| [Solve a Small Hand-Eye Calibration Residual](problems/hand-eye-translation-residual/) | 1.2 | Runnable |
+| [Trace Frames Through a Robot Perception Graph](problems/trace-perception-frame-graph/) | 1.2 | Runnable |
 | [Interpolate Franka FR3 Joint Waypoints](problems/fr3-joint-interpolation/) | 1.3 | Runnable |
-| [Compute Forward Kinematics for a Serial Chain](planned/kinematics/serial-chain-forward-kinematics/) | 1.3 | Existing plan; contract review pending |
+| [Compute Forward Kinematics for a Serial Chain](problems/serial-chain-forward-kinematics/) | 1.3 | Runnable |
 | [Solve Closed-Form IK for a Planar Two-Link Arm](problems/planar-two-link-ik/) | 1.3 | Runnable |
-| Compute a Geometric Jacobian from Joint Axes | 1.3 | Queued |
-| Solve IK with a Jacobian Pseudoinverse | 1.3 | Queued |
-| Stabilize Singular IK with Damped Least Squares | 1.3 | Queued |
-| Enforce Joint Limits and Collision Constraints in IK | 1.3 | Queued |
+| [Compute a Geometric Jacobian from Joint Axes](problems/geometric-jacobian-joint-axes/) | 1.3 | Runnable |
+| [Solve IK with a Jacobian Pseudoinverse](problems/planar-ik-jacobian-pseudoinverse/) | 1.3 | Runnable |
+| [Stabilize Singular IK with Damped Least Squares](problems/damped-least-squares-ik-step/) | 1.3 | Runnable |
+| [Enforce Joint Limits and Collision Constraints in IK](problems/joint-limit-collision-ik-candidates/) | 1.3 | Runnable |
 | [Interpolate Joint State at Camera Time](problems/interpolate-joint-state/) | 1.4 | Runnable |
-| Match Approximate Sensor Timestamps | 1.4 | Queued |
-| Detect Dropped and Duplicated Sensor Frames | 1.4 | Queued |
-| Estimate Clock Offset from Paired Events | 1.4 | Queued |
-| Window an Episode Without Crossing Boundaries | 1.4 | Queued |
-| Build Padding and Validity Masks for Robot Sequences | 1.4 | Queued |
-| One Kalman Filter Predict Step | 1.5 | Queued |
-| One Kalman Filter Measurement Update | 1.5 | Queued |
-| Gate Measurements with Mahalanobis Distance | 1.5 | Queued |
-| Normalize and Resample Particle Weights | 1.5 | Queued |
-| Update Occupancy Grid Log Odds | 1.5 | Queued |
-| Fuse Asynchronous Position and Velocity Sensors | 1.5 | Queued |
+| [Match Approximate Sensor Timestamps](problems/match-approximate-sensor-timestamps/) | 1.4 | Runnable |
+| [Detect Dropped and Duplicated Sensor Frames](problems/detect-dropped-duplicated-sensor-frames/) | 1.4 | Runnable |
+| [Estimate Clock Offset from Paired Events](problems/estimate-clock-offset-paired-events/) | 1.4 | Runnable |
+| [Window an Episode Without Crossing Boundaries](problems/window-episode-without-crossing-boundaries/) | 1.4 | Runnable |
+| [Build Padding and Validity Masks for Robot Sequences](problems/build-robot-sequence-validity-masks/) | 1.4 | Runnable |
+| [One Kalman Filter Predict Step](problems/kalman-filter-predict-step/) | 1.5 | Runnable |
+| [One Kalman Filter Measurement Update](problems/kalman-filter-measurement-update/) | 1.5 | Runnable |
+| [Gate Measurements with Mahalanobis Distance](problems/mahalanobis-measurement-gate/) | 1.5 | Runnable |
+| [Normalize and Resample Particle Weights](problems/normalize-resample-particle-weights/) | 1.5 | Runnable |
+| [Update Occupancy Grid Log Odds](problems/occupancy-grid-log-odds-update/) | 1.5 | Runnable |
+| [Fuse Asynchronous Position and Velocity Sensors](problems/fuse-asynchronous-position-velocity/) | 1.5 | Runnable |
 | [PID with Integral Anti-Windup](problems/pid-anti-windup/) | 1.6 | Runnable |
-| Interpolate a Time-Parameterized Trajectory | 1.6 | Queued |
-| Check a Segment Against Occupancy Cells | 1.6 | Queued |
-| Compute a Differential-Drive Rollout | 1.6 | Queued |
-| Evaluate an MPC Tracking Cost | 1.6 | Queued |
-| Enforce Velocity and Acceleration Limits | 1.6 | Queued |
+| [Interpolate a Time-Parameterized Trajectory](problems/time-parameterized-trajectory/) | 1.6 | Runnable |
+| [Check a Segment Against Occupancy Cells](problems/segment-occupancy-cell-check/) | 1.6 | Runnable |
+| [Compute a Differential-Drive Rollout](problems/differential-drive-rollout/) | 1.6 | Runnable |
+| [Evaluate an MPC Tracking Cost](problems/mpc-tracking-cost/) | 1.6 | Runnable |
+| [Enforce Velocity and Acceleration Limits](problems/velocity-acceleration-command-limits/) | 1.6 | Runnable |
 
 ## 2. Vision, VLM, and 3D perception
 
 | Problem | Group | State |
 |---|---|---|
 | [Decode YOLO Grid Predictions into Image Boxes](problems/decode-yolo-grid/) | 2.1 | Runnable |
-| Assign Ground-Truth Objects to Responsible Cells | 2.1 | Queued |
-| Compute YOLO Coordinate, Objectness, and Class Losses | 2.1 | Queued |
+| [Assign Ground-Truth Objects to Responsible Cells](problems/yolo-responsible-cell-targets/) | 2.1 | Runnable |
+| [Compute YOLO Coordinate, Objectness, and Class Losses](problems/yolo-coordinate-objectness-class-loss/) | 2.1 | Runnable |
 | [Run Class-Aware Non-Maximum Suppression](problems/class-aware-nms/) | 2.1 | Runnable |
-| Evaluate Detection with IoU, Precision-Recall, and mAP | 2.1 | Queued |
-| Benchmark Detector Accuracy Against Edge Latency | 2.1 | Queued |
+| [Evaluate Detection with IoU, Precision-Recall, and mAP](problems/detection-precision-recall-map/) | 2.1 | Runnable |
+| [Benchmark Detector Accuracy Against Edge Latency](problems/detector-accuracy-latency-frontier/) | 2.1 | Runnable |
 | [Build a Detection Bipartite-Matching Cost Matrix](problems/detr-matching-cost/) | 2.2 | Runnable |
 | [Match Object Queries with the Hungarian Algorithm](problems/detr-hungarian-assignment/) | 2.2 | Runnable |
-| Compute DETR Classification, L1, and GIoU Losses | 2.2 | Queued |
+| [Compute DETR Classification, L1, and GIoU Losses](problems/detr-matched-training-losses/) | 2.2 | Runnable |
 | [Handle the No-Object Class and Padding Masks](problems/detr-no-object-targets/) | 2.2 | Runnable |
-| Diagnose Query Collapse and Missed Small Objects | 2.2 | Queued |
+| [Diagnose Query Collapse and Missed Small Objects](problems/detr-query-small-object-diagnostics/) | 2.2 | Runnable |
 | [Patchify and Reconstruct an Image Tensor](problems/vit-patchify-reconstruct/) | 2.3 | Runnable |
 | [Build Learned Patch and Class Tokens](problems/vit-patch-class-tokens/) | 2.3 | Runnable |
 | [Interpolate 2D Positional Embeddings](problems/vit-position-interpolation/) | 2.3 | Runnable |
-| Assemble a Pre-Norm Vision Transformer Block | 2.3 | Queued |
-| Profile Token Count, Memory, and Latency by Resolution | 2.3 | Queued |
+| [Assemble a Pre-Norm Vision Transformer Block](problems/vit-pre-norm-block/) | 2.3 | Runnable |
+| [Profile Token Count, Memory, and Latency by Resolution](problems/vit-resolution-profile/) | 2.3 | Runnable |
 | [Normalize Image and Text Embeddings](problems/clip-normalize-embeddings/) | 2.4 | Runnable |
 | [Compute Symmetric Contrastive Loss](problems/clip-symmetric-loss/) | 2.4 | Runnable |
 | [Build a Prompt-Ensembled Zero-Shot Classifier](problems/clip-prompt-ensemble/) | 2.4 | Runnable |
 | [Evaluate Cross-Modal Retrieval Recall at K](problems/clip-retrieval-recall/) | 2.4 | Runnable |
-| Detect Prompt and Class Distribution Drift | 2.4 | Queued |
-| Encode Positive and Negative Point Prompts | 2.5 | Queued |
-| Encode a Box Prompt with Positional Features | 2.5 | Queued |
+| [Detect Prompt and Class Distribution Drift](problems/clip-prompt-class-drift/) | 2.4 | Runnable |
+| [Encode Positive and Negative Point Prompts](problems/sam-point-prompt-encoding/) | 2.5 | Runnable |
+| [Encode a Box Prompt with Positional Features](problems/sam-box-prompt-encoding/) | 2.5 | Runnable |
 | [Rank Candidate Masks with Predicted IoU](problems/sam-mask-ranking/) | 2.5 | Runnable |
 | [Filter Automatic Masks by Stability and Overlap](problems/sam-stability-overlap-filter/) | 2.5 | Runnable |
-| Map Text Tokens to Grounded Phrases | 2.5 | Queued |
-| Select Language-Guided Object Queries | 2.5 | Queued |
-| Decode Phrase-Labeled Boxes | 2.5 | Queued |
-| Build a Grounded Segmentation Pipeline and Trace Failures | 2.5 | Queued |
+| [Map Text Tokens to Grounded Phrases](problems/grounding-token-phrase-map/) | 2.5 | Runnable |
+| [Select Language-Guided Object Queries](problems/grounding-language-query-selection/) | 2.5 | Runnable |
+| [Decode Phrase-Labeled Boxes](problems/grounding-phrase-box-decoding/) | 2.5 | Runnable |
+| [Build a Grounded Segmentation Pipeline and Trace Failures](problems/grounded-segmentation-failure-trace/) | 2.5 | Runnable |
 | [Update a Teacher Encoder with Exponential Moving Average](problems/dinov2-teacher-ema/) | 2.6 | Runnable |
 | [Center and Sharpen Teacher Probabilities](problems/dinov2-center-sharpen/) | 2.6 | Runnable |
 | [Combine Class-Token and Masked-Patch Objectives](problems/dinov2-class-patch-objectives/) | 2.6 | Runnable |
 | [Evaluate Frozen Features with k-NN](problems/dinov2-knn-evaluation/) | 2.6 | Runnable |
-| Monitor Frozen-Feature Drift Across Camera Domains | 2.6 | Queued |
+| [Monitor Frozen-Feature Drift Across Camera Domains](problems/dinov2-camera-feature-drift/) | 2.6 | Runnable |
 | [Prove Permutation Invariance with Symmetric Pooling](problems/pointnet-symmetric-pooling/) | 2.7 | Runnable |
-| Build a Shared Point MLP and Global Feature | 2.7 | Queued |
+| [Build a Shared Point MLP and Global Feature](problems/pointnet-shared-mlp/) | 2.7 | Runnable |
 | [Concatenate Local and Global Features for Segmentation](problems/pointnet-local-global-features/) | 2.7 | Runnable |
 | [Regularize a Learned Feature Transform](problems/pointnet-transform-regularizer/) | 2.7 | Runnable |
-| Validate Point-Cloud Density and Coordinate Conventions | 2.7 | Queued |
-| Generate Calibrated Camera Rays | 2.8 | Queued |
+| [Validate Point-Cloud Density and Coordinate Conventions](problems/pointcloud-density-conventions/) | 2.7 | Runnable |
+| [Generate Calibrated Camera Rays](problems/nerf-calibrated-camera-rays/) | 2.8 | Runnable |
 | [Stratify Samples Along Near and Far Bounds](problems/nerf-stratified-samples/) | 2.8 | Runnable |
 | [Encode 3D Positions with Fourier Features](problems/nerf-fourier-features/) | 2.8 | Runnable |
 | [Compute Transmittance and Alpha Compositing Weights](problems/nerf-alpha-compositing/) | 2.8 | Runnable |
 | [Render Color and Expected Depth Along a Ray](problems/nerf-render-color-depth/) | 2.8 | Runnable |
-| Detect Bad Poses with Reprojection and Render Residuals | 2.8 | Queued |
-| Project BEV Reference Points into Calibrated Cameras | 2.9 | Queued |
-| Mask Out-of-View and Behind-Camera Samples | 2.9 | Queued |
+| [Detect Bad Poses with Reprojection and Render Residuals](problems/nerf-pose-residual-diagnostics/) | 2.8 | Runnable |
+| [Project BEV Reference Points into Calibrated Cameras](problems/bev-project-reference-points/) | 2.9 | Runnable |
+| [Mask Out-of-View and Behind-Camera Samples](problems/bev-visibility-mask/) | 2.9 | Runnable |
 | [Aggregate Multi-Camera Features with Attention Weights](problems/bev-weighted-camera-features/) | 2.9 | Runnable |
 | [Warp a Previous BEV with Ego Motion](problems/bev-ego-motion-warp/) | 2.9 | Runnable |
-| Fuse Temporal BEV State | 2.9 | Queued |
-| Diagnose Camera Dropout and Calibration Drift in BEV | 2.9 | Queued |
+| [Fuse Temporal BEV State](problems/bev-temporal-fusion/) | 2.9 | Runnable |
+| [Diagnose Camera Dropout and Calibration Drift in BEV](problems/bev-camera-health-diagnostics/) | 2.9 | Runnable |
 
 ## 3. VLA and embodied robot learning
 
@@ -130,53 +130,53 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Quantize and Dequantize Continuous Robot Actions](problems/rt1-action-codec/) | 3.1 | Runnable |
 | [Select Compact Visual Tokens with Learned Attention](problems/rt1-compact-visual-tokens/) | 3.1 | Runnable |
 | [Build a Causal Action-Token Mask](problems/rt1-causal-action-token-mask/) | 3.1 | Runnable |
-| Sample a Task-Balanced Trajectory Batch | 3.1 | Queued |
-| Measure Closed-Loop Latency and Action Dropouts | 3.1 | Queued |
+| [Sample a Task-Balanced Trajectory Batch](problems/rt1-task-balanced-trajectories/) | 3.1 | Runnable |
+| [Measure Closed-Loop Latency and Action Dropouts](problems/rt1-control-latency-dropouts/) | 3.1 | Runnable |
 | [Build Sliding Action Chunks with Padding Masks](problems/act-sliding-action-chunks/) | 3.2 | Runnable |
 | [Compute a Masked CVAE Reconstruction and KL Loss](problems/act-cvae-loss/) | 3.2 | Runnable |
 | [Blend Overlapping Action Chunks with Temporal Ensembling](problems/act-temporal-ensembling/) | 3.2 | Runnable |
-| Evaluate Chunk Length Against Compounding Error | 3.2 | Queued |
-| Detect Teleoperation Demonstration Quality Failures | 3.2 | Queued |
+| [Evaluate Chunk Length Against Compounding Error](problems/act-chunk-compounding-error/) | 3.2 | Runnable |
+| [Detect Teleoperation Demonstration Quality Failures](problems/act-teleoperation-quality/) | 3.2 | Runnable |
 | [Add Noise to an Action Sequence](problems/diffusion-action-noising/) | 3.3 | Runnable |
 | [Compute a Conditional Noise-Prediction Loss](problems/diffusion-conditional-noise-loss/) | 3.3 | Runnable |
-| Sample an Action Trajectory with DDPM Steps | 3.3 | Queued |
+| [Sample an Action Trajectory with DDPM Steps](problems/diffusion-ddpm-action-sampler/) | 3.3 | Runnable |
 | [Execute a Receding-Horizon Action Window](problems/diffusion-receding-horizon-window/) | 3.3 | Runnable |
-| Budget Denoising Steps Against Control Frequency | 3.3 | Queued |
+| [Budget Denoising Steps Against Control Frequency](problems/diffusion-denoising-budget/) | 3.3 | Runnable |
 | [Project Continuous Sensor Features into Language Width](problems/palm-e-project-sensor-features/) | 3.4 | Runnable |
-| Interleave Image, State, and Text Tokens | 3.4 | Queued |
-| Build a Multimodal Causal Attention Mask | 3.4 | Queued |
-| Collate Variable Multimodal Sequences | 3.4 | Queued |
-| Validate Missing-Modality and Stale-Sensor Inputs | 3.4 | Queued |
+| [Interleave Image, State, and Text Tokens](problems/palm-e-interleave-modal-tokens/) | 3.4 | Runnable |
+| [Build a Multimodal Causal Attention Mask](problems/palm-e-multimodal-causal-mask/) | 3.4 | Runnable |
+| [Collate Variable Multimodal Sequences](problems/palm-e-collate-multimodal-sequences/) | 3.4 | Runnable |
+| [Validate Missing-Modality and Stale-Sensor Inputs](problems/palm-e-sensor-readiness/) | 3.4 | Runnable |
 | [Serialize Robot Actions as Discrete Tokens](problems/rt2-serialize-action-tokens/) | 3.5 | Runnable |
 | [Parse and Validate an Action-Token Grammar](problems/rt2-parse-action-grammar/) | 3.5 | Runnable |
-| Mix Web and Robot Batches at a Target Ratio | 3.5 | Queued |
+| [Mix Web and Robot Batches at a Target Ratio](problems/rt2-mix-web-robot-batches/) | 3.5 | Runnable |
 | [Constrain Autoregressive Decoding to Valid Actions](problems/rt2-constrained-action-decoding/) | 3.5 | Runnable |
-| Monitor Invalid Actions and Semantic Generalization Slices | 3.5 | Queued |
-| Normalize Heterogeneous Robot Observation Schemas | 3.6 | Queued |
-| Normalize and Mask Embodiment-Specific Action Spaces | 3.6 | Queued |
-| Sample a Balanced Multi-Dataset Mixture | 3.6 | Queued |
-| Compute Per-Embodiment and Transfer Metrics | 3.6 | Queued |
-| Version a Cross-Robot Dataset Manifest | 3.6 | Queued |
-| Assemble Observation and Task Token Groups | 3.7 | Queued |
-| Build Block Masks for Missing Sensors and Goals | 3.7 | Queued |
-| Route Tokens into Dataset-Specific Action Heads | 3.7 | Queued |
-| Add a Frozen-Backbone Adaptation Module | 3.7 | Queued |
-| Verify Trainable Parameters and Fine-Tuning Artifacts | 3.7 | Queued |
-| [Fuse Two Visual Feature Streams Safely](planned/vla/openvla-fuse-visual-streams/) | 3.8 | Reviewed draft; evaluator pending |
-| Quantize Actions from Training-Set Quantiles | 3.8 | Queued |
-| Build a VLA Action-Token Training Batch | 3.8 | Queued |
-| [Add Low-Rank Adaptation to a Policy Layer](planned/vla/openvla-lora-policy-layer/) | 3.8 | Reviewed draft; evaluator pending |
-| Estimate Memory, Latency, and Quantized Serving Budgets | 3.8 | Queued |
+| [Monitor Invalid Actions and Semantic Generalization Slices](problems/rt2-action-generalization-slices/) | 3.5 | Runnable |
+| [Normalize Heterogeneous Robot Observation Schemas](problems/oxe-normalize-observation-schema/) | 3.6 | Runnable |
+| [Normalize and Mask Embodiment-Specific Action Spaces](problems/oxe-normalize-action-spaces/) | 3.6 | Runnable |
+| [Sample a Balanced Multi-Dataset Mixture](problems/oxe-balanced-dataset-sampling/) | 3.6 | Runnable |
+| [Compute Per-Embodiment and Transfer Metrics](problems/oxe-embodiment-transfer-metrics/) | 3.6 | Runnable |
+| [Version a Cross-Robot Dataset Manifest](problems/oxe-version-dataset-manifest/) | 3.6 | Runnable |
+| [Assemble Observation and Task Token Groups](problems/octo-assemble-token-groups/) | 3.7 | Runnable |
+| [Build Block Masks for Missing Sensors and Goals](problems/octo-missing-modality-block-mask/) | 3.7 | Runnable |
+| [Route Tokens into Dataset-Specific Action Heads](problems/octo-dataset-specific-action-heads/) | 3.7 | Runnable |
+| [Add a Frozen-Backbone Adaptation Module](problems/octo-frozen-backbone-adaptation/) | 3.7 | Runnable |
+| [Verify Trainable Parameters and Fine-Tuning Artifacts](problems/octo-verify-finetuning-artifacts/) | 3.7 | Runnable |
+| [Fuse Two Visual Feature Streams Safely](problems/openvla-fuse-visual-streams/) | 3.8 | Runnable |
+| [Quantize Actions from Training-Set Quantiles](problems/openvla-training-quantile-action-bins/) | 3.8 | Runnable |
+| [Build a VLA Action-Token Training Batch](problems/openvla-action-token-training-batch/) | 3.8 | Runnable |
+| [Add Low-Rank Adaptation to a Policy Layer](problems/openvla-lora-policy-layer/) | 3.8 | Runnable |
+| [Estimate Memory, Latency, and Quantized Serving Budgets](problems/openvla-quantized-serving-budget/) | 3.8 | Runnable |
 | [Sample Flow-Matching Action Interpolants and Targets](problems/pi0-flow-action-interpolants/) | 3.9 | Runnable |
-| Build Block Attention for VLM and Action Expert Tokens | 3.9 | Queued |
+| [Build Block Attention for VLM and Action Expert Tokens](problems/pi0-vlm-action-block-attention/) | 3.9 | Runnable |
 | [Integrate an Action Flow with Euler Steps](problems/pi0-euler-action-flow/) | 3.9 | Runnable |
-| Evaluate Solver Steps Against Trajectory Error | 3.9 | Queued |
-| Monitor Continuous-Action Range and Smoothness Drift | 3.9 | Queued |
-| Route Inputs Through a Dual-System Policy Interface | 3.10 | Queued |
-| Build a Heterogeneous Real, Video, and Synthetic Batch | 3.10 | Queued |
-| Compute a Diffusion-Transformer Action-Chunk Loss | 3.10 | Queued |
-| Report Metrics by Source and Embodiment | 3.10 | Queued |
-| Gate a Humanoid Policy Release on Safety Slices | 3.10 | Queued |
+| [Evaluate Solver Steps Against Trajectory Error](problems/pi0-solver-trajectory-error/) | 3.9 | Runnable |
+| [Monitor Continuous-Action Range and Smoothness Drift](problems/pi0-action-range-smoothness-drift/) | 3.9 | Runnable |
+| [Route Inputs Through a Dual-System Policy Interface](problems/gr00t-dual-system-routing/) | 3.10 | Runnable |
+| [Build a Heterogeneous Real, Video, and Synthetic Batch](problems/gr00t-heterogeneous-training-batch/) | 3.10 | Runnable |
+| [Compute a Masked Action Flow-Matching Loss](problems/gr00t-masked-action-flow-loss/) | 3.10 | Runnable |
+| [Report Metrics by Source and Embodiment](problems/gr00t-source-embodiment-metrics/) | 3.10 | Runnable |
+| [Gate a Humanoid Policy Release on Safety Slices](problems/gr00t-humanoid-safety-slice-gate/) | 3.10 | Runnable |
 
 ## 4. Robotics MLOps, deployment, and sim-to-real
 
@@ -204,29 +204,46 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Select a Checkpoint with Offline and Rollout Gates](problems/offline-rollout-checkpoint-gate/) | 4.4 | Runnable |
 | [Map Robot-Specific Data into a Shared Episode Schema](problems/map-shared-robot-episode/) | 4.5 | Runnable |
 | [Balance a Multi-Dataset Training Mixture](problems/balance-multidataset-batch/) | 4.5 | Runnable |
-| [Mask Unavailable Action Dimensions](planned/mlops/mask-unavailable-action-dimensions/) | 4.5 | Draft package; review pending |
-| [Build a Per-Embodiment Transfer Matrix](planned/mlops/per-embodiment-transfer-matrix/) | 4.5 | Draft package; review pending |
-| [Detect Dataset-Version and Schema Drift](planned/mlops/dataset-version-schema-drift/) | 4.5 | Draft package; review pending |
+| [Mask Unavailable Action Dimensions](problems/mask-unavailable-action-dimensions/) | 4.5 | Runnable |
+| [Build a Per-Embodiment Transfer Matrix](problems/per-embodiment-transfer-matrix/) | 4.5 | Runnable |
+| [Detect Dataset-Version and Schema Drift](problems/dataset-version-schema-drift/) | 4.5 | Runnable |
 | [Compute p50, p90, and p99 Inference Latency](problems/inference-latency-percentiles/) | 4.6 | Runnable |
-| [Simulate Single-Stream and Server Load](planned/mlops/simulate-inference-load/) | 4.6 | Draft package; review pending |
-| [Reject Invalid Benchmark Runs](planned/mlops/reject-invalid-benchmark-runs/) | 4.6 | Draft package; review pending |
-| [Derive End-to-End Latency from Robotics Trace Events](planned/mlops/robotics-trace-end-to-end-latency/) | 4.6 | Draft package; review pending |
-| Measure Throughput and Jitter Across a ROS-Style Graph | 4.6 | Queued |
-| Compare Black-Box and Grey-Box Pipeline Measurements | 4.6 | Queued |
-| Fuse Compatible Operators in a Compute Graph | 4.7 | Queued |
-| Search Tensor Tile Sizes with a Toy Cost Model | 4.7 | Queued |
-| Reuse Tensor Buffers with Liveness Analysis | 4.7 | Queued |
-| Extract a Depth, Width, and Kernel Subnetwork | 4.7 | Queued |
-| Sample a Progressive-Shrinking Curriculum | 4.7 | Queued |
-| Select a Pareto Model Under Accuracy and Latency Limits | 4.7 | Queued |
-| Package and Verify an Edge Model Artifact | 4.7 | Queued |
-| Build a Seeded Visual Randomization Sampler | 4.8 | Queued |
-| Stratify Texture, Lighting, Camera, and Distractor Factors | 4.8 | Queued |
-| Measure Performance Across Shift Buckets | 4.8 | Queued |
-| Estimate Scenario Coverage and Confidence Intervals | 4.8 | Queued |
-| Version a Simulation Scenario Distribution | 4.8 | Queued |
+| [Simulate Single-Stream and Server Load](problems/simulate-inference-load/) | 4.6 | Runnable |
+| [Reject Invalid Benchmark Runs](problems/reject-invalid-benchmark-runs/) | 4.6 | Runnable |
+| [Derive End-to-End Latency from Robotics Trace Events](problems/robotics-trace-end-to-end-latency/) | 4.6 | Runnable |
+| [Measure Throughput and Jitter Across a ROS-Style Graph](problems/graph-throughput-jitter/) | 4.6 | Runnable |
+| [Compare Black-Box and Grey-Box Pipeline Measurements](problems/compare-pipeline-measurements/) | 4.6 | Runnable |
+| [Fuse Compatible Operators in a Compute Graph](problems/fuse-compatible-operators/) | 4.7 | Runnable |
+| [Search Tensor Tile Sizes with a Toy Cost Model](problems/search-tensor-tiles/) | 4.7 | Runnable |
+| [Reuse Tensor Buffers with Liveness Analysis](problems/reuse-tensor-buffers/) | 4.7 | Runnable |
+| [Extract a Depth, Width, and Kernel Subnetwork](problems/extract-elastic-subnetwork/) | 4.7 | Runnable |
+| [Sample a Progressive-Shrinking Curriculum](problems/progressive-shrinking-curriculum/) | 4.7 | Runnable |
+| [Select a Pareto Model Under Accuracy and Latency Limits](problems/pareto-edge-model-selection/) | 4.7 | Runnable |
+| [Package and Verify an Edge Model Artifact](problems/package-edge-model-artifact/) | 4.7 | Runnable |
+| [Build a Seeded Visual Randomization Sampler](problems/seeded-visual-randomization/) | 4.8 | Runnable |
+| [Stratify Texture, Lighting, Camera, and Distractor Factors](problems/stratify-visual-factors/) | 4.8 | Runnable |
+| [Measure Performance Across Shift Buckets](problems/shift-bucket-performance/) | 4.8 | Runnable |
+| [Estimate Scenario Coverage and Confidence Intervals](problems/scenario-coverage-confidence/) | 4.8 | Runnable |
+| [Version a Simulation Scenario Distribution](problems/version-simulation-distribution/) | 4.8 | Runnable |
 | [Sample Mass, Friction, Delay, and Gain Distributions](problems/sample-dynamics-distributions/) | 4.9 | Runnable |
-| Aggregate Mean and Worst-Case Policy Returns | 4.9 | Queued |
-| Quantify Calibration Sensitivity | 4.9 | Queued |
-| Choose Randomization Bounds from Safety Constraints | 4.9 | Queued |
-| Gate Sim-to-Real Release with Robustness Evidence | 4.9 | Queued |
+| [Aggregate Mean and Worst-Case Policy Returns](problems/aggregate-policy-returns/) | 4.9 | Runnable |
+| [Quantify Calibration Sensitivity](problems/calibration-sensitivity/) | 4.9 | Runnable |
+| [Choose Randomization Bounds from Safety Constraints](problems/randomization-safety-bounds/) | 4.9 | Runnable |
+| [Gate Sim-to-Real Release with Robustness Evidence](problems/sim-to-real-robustness-gate/) | 4.9 | Runnable |
+
+## 7. Reviewed paper-library expansion
+
+| Problem | Group | State |
+|---|---|---|
+| [Compute the Clipped Policy Surrogate](problems/ppo-clipped-policy-surrogate/) | 7.1 | Runnable |
+| [Normalize Batched Advantages](problems/ppo-normalize-batched-advantages/) | 7.1 | Runnable |
+| [Report Policy Update Clip Fractions](problems/ppo-policy-update-clip-fractions/) | 7.1 | Runnable |
+| [Compute Value Targets Across Episode Boundaries](problems/ppo-boundary-value-targets/) | 7.1 | Runnable |
+| [Compute an Entropy-Regularized State Value](problems/sac-soft-state-value/) | 7.1 | Runnable |
+| [Compute an Entropy-Regularized Bellman Target](problems/soft-value-bellman-target/) | 7.1 | Runnable |
+| [Apply Tanh Action Log-Probability Correction](problems/sac-tanh-logprob-correction/) | 7.1 | Runnable |
+| [Update a Temperature Objective (later SAC extension)](problems/sac-temperature-objective-update/) | 7.1 | Runnable |
+| [Compute an Expectile Regression Loss](problems/iql-expectile-regression/) | 7.1 | Runnable |
+| [Build Advantage-Weighted Action Weights](problems/iql-advantage-action-weights/) | 7.1 | Runnable |
+| [Validate an Offline Dataset Split](problems/iql-offline-dataset-split/) | 7.1 | Runnable |
+| [Train and Evaluate a Tiny PPO Joint Controller](problems/ppo-joint-controller-integration/) | 7.1 | Runnable |

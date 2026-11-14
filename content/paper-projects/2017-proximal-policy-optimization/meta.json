@@ -1,0 +1,41 @@
+{
+  "slug": "2017-proximal-policy-optimization",
+  "title": "Train a Tiny PPO Joint Controller",
+  "summary": "Collect reproducible synthetic rollouts, update a Gaussian controller, and evaluate held-out joint targets.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "ppo-joint-controller-integration",
+  "paperIds": [
+    "2017-proximal-policy-optimization"
+  ],
+  "stages": [
+    {
+      "title": "Keep rollout boundaries explicit",
+      "description": "Use terminal-aware discounted targets from the actual next observation.",
+      "problemSlugs": [
+        "ppo-boundary-value-targets"
+      ]
+    },
+    {
+      "title": "Construct the policy update signal",
+      "description": "Normalize the valid rollout advantages and apply the signed clipped objective.",
+      "problemSlugs": [
+        "ppo-normalize-batched-advantages",
+        "ppo-clipped-policy-surrogate"
+      ]
+    },
+    {
+      "title": "Inspect the update",
+      "description": "Distinguish a ratio excursion from active clipping and report approximate policy-change evidence.",
+      "problemSlugs": [
+        "ppo-policy-update-clip-fractions"
+      ]
+    },
+    {
+      "title": "Train and evaluate one bounded controller",
+      "description": "Compose rollout collection, updates and held-out deterministic evaluation in one reproducible function.",
+      "problemSlugs": [
+        "ppo-joint-controller-integration"
+      ]
+    }
+  ]
+}

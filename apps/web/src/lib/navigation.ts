@@ -13,6 +13,7 @@ export type NavigationItem = {
 
 export function buildNavigation(problems: ProblemMeta[], papers: Paper[], tracks: Track[]): NavigationItem[] {
   const problemSlugs = new Set(problems.map(problem => problem.slug));
+  const capstones = problems.filter(problem => problem.slug.startsWith("capstone-")).map(problem => ({ id: `capstone-${problem.slug}`, label: problem.title, href: `/projects/capstones/${problem.slug.slice("capstone-".length)}` }));
   const topics = projectSheets.map(sheet => {
     const children = papers.filter(paper => projectSheet(paper.category)?.slug === sheet.slug).map(paper => ({
       id: `paper-${paper.id}`, label: paper.title, href: `/projects/${paper.id}`, keywords: `${paper.id} ${paper.topics.join(" ")}`,
@@ -39,7 +40,7 @@ export function buildNavigation(problems: ProblemMeta[], papers: Paper[], tracks
         return { id: `track-topic-${sheet.slug}`, label: sheet.title, href: `/tracks?topic=${sheet.slug}`, count: children.length, children };
       }).filter(topic => topic.children.length)],
     },
-    { id: "projects", label: "Projects", href: "/projects", icon: "projects", count: papers.length, children: topics },
+    { id: "projects", label: "Projects", href: "/projects", icon: "projects", count: papers.length + capstones.length, children: [{ id: "capstones", label: "Capstone projects", href: "/projects/capstones", count: capstones.length, children: capstones }, ...topics] },
     { id: "systems", label: "Systems", href: "/systems", icon: "systems" },
     { id: "progress", label: "Progress", href: "/progress", icon: "progress" },
     { id: "account", label: "Account", href: "/account", icon: "account", keywords: "login sign in register profile" },

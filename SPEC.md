@@ -264,7 +264,7 @@ Roll out the new format in reviewed batches, beginning with Diffusion Policy. Th
 
 ## 9. Launch curriculum
 
-`MVP_10.md` defines the first ten problems to author and implement. `CURRICULUM.md` is the larger named roadmap: 189 practical problem candidates across shared foundations, vision/VLM/3D perception, VLA/embodied learning, and robotics MLOps/deployment/sim-to-real. A roadmap name is a candidate until a reviewed problem-blueprint Markdown file promotes it to an implementation commitment.
+`MVP_10.md` defines the original ten-problem vertical slice. `CURRICULUM.md` contains 190 named practical problems across shared foundations, vision/VLM/3D perception, VLA/embodied learning, and robotics MLOps/deployment/sim-to-real. The current implementation and review state of every entry is recorded in `content/AUTHORING_STATUS.md`. Additional paper-flow ideas require a reviewed blueprint before becoming new implementation commitments.
 
 The local catalog now expands incrementally from that baseline. `content/AUTHORING_STATUS.md` records each named entry as queued, planned, drafted, reviewed, or runnable, generated from the curriculum and content files. Runnable entries have complete versioned packages and pass public Run plus hidden Submit in the existing isolated worker. Standalone theory may use a purposeful static table or shape trace with `visualization: markdown`; an unrelated interactive diagram must never substitute for a missing adapter. Reference verification discovers published metadata and supports focused slug selection instead of a fixed ten-problem count. Shared local runtime caps remain 18 seconds wall time, 10 CPU seconds, and 4 GiB address space per process; smaller authoring targets are not represented as enforced budgets.
 
@@ -386,7 +386,7 @@ Required human-authored material: summary, prompt, theory, examples, hints, solu
 
 ## 12. Technical architecture
 
-The user has begun Vercel deployment of the web application and authorized fixing its build configuration. The website may run locally or as a Vercel web preview, with the supplied Supabase project for email/password Auth and account metadata. The evaluator and MuJoCo service remain local-only; this web deployment does not authorize remote database migrations or learner execution in hosted functions. Repository-root Vercel builds use apps/web/.next and the packaging contract in docs/vercel-web.md.
+The user has authorized the remaining release work, including Vercel web publishing and Supabase persistence migrations once an authenticated connection is available. The website may run locally or on Vercel. Prepare the separate Linux evaluator and MuJoCo deployment; the user will choose its hosting provider before those services are deployed. Learner code never executes in hosted web/database functions. Repository-root Vercel builds use apps/web/.next and the packaging contract in docs/vercel-web.md. The current release split and outstanding verification are in docs/RELEASE_PLAN.md and deploy/README.md.
 
 ### 12.1 Applications
 
@@ -415,6 +415,16 @@ Browser
 ```
 
 The production worker never receives general database or service-role credentials. It gets a single-use job payload and narrow, expiring artifact permissions. Local development may use a local-only credential through the same narrow interface, never embedded in learner workloads.
+
+The prepared initial transport uses an authenticated Next.js proxy: Supabase Auth verifies the session, the server replaces browser-supplied ownership with the account ID, and a separate server-only token authenticates the backend call over HTTPS. Completed evaluations return through a token-authenticated `/api/evaluations` callback; the Vercel control plane invokes the service-only `record_evaluation` database transaction. The worker has no general database credential. This shared service credential is an initial control-plane transport, not the future single-use job capability described above.
+
+The new experimental `data-only-functions-v1` grader keeps test code and expected results outside the learner process. Its bounded numeric transport does not preserve native object identity, in-place effects or autograd. Existing native-function contracts must not silently be graded with weaker semantics: hosted qualification requires an explicitly reviewed compatible execution contract and matching immutable artifact hashes. The existing catalog remains on its local native runner until a contract-compatible production path is qualified. A Docker/gVisor build and actual host containment checks are deployment gates, not inferred from local bubblewrap tests.
+
+### 12.2.1 Account workspace synchronization
+
+`/api/workspace` verifies bearer sessions with Supabase Auth and uses row-level security for private drafts, notes and bookmarks. Writes use expected revisions; conflicting edits preserve both copies until the learner chooses. Browser caches are scoped to the authenticated account and remain separate from guest work. Account changes abort pending requests and remount the editor boundary. An unavailable backend retains local edits and exposes retry status.
+
+The browser cannot upload solved flags or manufacture submission history. Those records come from server-owned immutable jobs, evaluations and progress. The evaluator callback checks published content/runtime/fixture identity before recording a solve. Hosted use requires applied migrations and real published catalog versions; the public URL and publishable key alone do not apply a schema or publish versions.
 
 ### 12.3 Core entities
 
@@ -597,7 +607,7 @@ Specification work is complete for the local vertical slice. No unresolved produ
 
 - Product workflow and Theory/LaTeX/visual standards are defined.
 - The first ten problems, order, contracts, paper connections, visuals, and evaluator families are defined in `MVP_10.md`.
-- The larger 189-problem roadmap is named and grouped in `CURRICULUM.md`.
+- The larger 190-problem curriculum is named and grouped in `CURRICULUM.md`; current runnable coverage is recorded in `content/AUTHORING_STATUS.md`.
 - Paper-card and problem-blueprint schemas are defined, with 32 verified PDF/Markdown pairs available for authoring.
 - Local execution and the Vercel/Supabase production boundary are locked.
 - Untrusted learner execution is separated from the web/control plane.

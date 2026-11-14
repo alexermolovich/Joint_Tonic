@@ -1,10 +1,8 @@
-# Optional local Supabase persistence
+# Local Supabase persistence
 
-Account login is now implemented separately: see [Supabase login and accounts](supabase-auth.md). The user authorized hosted Supabase Auth for the localhost website. Display names persist in Auth metadata; the database/workspace adapters below remain future work. The client now accepts HTTPS hosted endpoints as well as loopback HTTP(S).
+Login and account workspaces are implemented. See [Supabase Auth](supabase-auth.md) and [account workspace persistence](../specs/account-workspace-persistence.md) for the API, account isolation, conflict handling and deployment prerequisites.
 
-Joint Tonic currently runs without a database daemon. The application reads problem/paper content from the repository, stores drafts, notes, bookmarks and displayed progress in browser localStorage under joint-tonic.workspace.v1, and stores worker job records under .local/jobs. Those records are local development state. They are not signed-in cross-device persistence or authoritative database-backed learning records.
-
-The schema in supabase/migrations is the next persistence layer. Adding environment variables creates an optional browser client; it does not switch the existing workspace or worker adapters automatically.
+Without database configuration, signed-out drafts, notes and progress remain in the original browser workspace. Signed-in caches are separate and preserve pending edits while storage is unavailable. Cloud synchronization needs the checked-in migrations and a published immutable catalog. No hosted migrations or catalog rows have been applied by this implementation.
 
 ## Start the local stack
 

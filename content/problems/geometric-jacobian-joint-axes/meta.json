@@ -1,0 +1,76 @@
+{
+  "slug": "geometric-jacobian-joint-axes",
+  "title": "Compute a Geometric Jacobian from Joint Axes",
+  "version": "1.0.0",
+  "number": 56,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "kinematics"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "geometric_jacobian",
+  "paperIds": [],
+  "prerequisites": [
+    "serial-chain-forward-kinematics"
+  ],
+  "visualization": "markdown",
+  "summary": "Convert base-frame joint axes and origins into a linear-first tool geometric Jacobian.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "one right-handed base frame for every input"
+    ],
+    "units": {
+      "origins,tool": "metres",
+      "axes": "dimensionless unit vectors",
+      "joint_rates": "revolute rad/s; prismatic m/s",
+      "twist": "linear m/s then angular rad/s"
+    },
+    "axes": "Positive rotation follows the right-hand rule; positive prismatic motion follows its axis.",
+    "timestamp_assumptions": "All origins and axes describe the same static robot configuration.",
+    "batching": "origins/axes(N,3), joint_types list/tuple(N), tool(3,) -> float64 J(6,N); 1<=N<=1000."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "adf1a5227e47b81f17736faca927376bb627b3c62ebfdd23c2bc087206818250"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

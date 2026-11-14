@@ -4,7 +4,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let browserClient: SupabaseClient | null = null;
 
-/** Optional Auth client. Learning records still use the local workspace. */
+/** Optional Auth client; private account records use the server-verified workspace API. */
 export function getSupabaseBrowserClient(): SupabaseClient | null {
   if (typeof window === "undefined") return null;
   if (browserClient) return browserClient;

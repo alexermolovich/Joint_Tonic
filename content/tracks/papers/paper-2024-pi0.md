@@ -19,10 +19,13 @@
     "generalist robot control"
   ],
   "runnable_problem_slugs": [
+    "pi0-vlm-action-block-attention",
     "pi0-flow-action-interpolants",
-    "pi0-euler-action-flow"
+    "pi0-euler-action-flow",
+    "pi0-solver-trajectory-error",
+    "pi0-action-range-smoothness-drift"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +58,7 @@ The implementation path follows **Build embodied context → Train a flow field 
 
 Source cards: [2024-pi0](../../../research/papers/vla-embodied/2024-pi0.md).
 
-**Available now:** 2 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,7 +79,7 @@ Combine semantic visual-language features with the robot’s current state.
 
 [Study the mechanism and math](/projects/2024-pi0#paper-section-build-embodied-context).
 
-- **Proposed component, not runnable:** Build Block Attention for VLM and Action Expert Tokens.
+- **Runnable paper-associated component:** [Build Block Attention for VLM and Action Expert Tokens](/problems/pi0-vlm-action-block-attention). The semantic context remains fixed while an action chunk is jointly refined.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -101,8 +104,8 @@ Apply the learned velocity repeatedly to turn fresh noise into an action chunk.
 [Study the mechanism and math](/projects/2024-pi0#paper-section-integrate-and-execute).
 
 - **Runnable paper-associated component:** [Integrate an Action Flow with Euler Steps](/problems/pi0-euler-action-flow). Integrate an Action Flow with Euler Steps
-- **Proposed component, not runnable:** Evaluate Solver Steps Against Trajectory Error.
-- **Proposed component, not runnable:** Monitor Continuous-Action Range and Smoothness Drift.
+- **Runnable paper-associated component:** [Evaluate Solver Steps Against Trajectory Error](/problems/pi0-solver-trajectory-error). More solver steps spend time without guaranteeing a better predicted trajectory.
+- **Runnable paper-associated component:** [Monitor Continuous-Action Range and Smoothness Drift](/problems/pi0-action-range-smoothness-drift). An action can stay inside its allowed range yet jump too quickly between control ticks.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

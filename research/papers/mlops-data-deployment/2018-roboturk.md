@@ -16,7 +16,7 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Map operator motion","detail":"Translate mobile-device motion into a robot control reference.","column":0,"row":0,"section":"Map operator motion","problem_slugs":["se3-transform-points"],"planned_problems":["Map Operator Motion into a Robot Control Frame"]},{"id":"stage-2","title":"Stream control and feedback","detail":"Run a session with synchronized actions and visual observations.","column":1,"row":0,"section":"Stream control and feedback","problem_slugs":[],"planned_problems":["Detect Paused or Corrupted Action Segments"]},{"id":"stage-3","title":"Curate demonstrations","detail":"Store complete episodes and task outcomes for learning.","column":2,"row":0,"section":"Curate demonstrations","problem_slugs":["validate-robot-episodes"],"planned_problems":["Validate a Teleoperation Demonstration","Compute Collector and Task Coverage"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"operator commands"},{"from":"stage-2","to":"stage-3","label":"session trajectories"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Map operator motion", "detail": "Translate mobile-device motion into a robot control reference.", "column": 0, "row": 0, "section": "Map operator motion", "problem_slugs": ["se3-transform-points", "trace-perception-frame-graph", "velocity-acceleration-command-limits"], "planned_problems": ["Map Operator Motion into a Robot Control Frame"]}, {"id": "stage-2", "title": "Stream control and feedback", "detail": "Run a session with synchronized actions and visual observations.", "column": 1, "row": 0, "section": "Stream control and feedback", "problem_slugs": ["estimate-clock-offset-paired-events", "detect-dropped-duplicated-sensor-frames"], "planned_problems": ["Detect Paused or Corrupted Action Segments"]}, {"id": "stage-3", "title": "Curate demonstrations", "detail": "Store complete episodes and task outcomes for learning.", "column": 2, "row": 0, "section": "Curate demonstrations", "problem_slugs": ["validate-robot-episodes"], "planned_problems": ["Validate a Teleoperation Demonstration", "Compute Collector and Task Coverage"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "operator commands"}, {"from": "stage-2", "to": "stage-3", "label": "session trajectories"}]}
 ---
 
 ## Core paper explanation
@@ -32,6 +32,17 @@ Follow the data through the mechanism. Training objectives and inference behavio
 A teaching relative-pose interface uses $\Delta T=T_{\mathrm{phone},0}^{-1}T_{\mathrm{phone},t}$, then maps that displacement into the robot's controller frame. The exact scaling, clutching, and orientation conventions belong to the teleoperation interface; raw phone coordinates are not robot coordinates.
 
 
+
+<!-- joint-tonic-math-expansion -->
+#### A bounded coordinate-mapping model
+
+For an original translation-only teaching model, let $\delta p_P\in\mathbb R^3$ be phone displacement in metres, $R_{RP}\in SO(3)$ the rotation from phone-reference axes into robot-control axes, and $s>0$ a dimensionless motion scale. The robot reference increment is
+
+$$\delta p_R=sR_{RP}\delta p_P.$$
+
+For a +90° rotation about z, scale 2, and phone displacement $(0.01,0,0)$ metres, the robot increment is $(0,0.02,0)$ metres. This isolates frame/scale reasoning; it is not a claim about RoboTurk's complete clutching or controller implementation. [Frame-graph tracing](/problems/trace-perception-frame-graph) makes the coordinate direction explicit, while [velocity and acceleration limits](/problems/velocity-acceleration-command-limits) demonstrates bounded command changes in joint coordinates after a controller has mapped the target.
+<!-- /joint-tonic-math-expansion -->
+
 **Component practice**
 
 - Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
@@ -41,6 +52,15 @@ A teaching relative-pose interface uses $\Delta T=T_{\mathrm{phone},0}^{-1}T_{\m
 
 End-to-end feedback age is $\Delta t=t_{\mathrm{display}}-t_{\mathrm{capture}}$. This diagnostic includes capture, transport, processing, and display delay. The paper studies operation under network variation; it does not establish arbitrary latency tolerance for every robot task.
 
+
+
+<!-- joint-tonic-math-expansion -->
+For frame $i$, define capture time $c_i$ and display time $d_i$ on a synchronized clock, both in seconds. The observed feedback age is
+
+$$a_i=d_i-c_i.$$
+
+A frame captured at 10.00 s and displayed at 10.18 s is 0.18 s old. A second frame's smaller age does not fix an out-of-order display sequence. [Clock-offset estimation](/problems/estimate-clock-offset-paired-events) and [dropped/duplicate frame detection](/problems/detect-dropped-duplicated-sensor-frames) expose different collection failures; neither establishes a safe delay bound for live teleoperation.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

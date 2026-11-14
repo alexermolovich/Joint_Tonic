@@ -1,0 +1,25 @@
+[Unit]
+Description=Joint Tonic bounded MuJoCo renderer
+After=network-online.target
+
+[Service]
+Type=simple
+User=joint-tonic
+Group=joint-tonic
+WorkingDirectory=/opt/joint-tonic
+EnvironmentFile=/etc/joint-tonic/simulator.env
+Environment=MUJOCO_GL=egl
+ExecStart=/opt/joint-tonic/.venv/bin/python -u apps/simulator/server.py
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/joint-tonic/.local
+MemoryMax=2G
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

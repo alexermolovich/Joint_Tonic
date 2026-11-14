@@ -21,9 +21,11 @@
   "runnable_problem_slugs": [
     "diffusion-action-noising",
     "diffusion-conditional-noise-loss",
-    "diffusion-receding-horizon-window"
+    "diffusion-ddpm-action-sampler",
+    "diffusion-receding-horizon-window",
+    "diffusion-denoising-budget"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 6,
   "source_flow_nodes": [
     {
@@ -70,7 +72,7 @@ The implementation path follows **Encode observations → Noise a demonstration 
 
 Source cards: [2023-diffusion-policy](../../../research/papers/vla-embodied/2023-diffusion-policy.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -139,7 +141,7 @@ Inference starts from Gaussian noise and applies the trained network through the
 
 [Study the mechanism and math](/projects/2023-diffusion-policy#paper-section-reverse-sampling).
 
-- **Proposed component, not runnable:** Sample an Action Trajectory with DDPM Steps.
+- **Runnable paper-associated component:** [Sample an Action Trajectory with DDPM Steps](/problems/diffusion-ddpm-action-sampler). Reverse diffusion removes predicted corruption one level at a time.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -152,7 +154,7 @@ Execute a short valid prefix, capture new observations, and plan the next overla
 [Study the mechanism and math](/projects/2023-diffusion-policy#paper-section-receding-horizon-execution).
 
 - **Runnable paper-associated component:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window). Extract the controller-supported prefix of a predicted future trajectory after a specified alignment offset.
-- **Proposed component, not runnable:** Budget Denoising Steps Against Control Frequency.
+- **Runnable paper-associated component:** [Budget Denoising Steps Against Control Frequency](/problems/diffusion-denoising-budget). More denoising iterations can improve a sampler while missing a robot deadline.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

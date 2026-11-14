@@ -1,96 +1,88 @@
 ---
-{
-  "schema_version": 1,
-  "paper_id": "2018-micro-lie-theory",
-  "title": "A micro Lie theory for state estimation in robotics",
-  "authors": [
-    "Joan Solà",
-    "Jeremie Deray",
-    "Dinesh Atchuthan"
-  ],
-  "year": 2018,
-  "venue_or_status": "Technical report IRI-TR-18-01; arXiv v9 (2021 revision)",
-  "primary_url": "https://arxiv.org/abs/1812.01537",
-  "pdf_url": "https://arxiv.org/pdf/1812.01537v9",
-  "local_pdf": "./2018-micro-lie-theory.pdf",
-  "sha256": "93190a60ad5f390006970f684ba8590bf55ce21adc3c1cb675adc55ead17f869",
-  "bytes": 1576616,
-  "pages": 17,
-  "topics": [
-    "Lie groups",
-    "state estimation",
-    "SE(3)",
-    "geometry"
-  ],
-  "modalities": [
-    "poses",
-    "inertial state",
-    "geometric measurements"
-  ],
-  "track_role": "supporting",
-  "open_access_status": "open-access-preprint",
-  "redistribution_note": "Local research reference only. Open-access source verified; downstream redistribution rights have not been audited. The PDF is not a public product asset.",
-  "acquired_on": "2026-11-13",
-  "source_verification": "Primary title/authors and version checked; PDF signature, all-page parser readability, first-page visual render, count and SHA-256 validated.",
-  "execution_flow": {
-    "title": "Selected mechanism and implementation path",
-    "description": "A compact treatment of Lie-group perturbations, Jacobians and uncertainty for robot state estimation. It helps make pose-update conventions executable rather than treating a rotation matrix as an unconstrained array.",
-    "nodes": [
-      {
-        "id": "pose",
-        "title": "Represent a pose",
-        "detail": "Represent a pose. See the original explanation and component status below.",
-        "column": 0,
-        "row": 0,
-        "section": "Represent a pose",
-        "problem_slugs": [
-          "compose-frame-transforms",
-          "normalize-multiply-quaternions"
-        ],
-        "planned_problems": [
-          "Interpolate a Pose with SLERP"
-        ]
-      },
-      {
-        "id": "update",
-        "title": "Apply a tangent update",
-        "detail": "Apply a tangent update. See the original explanation and component status below.",
-        "column": 1,
-        "row": 0,
-        "section": "Apply a tangent update",
-        "problem_slugs": [],
-        "planned_problems": [
-          "Apply SE(3) Exponential and Logarithm Maps"
-        ]
-      },
-      {
-        "id": "linearize",
-        "title": "Linearize an estimation residual",
-        "detail": "Linearize an estimation residual. See the original explanation and component status below.",
-        "column": 2,
-        "row": 0,
-        "section": "Linearize an estimation residual",
-        "problem_slugs": [],
-        "planned_problems": [
-          "Finite-Difference Gradient Check",
-          "One Kalman Filter Measurement Update"
-        ]
-      }
-    ],
-    "edges": [
-      {
-        "from": "pose",
-        "to": "update",
-        "label": "validated component output"
-      },
-      {
-        "from": "update",
-        "to": "linearize",
-        "label": "validated component output"
-      }
-    ]
-  }
-}
+schema_version: 1
+paper_id: 2018-micro-lie-theory
+title: A micro Lie theory for state estimation in robotics
+authors:
+  - Joan Solà
+  - Jeremie Deray
+  - Dinesh Atchuthan
+year: 2018
+venue_or_status: Technical report IRI-TR-18-01; arXiv v9 (2021 revision)
+primary_url: 'https://arxiv.org/abs/1812.01537'
+pdf_url: 'https://arxiv.org/pdf/1812.01537v9'
+local_pdf: ./2018-micro-lie-theory.pdf
+sha256: 93190a60ad5f390006970f684ba8590bf55ce21adc3c1cb675adc55ead17f869
+bytes: 1576616
+pages: 17
+topics:
+  - Lie groups
+  - state estimation
+  - SE(3)
+  - geometry
+modalities:
+  - poses
+  - inertial state
+  - geometric measurements
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: >-
+  Local research reference only. Open-access source verified; downstream
+  redistribution rights have not been audited. The PDF is not a public product
+  asset.
+acquired_on: '2026-11-13'
+source_verification: >-
+  Primary title/authors and version checked; PDF signature, all-page parser
+  readability, first-page visual render, count and SHA-256 validated.
+execution_flow:
+  title: Selected mechanism and implementation path
+  description: >-
+    A compact treatment of Lie-group perturbations, Jacobians and uncertainty
+    for robot state estimation. It helps make pose-update conventions executable
+    rather than treating a rotation matrix as an unconstrained array.
+  nodes:
+    - id: pose
+      title: Represent a pose
+      detail: >-
+        Represent a pose. See the original explanation and component status
+        below.
+      column: 0
+      row: 0
+      section: Represent a pose
+      problem_slugs:
+        - compose-frame-transforms
+        - normalize-multiply-quaternions
+        - interpolate-pose-slerp
+      planned_problems: []
+    - id: update
+      title: Apply a tangent update
+      detail: >-
+        Apply a tangent update. See the original explanation and component
+        status below.
+      column: 1
+      row: 0
+      section: Apply a tangent update
+      problem_slugs: []
+      planned_problems:
+        - Apply SE(3) Exponential and Logarithm Maps
+    - id: linearize
+      title: Linearize an estimation residual
+      detail: >-
+        Linearize an estimation residual. See the original explanation and
+        component status below.
+      column: 2
+      row: 0
+      section: Linearize an estimation residual
+      problem_slugs:
+        - kalman-filter-measurement-update
+        - finite-difference-gradient-check
+      planned_problems: []
+  edges:
+    - from: pose
+      to: update
+      label: validated component output
+    - from: update
+      to: linearize
+      label: validated component output
 ---
 
 ## Core paper explanation
@@ -109,6 +101,9 @@ T_{ab}=\begin{bmatrix}R_{ab}&\mathbf t_{ab}\\0&1\end{bmatrix},
 $$
 
 All poses and measurements must refer to a declared time. [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms) and [Normalize and Multiply Quaternions](/problems/normalize-multiply-quaternions) are implemented prerequisites, not the complete Lie-estimation method.
+
+[Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp) is now runnable. It interpolates translation linearly and unit quaternions on the shortest arc; it is a prerequisite in pose representation, not an implementation of the paper's general Lie-group exponential and logarithm maps.
+
 
 ### Apply a tangent update
 
@@ -136,7 +131,7 @@ $$
 \qquad P_y\approx J P_\xi J^\top.
 $$
 
-$P_\xi$ is tangent-space covariance; its translation, rotation and cross blocks carry corresponding squared or mixed units. A finite-difference check must perturb T on the same side used in the derivation. Planned curriculum components: **Finite-Difference Gradient Check** and **One Kalman Filter Measurement Update**.
+$P_\xi$ is tangent-space covariance; its translation, rotation and cross blocks carry corresponding squared or mixed units. A finite-difference check must perturb T on the same side used in the derivation. Finite-Difference Gradient Check remains a planned curriculum component; the linear Kalman prerequisite is available below.
 
 | Convention | Increment coordinates | Update |
 |---|---|---|
@@ -144,6 +139,9 @@ $P_\xi$ is tangent-space covariance; its translation, rotation and cross blocks 
 | Left | Reference/world tangent | Exponential followed by T |
 
 The table is an original text alternative to the execution graph.
+
+[One Kalman Filter Measurement Update](/problems/kalman-filter-measurement-update) implements a Euclidean linear-Gaussian update with explicit covariance validation. Its uncertainty bookkeeping is useful prerequisite practice; replacing a pose with an unconstrained Euclidean vector does not implement this Lie-group estimator.
+
 
 ## Why this matters on a robot
 

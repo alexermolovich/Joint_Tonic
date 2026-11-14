@@ -1,22 +1,7 @@
-# Author and independent review
+# Independent review and runtime verification
 
-Status: drafted; independent contract review pending.
+Status: reviewed and implemented. Contract draft author: prior code_issue_scout. Implementation: curriculum_continuation. Independent reviewer: perception_completion.
 
-## Proof of success
+Reviewer approved all statements, examples, theory, reference implementations and evaluator cases, checking physical/type contracts, bounds, deterministic ordering and numerical examples. Masks exclude unavailable nonfinite placeholders; transfer pools integer trial counts; schema compares physical meaning and validates unexpected datasets; FCFS retains arbitrary-size integer time; benchmark gates report all independent failures; traces preserve request/clock identity and nanosecond precision.
 
-Recompute10/12 versus mean percentages, missing-versus-zero cells, caller axis order, duplicate evidence and empty outputs; check typed counters, independent storage and all documented invalid inputs.
-
-## Author evidence
-
-Read the paired card and manifest; verified the mechanism or motivation against the primary source. Inputs/examples/diagram are original. Shared structural validator passed all six packages and27 LaTeX expressions. Author independently recomputed all12 examples: selective masked values, pooled success rates, schema changes, FCFS schedules, run-accounting gates and exact correlated timestamp differences. No evaluator or publication claim is made.
-
-## Question answer key
-
-1. Absence has no denominator;0 means measured zero success and would fabricate evidence.
-
-2. No. Positive transfer needs a relevant baseline and comparable evaluation conditions.
-
-## Review risks
-
-Do not replace missing evidence by zero, reorder axes, infer robot similarity or claim causal transfer from an unadjusted rate matrix.
-
+The reference passed its public Run and full public/hidden Submit through the actual existing bubblewrap sandbox. The starter was rejected; a plausible erroneous mutant was also rejected for this task. Cases cover worked examples, invalid boundaries, minimal/empty cases, preservation and independent or scale evidence. The six-problem batch has31 unique casefamilies (12publicRun plus31Submit). Runtime is Python3.12.3/NumPy2.2.4, 18s wall,10s CPU,4096MiB address-space,64KiB output, no network. No evaluator/runtime changes. OCI digest remains pending; this is the pinned local baseline.

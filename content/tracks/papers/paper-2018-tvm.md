@@ -19,8 +19,12 @@
     "auto-tuning",
     "edge-inference"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "fuse-compatible-operators",
+    "search-tensor-tiles",
+    "reuse-tensor-buffers"
+  ],
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +57,7 @@ The implementation path follows **Specify tensor semantics → Schedule loops an
 
 Source cards: [2018-tvm](../../../research/papers/mlops-sim2real/2018-tvm.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -73,7 +77,7 @@ Describe what values to compute independently of loop placement.
 
 [Study the mechanism and math](/projects/2018-tvm#paper-section-specify-tensor-semantics).
 
-- **Proposed component, not runnable:** Fuse Compatible Operators in a Compute Graph.
+- **Runnable paper-associated component:** [Fuse Compatible Operators in a Compute Graph](/problems/fuse-compatible-operators). Fuse Compatible Operators in a Compute Graph
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -85,8 +89,8 @@ Tile, reorder, vectorize, or parallelize legal pieces of the computation.
 
 [Study the mechanism and math](/projects/2018-tvm#paper-section-schedule-loops-and-memory).
 
-- **Proposed component, not runnable:** Search Tensor Tile Sizes with a Toy Cost Model.
-- **Proposed component, not runnable:** Reuse Tensor Buffers with Liveness Analysis.
+- **Runnable paper-associated component:** [Search Tensor Tile Sizes with a Toy Cost Model](/problems/search-tensor-tiles). Search Tensor Tile Sizes with a Toy Cost Model
+- **Runnable paper-associated component:** [Reuse Tensor Buffers with Liveness Analysis](/problems/reuse-tensor-buffers). Reuse Tensor Buffers with Liveness Analysis
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

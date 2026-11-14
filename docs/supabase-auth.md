@@ -1,6 +1,6 @@
 # Supabase login and accounts
 
-The localhost website can now use the user-supplied hosted Supabase Auth project. The evaluator remains local. No remote SQL migrations or privileged keys are needed for this account slice.
+The localhost website can now use the user-supplied hosted Supabase Auth project. The evaluator remains local. Login itself needs no privileged key. Saved account work additionally requires the reviewed database migrations and published content catalog described in [account workspace persistence](../specs/account-workspace-persistence.md). Those hosted changes have not been applied.
 
 ## Local configuration
 
@@ -32,8 +32,8 @@ Use one hostname consistently: localhost and 127.0.0.1 have different browser st
 - `/auth/reset-password`: recovery callback and signed-in password changes.
 - Display name persists in Supabase Auth `user_metadata.display_name`. It is display data, not a role or authorization claim. `public.profiles` is not used in this slice, avoiding a dependency on unapplied hosted schema migrations.
 - The SDK handles PKCE callbacks, session refresh, and sign-out propagation across tabs.
-- Browsing and local coding stay available signed out. Drafts, notes, bookmarks, progress, and job history remain browser-local, shared by users of that browser workspace. Sign-out does not erase those records. Export/reset is in Settings.
-- Account auth does not turn local UUID-owned jobs into authenticated cloud submissions. Server-verified identity, content ingestion, RLS-backed private workspace records, and trusted evaluation persistence remain the next adapter stage. Never upload local solved flags as verified progress.
+- Browsing and local coding stay available signed out in the original guest browser workspace. Signing in opens a separate account cache. Drafts, notes and bookmarks synchronize when the database is provisioned; guest records are never silently imported. Settings exposes status, conflicts, export and local-cache reset.
+- Account workspace requests validate the bearer server-side and retain RLS ownership. Account progress/history comes only from the trusted evaluation persistence adapter. Local solved flags are never uploaded as verified progress. See the persistence spec for the image qualification and deployment prerequisites.
 
 ## Verification
 

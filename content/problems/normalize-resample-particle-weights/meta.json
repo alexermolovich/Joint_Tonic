@@ -1,0 +1,72 @@
+{
+  "slug": "normalize-resample-particle-weights",
+  "title": "Normalize and Resample Particle Weights",
+  "version": "1.0.0",
+  "number": 48,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "state-estimation"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "resample_particles",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Normalize nonnegative particle weights and perform deterministic systematic resampling.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "not-spatial"
+    ],
+    "units": {
+      "weights": "unnormalized likelihood mass",
+      "offset": "dimensionless unit-interval fraction"
+    },
+    "axes": "No spatial axes are transformed.",
+    "timestamp_assumptions": "All particles describe the same state timestamp; no motion update is performed.",
+    "batching": "weights(N,), 1<=N<=100000, scalar offset -> (float64 normalized(N,), int64 ancestry(N,))."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "ab89b6220071c2327b1243edce266aab9c743d54b24cc6485e5a7855be39a8e5"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

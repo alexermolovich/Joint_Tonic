@@ -19,9 +19,14 @@
     "synthetic robot data"
   ],
   "runnable_problem_slugs": [
-    "validate-robot-episodes"
+    "validate-robot-episodes",
+    "gr00t-dual-system-routing",
+    "gr00t-heterogeneous-training-batch",
+    "gr00t-masked-action-flow-loss",
+    "gr00t-source-embodiment-metrics",
+    "gr00t-humanoid-safety-slice-gate"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +59,7 @@ The implementation path follows **Encode semantic context → Learn action flow 
 
 Source cards: [2025-gr00t-n1](../../../research/papers/vla-embodied/2025-gr00t-n1.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -75,8 +80,8 @@ Represent visual and language inputs while preserving the current embodiment sta
 [Study the mechanism and math](/projects/2025-gr00t-n1#paper-section-encode-semantic-context).
 
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
-- **Proposed component, not runnable:** Route Inputs Through a Dual-System Policy Interface.
-- **Proposed component, not runnable:** Build a Heterogeneous Real, Video, and Synthetic Batch.
+- **Runnable paper-associated component:** [Route Inputs Through a Dual-System Policy Interface](/problems/gr00t-dual-system-routing). A semantic model and a motor model need different inputs and may run at different rates.
+- **Runnable paper-associated component:** [Build a Heterogeneous Real, Video, and Synthetic Batch](/problems/gr00t-heterogeneous-training-batch). A real robot demonstration supplies actuator targets, whereas an unlabelled human video does not.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +93,7 @@ Train a transformer velocity model on noisy action chunks.
 
 [Study the mechanism and math](/projects/2025-gr00t-n1#paper-section-learn-action-flow-matching).
 
-- **Proposed component, not runnable:** Compute a Masked Action Flow-Matching Loss.
+- **Runnable paper-associated component:** [Compute a Masked Action Flow-Matching Loss](/problems/gr00t-masked-action-flow-loss). A flow model learns how to move a noisy action toward a demonstration.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,8 +105,8 @@ Generate a continuous action sequence through a bounded number of network calls.
 
 [Study the mechanism and math](/projects/2025-gr00t-n1#paper-section-integrate-a-control-chunk).
 
-- **Proposed component, not runnable:** Report Metrics by Source and Embodiment.
-- **Proposed component, not runnable:** Gate a Humanoid Policy Release on Safety Slices.
+- **Runnable paper-associated component:** [Report Metrics by Source and Embodiment](/problems/gr00t-source-embodiment-metrics). A high average success rate can hide a weak source or robot embodiment.
+- **Runnable paper-associated component:** [Gate a Humanoid Policy Release on Safety Slices](/problems/gr00t-humanoid-safety-slice-gate). A release decision needs evidence for every required scenario, not just a good overall score.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

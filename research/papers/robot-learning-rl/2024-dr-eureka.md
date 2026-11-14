@@ -1,22 +1,82 @@
 ---
 schema_version: 1
-paper_id: "2024-dr-eureka"
-title: "DrEureka: Language Model Guided Sim-To-Real Transfer"
-authors: ["Ma, Yecheng Jason","Liang, William","Wang, Hung-Ju","Wang, Sam","Zhu, Yuke","Fan, Linxi","Bastani, Osbert","Jayaraman, Dinesh"]
+paper_id: 2024-dr-eureka
+title: 'DrEureka: Language Model Guided Sim-To-Real Transfer'
+authors:
+  - 'Ma, Yecheng Jason'
+  - 'Liang, William'
+  - 'Wang, Hung-Ju'
+  - 'Wang, Sam'
+  - 'Zhu, Yuke'
+  - 'Fan, Linxi'
+  - 'Bastani, Osbert'
+  - 'Jayaraman, Dinesh'
 year: 2024
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/2406.01967"
-pdf_url: "https://arxiv.org/pdf/2406.01967"
-local_pdf: "./2024-dr-eureka.pdf"
-sha256: "5931e0b03478694579daded847e39fb80115d5d9fa75cd250f059f691fb5f94c"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/2406.01967'
+pdf_url: 'https://arxiv.org/pdf/2406.01967'
+local_pdf: ./2024-dr-eureka.pdf
+sha256: 5931e0b03478694579daded847e39fb80115d5d9fa75cd250f059f691fb5f94c
 bytes: 34335250
 pages: 28
-topics: ["robot-learning-rl","dr-eureka"]
-modalities: ["robot-state","rgb","actions","rewards"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Design a transfer-oriented reward","detail":"Generate and evaluate rewards with explicit physical behavior requirements.","column":0,"row":0,"section":"Design a transfer-oriented reward","problem_slugs":[],"planned_problems":["Validate a Generated Reward Program"]},{"id":"stage-2","title":"Probe physics sensitivity","detail":"Evaluate the initial policy under perturbed simulator parameters.","column":1,"row":0,"section":"Probe physics sensitivity","problem_slugs":[],"planned_problems":["Compare Robustness Across Randomization Settings"]},{"id":"stage-3","title":"Train with generated randomization","detail":"Sample varied dynamics and validate physical transfer.","column":2,"row":0,"section":"Train with generated randomization","problem_slugs":["sample-dynamics-distributions"],"planned_problems":["Sample a Bounded Dynamics Randomization Config"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"selected policy"},{"from":"stage-2","to":"stage-3","label":"randomization configuration"}]}
+topics:
+  - robot-learning-rl
+  - dr-eureka
+modalities:
+  - robot-state
+  - rgb
+  - actions
+  - rewards
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Design a transfer-oriented reward
+      detail: >-
+        Generate and evaluate rewards with explicit physical behavior
+        requirements.
+      column: 0
+      row: 0
+      section: Design a transfer-oriented reward
+      problem_slugs: []
+      planned_problems:
+        - Validate a Generated Reward Program
+    - id: stage-2
+      title: Probe physics sensitivity
+      detail: Evaluate the initial policy under perturbed simulator parameters.
+      column: 1
+      row: 0
+      section: Probe physics sensitivity
+      problem_slugs:
+        - randomization-safety-bounds
+      planned_problems:
+        - Compare Robustness Across Randomization Settings
+    - id: stage-3
+      title: Train with generated randomization
+      detail: Sample varied dynamics and validate physical transfer.
+      column: 2
+      row: 0
+      section: Train with generated randomization
+      problem_slugs:
+        - sample-dynamics-distributions
+        - sim-to-real-robustness-gate
+      planned_problems:
+        - Sample a Bounded Dynamics Randomization Config
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: selected policy
+    - from: stage-2
+      to: stage-3
+      label: randomization configuration
 ---
 
 ## Core paper explanation
@@ -36,6 +96,29 @@ Candidate policies optimize $J(\pi;r)=\mathbb E[\sum_t\gamma^tr(s_t,a_t)]$. Rewa
 
 
 ### Probe physics sensitivity
+
+Physics sensitivity asks how one fixed policy behaves when simulator parameters change. Let $\theta$ contain declared physical parameters, such as mass in kilograms and dimensionless friction coefficient. For a finite evaluation grid $\theta_1,\ldots,\theta_G$ and N rollout seeds, an operational estimate is
+
+$$
+\widehat S_g=\frac1N\sum_{n=1}^N\mathbf1[\text{task succeeds under }(\pi,\theta_g,n)].
+$$
+
+This success-grid statistic is an original diagnostic, not a substitute for the paper's complete reward-aware prior construction. A generated distribution $p_\psi(\theta)$ is then used during robust training:
+
+$$
+J(\pi;\psi)=\mathbb E_{\theta\sim p_\psi,\,\tau\sim P_\theta,\pi}\left[\sum_{t=0}^{H-1}\gamma^t r_t\right].
+$$
+
+Here $P_\theta$ is the simulated dynamics, tau a rollout, H its step horizon, gamma a dimensionless discount and $r_t$ the chosen shaped reward. For friction values0.3,0.6,0.9 with4trials each, success counts1,4,3 give0.25,1,0.75. Failure at0.3 identifies policy sensitivity; it does not establish that physical friction0.3 is impossible. [Choose Randomization Bounds from Safety Constraints](/problems/randomization-safety-bounds) is a related bounded configuration check, while [Gate Sim-to-Real Release with Robustness Evidence](/problems/sim-to-real-robustness-gate) checks supplied transfer evidence. Neither runs the language-model search.
+
+| Physics setting | Trials | Success | Diagnostic |
+|---|---|---|---|
+| friction0.3 | 4 | 1 | sensitive setting |
+| friction0.6 | 4 | 4 | strongest observed setting |
+| friction0.9 | 4 | 3 | partial degradation |
+
+The table supplies a static trace and textual alternative; all other parameters are held fixed in this synthetic example.
+
 
 For parameter setting $\theta$, estimate $S(\theta)=\mathbb E[\mathrm{success}\mid\pi,\theta]$. The resulting reward-aware physics priors inform plausible randomization ranges. A policy failing at a parameter value does not prove that value is physically impossible.
 

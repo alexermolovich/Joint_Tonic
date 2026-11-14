@@ -1,0 +1,76 @@
+{
+  "slug": "rt2-action-generalization-slices",
+  "title": "Monitor Invalid Actions and Semantic Generalization Slices",
+  "version": "1.0.0",
+  "number": 233,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-rt-2",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "action_slice_metrics",
+  "paperIds": [
+    "2023-rt-2"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An overall success percentage can hide a policy that emits malformed commands on unfamiliar instructions.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Rates are dimensionless attempt fractions; semantic slice IDs preserve external evaluation labels."
+    },
+    "axes": "valid/success/IDs(N) -> per-slice counts/rates(S)",
+    "timestamp_assumptions": "Each row is one evaluated attempt, not a timestep; attempts may come from different episodes.",
+    "batching": "valid/success/IDs(N) -> per-slice counts/rates(S)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "b4424aa3d8b1e33be73781a33daf96d837e95e1c2e403d1318eaccb75964eb8c"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original monitoring component inspired by RT-2 semantic-generalization evaluation. It computes supplied slice metrics and does not infer semantic novelty from images or claim paper-level success.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2307.15818"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-rt-2.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

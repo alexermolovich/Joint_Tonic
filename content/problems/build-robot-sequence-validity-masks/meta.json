@@ -1,0 +1,72 @@
+{
+  "slug": "build-robot-sequence-validity-masks",
+  "title": "Build Padding and Validity Masks for Robot Sequences",
+  "version": "1.0.0",
+  "number": 44,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "sequence-data"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "sequence_masks",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Build valid-token and causal-attention masks for padded robot episodes.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "not-spatial"
+    ],
+    "units": {
+      "lengths": "frames",
+      "max_steps": "frames"
+    },
+    "axes": "No spatial axes are transformed.",
+    "timestamp_assumptions": "One common monotonic clock in seconds.",
+    "batching": "lengths(B,) -> valid bool(B,T), attention bool(B,T,T), T=max_steps."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "ab19c22a7c2fafcc2e94474cf5a8c0030a6349f1ecf4e9f4e659aa888ef42883"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

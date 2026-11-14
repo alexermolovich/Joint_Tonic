@@ -20,9 +20,14 @@
     "calibration"
   ],
   "runnable_problem_slugs": [
-    "sample-dynamics-distributions"
+    "sample-dynamics-distributions",
+    "version-simulation-distribution",
+    "aggregate-policy-returns",
+    "calibration-sensitivity",
+    "randomization-safety-bounds",
+    "sim-to-real-robustness-gate"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,13 +60,13 @@ The implementation path follows **Sample a physical model → Optimize expected 
 
 Source cards: [2018-dynamics-randomization](../../../research/papers/mlops-sim2real/2018-dynamics-randomization.md).
 
-**Available now:** 1 paper-associated runnable component; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Sample a physical model** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -76,7 +81,7 @@ Choose valid simulator parameters with declared units and reset semantics.
 [Study the mechanism and math](/projects/2018-dynamics-randomization#paper-section-sample-a-physical-model).
 
 - **Runnable paper-associated component:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Convert reproducible unit draws into valid, explicitly typed per-episode physical parameter configurations.
-- **Proposed component, not runnable:** Version a Simulation Scenario Distribution.
+- **Runnable supporting prerequisite:** [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Version a Simulation Scenario Distribution
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +93,7 @@ Train a policy across the parameter distribution rather than one nominal environ
 
 [Study the mechanism and math](/projects/2018-dynamics-randomization#paper-section-optimize-expected-return).
 
-- **Proposed component, not runnable:** Aggregate Mean and Worst-Case Policy Returns.
+- **Runnable paper-associated component:** [Aggregate Mean and Worst-Case Policy Returns](/problems/aggregate-policy-returns). Aggregate Mean and Worst-Case Policy Returns
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,9 +105,9 @@ Separate average success from weak regions of the physical parameter space.
 
 [Study the mechanism and math](/projects/2018-dynamics-randomization#paper-section-evaluate-parameter-slices).
 
-- **Proposed component, not runnable:** Quantify Calibration Sensitivity.
-- **Proposed component, not runnable:** Choose Randomization Bounds from Safety Constraints.
-- **Proposed component, not runnable:** Gate Sim-to-Real Release with Robustness Evidence.
+- **Runnable paper-associated component:** [Quantify Calibration Sensitivity](/problems/calibration-sensitivity). Quantify Calibration Sensitivity
+- **Runnable paper-associated component:** [Choose Randomization Bounds from Safety Constraints](/problems/randomization-safety-bounds). Choose Randomization Bounds from Safety Constraints
+- **Runnable paper-associated component:** [Gate Sim-to-Real Release with Robustness Evidence](/problems/sim-to-real-robustness-gate). Gate Sim-to-Real Release with Robustness Evidence
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

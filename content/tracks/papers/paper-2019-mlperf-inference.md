@@ -20,10 +20,12 @@
     "reproducibility"
   ],
   "runnable_problem_slugs": [
+    "simulate-inference-load",
     "inference-latency-percentiles",
-    "edge-inference-release-gate"
+    "edge-inference-release-gate",
+    "reject-invalid-benchmark-runs"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Specify the load scenario → Measure query pe
 
 Source cards: [2019-mlperf-inference](../../../research/papers/mlops-sim2real/2019-mlperf-inference.md).
 
-**Available now:** 2 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,7 +78,7 @@ Define how requests arrive and what counts as a completed query.
 
 [Study the mechanism and math](/projects/2019-mlperf-inference#paper-section-specify-the-load-scenario).
 
-- **Proposed component, not runnable:** Simulate Single-Stream and Server Load.
+- **Runnable paper-associated component:** [Simulate Single-Stream and Server Load](/problems/simulate-inference-load). Distinguish closed-loop query issuance from externally arriving requests and include queue waiting in latency.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -102,7 +104,7 @@ Reject configurations that trade away required correctness or miss scenario limi
 [Study the mechanism and math](/projects/2019-mlperf-inference#paper-section-apply-quality-and-latency-gates).
 
 - **Runnable paper-associated component:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Reject Invalid Benchmark Runs.
+- **Runnable paper-associated component:** [Reject Invalid Benchmark Runs](/problems/reject-invalid-benchmark-runs). Reject supplied benchmark evidence that has missing work, failures, inadequate coverage or mismatched run identity.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

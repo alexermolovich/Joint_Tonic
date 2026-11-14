@@ -1,0 +1,76 @@
+{
+  "slug": "diffusion-denoising-budget",
+  "title": "Budget Denoising Steps Against Control Frequency",
+  "version": "1.0.0",
+  "number": 227,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-diffusion-policy",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "denoising_budget",
+  "paperIds": [
+    "2023-diffusion-policy"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "More denoising iterations can improve a sampler while missing a robot deadline.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Latency milliseconds; control frequency Hertz; counts dimensionless."
+    },
+    "axes": "candidate_steps(K) -> latency_ms(K), feasible(K), selected_steps scalar",
+    "timestamp_assumptions": "One planning invocation per period1000/frequency_hz ms; overlap or amortization across action windows is outside this task.",
+    "batching": "candidate_steps(K) -> latency_ms(K), feasible(K), selected_steps scalar"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "af1c02850a63a34fe54e2fb6e9b4505ea7a3a15407656ff9a4e21fc44c343721"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original serving-budget exercise inspired by Diffusion Policy inference scheduling. A constant measured per-step cost is an explicit approximation, not a published timing guarantee.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2303.04137"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-diffusion-policy.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

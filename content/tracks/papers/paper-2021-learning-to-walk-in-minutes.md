@@ -16,7 +16,11 @@
     "humanoid-dexterity-tactile",
     "learning-to-walk-in-minutes"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "window-episode-without-crossing-boundaries",
+    "build-robot-sequence-validity-masks",
+    "mpc-tracking-cost"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +54,15 @@ The implementation path follows **Collect parallel locomotion rollouts → Adapt
 
 Source cards: [2021-learning-to-walk-in-minutes](../../../research/papers/humanoid-dexterity-tactile/2021-learning-to-walk-in-minutes.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Collect parallel locomotion rollouts** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Evaluate an MPC Tracking Cost](/problems/mpc-tracking-cost). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -94,6 +100,9 @@ Optimize locomotion rewards and validate the physical controller.
 
 [Study the mechanism and math](/projects/2021-learning-to-walk-in-minutes#paper-section-train-and-transfer-control).
 
+- **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
+- **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
+- **Runnable supporting prerequisite:** [Evaluate an MPC Tracking Cost](/problems/mpc-tracking-cost). Score a finite-horizon predicted trajectory with stage, control-effort, and terminal penalties.
 - **Proposed component, not runnable:** Compute Gait Tracking and Stability Metrics.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

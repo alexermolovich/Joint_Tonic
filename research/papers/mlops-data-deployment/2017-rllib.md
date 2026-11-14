@@ -16,7 +16,7 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Collect policy experience","detail":"Run environment workers with explicit policy snapshots.","column":0,"row":0,"section":"Collect policy experience","problem_slugs":["validate-robot-episodes"],"planned_problems":["Batch Actor Samples into Learner Updates"]},{"id":"stage-2","title":"Aggregate algorithm updates","detail":"Combine samples or gradients according to the chosen RL method.","column":1,"row":0,"section":"Aggregate algorithm updates","problem_slugs":[],"planned_problems":["Aggregate Weighted Learner Gradients"]},{"id":"stage-3","title":"Distribute new parameters","detail":"Update workers and monitor policy lag.","column":2,"row":0,"section":"Distribute new parameters","problem_slugs":[],"planned_problems":["Track Policy Version Staleness","Measure Sampling and Learning Throughput"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"versioned batches"},{"from":"stage-2","to":"stage-3","label":"learner update"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Collect policy experience", "detail": "Run environment workers with explicit policy snapshots.", "column": 0, "row": 0, "section": "Collect policy experience", "problem_slugs": ["validate-robot-episodes"], "planned_problems": ["Batch Actor Samples into Learner Updates"]}, {"id": "stage-2", "title": "Aggregate algorithm updates", "detail": "Combine samples or gradients according to the chosen RL method.", "column": 1, "row": 0, "section": "Aggregate algorithm updates", "problem_slugs": ["window-episode-without-crossing-boundaries", "build-robot-sequence-validity-masks"], "planned_problems": ["Aggregate Weighted Learner Gradients"]}, {"id": "stage-3", "title": "Distribute new parameters", "detail": "Update workers and monitor policy lag.", "column": 2, "row": 0, "section": "Distribute new parameters", "problem_slugs": ["graph-throughput-jitter"], "planned_problems": ["Track Policy Version Staleness", "Measure Sampling and Learning Throughput"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "versioned batches"}, {"from": "stage-2", "to": "stage-3", "label": "learner update"}]}
 ---
 
 ## Core paper explanation
@@ -43,6 +43,21 @@ Worker $i$ gathers trajectories $\tau_i\sim\pi_{\theta_{v_i}}$, where $v_i$ iden
 For synchronized equally weighted worker gradients, $g=P^{-1}\sum_i g_i$. Unequal batch sizes require sample-weighted averaging. This equation illustrates one execution pattern; RLlib also supports algorithms whose update logic is not synchronous gradient averaging.
 
 
+
+<!-- joint-tonic-math-expansion -->
+#### Sample counts define the average
+
+Let worker $i$ contribute $n_i>0$ transitions and a mean gradient $g_i\in\mathbb R^D$ over those transitions, where $D$ is the number of trainable scalar parameters. If every transition has equal weight, the combined mean is
+
+$$
+\bar g=\frac{\sum_{i=1}^{P}n_i g_i}{\sum_{i=1}^{P}n_i},\qquad \theta'=\theta-\eta\bar g.
+$$
+
+$P$ is worker count and $\eta>0$ is the optimizer step size; the second expression illustrates plain gradient descent, not a requirement of every RLlib algorithm. Two workers with $n=(2,6)$ and scalar mean gradients $(1,3)$ produce $\bar g=2.5$, not the unweighted value 2. Counts must refer to valid samples after padding and episode boundaries are handled.
+
+Practice the sample contract with [episode-safe windows](/problems/window-episode-without-crossing-boundaries) and [sequence validity masks](/problems/build-robot-sequence-validity-masks). These prepare learner batches; neither implements distributed gradient transport or an RLlib optimizer.
+<!-- /joint-tonic-math-expansion -->
+
 **Component practice**
 
 - Aggregate Weighted Learner Gradients — unreviewed idea; contract and evaluator required.
@@ -52,6 +67,17 @@ For synchronized equally weighted worker gradients, $g=P^{-1}\sum_i g_i$. Unequa
 
 A useful diagnostic is $\Delta v_i=v_{\mathrm{learner}}-v_i$. It counts version lag, not elapsed time or statistical divergence. On-policy algorithms require appropriate restrictions on stale samples; off-policy algorithms have different replay assumptions. The paper describes architecture rather than today's library API.
 
+
+
+<!-- joint-tonic-math-expansion -->
+#### Lag and throughput measure different things
+
+For learner version $v$ and worker sample version $v_i$, version lag is $\ell_i=v-v_i$. For $N$ completed samples over a measured wall interval $\Delta t>0$ seconds, throughput is
+
+$$\rho=\frac{N}{\Delta t}\quad\text{samples/second}.$$
+
+A batch can have high throughput and large policy lag simultaneously. Ten thousand samples in 2 seconds gives 5,000 samples/s; it says nothing about whether their policy version is current. [Graph throughput and jitter](/problems/graph-throughput-jitter) implements a bounded completion-event diagnostic, not algorithm-specific stale-gradient correction.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

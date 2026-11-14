@@ -20,11 +20,13 @@
   ],
   "runnable_problem_slugs": [
     "nerf-stratified-samples",
+    "nerf-calibrated-camera-rays",
     "nerf-fourier-features",
     "nerf-alpha-compositing",
-    "nerf-render-color-depth"
+    "nerf-render-color-depth",
+    "nerf-pose-residual-diagnostics"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,7 +59,7 @@ The implementation path follows **Construct camera rays → Query the radiance f
 
 Source cards: [2020-nerf](../../../research/papers/vision-vlm-3d/2020-nerf.md).
 
-**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 6 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -79,7 +81,7 @@ Use intrinsics and camera pose to express a pixel ray in the scene frame.
 [Study the mechanism and math](/projects/2020-nerf#paper-section-construct-camera-rays).
 
 - **Runnable paper-associated component:** [Stratify Samples Along Near and Far Bounds](/problems/nerf-stratified-samples). Stratify Samples Along Near and Far Bounds
-- **Proposed component, not runnable:** Generate Calibrated Camera Rays.
+- **Runnable paper-associated component:** [Generate Calibrated Camera Rays](/problems/nerf-calibrated-camera-rays). Turn supplied continuous pixel coordinates into world-space unit rays.
 - **Proposed component, not runnable:** Sample Hierarchical Depth Intervals.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
@@ -106,7 +108,7 @@ Accumulate visible colors in depth order and compare rendered pixels.
 
 - **Runnable paper-associated component:** [Compute Transmittance and Alpha Compositing Weights](/problems/nerf-alpha-compositing). Turn ordered ray densities and metric interval lengths into sample visibility weights and remaining background mass.
 - **Runnable paper-associated component:** [Render Color and Expected Depth Along a Ray](/problems/nerf-render-color-depth). Render Color and Expected Depth Along a Ray
-- **Proposed component, not runnable:** Detect Bad Poses with Reprojection and Render Residuals.
+- **Runnable paper-associated component:** [Detect Bad Poses with Reprojection and Render Residuals](/problems/nerf-pose-residual-diagnostics). Compute separate per-view geometric and photometric residual summaries with explicit missing-data flags.
 - **Proposed component, not runnable:** Differentiate Rendered Color on a Small Synthetic Field.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

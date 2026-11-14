@@ -16,7 +16,10 @@
     "humanoid-dexterity-tactile",
     "digit-tactile-sensor"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "match-approximate-sensor-timestamps",
+    "detect-dropped-duplicated-sensor-frames"
+  ],
   "proposed_component_count": 5,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Capture contact deformation → Extract tactil
 
 Source cards: [2020-digit-tactile-sensor](../../../research/papers/humanoid-dexterity-tactile/2020-digit-tactile-sensor.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Capture contact deformation** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,6 +86,8 @@ Use contact images or learned features for manipulation feedback.
 
 [Study the mechanism and math](/projects/2020-digit-tactile-sensor#paper-section-extract-tactile-state).
 
+- **Runnable supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Associate each query with its nearest reference timestamp within a fixed tolerance.
+- **Runnable supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Report missing frame identifiers and repeated identifiers in an ordered sensor log.
 - **Proposed component, not runnable:** Subtract a Tactile Reference Image.
 - **Proposed component, not runnable:** Estimate Contact Patch Statistics.
 

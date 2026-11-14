@@ -20,10 +20,12 @@
   ],
   "runnable_problem_slugs": [
     "rt1-compact-visual-tokens",
+    "rt1-task-balanced-trajectories",
     "rt1-causal-action-token-mask",
-    "rt1-action-codec"
+    "rt1-action-codec",
+    "rt1-control-latency-dropouts"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Compress visual observations → Predict actio
 
 Source cards: [2022-rt-1](../../../research/papers/vla-embodied/2022-rt-1.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -77,7 +79,7 @@ Condition image features on the instruction and aggregate a small token set.
 [Study the mechanism and math](/projects/2022-rt-1#paper-section-compress-visual-observations).
 
 - **Runnable paper-associated component:** [Select Compact Visual Tokens with Learned Attention](/problems/rt1-compact-visual-tokens). Turn supplied learned spatial logits into normalized attention maps and compress visual features without mixing examples.
-- **Proposed component, not runnable:** Sample a Task-Balanced Trajectory Batch.
+- **Runnable paper-associated component:** [Sample a Task-Balanced Trajectory Batch](/problems/rt1-task-balanced-trajectories). A common task can dominate training when sampling trajectories uniformly.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -102,7 +104,7 @@ Map continuous channels through explicit bin ranges and reconstruct usable comma
 [Study the mechanism and math](/projects/2022-rt-1#paper-section-decode-bounded-actions).
 
 - **Runnable paper-associated component:** [Quantize and Decode Robot Actions](/problems/rt1-action-codec). Scale to [0,1], take floor(bins * scaled), clamp bin IDs to [0,bins-1], add offset, reconstruct bin centers.
-- **Proposed component, not runnable:** Measure Closed-Loop Latency and Action Dropouts.
+- **Runnable paper-associated component:** [Measure Closed-Loop Latency and Action Dropouts](/problems/rt1-control-latency-dropouts). An inference that finishes after its control deadline is not equivalent to an action applied on time.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

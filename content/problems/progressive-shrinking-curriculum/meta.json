@@ -1,0 +1,82 @@
+{
+  "slug": "progressive-shrinking-curriculum",
+  "title": "Sample a Progressive-Shrinking Curriculum",
+  "version": "1.0.0",
+  "number": 342,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "2020-once-for-all"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "sample_progressive_subnets",
+  "paperIds": [
+    "2020-once-for-all"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Sample a Progressive-Shrinking Curriculum",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "No spatial transform; preserve caller-supplied scenario/model identities"
+    ],
+    "units": {
+      "depth": "layer count",
+      "width": "channel count",
+      "kernel": "odd spatial sample count",
+      "seed": "unsigned 32-bit integer"
+    },
+    "axes": "int64(N,3), columns depth,width,kernel",
+    "timestamp_assumptions": "No live timestamps; latency metrics are supplied durations only.",
+    "batching": "int64(N,3), columns depth,width,kernel"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "evaluator_sha256": "b6ca28ef31a4a6542a9731ecdcdc8629db17bae58232b1ceb537801e66958569",
+    "performance_class": "none; no timing leaderboard"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "This original bounded component is motivated by [2020-once-for-all](https://arxiv.org/abs/1908.09791). It does not reproduce the full paper, trained model or benchmark protocol.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1908.09791"
+    ],
+    "paper_card": "research/papers/mlops-sim2real/2020-once-for-all.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

@@ -16,7 +16,7 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Capture contact deformation","detail":"Observe elastomer appearance under contact.","column":0,"row":0,"section":"Capture contact deformation","problem_slugs":[],"planned_problems":["Validate a Tactile Image Capture Contract"]},{"id":"stage-2","title":"Extract tactile state","detail":"Use contact images or learned features for manipulation feedback.","column":1,"row":0,"section":"Extract tactile state","problem_slugs":[],"planned_problems":["Subtract a Tactile Reference Image","Estimate Contact Patch Statistics"]},{"id":"stage-3","title":"Predict and control contact","detail":"Use learned tactile dynamics to choose manipulation actions.","column":2,"row":0,"section":"Predict and control contact","problem_slugs":[],"planned_problems":["Align Tactile Frames with Robot Actions","Score Predicted Tactile Contact Outcomes"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"tactile images"},{"from":"stage-2","to":"stage-3","label":"tactile state"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Capture contact deformation","detail":"Observe elastomer appearance under contact.","column":0,"row":0,"section":"Capture contact deformation","problem_slugs":[],"planned_problems":["Validate a Tactile Image Capture Contract"]},{"id":"stage-2","title":"Extract tactile state","detail":"Use contact images or learned features for manipulation feedback.","column":1,"row":0,"section":"Extract tactile state","problem_slugs":["match-approximate-sensor-timestamps","detect-dropped-duplicated-sensor-frames"],"planned_problems":["Subtract a Tactile Reference Image","Estimate Contact Patch Statistics"]},{"id":"stage-3","title":"Predict and control contact","detail":"Use learned tactile dynamics to choose manipulation actions.","column":2,"row":0,"section":"Predict and control contact","problem_slugs":[],"planned_problems":["Align Tactile Frames with Robot Actions","Score Predicted Tactile Contact Outcomes"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"tactile images"},{"from":"stage-2","to":"stage-3","label":"tactile state"}]}
 ---
 
 ## Core paper explanation
@@ -36,6 +36,27 @@ A tactile image can be modeled conceptually as $I=\mathcal R(\mathrm{deformation
 
 
 ### Extract tactile state
+
+#### A measurable image-change diagnostic
+
+For an original diagnostic exercise, let $I_t,I_0\in[0,1]^{H\times W\times C}$ be a current image and an unloaded reference with identical exposure and pixel alignment. Intensities are dimensionless; $t$ indexes captures, $H,W$ count image rows and columns, and $C$ counts channels. Define a per-pixel change and its threshold mask by
+
+$$
+D_t(u,v)=\frac1C\sum_{c=1}^C |I_t(u,v,c)-I_0(u,v,c)|,
+\qquad M_t(u,v)=\mathbf1[D_t(u,v)>\tau],
+\qquad A_t=\sum_{u,v}M_t(u,v).
+$$
+
+Here $u$ increases down the image, $v$ increases right, $\tau\ge0$ is a dimensionless threshold, and $A_t$ counts changed pixels. This is neither a contact-force calibration nor a claimed DIGIT reconstruction algorithm. For one-channel images with reference zero and current intensities $\begin{bmatrix}0&0.2\\0.1&0.4\end{bmatrix}$, choosing $\tau=0.15$ selects the two right-column pixels: $A_t=2$. Their center in pixel coordinates is $(v,u)=(1,0.5)$ when integer coordinates denote pixel centers. An empty mask has no centroid and must be marked missing.
+
+| Signal | Shape | Interpretation |
+| --- | --- | --- |
+| Reference and capture | $H\times W\times C$ | Comparable optical measurements |
+| Absolute channel mean | $H\times W$ | Appearance change, not newtons |
+| Threshold mask | $H\times W$ | Candidate region requiring validation |
+
+Before interpreting a temporal change, use [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps) to practice aligning capture and robot-state times, and [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames) to detect missing evidence. These are supporting sensor-contract exercises; the tactile image diagnostic itself remains a planned component.
+
 
 A simple diagnostic difference is $\Delta I_t=I_t-I_{\mathrm{reference}}$. It can highlight contact but also responds to lighting drift and sensor aging. Any mapping $\hat F=f_\theta(I)$ to physical force requires separate calibration and labels; it is not supplied automatically by the hardware.
 

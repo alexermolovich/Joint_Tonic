@@ -16,7 +16,7 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Record collection context","detail":"Describe motivation, population, acquisition, and permissions.","column":0,"row":0,"section":"Record collection context","problem_slugs":[],"planned_problems":["Validate a Robot Dataset Datasheet","Detect Missing Provenance Fields"]},{"id":"stage-2","title":"Describe composition and gaps","detail":"Quantify coverage while preserving qualitative limitations.","column":1,"row":0,"section":"Describe composition and gaps","problem_slugs":[],"planned_problems":["Compute Collector and Task Coverage"]},{"id":"stage-3","title":"Publish maintenance guidance","detail":"Document intended uses, distribution, updates, and known risks.","column":2,"row":0,"section":"Publish maintenance guidance","problem_slugs":[],"planned_problems":["Generate a Data-Use Risk Report"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"documented records"},{"from":"stage-2","to":"stage-3","label":"dataset description"}]}
+execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Record collection context", "detail": "Describe motivation, population, acquisition, and permissions.", "column": 0, "row": 0, "section": "Record collection context", "problem_slugs": [], "planned_problems": ["Validate a Robot Dataset Datasheet", "Detect Missing Provenance Fields"]}, {"id": "stage-2", "title": "Describe composition and gaps", "detail": "Quantify coverage while preserving qualitative limitations.", "column": 1, "row": 0, "section": "Describe composition and gaps", "problem_slugs": ["infer-robot-episode-schema", "robot-feature-anomalies"], "planned_problems": ["Compute Collector and Task Coverage"]}, {"id": "stage-3", "title": "Publish maintenance guidance", "detail": "Document intended uses, distribution, updates, and known risks.", "column": 2, "row": 0, "section": "Publish maintenance guidance", "problem_slugs": ["record-artifact-lineage"], "planned_problems": ["Generate a Data-Use Risk Report"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "documented records"}, {"from": "stage-2", "to": "stage-3", "label": "dataset description"}]}
 ---
 
 ## Core paper explanation
@@ -42,6 +42,19 @@ For robotics, record embodiment, sensors, calibration, operators, environments, 
 For declared slice $s$, report $n_s=\sum_i\mathbf1[x_i\in s]$ and fraction $n_s/N$. Overlapping slices need not sum to $N$. Counts do not prove representative sampling, consent, or suitability. State missing metadata explicitly rather than treating unknown values as negative answers.
 
 
+
+<!-- joint-tonic-math-expansion -->
+#### Count coverage without turning documentation into a score
+
+The following is an original reporting formalization, not a proposed equation or quality metric from the paper. For $N>0$ episodes and a declared slice $s$, let $m_{is}$ indicate membership and $k_i$ indicate whether the metadata needed to determine membership is known. Report
+
+$$n_s=\sum_{i=1}^{N}k_i m_{is},\qquad n_{\mathrm{unknown}}=\sum_{i=1}^{N}(1-k_i),\qquad f_s=\frac{n_s}{N}.$$
+
+All counts and fractions are dimensionless. With 10 episodes, 3 known night episodes and 2 unknown lighting labels, the report is 3/10 night and 2/10 unknown; it must not call all remaining 7 episodes daytime. Overlapping slices can sum above 100%.
+
+[Infer an episode schema](/problems/infer-robot-episode-schema) and [detect feature anomalies](/problems/robot-feature-anomalies) implement bounded checks on declared data. They cannot establish collection consent, representativeness, or suitability for a new robot.
+<!-- /joint-tonic-math-expansion -->
+
 **Component practice**
 
 - Compute Collector and Task Coverage — unreviewed idea; contract and evaluator required.
@@ -50,6 +63,15 @@ For declared slice $s$, report $n_s=\sum_i\mathbf1[x_i\in s]$ and fraction $n_s/
 
 A dataset version should identify its datasheet, split definitions, processing history, and change policy. Documentation questions may be inapplicable, but omission should be deliberate. The framework supports reflection and accountability; a completed checklist is not a certification of dataset quality.
 
+
+
+<!-- joint-tonic-math-expansion -->
+A concrete lineage edge can record input hash $h_D$, transform/configuration hash $h_F$, and output hash $h_{D'}$:
+
+$$e=(h_D,h_F,h_{D'}).$$
+
+These identifiers are opaque content digests, not numeric quantities. [Artifact lineage](/problems/record-artifact-lineage) exercises this operational connection; a valid lineage record still requires a human-readable explanation of why a data transformation was appropriate.
+<!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 

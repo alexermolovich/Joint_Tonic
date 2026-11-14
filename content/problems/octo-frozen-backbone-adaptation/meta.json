@@ -1,0 +1,76 @@
+{
+  "slug": "octo-frozen-backbone-adaptation",
+  "title": "Add a Frozen-Backbone Adaptation Module",
+  "version": "1.0.0",
+  "number": 242,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2024-octo",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "adaptation_step",
+  "paperIds": [
+    "2024-octo"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A small residual adapter can learn a correction while a useful pretrained map stays fixed.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Token features and normalized actions are dimensionless; no world-frame transform or physical actuation is performed."
+    },
+    "axes": "Explicit token, batch and feature axes defined in the contract",
+    "timestamp_assumptions": "Each batch row is a synchronized caller-supplied policy context; group order is explicit.",
+    "batching": "Explicit token, batch and feature axes defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "1ede4a5ba06314f4300f48e56a3ea0449ddcc23b1da3f979dd37d509bae5f1ba"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original linear residual-adapter training step motivated by adapting generalist policies while freezing pretrained weights; this is not Octo official fine-tuning code or a full parameter-efficient method.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2405.12213"
+    ],
+    "paper_card": "research/papers/vla-embodied/2024-octo.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

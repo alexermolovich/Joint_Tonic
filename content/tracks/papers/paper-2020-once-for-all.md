@@ -20,9 +20,13 @@
     "pareto-optimization"
   ],
   "runnable_problem_slugs": [
-    "edge-inference-release-gate"
+    "progressive-shrinking-curriculum",
+    "extract-elastic-subnetwork",
+    "edge-inference-release-gate",
+    "pareto-edge-model-selection",
+    "package-edge-model-artifact"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +59,7 @@ The implementation path follows **Train elastic weights → Extract a valid subn
 
 Source cards: [2020-once-for-all](../../../research/papers/mlops-sim2real/2020-once-for-all.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -75,7 +79,7 @@ Support several architecture choices through staged shared training.
 
 [Study the mechanism and math](/projects/2020-once-for-all#paper-section-train-elastic-weights).
 
-- **Proposed component, not runnable:** Sample a Progressive-Shrinking Curriculum.
+- **Runnable paper-associated component:** [Sample a Progressive-Shrinking Curriculum](/problems/progressive-shrinking-curriculum). Sample a Progressive-Shrinking Curriculum
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -87,7 +91,7 @@ Select coherent depths, widths, kernels, and resolution with appropriate statist
 
 [Study the mechanism and math](/projects/2020-once-for-all#paper-section-extract-a-valid-subnetwork).
 
-- **Proposed component, not runnable:** Extract a Depth, Width, and Kernel Subnetwork.
+- **Runnable paper-associated component:** [Extract a Depth, Width, and Kernel Subnetwork](/problems/extract-elastic-subnetwork). Extract a Depth, Width, and Kernel Subnetwork
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,8 +104,8 @@ Search for a high-quality subnetwork under a measured device constraint.
 [Study the mechanism and math](/projects/2020-once-for-all#paper-section-specialize-for-hardware).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Select a Pareto Model Under Accuracy and Latency Limits.
-- **Proposed component, not runnable:** Package and Verify an Edge Model Artifact.
+- **Runnable paper-associated component:** [Select a Pareto Model Under Accuracy and Latency Limits](/problems/pareto-edge-model-selection). Select a Pareto Model Under Accuracy and Latency Limits
+- **Runnable paper-associated component:** [Package and Verify an Edge Model Artifact](/problems/package-edge-model-artifact). Package and Verify an Edge Model Artifact
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

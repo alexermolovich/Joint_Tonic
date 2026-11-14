@@ -1,0 +1,76 @@
+{
+  "slug": "oxe-embodiment-transfer-metrics",
+  "title": "Compute Per-Embodiment and Transfer Metrics",
+  "version": "1.0.0",
+  "number": 237,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-open-x-embodiment",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "embodiment_transfer_metrics",
+  "paperIds": [
+    "2023-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A single average hides whether a shared policy succeeds only on the embodiment it was trained for.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Rates dimensionless; IDs reference a versioned embodiment registry."
+    },
+    "axes": "train/test IDs and success(N) -> count/rate(E,E) plus two scalars",
+    "timestamp_assumptions": "Each row is one episode evaluation, not an action timestep; train/test IDs label model-training and deployment embodiment.",
+    "batching": "train/test IDs and success(N) -> count/rate(E,E) plus two scalars"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "5d245e728c94f00a55bff919f1dd3994828a862ab11310e36d31e9f8d2a36706"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original cross-embodiment evaluation aggregation inspired by OXE. A matrix cell measures supplied outcomes and cannot prove transfer causality without controlled baselines.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-open-x-embodiment.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

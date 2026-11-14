@@ -21,9 +21,12 @@
   ],
   "runnable_problem_slugs": [
     "inference-latency-percentiles",
-    "edge-inference-release-gate"
+    "robotics-trace-end-to-end-latency",
+    "graph-throughput-jitter",
+    "edge-inference-release-gate",
+    "compare-pipeline-measurements"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +59,7 @@ The implementation path follows **Declare workload boundaries → Analyze the ti
 
 Source cards: [2023-robotperf](../../../research/papers/mlops-sim2real/2023-robotperf.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -90,8 +93,8 @@ Separate processing time, waiting, transfer, and parallel work.
 [Study the mechanism and math](/projects/2023-robotperf#paper-section-analyze-the-timed-graph).
 
 - **Runnable supporting prerequisite:** [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles). Summarize end-to-end request latency with explicitly defined nearest-rank p50, p90, and p99 values.
-- **Proposed component, not runnable:** Derive End-to-End Latency from Robotics Trace Events.
-- **Proposed component, not runnable:** Measure Throughput and Jitter Across a ROS-Style Graph.
+- **Runnable paper-associated component:** [Derive End-to-End Latency from Robotics Trace Events](/problems/robotics-trace-end-to-end-latency). Pair boundary events by request identity and compute exact end-to-end latency on one declared clock.
+- **Runnable paper-associated component:** [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Measure Throughput and Jitter Across a ROS-Style Graph
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -104,7 +107,7 @@ Report distributions and configuration identity rather than a context-free speed
 [Study the mechanism and math](/projects/2023-robotperf#paper-section-compare-valid-runs).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Compare Black-Box and Grey-Box Pipeline Measurements.
+- **Runnable paper-associated component:** [Compare Black-Box and Grey-Box Pipeline Measurements](/problems/compare-pipeline-measurements). Compare Black-Box and Grey-Box Pipeline Measurements
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

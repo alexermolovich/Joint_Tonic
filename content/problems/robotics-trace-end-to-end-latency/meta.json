@@ -1,0 +1,73 @@
+{
+  "slug": "robotics-trace-end-to-end-latency",
+  "title": "Derive End-to-End Latency from Robotics Trace Events",
+  "version": "1.0.0",
+  "number": 335,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-tracing",
+    "correlation-ids",
+    "end-to-end-latency"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "trace_latencies",
+  "paperIds": [
+    "2023-robotperf"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Pair boundary events by request identity and compute exact end-to-end latency on one declared clock.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; baseline worker exists",
+    "dependencies": {},
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker limits; verified before publication"
+  },
+  "physical_contract": "Events use integer nanoseconds from one shared monotonic clock ID. Each request has one input and one output boundary. No clock correction, stage-duration summation, nearest-time pairing or robot actuation is performed.",
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "out-of-order trace events with correct IDs",
+      "large clock origin and zero latency",
+      "empty trace"
+    ],
+    "hidden_case_families": [
+      "duplicate/missing boundaries rejected",
+      "different clocks and reverse time rejected",
+      "typed event limits and IDs",
+      "sorted results and preservation at scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "c668ad34727715bc14fc6368ae9a613250011634f48f7715b8c14d467108c339"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "mlops-batch5-draft-0.1.0",
+    "evaluator_sha256": null
+  },
+  "provenance": {
+    "authoring_notes": "RobotPerf motivates explicit workload boundaries and correlated timing. The strict two-event schema is an original bounded trace-analysis exercise, not a complete ROS trace parser or critical-path reconstruction.",
+    "primary_urls": [
+      "https://arxiv.org/html/2309.09212v2"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2023-robotperf.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

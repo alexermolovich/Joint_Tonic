@@ -1,0 +1,76 @@
+{
+  "slug": "act-teleoperation-quality",
+  "title": "Detect Teleoperation Demonstration Quality Failures",
+  "version": "1.0.0",
+  "number": 225,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-aloha-act",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "teleop_quality_flags",
+  "paperIds": [
+    "2023-aloha-act"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A demonstration can look smooth in video while its logged joint stream contains impossible jumps or missing observations.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Joint positions radians; times seconds; max_speed radians/second, one threshold per joint."
+    },
+    "axes": "times(T), joints(T,D), observed(T), bounds(D) -> three Boolean flags(T)",
+    "timestamp_assumptions": "Time samples must be strictly increasing on one clock; differences are between adjacent recorded rows.",
+    "batching": "times(T), joints(T,D), observed(T), bounds(D) -> three Boolean flags(T)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "1b7f843d57336adc6f1b9bba4c5f6ccfd020a347f9c2ffe010448c4348793c05"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original demonstration-quality check motivated by ALOHA/ACT data collection. Thresholds are supplied; this is not a collision or contact-quality evaluator.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2304.13705"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-aloha-act.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

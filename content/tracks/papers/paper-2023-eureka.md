@@ -16,7 +16,9 @@
     "robot-learning-rl",
     "eureka"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "validation-loss-rollout-ranking"
+  ],
   "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +52,13 @@ The implementation path follows **Generate reward candidates → Train and evalu
 
 Source cards: [2023-eureka](../../../research/papers/robot-learning-rl/2023-eureka.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Generate reward candidates** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Compare Validation Loss with Rollout Success](/problems/validation-loss-rollout-ranking). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,6 +84,7 @@ Optimize each reward and score behavior with an independent task metric.
 
 [Study the mechanism and math](/projects/2023-eureka#paper-section-train-and-evaluate-policies).
 
+- **Runnable supporting prerequisite:** [Compare Validation Loss with Rollout Success](/problems/validation-loss-rollout-ranking). Expose when offline-loss ordering disagrees with the ordering of observed rollout success.
 - **Proposed component, not runnable:** Rank Reward Candidates by Rollout Evidence.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

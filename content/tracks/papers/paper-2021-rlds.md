@@ -20,11 +20,13 @@
   ],
   "runnable_problem_slugs": [
     "validate-robot-episodes",
+    "oxe-version-dataset-manifest",
     "interpolate-joint-state",
+    "window-episode-without-crossing-boundaries",
     "act-sliding-action-chunks",
     "record-artifact-lineage"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,14 +59,16 @@ The implementation path follows **Record lossless episode structure → Align ob
 
 Source cards: [2021-rlds](../../../research/papers/mlops-data-deployment/2021-rlds.md).
 
-**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 6 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Record lossless episode structure** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Version a Cross-Robot Dataset Manifest](/problems/oxe-version-dataset-manifest). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Interpolate Joint State at Camera Time](/problems/interpolate-joint-state). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Its own contract remains authoritative; it does not implement the entire paper.
 
@@ -81,7 +85,7 @@ Record lossless episode structure. See the original explanation and component st
 [Study the mechanism and math](/projects/2021-rlds#paper-section-record-lossless-episode-structure).
 
 - **Runnable supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase.
-- **Proposed component, not runnable:** Version a Cross-Robot Dataset Manifest.
+- **Runnable supporting prerequisite:** [Version a Cross-Robot Dataset Manifest](/problems/oxe-version-dataset-manifest). A mixed dataset needs an identity that includes its versions, embodiments and calibration.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Align observations actions and rewards. See the original explanation and compone
 [Study the mechanism and math](/projects/2021-rlds#paper-section-align-observations-actions-and-rewards).
 
 - **Runnable supporting prerequisite:** [Interpolate Joint State at Camera Time](/problems/interpolate-joint-state). Align unwrapped encoder angles to camera timestamps without crossing sensor dropouts.
-- **Proposed component, not runnable:** Window an Episode Without Crossing Boundaries.
+- **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

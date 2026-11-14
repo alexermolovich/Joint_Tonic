@@ -1,0 +1,77 @@
+{
+  "slug": "damped-least-squares-ik-step",
+  "title": "Stabilize Singular IK with Damped Least Squares",
+  "version": "1.0.0",
+  "number": 63,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "inverse-kinematics"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "damped_ik_step",
+  "paperIds": [],
+  "prerequisites": [
+    "geometric-jacobian-joint-axes"
+  ],
+  "visualization": "markdown",
+  "summary": "Compute a regularized joint-space correction that remains bounded near singular Jacobians.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "one common normalized task frame"
+    ],
+    "units": {
+      "jacobian": "normalized task coordinate per normalized joint coordinate",
+      "error": "normalized task coordinates",
+      "damping": "task/joint scale ratio"
+    },
+    "axes": "Rows share caller-supplied metric scaling; mixed raw metres/radians must be scaled before calling.",
+    "timestamp_assumptions": "One static linearized IK iteration, not a physical motion command.",
+    "batching": "J(M,N), error(M,), scalar damping -> float64 correction(N,), residual(M,); 1<=M,N<=32."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "3d51970a884ea1f33ced085feb335d4b4c8ef5631e2ff026c4f668c75a8cc549"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://modernrobotics.northwestern.edu/nu-gm-book-resource/6-2-numerical-inverse-kinematics-part-1-of-2/"
+    ],
+    "implementation_urls": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "slug": "oxe-balanced-dataset-sampling",
+  "title": "Sample a Balanced Multi-Dataset Mixture",
+  "version": "1.0.0",
+  "number": 236,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-open-x-embodiment",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "sample_dataset_mixture",
+  "paperIds": [
+    "2023-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Large datasets should not automatically dominate every mixed batch.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Counts, weights and fractions are dimensionless; dataset action interfaces remain distinct."
+    },
+    "axes": "sizes/weights(G), uniforms(N,2) -> dataset/local indices(N)",
+    "timestamp_assumptions": "Independent draws with replacement; selected local indices are not time coordinates.",
+    "batching": "sizes/weights(G), uniforms(N,2) -> dataset/local indices(N)"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "1b74d45b30c6bfd84e1042f979654e67678d5370f649d916588f3c731b431eb6"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original weighted mixture sampler motivated by OXE. Weights are explicit caller policy, not inferred from dataset size or asserted as the paper\u2019s exact proportions.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "paper_card": "research/papers/vla-embodied/2023-open-x-embodiment.md",
+    "manifest": "research/manifests/vla-embodied.md"
+  }
+}

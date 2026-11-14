@@ -21,9 +21,11 @@
   "runnable_problem_slugs": [
     "detr-matching-cost",
     "detr-no-object-targets",
-    "detr-hungarian-assignment"
+    "detr-hungarian-assignment",
+    "detr-matched-training-losses",
+    "detr-query-small-object-diagnostics"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Encode spatial features → Decode object quer
 
 Source cards: [2020-detr](../../../research/papers/vision-vlm-3d/2020-detr.md).
 
-**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -64,6 +66,7 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Build a Detection Bipartite-Matching Cost Matrix](/problems/detr-matching-cost). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Match Object Queries with the Hungarian Algorithm](/problems/detr-hungarian-assignment). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -104,8 +107,8 @@ Assign each target once, then supervise matched boxes and unused queries.
 - **Runnable paper-associated component:** [Build a Detection Bipartite-Matching Cost Matrix](/problems/detr-matching-cost). Build pairwise query-to-target costs from class probabilities, normalized box distances, and generalized IoU.
 - **Runnable paper-associated component:** [Handle the No-Object Class and Padding Masks](/problems/detr-no-object-targets). Handle the No-Object Class and Padding Masks
 - **Runnable paper-associated component:** [Match Object Queries with the Hungarian Algorithm](/problems/detr-hungarian-assignment). Match Object Queries with the Hungarian Algorithm
-- **Proposed component, not runnable:** Compute DETR Classification, L1, and GIoU Losses.
-- **Proposed component, not runnable:** Diagnose Query Collapse and Missed Small Objects.
+- **Runnable paper-associated component:** [Compute DETR Classification, L1, and GIoU Losses](/problems/detr-matched-training-losses). Compute single-image DETR losses from a supplied injective target-to-query assignment.
+- **Runnable paper-associated component:** [Diagnose Query Collapse and Missed Small Objects](/problems/detr-query-small-object-diagnostics). Report highly similar query pairs and geometrically uncovered small target boxes as separate diagnostics.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

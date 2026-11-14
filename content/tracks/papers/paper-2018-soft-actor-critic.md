@@ -16,8 +16,13 @@
     "robot-learning-rl",
     "soft-actor-critic"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "sac-soft-state-value",
+    "soft-value-bellman-target",
+    "sac-tanh-logprob-correction",
+    "sac-temperature-objective-update"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Define entropy-regularized value → Fit soft 
 
 Source cards: [2018-soft-actor-critic](../../../research/papers/robot-learning-rl/2018-soft-actor-critic.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +75,7 @@ Reward both task performance and policy entropy.
 
 [Study the mechanism and math](/projects/2018-soft-actor-critic#paper-section-define-entropy-regularized-value).
 
-- **Proposed component, not runnable:** Compute an Entropy-Regularized State Value.
+- **Runnable paper-associated component:** [Compute an Entropy-Regularized State Value](/problems/sac-soft-state-value). A stochastic robot policy values both task reward and action entropy.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Bootstrap from a target soft-value estimate.
 
 [Study the mechanism and math](/projects/2018-soft-actor-critic#paper-section-fit-soft-critic-targets).
 
-- **Proposed component, not runnable:** Compute an Entropy-Regularized Bellman Target.
+- **Runnable paper-associated component:** [Compute an Entropy-Regularized Bellman Target](/problems/soft-value-bellman-target). One-step critic targets combine immediate reward with a value estimate of the next physical state.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +99,8 @@ Trade high value against entropy using reparameterized actions.
 
 [Study the mechanism and math](/projects/2018-soft-actor-critic#paper-section-improve-the-stochastic-actor).
 
-- **Proposed component, not runnable:** Apply Tanh Action Log-Probability Correction.
-- **Proposed component, not runnable:** Update a Temperature Objective (later SAC extension).
+- **Runnable paper-associated component:** [Apply Tanh Action Log-Probability Correction](/problems/sac-tanh-logprob-correction). Squashing a Gaussian sample into an action interval changes its probability density.
+- **Runnable paper-associated component:** [Update a Temperature Objective (later SAC extension)](/problems/sac-temperature-objective-update). The entropy temperature should increase when the sampled policy is less random than the declared target and decrease when it is more random.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

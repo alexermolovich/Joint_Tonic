@@ -16,7 +16,7 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Deskew lidar measurements","detail":"Move points captured at different times into one scan frame.","column":0,"row":0,"section":"Deskew lidar measurements","problem_slugs":[],"planned_problems":["Deskew a Lidar Scan with Motion Estimates"]},{"id":"stage-2","title":"Align local scan features","detail":"Match edge and surface features against a local map.","column":1,"row":0,"section":"Align local scan features","problem_slugs":[],"planned_problems":["Compute Point-to-Line and Point-to-Plane Scan Residuals"]},{"id":"stage-3","title":"Smooth sensor factors","detail":"Combine inertial, lidar, GPS, and loop constraints when available.","column":2,"row":0,"section":"Smooth sensor factors","problem_slugs":[],"planned_problems":["Assemble an IMU-Lidar Pose Constraint","Reject Inconsistent Loop Closures"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"deskewed scan"},{"from":"stage-2","to":"stage-3","label":"relative pose factors"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Deskew lidar measurements","detail":"Move points captured at different times into one scan frame.","column":0,"row":0,"section":"Deskew lidar measurements","problem_slugs":["interpolate-pose-slerp","trace-perception-frame-graph"],"planned_problems":["Deskew a Lidar Scan with Motion Estimates"]},{"id":"stage-2","title":"Align local scan features","detail":"Match edge and surface features against a local map.","column":1,"row":0,"section":"Align local scan features","problem_slugs":[],"planned_problems":["Compute Point-to-Line and Point-to-Plane Scan Residuals"]},{"id":"stage-3","title":"Smooth sensor factors","detail":"Combine inertial, lidar, GPS, and loop constraints when available.","column":2,"row":0,"section":"Smooth sensor factors","problem_slugs":[],"planned_problems":["Assemble an IMU-Lidar Pose Constraint","Reject Inconsistent Loop Closures"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"deskewed scan"},{"from":"stage-2","to":"stage-3","label":"relative pose factors"}]}
 ---
 
 ## Core paper explanation
@@ -37,6 +37,11 @@ Transforms include lidar–IMU extrinsics. A scan is not instantaneous; per-poin
 **Prerequisite practice:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). These supporting skills do not complete this model stage.
 
 **Planned component problems:** Deskew a Lidar Scan with Motion Estimates. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+
+Use homogeneous points $p^{L_t}\in\mathbb R^4$ with final coordinate one. Each $T_{WL_t}\in\mathbb R^{4\times4}$ maps the lidar frame at capture time $t$ into the common world frame; translations and the first three point entries are in meters. If the lidar moves one meter along world x between the reference time and capture, with identity rotations, a captured point $(2,0,0,1)$ becomes $(3,0,0,1)$ in the reference lidar frame. Reversing the relative transform would incorrectly return x equal to one.
+
+[Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp) and [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph) expose interpolation and transform-direction prerequisites. The interpolation exercise is a bounded geometric model, not a substitute for LIO-SAM's inertial motion estimation, bias handling, or scan registration.
+
 
 ### Align local scan features
 

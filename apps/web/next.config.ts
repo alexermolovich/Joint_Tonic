@@ -12,6 +12,8 @@ const config: NextConfig = {
       "../../content/problems/*/{problem,theory,solution}.md",
       "../../content/problems/*/{starter,reference}.py",
       "../../content/tracks/papers/*.md",
+      "../../content/capstones/**/*.{json,md}",
+      "../../content/paper-projects/**/*.{json,md}",
       "../../research/papers/**/*.md",
     ],
   },

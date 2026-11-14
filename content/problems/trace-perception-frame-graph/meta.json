@@ -1,0 +1,72 @@
+{
+  "slug": "trace-perception-frame-graph",
+  "title": "Trace Frames Through a Robot Perception Graph",
+  "version": "1.0.0",
+  "number": 61,
+  "difficulty": "Medium",
+  "domain": "Robotics foundations",
+  "topics": [
+    "geometry"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "resolve_frame_transform",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Resolve a rigid transform between two frames in a validated acyclic frame forest.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "named right-handed frames in supplied forest"
+    ],
+    "units": {
+      "translation": "metres",
+      "rotation": "dimensionless"
+    },
+    "axes": "An edge (parent,child,T) stores T_parent_child mapping child coordinates into parent.",
+    "timestamp_assumptions": "Every edge belongs to the same synchronized calibration snapshot; no time interpolation.",
+    "batching": "list of up to128 (parent:str,child:str,T(4,4)) tuples, source/target str -> fresh float64(4,4)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-input",
+      "independent-oracle",
+      "immutability"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "119a023f63bdc51c5b65ea9bb515908e16729b8f978ab4b19e1da1ad23443250"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [],
+    "implementation_urls": []
+  }
+}

@@ -16,7 +16,10 @@
     "mlops-data-deployment",
     "robocasa"
   ],
-  "runnable_problem_slugs": [],
+  "runnable_problem_slugs": [
+    "scenario-coverage-confidence",
+    "version-simulation-distribution"
+  ],
   "proposed_component_count": 4,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
@@ -50,13 +53,14 @@ The implementation path follows **Generate a scenario → Produce demonstrations
 
 Source cards: [2024-robocasa](../../../research/papers/mlops-data-deployment/2024-robocasa.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Generate a scenario** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -95,6 +99,8 @@ Hold out meaningful scene factors and test real-world relevance separately.
 
 [Study the mechanism and math](/projects/2024-robocasa#paper-section-evaluate-variation-and-transfer).
 
+- **Runnable supporting prerequisite:** [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Estimate Scenario Coverage and Confidence Intervals
+- **Runnable supporting prerequisite:** [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Version a Simulation Scenario Distribution
 - **Proposed component, not runnable:** Aggregate Generalization Across Scene Families.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

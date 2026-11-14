@@ -16,7 +16,7 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Integrate relative rotation","detail":"Accumulate bias-corrected angular increments.","column":0,"row":0,"section":"Integrate relative rotation","problem_slugs":[],"planned_problems":["Integrate IMU Rotation Increments on SO3"]},{"id":"stage-2","title":"Integrate velocity and position","detail":"Accumulate specific force in the starting body frame.","column":1,"row":0,"section":"Integrate velocity and position","problem_slugs":[],"planned_problems":["Preintegrate Bias-Corrected IMU Velocity and Position"]},{"id":"stage-3","title":"Form a keyframe factor","detail":"Compare predicted state change with preintegrated measurements.","column":2,"row":0,"section":"Form a keyframe factor","problem_slugs":[],"planned_problems":["Propagate Preintegration Covariance","Apply a First-Order Bias Correction"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"relative rotations"},{"from":"stage-2","to":"stage-3","label":"preintegrated measurements"}]}
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Integrate relative rotation","detail":"Accumulate bias-corrected angular increments.","column":0,"row":0,"section":"Integrate relative rotation","problem_slugs":[],"planned_problems":["Integrate IMU Rotation Increments on SO3"]},{"id":"stage-2","title":"Integrate velocity and position","detail":"Accumulate specific force in the starting body frame.","column":1,"row":0,"section":"Integrate velocity and position","problem_slugs":["match-approximate-sensor-timestamps","estimate-clock-offset-paired-events"],"planned_problems":["Preintegrate Bias-Corrected IMU Velocity and Position"]},{"id":"stage-3","title":"Form a keyframe factor","detail":"Compare predicted state change with preintegrated measurements.","column":2,"row":0,"section":"Form a keyframe factor","problem_slugs":[],"planned_problems":["Propagate Preintegration Covariance","Apply a First-Order Bias Correction"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"relative rotations"},{"from":"stage-2","to":"stage-3","label":"preintegrated measurements"}]}
 ---
 
 ## Core paper explanation
@@ -47,6 +47,11 @@ These first-order discrete updates show the mechanism. Covariance and bias Jacob
 
 
 **Planned component problem:** Preintegrate Bias-Corrected IMU Velocity and Position. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
+
+The relative rotation $\Delta R_{ik}\in\mathbb R^{3\times3}$ maps the sample-$k$ body frame into the keyframe-$i$ body frame. The three-vectors $\Delta v_{ik}$ and $\Delta p_{ik}$ are expressed in that fixed keyframe frame, in meters per second and meters; $\Delta t$ is in seconds. Initialize them to zero and the relative rotation to identity. Gravity is deliberately absent from these preintegrated quantities and appears when forming the world-state residual.
+
+For one zero-bias sample with identity rotation, specific force $(2,0,0)$ meters per second squared and duration $0.1$ seconds, the increments are $(0.2,0,0)$ meters per second and $(0.01,0,0)$ meters. This traces the discrete recurrence, not a physical claim that an accelerometer at rest reads zero. [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps) and [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events) practice the timing contract needed before integration; neither implements preintegration.
+
 
 ### Form a keyframe factor
 

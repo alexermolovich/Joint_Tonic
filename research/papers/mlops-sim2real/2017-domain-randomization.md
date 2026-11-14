@@ -1,37 +1,81 @@
 ---
 schema_version: 1
-paper_id: "2017-domain-randomization"
-title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World"
+paper_id: 2017-domain-randomization
+title: >-
+  Domain Randomization for Transferring Deep Neural Networks from Simulation to
+  the Real World
 authors:
-  - "Josh Tobin"
-  - "Rachel Fong"
-  - "Alex Ray"
-  - "Jonas Schneider"
-  - "Wojciech Zaremba"
-  - "Pieter Abbeel"
+  - Josh Tobin
+  - Rachel Fong
+  - Alex Ray
+  - Jonas Schneider
+  - Wojciech Zaremba
+  - Pieter Abbeel
 year: 2017
-venue_or_status: "IEEE/RSJ IROS 2017"
-primary_url: "https://arxiv.org/abs/1703.06907"
-pdf_url: "https://arxiv.org/pdf/1703.06907"
-local_pdf: "./2017-domain-randomization.pdf"
-sha256: "3fc98c5f4cea050686d45858e647e1b704492121fdae80f8fcd5d560c107f11f"
+venue_or_status: IEEE/RSJ IROS 2017
+primary_url: 'https://arxiv.org/abs/1703.06907'
+pdf_url: 'https://arxiv.org/pdf/1703.06907'
+local_pdf: ./2017-domain-randomization.pdf
+sha256: 3fc98c5f4cea050686d45858e647e1b704492121fdae80f8fcd5d560c107f11f
 bytes: 4066798
 pages: 8
 topics:
-  - "sim-to-real"
-  - "domain-randomization"
-  - "synthetic-data"
-  - "perception"
-  - "robustness"
+  - sim-to-real
+  - domain-randomization
+  - synthetic-data
+  - perception
+  - robustness
 modalities:
-  - "synthetic-rgb"
-  - "real-rgb"
-  - "object-pose"
-  - "simulator-parameters"
-track_role: "core"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Sample rendering parameters, generate labeled images, and evaluate transfer on held-out variations and real observations.","nodes":[{"id":"stage-1","title":"Sample appearance parameters","detail":"Choose a reproducible distribution over simulator visual factors.","column":0,"row":0,"section":"Sample appearance parameters","problem_slugs":[],"planned_problems":["Build a Seeded Visual Randomization Sampler","Stratify Texture, Lighting, Camera, and Distractor Factors","Version a Simulation Scenario Distribution"]},{"id":"stage-2","title":"Train across variation","detail":"Optimize task predictions over the sampled appearance distribution.","column":1,"row":0,"section":"Train across variation","problem_slugs":[],"planned_problems":["Average Per-Scenario Perception Losses"]},{"id":"stage-3","title":"Measure transfer and coverage","detail":"Report behavior across factor ranges rather than only a pooled average.","column":2,"row":0,"section":"Measure transfer and coverage","problem_slugs":[],"planned_problems":["Measure Performance Across Shift Buckets","Estimate Scenario Coverage and Confidence Intervals"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"randomized images"},{"from":"stage-2","to":"stage-3","label":"trained perception model"}]}
+  - synthetic-rgb
+  - real-rgb
+  - object-pose
+  - simulator-parameters
+track_role: core
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Sample rendering parameters, generate labeled images, and evaluate transfer
+    on held-out variations and real observations.
+  nodes:
+    - id: stage-1
+      title: Sample appearance parameters
+      detail: Choose a reproducible distribution over simulator visual factors.
+      column: 0
+      row: 0
+      section: Sample appearance parameters
+      problem_slugs:
+        - seeded-visual-randomization
+        - stratify-visual-factors
+        - version-simulation-distribution
+      planned_problems: []
+    - id: stage-2
+      title: Train across variation
+      detail: Optimize task predictions over the sampled appearance distribution.
+      column: 1
+      row: 0
+      section: Train across variation
+      problem_slugs: []
+      planned_problems:
+        - Average Per-Scenario Perception Losses
+    - id: stage-3
+      title: Measure transfer and coverage
+      detail: Report behavior across factor ranges rather than only a pooled average.
+      column: 2
+      row: 0
+      section: Measure transfer and coverage
+      problem_slugs:
+        - shift-bucket-performance
+        - scenario-coverage-confidence
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: randomized images
+    - from: stage-2
+      to: stage-3
+      label: trained perception model
 ---
 
 ## Core paper explanation
@@ -55,9 +99,9 @@ The scene state $s$ determines task labels. Randomization must not silently chan
 
 **Component practice**
 
-- Build a Seeded Visual Randomization Sampler — unreviewed idea; contract and evaluator required.
-- Stratify Texture, Lighting, Camera, and Distractor Factors — unreviewed idea; contract and evaluator required.
-- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
+- Runnable component: [Build a Seeded Visual Randomization Sampler](/problems/seeded-visual-randomization). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Stratify Texture, Lighting, Camera, and Distractor Factors](/problems/stratify-visual-factors). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Implements the bounded learning contract linked here, not the complete paper.
 
 
 ### Train across variation
@@ -89,29 +133,33 @@ This is a teaching diagnostic, not a transfer guarantee. Held-out real images re
 
 **Component practice**
 
-- Measure Performance Across Shift Buckets — unreviewed idea; contract and evaluator required.
-- Estimate Scenario Coverage and Confidence Intervals — unreviewed idea; contract and evaluator required.
+- Runnable component: [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Implements the bounded learning contract linked here, not the complete paper.
 
 
 ## Implement the components
 
-Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
+Execution-flow nodes link runnable component exercises. Any additional research ideas remain explicitly labeled as future work and do not imply a complete paper reproduction.
 
 
-**Planned component problems:**
+**Component implementation map:**
 
-- Build a Seeded Visual Randomization Sampler — unreviewed idea; contract and evaluator required.
-- Stratify Texture, Lighting, Camera, and Distractor Factors — unreviewed idea; contract and evaluator required.
-- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
+- Runnable component: [Build a Seeded Visual Randomization Sampler](/problems/seeded-visual-randomization). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Stratify Texture, Lighting, Camera, and Distractor Factors](/problems/stratify-visual-factors). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Version a Simulation Scenario Distribution](/problems/version-simulation-distribution). Implements the bounded learning contract linked here, not the complete paper.
 - Average Per-Scenario Perception Losses — unreviewed idea; contract and evaluator required.
-- Measure Performance Across Shift Buckets — unreviewed idea; contract and evaluator required.
-- Estimate Scenario Coverage and Confidence Intervals — unreviewed idea; contract and evaluator required.
+- Runnable component: [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Estimate Scenario Coverage and Confidence Intervals](/problems/scenario-coverage-confidence). Implements the bounded learning contract linked here, not the complete paper.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
 ## Why this matters on a robot
 
 Appearance variation can reduce reliance on synthetic textures, but it does not solve incorrect geometry, sensor timing, or dynamics. Camera blur, specular materials, and calibration changes may sit outside the randomization family. Track transfer failures by their physical cause.
+
+## Scope of the runnable engineering components
+
+The runnable follow-up components are original engineering extensions. [Seeded visual scenarios](/problems/seeded-visual-randomization) maps four fixed random columns into declared texture, exposure, yaw and distractor ranges. [Stratified factors](/problems/stratify-visual-factors) guarantees marginal strata, not exhaustive joint-factor coverage. [Shift metrics](/problems/shift-bucket-performance) retains missing buckets as unknown. [Coverage and Wilson intervals](/problems/scenario-coverage-confidence) assumes independent Bernoulli scenario trials and reports marginal uncertainty, not a simultaneous transfer guarantee. [Distribution versioning](/problems/version-simulation-distribution) binds units, reset policy and asset identity into canonical configuration evidence; these rules are not claimed as the paper's original experimental protocol.
 
 ## Sources and scope
 
