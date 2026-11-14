@@ -2,7 +2,7 @@
 {
   "schema_version": 1,
   "problem_id": "grounding-localization-phrase-metrics",
-  "content_version": "1.0.0",
+  "content_version": "1.0.1",
   "status": "implemented",
   "title": "Evaluate Localization and Phrase Grounding Separately",
   "type": "function",
@@ -67,10 +67,11 @@
       "independent-mechanism-oracle",
       "boundary-and-invalid-input",
       "maximum-advertised-dimensions",
-      "input-preservation-and-output-aliasing"
+      "input-preservation-and-output-aliasing",
+      "oversized-signed-integer-scalar"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "0698693a911c544bcc6faa586bcc3bfb7fc70b3166517b6347e102168f775344"
+    "evaluator_sha256": "5fedd75d11b0baa36675f00aa81a4606288fa6df65e315507c71dbd5dfdae400"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

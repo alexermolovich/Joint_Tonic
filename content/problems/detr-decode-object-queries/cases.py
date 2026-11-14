@@ -55,4 +55,9 @@ def invalid(m):
  for index,value in [(0,np.zeros((1,1,1))),(1,f([[[-.1,0,0,0]]])),(2,b([False])),(3,True),(3,-.1)]:
   q=a.copy();q[index]=value;rejected(lambda:m.decode_queries(*q))
 
-TESTS=[('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]
+def oversized_scalars(m):
+    for value in (10**1000, -(10**1000)):
+        values=args();values[-1]=value
+        rejected(lambda: m.decode_queries(*values))
+
+TESTS=[('Oversized signed integer scalar','hidden',oversized_scalars),('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]

@@ -2,7 +2,7 @@
 {
   "schema_version": 1,
   "problem_id": "vit-class-token-linear-head",
-  "content_version": "1.0.0",
+  "content_version": "1.0.1",
   "status": "implemented",
   "title": "Read a Normalized Class Token with a Linear Head",
   "type": "function",
@@ -65,10 +65,11 @@
       "independent-mechanism-oracle",
       "boundary-and-invalid-input",
       "maximum-advertised-dimensions",
-      "input-preservation-and-output-aliasing"
+      "input-preservation-and-output-aliasing",
+      "oversized-signed-integer-scalar"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "83c97db88c1fa6775caa31e4675b532990d15de1d164e939793bc1dda7e5f470"
+    "evaluator_sha256": "6c4c514749f92901a979e8454f26b1ad4fb6548ad5bdd9760a1b9eebc72f8084"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

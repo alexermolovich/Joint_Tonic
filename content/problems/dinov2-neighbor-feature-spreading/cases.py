@@ -52,4 +52,9 @@ def invalid(m):
  a=args();generic_invalid(m.neighbor_spreading,a)
  for x,e in [(f([[0,0],[1,0]]),.01),(f([[1]]),.01),(f([[1e-10],[1]]),.01),(a[0],0),(a[0],True)]:rejected(lambda:m.neighbor_spreading(x,e))
 
-TESTS=[('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]
+def oversized_scalars(m):
+    for value in (10**1000, -(10**1000)):
+        values=args();values[-1]=value
+        rejected(lambda: m.neighbor_spreading(*values))
+
+TESTS=[('Oversized signed integer scalar','hidden',oversized_scalars),('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]

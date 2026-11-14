@@ -10,3 +10,8 @@ Author: root. Independent reviewer: research_curator.
 - Content/provenance validation is required at promotion; production Docker/gVisor qualification is separate and has not been claimed.
 
 Fixtures are original synthetic CC0-1.0; no source prose, figures, model weights or datasets are reproduced. Existing local native grading semantics are retained.
+
+
+## Patch 1.0.1: oversized integer scalar validation
+
+Reproduced `OverflowError` for a built-in `10**1000` scalar. Range checking now precedes `math.isfinite` conversion, so both signed oversized integers raise the documented `ValueError`. Numerical behavior for valid inputs is unchanged. Positive/negative regression cases are included in the evaluator. Focused isolated Run/Submit results are recorded in the linked issue handoff.
