@@ -16,8 +16,12 @@
     "robot-learning-rl",
     "r3m"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "r3m-time-contrastive-video-triplets",
+    "r3m-temporal-language-objective",
+    "r3m-frozen-feature-policy-step"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Learn temporal structure → Align progress wi
 
 Source cards: [2022-r3m](../../../research/papers/robot-learning-rl/2022-r3m.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Prefer nearby progress states over farther or unrelated video states.
 
 [Study the mechanism and math](/projects/2022-r3m#paper-section-learn-temporal-structure).
 
-- **Proposed component, not runnable:** Sample Time-Contrastive Video Triplets.
+- **Runnable paper-associated component:** [Sample Time-Contrastive Video Triplets](/problems/r3m-time-contrastive-video-triplets). Temporal supervision depends on which frames are compared.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Score whether a visual transition matches the described activity.
 
 [Study the mechanism and math](/projects/2022-r3m#paper-section-align-progress-with-language).
 
-- **Proposed component, not runnable:** Combine Temporal and Language Alignment Losses.
+- **Runnable paper-associated component:** [Combine Temporal and Language Alignment Losses](/problems/r3m-temporal-language-objective). Nearby visual states, meaningful language progress and compact features provide different learning signals.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Reuse frozen visual features with robot-specific control supervision.
 
 [Study the mechanism and math](/projects/2022-r3m#paper-section-train-a-robot-policy).
 
-- **Proposed component, not runnable:** Evaluate Frozen Features in a Small Policy.
+- **Runnable paper-associated component:** [Evaluate Frozen Features in a Small Policy](/problems/r3m-frozen-feature-policy-step). A frozen encoder can still support learning a new robot controller.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

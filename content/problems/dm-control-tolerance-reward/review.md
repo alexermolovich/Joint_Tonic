@@ -1,0 +1,9 @@
+# Independent review and verification
+
+Status: reviewed and implemented. Author: curriculum_continuation. Contract reviewers: root and research_curator. Independent reference/cases/Theory reviewer: perception_completion.
+
+This ten-problem batch pins robust finite-sample aggregation, task-stratified performance profiles, explicit timestep/discount semantics, tolerance rewards, seed/task weighting, simulator buffer indexing, selective reset bookkeeping, measured throughput and a bounded functional dynamics step. The source mechanisms are scoped explicitly; no simulator backend, full benchmark reproduction, hardware safety or confidence-interval coverage is claimed.
+
+Actual local bubblewrap verification: 20 public Run families and 50 full Submit families passed across the ten packages. All 10 starters and 10 plausible mechanism mutants were rejected with failed test results. Mutants changed trim rounding, threshold equality, LAST validity, zero-discount stopping, interval-boundary reward, seed weighting, joint index order, continuing counters, large timestamp subtraction and explicit versus semi-implicit position updates. Suites include independent scalar/original fixture oracles, empty/minimal cases, complete documented invalid inputs, noncontiguous arrays, input preservation and realistic scale. Subnormal margin and exact int64 identities/timestamps have dedicated regressions.
+
+All 77 Theory expressions rendered with strict KaTeX. All package source files were checked as UTF-8/LF; evaluator hashes match the exact cases.py bytes. Runtime Python 3.12.3 / NumPy 2.2.4, local bubblewrap baseline, 18-second wall / 10-second CPU / 4096 MiB address-space / 64 KiB output budgets, no network. OCI image remains pending; native-local contracts are not automatically production-qualified. No web/worker or hosted database changes were made for this batch.

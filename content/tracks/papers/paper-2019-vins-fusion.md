@@ -16,8 +16,13 @@
     "geometry-calibration-slam",
     "vins-fusion"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "relative-odometry-edges",
+    "global-sensor-pose-factors",
+    "match-approximate-sensor-timestamps",
+    "sensor-configuration-drift"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,15 @@ The implementation path follows **Obtain local odometry → Add global measureme
 
 Source cards: [2019-vins-fusion](../../../research/papers/geometry-calibration-slam/2019-vins-fusion.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Obtain local odometry** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Evaluate Trajectory Error After Alignment](/problems/aligned-trajectory-position-error). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +77,7 @@ Use relative motion from an existing local estimator.
 
 [Study the mechanism and math](/projects/2019-vins-fusion#paper-section-obtain-local-odometry).
 
-- **Proposed component, not runnable:** Construct Relative Pose Measurements from Local Odometry.
+- **Runnable paper-associated component:** [Construct Relative Pose Measurements from Local Odometry](/problems/relative-odometry-edges). `relative_odometry(poses, times, edges)` poses(N,4,4),1<=N<=8192 are body-to-local-world transforms, translations meters; times(N) seconds strictly increasing, adjacent spacing>=1e-6; edges(E,2),0<=E<=32768, each0<=i<j<N; duplicates allowed, preserve edge order. Return transforms(E,4,4)=Ti^-1 Tj, durations(E)=tj-ti, speeds(E)=norm(relative_translation)/duration in m/s. Relative transform maps body-j coordinates into body-i; speeds are chord speed, not path speed. No scale estimation, time interpolation or pose optimization. Example local poses identity atx0 andx2, times[0,2],edge[0,1]=>relative translation[2,0,0],duration2,speed1. Example Ri=Rz90 at origin, Rj=I with world translation[1,0,0]=>relative rotationRz-90,translation[0,-1,0]. Empty edges preserves output shapes.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +89,8 @@ Align the local trajectory to a global reference.
 
 [Study the mechanism and math](/projects/2019-vins-fusion#paper-section-add-global-measurements).
 
-- **Proposed component, not runnable:** Assemble Sensor-Specific Pose Factors.
-- **Proposed component, not runnable:** Handle Asynchronous Sensor Timestamps.
+- **Runnable paper-associated component:** [Assemble Sensor-Specific Pose Factors](/problems/global-sensor-pose-factors). `global_factors(world_from_body, body_from_sensor, gps, magnetic, world_field, height, std, valid)` transforms(N,4,4) and shared(4,4),0<=N<=4096. Sensor offset/rotation known; one collocated GPS/magnetometer/barometer frame is a teaching restriction. GPS(N,3) world ENU meters, magnetic(N,3) sensor-frame field vector in microtesla, world_field(3) ENU same units. Require each magnetic norm and world_field norm>1e-9 including masked rows. Height(N) is sensor altitude meters in same ENU datum (pressure conversion already done). std(N,7) in[1e-6,1000], ordered3 GPS meters,3 unit-direction dimensionless,1 height meters; valid(N,3) GPS/magnetic/barometer availability. Predicted sensor pose Ts=Tb Tbs. Residual signs measured-minus-predicted: gps-p_s, magnetic/norm−R_s.T(world_field/norm), height-p_s,z. Return raw(N,7),whitened(N,7),cost Pythonfloat .5sum(whitened²); unavailable entire sensor block zero, all supplied values still validated. Whitening uses diagonal std, not full covariance. No calibrated field magnitude heuristic or bias estimation. Example allidentity, gps[1,2,3],mag[1,0,0],worldfield[1,0,0],height4,std1,allvalid=>raw[1,2,3,0,0,0,4],cost15. Examplebodyidentity, sensor offset[1,0,0],sensorrotationRz90, gps[1,0,0],mag[0,-2,0],field[5,0,0],height0=>allzero.
+- **Runnable supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Associate each query with its nearest reference timestamp within a fixed tolerance.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +102,7 @@ Balance local consistency with globally anchored observations.
 
 [Study the mechanism and math](/projects/2019-vins-fusion#paper-section-optimize-the-pose-graph).
 
-- **Proposed component, not runnable:** Compare Drift Across Sensor Configurations.
+- **Runnable paper-associated component:** [Compare Drift Across Sensor Configurations](/problems/sensor-configuration-drift). `compare_drift(estimated, reference, valid, baseline)` estimated(C,N,3),1<=C<=64,1<=N<=8192,C*N<=262144; reference(N,3),valid(C,N), baseline builtinint0..C-1. Positions meters, already same world frame and matched timestamps. Use ONLY common evidence common=all(valid,axis0) for every configuration. Return common(N),countint,errors(C,N) with NaN outsidecommon,rmse(C),endpoint(C),improvement(C),best int. Errors Euclidean position norm; RMSE=sqrt(mean(errors²)); endpoint uses highest common sample index, not arbitrary last valid perconfig; improvement=baseline_rmse-rmse inmeters. Best minRMSE first-index ties; ifno common count0,allmetricsNaN,best-1. No posthoc alignment, interpolation, or assertion that better absolute error is solely less accumulated drift. Example reference[[0,0,0],[1,0,0]], estimated0=reference,estimated1=reference+[1,0,0],allvalid,baseline1=>rmse[0,1],endpoint[0,1],improvement[1,0],best0. Examplevalid[[True,False],[False,True]]=>no common. Comparison intentionally sacrifices coverage to prevent missing-data advantages.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

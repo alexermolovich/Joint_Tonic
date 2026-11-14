@@ -1,0 +1,82 @@
+{
+  "slug": "dm-control-action-repeat",
+  "title": "Implement Action Repeat Correctly",
+  "version": "1.0.0",
+  "number": 923,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "simulation-evaluation",
+    "2018-deepmind-control-suite"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "aggregate_action_repeat",
+  "paperIds": [
+    "2018-deepmind-control-suite"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Holding an action for several simulator transitions changes the control period.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Fixed caller-defined axes; no implicit coordinate transform"
+    ],
+    "units": {
+      "rewards/reward": "task reward units",
+      "discounts/discount": "dimensionless",
+      "steps": "underlying transition count"
+    },
+    "axes": "Chronological transition vectors(T,); scalar aggregate.",
+    "timestamp_assumptions": "No wall clock; transition order supplied explicitly where relevant",
+    "batching": "Chronological transition vectors(T,); scalar aggregate."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "afad0ded839673eba4f21d9d0d1a04d730251f7a7e5bc0274fc096bc41a59e27"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full simulator or benchmark reproduction. Backlog PB-245",
+    "primary_urls": [
+      "https://github.com/google-deepmind/dm_env/blob/master/dm_env/_environment.py"
+    ],
+    "paper_card": "research/papers/simulation-sim2real/2018-deepmind-control-suite.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

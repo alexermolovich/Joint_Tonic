@@ -21,9 +21,12 @@
     "map-shared-robot-episode",
     "window-episode-without-crossing-boundaries",
     "build-robot-sequence-validity-masks",
-    "per-embodiment-transfer-matrix"
+    "robonet-transition-frame-windows",
+    "robonet-masked-video-prediction-loss",
+    "per-embodiment-transfer-matrix",
+    "robonet-cross-robot-prediction-error"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +59,7 @@ The implementation path follows **Unify heterogeneous episodes → Learn interac
 
 Source cards: [2019-robonet](../../../research/papers/mlops-data-deployment/2019-robonet.md).
 
-**Available now:** 0 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -95,8 +98,8 @@ Predict future observations or infer actions between observations.
 
 - **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
 - **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
-- **Proposed component, not runnable:** Align Actions and Images in a Video Window.
-- **Proposed component, not runnable:** Compute a Masked Video-Prediction Loss.
+- **Runnable paper-associated component:** [Align Actions and Images in a Video Window](/problems/robonet-transition-frame-windows). An action belongs between two frames.
+- **Runnable paper-associated component:** [Compute a Masked Video-Prediction Loss](/problems/robonet-masked-video-prediction-loss). A padded video frame is not a black target.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -109,7 +112,7 @@ Separate held-out robots and environments from training coverage.
 [Study the mechanism and math](/projects/2019-robonet#paper-section-evaluate-transfer).
 
 - **Runnable supporting prerequisite:** [Build a Per-Embodiment Transfer Matrix](/problems/per-embodiment-transfer-matrix). Aggregate source-policy and target-robot evaluation evidence into a matrix while distinguishing unmeasured cells.
-- **Proposed component, not runnable:** Measure Cross-Robot Prediction Error.
+- **Runnable paper-associated component:** [Measure Cross-Robot Prediction Error](/problems/robonet-cross-robot-prediction-error). Large images and long episodes contribute more pixel residuals.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

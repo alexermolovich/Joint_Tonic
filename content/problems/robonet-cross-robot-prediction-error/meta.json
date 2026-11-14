@@ -1,0 +1,82 @@
+{
+  "slug": "robonet-cross-robot-prediction-error",
+  "title": "Measure Cross-Robot Prediction Error",
+  "version": "1.0.0",
+  "number": 936,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "dataset-evaluation",
+    "2019-robonet"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "cross_robot_prediction_error",
+  "paperIds": [
+    "2019-robonet"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Large images and long episodes contribute more pixel residuals.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared physical frames; no inferred transforms"
+    ],
+    "units": {
+      "squared_error": "sum of squared normalized-pixel residuals",
+      "pixel_counts": "pixel/channel sample counts",
+      "metrics": "mean squared normalized-pixel residual"
+    },
+    "axes": "Chunk vectors(N,) -> sorted robot vectors(R,),episode identity scoped by robot.",
+    "timestamp_assumptions": "Integer nanoseconds on source-video clock where applicable; no wall clock",
+    "batching": "Chunk vectors(N,) -> sorted robot vectors(R,),episode identity scoped by robot."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "e28e36d57c4116e507734e3f7943ee5b4449c05f16c32b2b54ed1d58ed1481cf"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded operational teaching component. Backlog PB-271",
+    "primary_urls": [
+      "https://arxiv.org/abs/1910.11215"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2019-robonet.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

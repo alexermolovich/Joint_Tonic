@@ -1,0 +1,82 @@
+{
+  "slug": "isaac-gym-batch-joint-state",
+  "title": "Batch Independent Simulator States",
+  "version": "1.0.0",
+  "number": 926,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "simulation-evaluation",
+    "2021-isaac-gym"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "batch_joint_states",
+  "paperIds": [
+    "2021-isaac-gym"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Simulator state is often exposed as a flattened buffer.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Fixed caller-defined axes; no implicit coordinate transform"
+    ],
+    "units": {
+      "state[...,0]": "radians",
+      "state[...,1]": "radians/second",
+      "indices": "flat joint-buffer row indices"
+    },
+    "axes": "Flat state(A,2),indices(B,J),output(B,J,2).",
+    "timestamp_assumptions": "No wall clock; transition order supplied explicitly where relevant",
+    "batching": "Flat state(A,2),indices(B,J),output(B,J,2)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "8e2a102da47559926c5df71c2cc7dc42814aabd1009ff165c35004f8a194b5d6"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full simulator or benchmark reproduction. Backlog PB-046",
+    "primary_urls": [
+      "https://arxiv.org/abs/2108.10470"
+    ],
+    "paper_card": "research/papers/simulation-sim2real/2021-isaac-gym.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

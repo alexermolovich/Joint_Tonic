@@ -1,22 +1,81 @@
 ---
 schema_version: 1
-paper_id: "2018-deepmind-control-suite"
-title: "DeepMind Control Suite"
-authors: ["Tassa, Yuval","Doron, Yotam","Muldal, Alistair","Erez, Tom","Li, Yazhe","Casas, Diego de Las","Budden, David","Abdolmaleki, Abbas","Merel, Josh","Lefrancq, Andrew","Lillicrap, Timothy","Riedmiller, Martin"]
+paper_id: 2018-deepmind-control-suite
+title: DeepMind Control Suite
+authors:
+  - 'Tassa, Yuval'
+  - 'Doron, Yotam'
+  - 'Muldal, Alistair'
+  - 'Erez, Tom'
+  - 'Li, Yazhe'
+  - 'Casas, Diego de Las'
+  - 'Budden, David'
+  - 'Abdolmaleki, Abbas'
+  - 'Merel, Josh'
+  - 'Lefrancq, Andrew'
+  - 'Lillicrap, Timothy'
+  - 'Riedmiller, Martin'
 year: 2018
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1801.00690"
-pdf_url: "https://arxiv.org/pdf/1801.00690"
-local_pdf: "./2018-deepmind-control-suite.pdf"
-sha256: "cdd89fa0165267b7a248ff694a578bee58df12293cdcafebf6918cb241160377"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1801.00690'
+pdf_url: 'https://arxiv.org/pdf/1801.00690'
+local_pdf: ./2018-deepmind-control-suite.pdf
+sha256: cdd89fa0165267b7a248ff694a578bee58df12293cdcafebf6918cb241160377
 bytes: 6697782
 pages: 24
-topics: ["simulation-sim2real","deepmind-control-suite"]
-modalities: ["simulator-state","robot-actions","sensor-observations"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Configure dynamics and observations","detail":"Declare state, actuators, timestep, and task inputs.","column":0,"row":0,"section":"Configure dynamics and observations","problem_slugs":[],"planned_problems":["Validate a Continuous-Control Time Step","Implement Action Repeat Correctly"]},{"id":"stage-2","title":"Compute interpretable reward","detail":"Map task variables into bounded tolerance-based scores.","column":1,"row":0,"section":"Compute interpretable reward","problem_slugs":[],"planned_problems":["Evaluate a Bounded Continuous-Control Reward"]},{"id":"stage-3","title":"Compare learning runs","detail":"Report returns under fixed evaluation and seed conventions.","column":2,"row":0,"section":"Compare learning runs","problem_slugs":[],"planned_problems":["Aggregate Seeded Benchmark Returns"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"simulated state"},{"from":"stage-2","to":"stage-3","label":"episode rewards"}]}
+topics:
+  - simulation-sim2real
+  - deepmind-control-suite
+modalities:
+  - simulator-state
+  - robot-actions
+  - sensor-observations
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Configure dynamics and observations
+      detail: 'Declare state, actuators, timestep, and task inputs.'
+      column: 0
+      row: 0
+      section: Configure dynamics and observations
+      problem_slugs:
+        - dm-control-timestep-validation
+        - dm-control-action-repeat
+      planned_problems: []
+    - id: stage-2
+      title: Compute interpretable reward
+      detail: Map task variables into bounded tolerance-based scores.
+      column: 1
+      row: 0
+      section: Compute interpretable reward
+      problem_slugs:
+        - dm-control-tolerance-reward
+      planned_problems: []
+    - id: stage-3
+      title: Compare learning runs
+      detail: Report returns under fixed evaluation and seed conventions.
+      column: 2
+      row: 0
+      section: Compare learning runs
+      problem_slugs:
+        - dm-control-seeded-return-summary
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: simulated state
+    - from: stage-2
+      to: stage-3
+      label: episode rewards
 ---
 
 ## Core paper explanation
@@ -36,8 +95,8 @@ $q$ is configuration, $\tau$ actuator torque, and $f_c$ contact force. This is b
 
 **Component practice**
 
-- Validate a Continuous-Control Time Step — unreviewed idea; contract and evaluator required.
-- Implement Action Repeat Correctly — unreviewed idea; contract and evaluator required.
+- [Validate a Continuous-Control Time Step](/problems/dm-control-timestep-validation).
+- [Implement Action Repeat Correctly](/problems/dm-control-action-repeat).
 
 ### Compute interpretable reward
 
@@ -46,7 +105,7 @@ A tolerance function is one inside a desired interval and decreases smoothly out
 
 **Component practice**
 
-- Evaluate a Bounded Continuous-Control Reward — unreviewed idea; contract and evaluator required.
+- [Evaluate a Bounded Continuous-Control Reward](/problems/dm-control-tolerance-reward).
 
 ### Compare learning runs
 
@@ -55,21 +114,25 @@ Return is $G=\sum_{t=0}^{T-1}\gamma^tr_t$ for declared discount $\gamma$. Evalua
 
 **Component practice**
 
-- Aggregate Seeded Benchmark Returns — unreviewed idea; contract and evaluator required.
+- [Aggregate Seeded Benchmark Returns](/problems/dm-control-seeded-return-summary).
 
 ## Implement the components
 
 Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
 
-**Planned component problems:**
+**Component status:**
 
-- Validate a Continuous-Control Time Step — unreviewed idea; contract and evaluator required.
-- Implement Action Repeat Correctly — unreviewed idea; contract and evaluator required.
-- Evaluate a Bounded Continuous-Control Reward — unreviewed idea; contract and evaluator required.
-- Aggregate Seeded Benchmark Returns — unreviewed idea; contract and evaluator required.
+- [Validate a Continuous-Control Time Step](/problems/dm-control-timestep-validation).
+- [Implement Action Repeat Correctly](/problems/dm-control-action-repeat).
+- [Evaluate a Bounded Continuous-Control Reward](/problems/dm-control-tolerance-reward).
+- [Aggregate Seeded Benchmark Returns](/problems/dm-control-seeded-return-summary).
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
+
+## Scope of the runnable components
+
+The time-step validator permits a nonzero LAST discount for a truncated episode; action repeat consumes the LAST transition before stopping. The reward exercise isolates Gaussian tolerance, and the return summary averages episodes within seeds and then seeds within tasks. These components neither run dm_control nor claim one universal task reward or benchmark protocol.
 
 ## Why this matters on a robot
 

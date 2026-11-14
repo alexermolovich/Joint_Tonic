@@ -20,9 +20,11 @@
     "interpolate-pose-slerp",
     "trace-perception-frame-graph",
     "deskew-lidar-points",
-    "lidar-feature-residuals"
+    "lidar-feature-residuals",
+    "imu-lidar-extrinsic-pose-residual",
+    "loop-closure-consistency-gate"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +57,7 @@ The implementation path follows **Deskew lidar measurements → Align local scan
 
 Source cards: [2020-lio-sam](../../../research/papers/geometry-calibration-slam/2020-lio-sam.md).
 
-**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -65,6 +67,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 - **Supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply SE(3) Exponential and Logarithm Maps](/problems/se3-exponential-logarithm). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Gate Measurements with Mahalanobis Distance](/problems/mahalanobis-measurement-gate). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -104,8 +108,8 @@ Combine inertial, lidar, GPS, and loop constraints when available.
 
 [Study the mechanism and math](/projects/2020-lio-sam#paper-section-smooth-sensor-factors).
 
-- **Proposed component, not runnable:** Assemble an IMU-Lidar Pose Constraint.
-- **Proposed component, not runnable:** Reject Inconsistent Loop Closures.
+- **Runnable paper-associated component:** [Assemble an IMU-Lidar Pose Constraint](/problems/imu-lidar-extrinsic-pose-residual). `imu_lidar_residual(world_from_imu, imu_from_lidar, lidar_relative, std)` world_from_imu(2,4,4),sharedextrinsic(4,4),lidar_relative(4,4) maps lidar-j into lidar-i;std(6)in[1e-6,1000], translationmeters thenrotationradians. Predicted lidarrelative=(Ti Til)^-1(Tj Til). E=lidar_relative^-1 predicted. Return predicted(4,4),translation=E[:3,3] with shape (3,),rotation=Log(E.R)(3),whitened(6)=concattranslation,rotation/std,costhalf norm². Requireprincipalrotationerror<=pi−1e-4. Translation is in measured residual frame; split translation/rotation residual is explicitly NOT full SE3Log translational Jacobian or complete LIO-SAM IMU velocity/bias factor. ExampleextrinsicI,posesI andtranslationx2,measuredtranslationx1,std1=>translation[1,0,0],rotation0,cost.5. ExamplepureIMURz90 with lidarleverarm[1,0,0]=>predictedRz90,translation[-1,1,0],matchingmeasurement giveszero. Knownextrinsics are essential.
+- **Runnable paper-associated component:** [Reject Inconsistent Loop Closures](/problems/loop-closure-consistency-gate). `gate_loop_closures(residuals, covariance, overlap, elapsed, threshold, min_overlap, min_elapsed)` residuals(K,6),0<=K<=8192, translationmeters+rotationradians supplied same tangent convention; covariance(K,6,6),symmetricatol1e-9 thenaverage,positive eigenvalues satisfy lambda_min>=max(1e-9,lambda_max*1e-8). overlap(K)fraction[0,1],elapsed(K)seconds[0,1e6];thresholdscalar[0,1e6]on squaredMahalanobis,min_overlap[0,1],min_elapsed[0,1e6]. Return squared_distance(K)=r.Tsolve(C,r),accepted(K)=(d<=threshold)&(overlap>=min)&(elapsed>=min),reason int64(K) priority1 elapsed too short,2 overlap low,3 Mahalanobis too large,0 accepted. All values validated even rejected for earlierreasons. Covariance cross terms matter. Original operational consistency gate for supplied registration evidence; not LIO-SAM's actual ICP fitness heuristic, a probability guarantee, or loop proposal/registration. Example r=[2,0,0,0,0,0],C=I,threshold4,overlap.5,min.5,elapsed10,min10=>d4accepted. Exampleelapsed9 andoverlap0 andlargeerror=>reason1; empty arrayscorrectshapes. Covariance entry C[i,j] has the product of residual coordinate i and j units (m², m·rad, or rad²).
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

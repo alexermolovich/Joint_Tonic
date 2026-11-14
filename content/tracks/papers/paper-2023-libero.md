@@ -16,8 +16,13 @@
     "mlops-data-deployment",
     "libero"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "libero-continual-task-schedule",
+    "libero-semantic-scene-factors",
+    "libero-evaluation-history-matrix",
+    "libero-forward-backward-transfer"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Define a task sequence → Train and retain ev
 
 Source cards: [2023-libero](../../../research/papers/mlops-data-deployment/2023-libero.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,8 +75,8 @@ Choose task families, order, demonstrations, and initial states.
 
 [Study the mechanism and math](/projects/2023-libero#paper-section-define-a-task-sequence).
 
-- **Proposed component, not runnable:** Build a Continual-Learning Task Sequence.
-- **Proposed component, not runnable:** Separate Task Semantics from Scene Variation.
+- **Runnable paper-associated component:** [Build a Continual-Learning Task Sequence](/problems/libero-continual-task-schedule). A continual-learning experiment is defined partly by its task order and demonstration budget.
+- **Runnable paper-associated component:** [Separate Task Semantics from Scene Variation](/problems/libero-semantic-scene-factors). The same manipulation goal can appear in different scenes.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -83,7 +88,7 @@ Evaluate earlier tasks after each learning stage.
 
 [Study the mechanism and math](/projects/2023-libero#paper-section-train-and-retain-evaluation-history).
 
-- **Proposed component, not runnable:** Record a Continual-Learning Evaluation Matrix.
+- **Runnable paper-associated component:** [Record a Continual-Learning Evaluation Matrix](/problems/libero-evaluation-history-matrix). A final score cannot show when a robot gained or lost a skill.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Summarize the matrix without hiding task-level outcomes.
 
 [Study the mechanism and math](/projects/2023-libero#paper-section-measure-transfer-and-forgetting).
 
-- **Proposed component, not runnable:** Compute a Forward and Backward Transfer Matrix.
+- **Runnable paper-associated component:** [Compute a Forward and Backward Transfer Matrix](/problems/libero-forward-backward-transfer). Transfer compares evaluations taken at meaningful points in a learning sequence.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

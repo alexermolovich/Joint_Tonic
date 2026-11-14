@@ -61,9 +61,9 @@ execution_flow:
       column: 1
       row: 0
       section: Aggregate robustly across runs
-      problem_slugs: []
-      planned_problems:
-        - Compute an Interquartile Mean Benchmark Score
+      problem_slugs:
+        - rliable-interquartile-mean
+      planned_problems: []
     - id: compare
       title: Compare distributions and uncertainty
       detail: >-
@@ -75,8 +75,8 @@ execution_flow:
       problem_slugs:
         - edge-inference-release-gate
         - slice-metrics-regressions
-      planned_problems:
-        - Bootstrap a Stratified Performance Profile
+        - rliable-stratified-performance-profile
+      planned_problems: []
   edges:
     - from: collect
       to: aggregate
@@ -111,7 +111,7 @@ $$
 \operatorname{IQM}(F)=2\int_{0.25}^{0.75}F^{-1}(p)\,dp.
 $$
 
-Finite-sample trimming and boundary rounding must be pinned in a coding contract. For sorted scores [0,1,2,3,4,5,6,100], dropping two from each end leaves [2,3,4,5], whose mean is3.5; the ordinary mean is15.125. **Compute an Interquartile Mean Benchmark Score** is a planned candidate, not an existing grader.
+Finite-sample trimming and boundary rounding must be pinned in a coding contract. For sorted scores [0,1,2,3,4,5,6,100], dropping two from each end leaves [2,3,4,5], whose mean is3.5; the ordinary mean is15.125. [Compute an Interquartile Mean Benchmark Score](/problems/rliable-interquartile-mean) implements floor-based 25% trimming from each tail of the pooled finite sample.
 
 ### Compare distributions and uncertainty
 
@@ -138,7 +138,7 @@ The half-tie convention is explicit here. Paired experimental designs require co
 | Profile | Fraction above thresholds | Physical safety |
 | Bootstrap interval | Sampling uncertainty under assumptions | Absence of dataset bias |
 
-**Compare Slice Metrics Without Hiding Regressions** and **Bootstrap a Stratified Performance Profile** are planned. [Edge Release Gate](/problems/edge-inference-release-gate) is a related operational prerequisite; its deterministic threshold checks are not these statistical procedures.
+[Bootstrap a Stratified Performance Profile](/problems/rliable-stratified-performance-profile) computes strict-threshold curves from supplied within-task resampling indices. It retains the fixed task suite and returns replicate curves, not confidence intervals or coverage guarantees. The slice-comparison component remains separately scoped. [Edge Release Gate](/problems/edge-inference-release-gate) is a related operational prerequisite; its deterministic threshold checks are not these statistical procedures.
 
 ## Why this matters on a robot
 

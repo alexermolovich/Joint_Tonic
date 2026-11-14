@@ -72,6 +72,10 @@ npm install --prefix .local/persistence-db-test --no-save --package-lock=false @
 node scripts/check-persistence-sql.mjs
 ```
 
-That check executes all migrations and 49 SQL assertions using actual PostgreSQL roles, RLS and PL/pgSQL, with minimal Supabase Auth stubs and local assertion wrappers. It also verifies generated catalog insertion, idempotent retry, literal text handling and immutable-conflict rejection. It is not the pgTAP extension itself. All four hosted migrations and 321 catalog-only versions were applied and verified on 2026-11-14. Each remote version matches its planned content/evaluator identity; anonymous catalog reads succeed while drafts and the trusted evaluation RPC reject anonymous access. These are separate hosted checks; live signed-in persistence, email delivery, actual OCI image publication and a deployed evaluator need their own evidence.
+That check executes all migrations and 49 SQL assertions using actual PostgreSQL roles, RLS and PL/pgSQL, with minimal Supabase Auth stubs and local assertion wrappers. It also verifies generated catalog insertion, idempotent retry, literal text handling and immutable-conflict rejection. It is not the pgTAP extension itself. All four hosted migrations and 372 catalog-only versions were applied and verified on 2026-11-14. Each remote version matches its planned content/evaluator identity; anonymous catalog reads succeed while drafts and the trusted evaluation RPC reject anonymous access. These are separate hosted checks; live signed-in persistence, email delivery, actual OCI image publication and a deployed evaluator need their own evidence.
 
 References: [Supabase getUser](https://supabase.com/docs/reference/javascript/auth-getuser), [database functions and privileges](https://supabase.com/docs/guides/database/functions).
+
+### Subsequent catalog seeds
+
+Supabase CLI 2.58.5 can report only `Updating seed hash` for an already recorded seed path without executing the changed SQL. For subsequent catalogs, copy the generated `seed.sql` to `catalog-<SHA256-of-seed>.sql` in the same ignored workspace and set `[db.seed].sql_paths` to that exact filename before the dry run and push. The 372-version release used this path and verified every remote identity afterward. A successful CLI exit alone is not proof of catalog insertion.

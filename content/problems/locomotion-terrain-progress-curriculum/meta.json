@@ -1,0 +1,76 @@
+{
+  "slug": "locomotion-terrain-progress-curriculum",
+  "title": "Sample Terrain Difficulty by Policy Progress",
+  "version": "1.0.0",
+  "number": 560,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2021-learning-to-walk-in-minutes",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "update_terrain_levels",
+  "paperIds": [
+    "2021-learning-to-walk-in-minutes"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A terrain curriculum changes difficulty from measured progress rather than a generic success label.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Right-handed robot base x forward/y left/z up; terrain positions/origins in one world frame"
+    ],
+    "units": {
+      "values": "Positions and terrain lengths use meters; velocities m/s; angular rates rad/s; contact forces N; durations seconds; normalized action and unit-gravity coordinates are dimensionless. Penalty terms retain the individual units stated in the contract."
+    },
+    "axes": "Environment, time, body-contact and controller-channel axes are defined in the contract",
+    "timestamp_assumptions": "Each environment is independent. Supplied episode counters and reset flags refer to the same control transition. Terrain update occurs on subsequent resets; no wall-clock scheduling or simulator action is performed.",
+    "batching": "Environment, time, body-contact and controller-channel axes are defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "58a1bc17bf6fa76985fdf32886edf0f491b8b9f4645eb0cd07f31194a892d848"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Bounded component associated with Learning to Walk in Minutes. Released reward/termination/curriculum formulas are isolated from full PPO training, physics, command randomization and hardware transfer. Supplied initialization states and recorded draws make replay deterministic.",
+    "primary_urls": [
+      "https://github.com/leggedrobotics/legged_gym/blob/master/legged_gym/envs/base/legged_robot.py"
+    ],
+    "paper_card": "research/papers/humanoid-dexterity-tactile/2021-learning-to-walk-in-minutes.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

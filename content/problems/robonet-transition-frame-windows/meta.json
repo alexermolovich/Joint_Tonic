@@ -1,0 +1,82 @@
+{
+  "slug": "robonet-transition-frame-windows",
+  "title": "Align Actions and Images in a Video Window",
+  "version": "1.0.0",
+  "number": 934,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "dataset-evaluation",
+    "2019-robonet"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "video_transition_windows",
+  "paperIds": [
+    "2019-robonet"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An action belongs between two frames.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared physical frames; no inferred transforms"
+    ],
+    "units": {
+      "images": "dimensionless normalized pixel intensities",
+      "actions": "caller-declared embodiment command units",
+      "indices": "frame indices,not elapsed time"
+    },
+    "axes": "Source images(T,H,W,C),actions(T-1,D); outputs images(S,K,H,W,C),actions(S,K,D),valid(S,K).",
+    "timestamp_assumptions": "Integer nanoseconds on source-video clock where applicable; no wall clock",
+    "batching": "Source images(T,H,W,C),actions(T-1,D); outputs images(S,K,H,W,C),actions(S,K,D),valid(S,K)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "b6dbc45aeb1ed68d480b3293901dba8ecb1fe9661dfd9537fc7570954316dd0f"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded operational teaching component. Backlog PB-010",
+    "primary_urls": [
+      "https://arxiv.org/abs/1910.11215"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2019-robonet.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

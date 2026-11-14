@@ -1,0 +1,76 @@
+{
+  "slug": "perceptive-terrain-foot-clearance",
+  "title": "Evaluate Foot Clearance Across Terrain Slices",
+  "version": "1.0.0",
+  "number": 562,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2022-perceptive-locomotion",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "terrain_clearance_report",
+  "paperIds": [
+    "2022-perceptive-locomotion"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Foot height becomes useful only relative to the nearby support surface.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Action vectors use identical robot joint order; foot and support heights share a right-handed world frame with z up"
+    ],
+    "units": {
+      "values": "Action targets and action scales use radians. Environmental features and their scales share declared normalized coordinates. Foot positions, terrain heights and clearance thresholds use meters; resulting normalized losses and violation rates are dimensionless."
+    },
+    "axes": "Batch B, synchronized time T, and declared action, environmental-feature or foot axes",
+    "timestamp_assumptions": "Times are already aligned within each environment. A terrain label is constant across one supplied window. No resampling, recurrent state estimation or simulator stepping occurs.",
+    "batching": "Batch B, synchronized time T, and declared action, environmental-feature or foot axes"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "fb80f9d752ba8eff1eb2bdc8b8f191d52204aa6ab4c8ce033dd52d49920df101"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teacher/student objective or terrain diagnostic associated with perceptive locomotion; no claim to reproduce the paper's recurrent gated network, training weights or hardware performance. All fixtures are synthetic.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2201.08117"
+    ],
+    "paper_card": "research/papers/humanoid-dexterity-tactile/2022-perceptive-locomotion.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

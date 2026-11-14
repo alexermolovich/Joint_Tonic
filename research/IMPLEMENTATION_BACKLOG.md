@@ -6,7 +6,7 @@ No graph association or source-card link establishes full paper reproduction. A 
 
 ## Current batch status
 
-121 new atomic packages are published and cover 125 proposed titles. 12 additional proposed titles reuse reviewed existing bounded components. 313 unique proposed titles remain pending. Independent contract/code review and focused isolated Run/Submit with negative controls gate publication. Full paper integrations remain separately scoped and counted.
+172 new atomic packages are published and cover 177 proposed titles. 17 additional proposed titles reuse reviewed existing bounded components. 256 unique proposed titles remain pending. Independent contract/code review and focused isolated Run/Submit with negative controls gate publication. Full paper integrations remain separately scoped and counted.
 
 ## Workflow and milestones
 
@@ -26,60 +26,60 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-026 | Apply Paired-Image Self and Cross Attention | 2021-loftr | [Published bounded component](/problems/paired-linear-image-attention) |
 | PB-027 | Apply Recurrent Dense Correspondence and Confidence Updates | 2021-droid-slam | Needs reviewed blueprint |
 | PB-028 | Apply SE(3) Exponential and Logarithm Maps | 2018-micro-lie-theory | [Published bounded component](/problems/se3-exponential-logarithm) |
-| PB-031 | Assemble an IMU-Lidar Pose Constraint | 2020-lio-sam | Needs reviewed blueprint |
-| PB-033 | Assemble Sensor-Specific Pose Factors | 2019-vins-fusion | Needs reviewed blueprint |
+| PB-031 | Assemble an IMU-Lidar Pose Constraint | 2020-lio-sam | [Published bounded component](/problems/imu-lidar-extrinsic-pose-residual) |
+| PB-033 | Assemble Sensor-Specific Pose Factors | 2019-vins-fusion | [Published bounded component](/problems/global-sensor-pose-factors) |
 | PB-034 | Assemble Sparse and Dense RGB-D Alignment Residuals | 2016-bundlefusion | Needs reviewed blueprint |
-| PB-036 | Associate Map Points with Image Features | 2016-orb-slam-2 | Needs reviewed blueprint |
+| PB-036 | Associate Map Points with Image Features | 2016-orb-slam-2 | [Published bounded component](/problems/pose-guided-binary-feature-association) |
 | PB-037 | Associate Scan Points with Local Map Planes | 2021-fast-lio-2 | [Published bounded component](/problems/associate-local-map-planes) |
 | PB-052 | Build a Dense Reprojection Residual | 2021-droid-slam | Needs reviewed blueprint |
 | PB-053 | Build a Feature-Matching Score Matrix | 2019-superglue | [Published bounded component](/problems/feature-matching-score-matrix) |
-| PB-061 | Build a Visual-Inertial Residual | 2017-vins-mono | Needs reviewed blueprint |
+| PB-061 | Build a Visual-Inertial Residual | 2017-vins-mono | [Published bounded component](/problems/visual-inertial-keyframe-residual) |
 | PB-066 | Build Homography-Supervised Descriptor Correspondence Targets | 2017-superpoint | [Published bounded component](/problems/homography-descriptor-targets) |
 | PB-081 | Choose Keyframes by Reconstruction Error | 2021-imap | Needs reviewed blueprint |
-| PB-092 | Combine Reprojection and Inertial Residuals in a Local Window | 2020-orb-slam-3 | Needs reviewed blueprint |
-| PB-098 | Compare Drift Across Sensor Configurations | 2019-vins-fusion | Needs reviewed blueprint |
+| PB-092 | Combine Reprojection and Inertial Residuals in a Local Window | 2020-orb-slam-3 | [Reused bounded component](/problems/visual-inertial-keyframe-residual) |
+| PB-098 | Compare Drift Across Sensor Configurations | 2019-vins-fusion | [Published bounded component](/problems/sensor-configuration-drift) |
 | PB-121 | Compute a Point-to-Plane Residual | 2021-fast-lio-2 | [Published bounded component](/problems/lidar-feature-residuals) |
 | PB-128 | Compute an Exposure-Corrected Photometric Residual | 2016-direct-sparse-odometry | [Published bounded component](/problems/exposure-photometric-residual) |
 | PB-141 | Compute Point-to-Line and Point-to-Plane Scan Residuals | 2020-lio-sam | [Published bounded component](/problems/lidar-feature-residuals) |
 | PB-153 | Construct Coarse Correspondence Candidates | 2021-loftr | [Published bounded component](/problems/dual-softmax-coarse-matches) |
-| PB-160 | Construct Relative Pose Measurements from Local Odometry | 2019-vins-fusion | Needs reviewed blueprint |
+| PB-160 | Construct Relative Pose Measurements from Local Odometry | 2019-vins-fusion | [Published bounded component](/problems/relative-odometry-edges) |
 | PB-171 | Decode Occupancy and Color from Hierarchical Scene Features | 2021-nice-slam | Needs reviewed blueprint |
 | PB-174 | Deskew a Lidar Scan with Motion Estimates | 2020-lio-sam | [Published bounded component](/problems/deskew-lidar-points) |
-| PB-180 | Detect Unobservable Initialization Motion | 2017-vins-mono | Needs reviewed blueprint |
-| PB-199 | Evaluate a Relocalization Candidate | 2016-orb-slam-2 | Needs reviewed blueprint |
+| PB-180 | Detect Unobservable Initialization Motion | 2017-vins-mono | [Published bounded component](/problems/initialization-observability-rank) |
+| PB-199 | Evaluate a Relocalization Candidate | 2016-orb-slam-2 | [Published bounded component](/problems/relocalization-landmark-coverage) |
 | PB-204 | Evaluate Keypoint Repeatability | 2017-superpoint | [Published bounded component](/problems/keypoint-repeatability) |
-| PB-219 | Evaluate Trajectory Error After Alignment | 2020-orb-slam-3 | Needs reviewed blueprint |
+| PB-219 | Evaluate Trajectory Error After Alignment | 2020-orb-slam-3 | [Published bounded component](/problems/aligned-trajectory-position-error) |
 | PB-224 | Extract Mutual Matches and Unmatched Labels from Transport Scores | 2019-superglue | [Published bounded component](/problems/extract-mutual-feature-matches) |
 | PB-225 | Filter Geometrically Inconsistent Matches | 2021-loftr | [Published bounded component](/problems/sampson-epipolar-match-gate) |
 | PB-230 | Finite-Difference Gradient Check | 2018-micro-lie-theory | [Reused bounded component](/problems/finite-difference-gradient-check) |
-| PB-243 | Handle Asynchronous Sensor Timestamps | 2019-vins-fusion | Needs reviewed blueprint |
+| PB-243 | Handle Asynchronous Sensor Timestamps | 2019-vins-fusion | [Reused bounded component](/problems/match-approximate-sensor-timestamps) |
 | PB-251 | Integrate a Depth Frame into a TSDF | 2016-bundlefusion | Needs reviewed blueprint |
 | PB-252 | Integrate IMU Rotation Increments on SO3 | 2015-on-manifold-preintegration | [Published bounded component](/problems/integrate-imu-rotation) |
-| PB-263 | Marginalize a Visual-Inertial Window with a Schur Complement | 2017-vins-mono | Needs reviewed blueprint |
+| PB-263 | Marginalize a Visual-Inertial Window with a Schur Complement | 2017-vins-mono | [Published bounded component](/problems/schur-window-marginalization) |
 | PB-277 | Measure Pose and Reconstruction Error | 2021-nice-slam | Needs reviewed blueprint |
 | PB-282 | Merge Consistent Map Transforms | 2020-orb-slam-3 | Needs reviewed blueprint |
 | PB-291 | Normalize Assignments with Sinkhorn Iterations | 2019-superglue | [Published bounded component](/problems/log-sinkhorn-assignments) |
 | PB-297 | Optimize a Camera Pose Against a Neural Map | 2021-imap | Needs reviewed blueprint |
-| PB-302 | Preintegrate a Short IMU Window | 2017-vins-mono | Needs reviewed blueprint |
+| PB-302 | Preintegrate a Short IMU Window | 2017-vins-mono | [Published bounded component](/problems/short-window-imu-preintegration) |
 | PB-303 | Preintegrate Bias-Corrected IMU Velocity and Position | 2015-on-manifold-preintegration | [Published bounded component](/problems/preintegrate-imu-translation) |
 | PB-311 | Propagate an Error-State IMU Mean and Covariance | 2021-fast-lio-2 | Needs reviewed blueprint |
-| PB-312 | Propagate Preintegration Covariance | 2015-on-manifold-preintegration | Needs reviewed blueprint |
+| PB-312 | Propagate Preintegration Covariance | 2015-on-manifold-preintegration | [Published bounded component](/problems/imu-preintegration-covariance) |
 | PB-318 | Query Color and Density from a Coordinate MLP | 2021-imap | Needs reviewed blueprint |
 | PB-319 | Query Multi-Resolution Scene Features | 2021-nice-slam | Needs reviewed blueprint |
 | PB-331 | Refine a Match in a Local Window | 2021-loftr | [Published bounded component](/problems/local-window-match-expectation) |
 | PB-332 | Reintegrate Geometry After a Pose Correction | 2016-bundlefusion | Needs reviewed blueprint |
-| PB-333 | Reject Inconsistent Loop Closures | 2020-lio-sam | Needs reviewed blueprint |
+| PB-333 | Reject Inconsistent Loop Closures | 2020-lio-sam | [Published bounded component](/problems/loop-closure-consistency-gate) |
 | PB-334 | Reject Unmatched Features with Dustbins | 2019-superglue | [Published bounded component](/problems/dustbin-partial-assignment) |
 | PB-358 | Sample Descriptors at Keypoint Coordinates | 2017-superpoint | [Published bounded component](/problems/sample-keypoint-descriptors) |
 | PB-361 | Sample Informative Mapping Pixels | 2021-imap | Needs reviewed blueprint |
 | PB-362 | Sample Rays for Online Mapping | 2021-nice-slam | Needs reviewed blueprint |
 | PB-376 | Select Edges for a Frame Graph | 2021-droid-slam | Needs reviewed blueprint |
-| PB-377 | Select Geometric Pose Inliers | 2016-orb-slam-2 | Needs reviewed blueprint |
+| PB-377 | Select Geometric Pose Inliers | 2016-orb-slam-2 | [Published bounded component](/problems/reprojection-pose-hypothesis-inliers) |
 | PB-379 | Select High-Gradient Image Points | 2016-direct-sparse-odometry | [Published bounded component](/problems/select-gradient-image-points) |
 | PB-402 | Update a Global Pose Graph | 2016-bundlefusion | Needs reviewed blueprint |
-| PB-406 | Update an Incremental Local Map | 2021-fast-lio-2 | Needs reviewed blueprint |
+| PB-406 | Update an Incremental Local Map | 2021-fast-lio-2 | [Published bounded component](/problems/incremental-voxel-local-map) |
 | PB-407 | Update Poses in a Small Bundle-Adjustment Problem | 2021-droid-slam | Needs reviewed blueprint |
-| PB-425 | Validate a Visual-Inertial Initialization | 2020-orb-slam-3 | Needs reviewed blueprint |
+| PB-425 | Validate a Visual-Inertial Initialization | 2020-orb-slam-3 | [Published bounded component](/problems/visual-inertial-initialization-gate) |
 | PB-447 | Warp a Point Between Calibrated Frames | 2016-direct-sparse-odometry | [Published bounded component](/problems/warp-calibrated-pixels) |
 
 ## humanoid-dexterity-tactile
@@ -87,23 +87,23 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | ID | Proposed exercise | Paper IDs | Status / existing contract |
 |---|---|---|---|
 | PB-016 | Align Tactile Frames with Robot Actions | 2020-digit-tactile-sensor | [Published bounded component](/problems/digit-align-actions) |
-| PB-017 | Align Terrain Samples to the Robot Frame | 2022-perceptive-locomotion | Needs reviewed blueprint |
+| PB-017 | Align Terrain Samples to the Robot Frame | 2022-perceptive-locomotion | [Reused bounded component](/problems/se3-transform-points) |
 | PB-043 | Balance Task and Style Objectives | 2021-adversarial-motion-priors | [Published bounded component](/problems/motion-task-reward-blend) |
 | PB-074 | Build Privileged Dynamics-Latent Supervision | 2021-rapid-motor-adaptation | [Published bounded component](/problems/rma-privileged-latent-supervision) |
 | PB-091 | Combine Imitation and Task Rewards for Motion Control | 2018-deepmimic | [Published bounded component](/problems/motion-task-reward-blend) |
 | PB-114 | Compute a Contact-Based Manipulation Reward | 2022-dexpoint | Needs reviewed blueprint |
 | PB-116 | Compute a Hand-Retargeting Geometry Residual | 2021-dexmv | Needs reviewed blueprint |
 | PB-123 | Compute an Adversarial Style Reward | 2021-adversarial-motion-priors | [Published bounded component](/problems/amp-adversarial-style-reward) |
-| PB-130 | Compute Belief Reconstruction and Teacher-Action Losses | 2022-perceptive-locomotion | Needs reviewed blueprint |
-| PB-133 | Compute Gait Tracking and Stability Metrics | 2021-learning-to-walk-in-minutes | Needs reviewed blueprint |
+| PB-130 | Compute Belief Reconstruction and Teacher-Action Losses | 2022-perceptive-locomotion | [Published bounded component](/problems/perceptive-teacher-belief-loss) |
+| PB-133 | Compute Gait Tracking and Stability Metrics | 2021-learning-to-walk-in-minutes | [Published bounded component](/problems/locomotion-tracking-stability-metrics) |
 | PB-139 | Compute Object Rotation Tracking Error | 2018-learning-dexterous-manipulation | Needs reviewed blueprint |
 | PB-142 | Compute Pose and Velocity Imitation Rewards | 2018-deepmimic | [Published bounded component](/problems/deepmimic-pose-velocity-rewards) |
 | PB-156 | Construct Motion Discriminator Features | 2021-adversarial-motion-priors | [Published bounded component](/problems/amp-motion-discriminator-features) |
 | PB-178 | Detect Phase Misalignment in a Motion Clip | 2018-deepmimic | [Published bounded component](/problems/deepmimic-phase-alignment) |
-| PB-179 | Detect Stale Perception in a Control Window | 2022-perceptive-locomotion | Needs reviewed blueprint |
+| PB-179 | Detect Stale Perception in a Control Window | 2022-perceptive-locomotion | [Reused bounded component](/problems/palm-e-sensor-readiness) |
 | PB-191 | Estimate a Latent Dynamics Context | 2021-rapid-motor-adaptation | [Published bounded component](/problems/rma-latent-context-estimator) |
 | PB-192 | Estimate Contact Patch Statistics | 2020-digit-tactile-sensor | [Published bounded component](/problems/digit-contact-patch-statistics) |
-| PB-201 | Evaluate Foot Clearance Across Terrain Slices | 2022-perceptive-locomotion | Needs reviewed blueprint |
+| PB-201 | Evaluate Foot Clearance Across Terrain Slices | 2022-perceptive-locomotion | [Published bounded component](/problems/perceptive-terrain-foot-clearance) |
 | PB-209 | Evaluate Novel-Object Generalization | 2022-dexpoint | Needs reviewed blueprint |
 | PB-212 | Evaluate Policy Recovery After a Parameter Change | 2021-rapid-motor-adaptation | [Published bounded component](/problems/rma-parameter-change-recovery) |
 | PB-214 | Evaluate Retargeted Motion Feasibility | 2021-dexmv | Needs reviewed blueprint |
@@ -111,10 +111,10 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-253 | Interpolate a Reference Motion Pose | 2018-deepmimic | [Published bounded component](/problems/deepmimic-reference-pose) |
 | PB-259 | Map Human Demonstration Segments to Robot Time | 2021-dexmv | Needs reviewed blueprint |
 | PB-283 | Merge Observed and Imagined Hand Point Clouds | 2022-dexpoint | Needs reviewed blueprint |
-| PB-343 | Reset Failed Locomotion Environments | 2021-learning-to-walk-in-minutes | Needs reviewed blueprint |
+| PB-343 | Reset Failed Locomotion Environments | 2021-learning-to-walk-in-minutes | [Published bounded component](/problems/locomotion-failure-reset-batch) |
 | PB-359 | Sample Hand Dynamics Randomization | 2018-learning-dexterous-manipulation | Needs reviewed blueprint |
-| PB-363 | Sample Terrain Difficulty by Policy Progress | 2021-learning-to-walk-in-minutes | Needs reviewed blueprint |
-| PB-368 | Score a Privileged Terrain Teacher Rollout | 2022-perceptive-locomotion | Needs reviewed blueprint |
+| PB-363 | Sample Terrain Difficulty by Policy Progress | 2021-learning-to-walk-in-minutes | [Published bounded component](/problems/locomotion-terrain-progress-curriculum) |
+| PB-368 | Score a Privileged Terrain Teacher Rollout | 2022-perceptive-locomotion | [Reused bounded component](/problems/tdmpc2-candidate-trajectory-scores) |
 | PB-372 | Score Predicted Tactile Contact Outcomes | 2020-digit-tactile-sensor | [Published bounded component](/problems/digit-predicted-contact-cost) |
 | PB-387 | Subtract a Tactile Reference Image | 2020-digit-tactile-sensor | [Published bounded component](/problems/digit-reference-subtraction) |
 | PB-397 | Track the Age of an Asynchronous Adaptation Latent | 2021-rapid-motor-adaptation | [Published bounded component](/problems/rma-asynchronous-latent-age) |
@@ -127,25 +127,25 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 
 | ID | Proposed exercise | Paper IDs | Status / existing contract |
 |---|---|---|---|
-| PB-003 | Aggregate Evaluation by Activity Slice | 2021-ego4d, 2023-ego-exo4d | Needs reviewed blueprint |
+| PB-003 | Aggregate Evaluation by Activity Slice | 2021-ego4d, 2023-ego-exo4d | [Published bounded component](/problems/egocentric-activity-confusion-report) |
 | PB-004 | Aggregate Generalization Across Scene Families | 2024-robocasa | Needs reviewed blueprint |
 | PB-005 | Aggregate Metrics by Operational Slice | 2018-model-cards | Needs reviewed blueprint |
 | PB-009 | Aggregate Weighted Learner Gradients | 2017-rllib | [Published bounded component](/problems/rllib-weighted-learner-gradients) |
-| PB-010 | Align Actions and Images in a Video Window | 2019-robonet | Needs reviewed blueprint |
-| PB-012 | Align Egocentric Video Annotations | 2021-ego4d | Needs reviewed blueprint |
+| PB-010 | Align Actions and Images in a Video Window | 2019-robonet | [Published bounded component](/problems/robonet-transition-frame-windows) |
+| PB-012 | Align Egocentric Video Annotations | 2021-ego4d | [Published bounded component](/problems/ego4d-annotation-frame-ranges) |
 | PB-020 | Apply a Weight-Pruning Mask | 2015-deep-compression | [Published bounded component](/problems/deep-compression-pruning-mask) |
 | PB-021 | Apply an Equivalent Channel Rescaling | 2022-smoothquant | [Published bounded component](/problems/smoothquant-equivalent-rescaling) |
 | PB-039 | Audit Data and Calibration Lineage | 2024-droid | [Published bounded component](/problems/droid-calibration-lineage-audit) |
 | PB-044 | Batch Actor Samples into Learner Updates | 2017-rllib | Needs reviewed blueprint |
-| PB-047 | Bootstrap a Stratified Performance Profile | 2021-rliable-statistical-precipice | Needs reviewed blueprint |
-| PB-051 | Build a Continual-Learning Task Sequence | 2023-libero | Needs reviewed blueprint |
-| PB-070 | Build Leakage-Safe Temporal Splits | 2021-ego4d | Needs reviewed blueprint |
+| PB-047 | Bootstrap a Stratified Performance Profile | 2021-rliable-statistical-precipice | [Published bounded component](/problems/rliable-stratified-performance-profile) |
+| PB-051 | Build a Continual-Learning Task Sequence | 2023-libero | [Published bounded component](/problems/libero-continual-task-schedule) |
+| PB-070 | Build Leakage-Safe Temporal Splits | 2021-ego4d | [Published bounded component](/problems/ego4d-temporal-leakage-groups) |
 | PB-095 | Compare Activation-Weighted Quantization Error | 2023-awq | [Published bounded component](/problems/awq-activation-weighted-error) |
 | PB-106 | Compare Slice Metrics Without Hiding Regressions | 2021-rliable-statistical-precipice | [Reused bounded component](/problems/slice-metrics-regressions) |
 | PB-111 | Compute a Compressed Model Storage Budget | 2015-deep-compression | [Published bounded component](/problems/deep-compression-storage-budget) |
-| PB-115 | Compute a Forward and Backward Transfer Matrix | 2023-libero | Needs reviewed blueprint |
-| PB-119 | Compute a Masked Video-Prediction Loss | 2019-robonet | Needs reviewed blueprint |
-| PB-129 | Compute an Interquartile Mean Benchmark Score | 2021-rliable-statistical-precipice | Needs reviewed blueprint |
+| PB-115 | Compute a Forward and Backward Transfer Matrix | 2023-libero | [Published bounded component](/problems/libero-forward-backward-transfer) |
+| PB-119 | Compute a Masked Video-Prediction Loss | 2019-robonet | [Published bounded component](/problems/robonet-masked-video-prediction-loss) |
+| PB-129 | Compute an Interquartile Mean Benchmark Score | 2021-rliable-statistical-precipice | [Published bounded component](/problems/rliable-interquartile-mean) |
 | PB-131 | Compute Collector and Task Coverage | 2018-datasheets-for-datasets, 2018-roboturk | Needs reviewed blueprint |
 | PB-132 | Compute Confidence Intervals Across Robot Episodes | 2021-rliable-statistical-precipice | [Reused bounded component](/problems/robot-episode-confidence-intervals) |
 | PB-134 | Compute Group-Wise Quantization Parameters | 2023-awq | [Published bounded component](/problems/awq-groupwise-quantization) |
@@ -155,18 +155,18 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-220 | Evaluate Transfer by Environment Slice | 2023-bridgedata-v2 | Needs reviewed blueprint |
 | PB-240 | Generate a Data-Use Risk Report | 2018-datasheets-for-datasets | [Published bounded component](/problems/robot-data-use-risk-report) |
 | PB-260 | Map Operator Motion into a Robot Control Frame | 2018-roboturk | Needs reviewed blueprint |
-| PB-271 | Measure Cross-Robot Prediction Error | 2019-robonet | Needs reviewed blueprint |
+| PB-271 | Measure Cross-Robot Prediction Error | 2019-robonet | [Published bounded component](/problems/robonet-cross-robot-prediction-error) |
 | PB-276 | Measure Per-Channel Activation and Weight Ranges | 2022-smoothquant | [Published bounded component](/problems/smoothquant-channel-ranges) |
 | PB-279 | Measure Sampling and Learning Throughput | 2017-rllib | Needs reviewed blueprint |
 | PB-295 | Normalize Multi-Environment Robot Records | 2023-bridgedata-v2 | Needs reviewed blueprint |
 | PB-305 | Project a Tracked Point Across Views | 2023-ego-exo4d, 2020-sapien | Needs reviewed blueprint |
 | PB-316 | Quantize Shared Weight Centroids | 2015-deep-compression | [Published bounded component](/problems/deep-compression-centroid-assignment) |
 | PB-317 | Quantize Weights and Activations to Int8 | 2022-smoothquant | [Published bounded component](/problems/smoothquant-int8-linear-layer) |
-| PB-327 | Record a Continual-Learning Evaluation Matrix | 2023-libero | Needs reviewed blueprint |
+| PB-327 | Record a Continual-Learning Evaluation Matrix | 2023-libero | [Published bounded component](/problems/libero-evaluation-history-matrix) |
 | PB-330 | Recover Failed Worker Tasks Idempotently | 2017-ray | [Published bounded component](/problems/ray-recovery-reconciliation) |
 | PB-370 | Score Chained Task Success | 2021-calvin, 2021-habitat-2 | Needs reviewed blueprint |
 | PB-374 | Segment a Long-Horizon Robot Rollout | 2021-calvin | Needs reviewed blueprint |
-| PB-381 | Separate Task Semantics from Scene Variation | 2023-libero | Needs reviewed blueprint |
+| PB-381 | Separate Task Semantics from Scene Variation | 2023-libero | [Published bounded component](/problems/libero-semantic-scene-factors) |
 | PB-383 | Split Demonstrations by Scene and Collector | 2024-droid | [Published bounded component](/problems/droid-scene-collector-split) |
 | PB-386 | Stratify Tasks by Scene Factors | 2024-robocasa | Needs reviewed blueprint |
 | PB-388 | Synchronize Ego and Exo Camera Events | 2023-ego-exo4d | Needs reviewed blueprint |
@@ -311,7 +311,7 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-064 | Build Distributional Reward and Ensemble-Value Targets | 2023-td-mpc2 | [Published bounded component](/problems/tdmpc2-distributional-ensemble-targets) |
 | PB-068 | Build IQL Critic Targets with Terminal Masks | 2021-implicit-q-learning | [Published bounded component](/problems/soft-value-bellman-target) |
 | PB-069 | Build Lambda-Return Targets | 2023-dreamerv3 | [Published bounded component](/problems/dreamer-continuation-lambda-returns) |
-| PB-094 | Combine Temporal and Language Alignment Losses | 2022-r3m | Needs reviewed blueprint |
+| PB-094 | Combine Temporal and Language Alignment Losses | 2022-r3m | [Published bounded component](/problems/r3m-temporal-language-objective) |
 | PB-101 | Compare Logged and Sampled Action Values | 2020-conservative-q-learning | [Published bounded component](/problems/cql-logged-sampled-value-gap) |
 | PB-104 | Compare Robustness Across Randomization Settings | 2024-dr-eureka | [Published bounded component](/problems/dreureka-randomization-robustness) |
 | PB-109 | Compute a Balanced Latent-Model Loss | 2023-dreamerv3 | [Published bounded component](/problems/dreamer-balanced-latent-loss) |
@@ -333,31 +333,31 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-182 | Encode a Discrete Six-DoF Action Target | 2022-peract | Needs reviewed blueprint |
 | PB-188 | Encode Symlog Two-Hot Reward Targets | 2023-dreamerv3 | [Published bounded component](/problems/dreamer-symlog-twohot-targets) |
 | PB-200 | Evaluate Compositional Manipulation Slices | 2021-cliport | Needs reviewed blueprint |
-| PB-202 | Evaluate Frozen Features in a Small Policy | 2022-r3m | Needs reviewed blueprint |
+| PB-202 | Evaluate Frozen Features in a Small Policy | 2022-r3m | [Published bounded component](/problems/r3m-frozen-feature-policy-step) |
 | PB-203 | Evaluate Grasp Precision Under a Safety Threshold | 2017-dex-net-2 | Needs reviewed blueprint |
 | PB-210 | Evaluate Offline Policy Support | 2020-conservative-q-learning | [Published bounded component](/problems/cql-offline-policy-support) |
 | PB-213 | Evaluate Policy Robustness to Visual Shifts | 2020-data-regularized-q | [Reused bounded component](/problems/shift-bucket-performance) |
 | PB-221 | Evaluate Viewpoint and Geometry Shift | 2024-3d-diffusion-policy | Needs reviewed blueprint |
 | PB-223 | Extract a Grasp-Aligned Depth Patch | 2017-dex-net-2 | Needs reviewed blueprint |
 | PB-236 | Fuse Semantic and Spatial Feature Streams | 2021-cliport | Needs reviewed blueprint |
-| PB-238 | Gate an Online Policy Update | 2024-hil-serl | Needs reviewed blueprint |
-| PB-256 | Label Human Intervention Segments | 2024-hil-serl | Needs reviewed blueprint |
+| PB-238 | Gate an Online Policy Update | 2024-hil-serl | [Published bounded component](/problems/hilserl-autonomous-update-gate) |
+| PB-256 | Label Human Intervention Segments | 2024-hil-serl | [Published bounded component](/problems/hilserl-intervention-segments) |
 | PB-269 | Measure Closed-Loop Latency and Action Dropouts | 2024-mobile-aloha | [Reused bounded component](/problems/rt1-control-latency-dropouts) |
-| PB-284 | Merge Online and Demonstration Replay | 2024-serl | Needs reviewed blueprint |
-| PB-285 | Mix Intervention and Autonomous Replay | 2024-hil-serl | Needs reviewed blueprint |
+| PB-284 | Merge Online and Demonstration Replay | 2024-serl | [Published bounded component](/problems/serl-merge-replay-sources) |
+| PB-285 | Mix Intervention and Autonomous Replay | 2024-hil-serl | [Published bounded component](/problems/hilserl-mix-corrective-replay) |
 | PB-286 | Mix Static and Mobile Demonstration Batches | 2024-mobile-aloha | Needs reviewed blueprint |
 | PB-292 | Normalize Batched Advantages | 2017-proximal-policy-optimization | [Published bounded component](/problems/ppo-normalize-batched-advantages) |
 | PB-294 | Normalize Heterogeneous Robot Observation Schemas | 2024-mobile-aloha | [Reused bounded component](/problems/oxe-normalize-observation-schema) |
 | PB-321 | Rank Grasp Candidates by Predicted Quality | 2017-dex-net-2 | Needs reviewed blueprint |
 | PB-324 | Rank Reward Candidates by Rollout Evidence | 2023-eureka | [Published bounded component](/problems/eureka-rank-rollout-candidates) |
-| PB-329 | Record Intervention and Reset Statistics | 2024-serl | Needs reviewed blueprint |
+| PB-329 | Record Intervention and Reset Statistics | 2024-serl | [Published bounded component](/problems/serl-intervention-reset-statistics) |
 | PB-340 | Report Policy Update Clip Fractions | 2017-proximal-policy-optimization | [Published bounded component](/problems/ppo-policy-update-clip-fractions) |
 | PB-347 | Roll Out a Latent Dynamics Sequence | 2023-td-mpc2 | [Published bounded component](/problems/tdmpc2-latent-dynamics-sequence) |
 | PB-348 | Roll Out Imagined Latent Trajectories | 2023-dreamerv3 | [Published bounded component](/problems/dreamer-imagined-latent-rollout) |
 | PB-353 | Sample a Bounded Dynamics Randomization Config | 2024-dr-eureka | [Reused bounded component](/problems/sample-dynamics-distributions) |
 | PB-355 | Sample and Normalize Scene Points | 2024-3d-diffusion-policy | Needs reviewed blueprint |
-| PB-364 | Sample Time-Contrastive Video Triplets | 2022-r3m | Needs reviewed blueprint |
-| PB-365 | Schedule Actor-Learner Updates | 2024-serl | Needs reviewed blueprint |
+| PB-364 | Sample Time-Contrastive Video Triplets | 2022-r3m | [Published bounded component](/problems/r3m-time-contrastive-video-triplets) |
+| PB-365 | Schedule Actor-Learner Updates | 2024-serl | [Published bounded component](/problems/serl-actor-learner-schedule) |
 | PB-369 | Score Candidate Action Trajectories | 2023-td-mpc2 | [Published bounded component](/problems/tdmpc2-candidate-trajectory-scores) |
 | PB-400 | Transform Demonstrations into a Shared Tool Frame | 2024-umi | Needs reviewed blueprint |
 | PB-404 | Update a Sampling-Based Planner | 2023-td-mpc2 | [Published bounded component](/problems/tdmpc2-weighted-elite-planner) |
@@ -366,15 +366,15 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-411 | Validate a Generated Reward Program | 2024-dr-eureka | [Published bounded component](/problems/dreureka-reward-expression-program) |
 | PB-417 | Validate a Reward Function Contract | 2023-eureka | [Published bounded component](/problems/eureka-reward-output-contract) |
 | PB-428 | Validate an Offline Dataset Split | 2021-implicit-q-learning | [Published bounded component](/problems/iql-offline-dataset-split) |
-| PB-437 | Validate Success-Classifier Rewards on Robot Failures | 2024-serl | Needs reviewed blueprint |
+| PB-437 | Validate Success-Classifier Rewards on Robot Failures | 2024-serl | [Published bounded component](/problems/serl-success-reward-failure-audit) |
 | PB-446 | Voxelize a Calibrated RGB-D Scene | 2022-peract | Needs reviewed blueprint |
 
 ## simulation-sim2real
 
 | ID | Proposed exercise | Paper IDs | Status / existing contract |
 |---|---|---|---|
-| PB-007 | Aggregate Seeded Benchmark Returns | 2018-deepmind-control-suite | Needs reviewed blueprint |
-| PB-046 | Batch Independent Simulator States | 2021-isaac-gym | Needs reviewed blueprint |
+| PB-007 | Aggregate Seeded Benchmark Returns | 2018-deepmind-control-suite | [Published bounded component](/problems/dm-control-seeded-return-summary) |
+| PB-046 | Batch Independent Simulator States | 2021-isaac-gym | [Published bounded component](/problems/isaac-gym-batch-joint-state) |
 | PB-057 | Build a Reproducible Interaction Scenario | 2020-sapien | Needs reviewed blueprint |
 | PB-059 | Build a Task-Variation Sampler | 2019-rlbench | Needs reviewed blueprint |
 | PB-060 | Build a Vectorized Manipulation Batch | 2023-maniskill-2 | Needs reviewed blueprint |
@@ -384,26 +384,26 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-144 | Compute Success and SPL | 2019-habitat | Needs reviewed blueprint |
 | PB-150 | Construct a Rearrangement Goal Graph | 2021-habitat-2 | Needs reviewed blueprint |
 | PB-175 | Detect an Invalid Interaction Transition | 2017-ai2thor | Needs reviewed blueprint |
-| PB-196 | Evaluate a Bounded Continuous-Control Reward | 2018-deepmind-control-suite | Needs reviewed blueprint |
+| PB-196 | Evaluate a Bounded Continuous-Control Reward | 2018-deepmind-control-suite | [Published bounded component](/problems/dm-control-tolerance-reward) |
 | PB-197 | Evaluate a Cooperative Interaction Episode | 2023-habitat-3 | Needs reviewed blueprint |
 | PB-217 | Evaluate Skill Success Across Object Instances | 2021-maniskill | Needs reviewed blueprint |
-| PB-244 | Implement a Functional Physics Step Contract | 2021-brax | Needs reviewed blueprint |
-| PB-245 | Implement Action Repeat Correctly | 2018-deepmind-control-suite | Needs reviewed blueprint |
+| PB-244 | Implement a Functional Physics Step Contract | 2021-brax | [Published bounded component](/problems/brax-functional-damped-step) |
+| PB-245 | Implement Action Repeat Correctly | 2018-deepmind-control-suite | [Published bounded component](/problems/dm-control-action-repeat) |
 | PB-272 | Measure Domain Shift Between Simulated Scenes | 2020-igibson | Needs reviewed blueprint |
 | PB-275 | Measure Human-Robot Proximity Events | 2023-habitat-3 | Needs reviewed blueprint |
-| PB-280 | Measure Simulation and Learning Throughput | 2021-isaac-gym | Needs reviewed blueprint |
+| PB-280 | Measure Simulation and Learning Throughput | 2021-isaac-gym | [Published bounded component](/problems/isaac-gym-steady-state-throughput) |
 | PB-289 | Normalize a Simulation Observation Dictionary | 2020-robosuite | Needs reviewed blueprint |
 | PB-290 | Normalize Action Bounds Across Tasks | 2021-maniskill | Needs reviewed blueprint |
 | PB-328 | Record a Deterministic Rollout Manifest | 2020-robosuite | Needs reviewed blueprint |
 | PB-336 | Replay a Seeded Navigation Trajectory | 2019-habitat | Needs reviewed blueprint |
 | PB-337 | Replay Sensor Streams from a Fixed Seed | 2020-igibson | Needs reviewed blueprint |
 | PB-339 | Report Generalization by Object Split | 2023-maniskill-2 | Needs reviewed blueprint |
-| PB-342 | Reset Completed Environments Selectively | 2021-isaac-gym | Needs reviewed blueprint |
+| PB-342 | Reset Completed Environments Selectively | 2021-isaac-gym | [Published bounded component](/problems/simulator-selective-environment-reset) |
 | PB-371 | Score Multi-Stage Task Completion | 2019-rlbench | Needs reviewed blueprint |
 | PB-385 | Stratify Manipulation Object Instances | 2021-maniskill | Needs reviewed blueprint |
 | PB-389 | Synchronize Human and Robot Agent States | 2023-habitat-3 | Needs reviewed blueprint |
 | PB-395 | Track Object-State Preconditions | 2017-ai2thor | Needs reviewed blueprint |
-| PB-408 | Validate a Continuous-Control Time Step | 2018-deepmind-control-suite | Needs reviewed blueprint |
+| PB-408 | Validate a Continuous-Control Time Step | 2018-deepmind-control-suite | [Published bounded component](/problems/dm-control-timestep-validation) |
 | PB-415 | Validate a Navigation Episode | 2019-habitat | Needs reviewed blueprint |
 | PB-419 | Validate a Robot-Controller-Task Configuration | 2020-robosuite, 2023-maniskill-2 | Needs reviewed blueprint |
 | PB-420 | Validate a Scene Interaction Graph | 2020-igibson | Needs reviewed blueprint |
@@ -414,7 +414,7 @@ First batch: PPO surrogate/normalization/targets/diagnostics; SAC target/value/l
 | PB-435 | Validate Object Reset States | 2021-habitat-2 | Needs reviewed blueprint |
 | PB-436 | Validate Skill Preconditions in a Rearrangement Plan | 2021-habitat-2 | Needs reviewed blueprint |
 | PB-439 | Validate Task-Specific Success Predicates | 2023-maniskill-2 | Needs reviewed blueprint |
-| PB-441 | Vectorize Environment Resets | 2021-brax | Needs reviewed blueprint |
+| PB-441 | Vectorize Environment Resets | 2021-brax | [Published bounded component](/problems/simulator-selective-environment-reset) |
 
 ## vision-vlm-3d
 

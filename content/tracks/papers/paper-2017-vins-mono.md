@@ -18,9 +18,13 @@
   ],
   "runnable_problem_slugs": [
     "trace-perception-frame-graph",
-    "estimate-clock-offset-paired-events"
+    "estimate-clock-offset-paired-events",
+    "initialization-observability-rank",
+    "short-window-imu-preintegration",
+    "visual-inertial-keyframe-residual",
+    "schur-window-marginalization"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +57,7 @@ The implementation path follows **Initialize visual-inertial state → Optimize 
 
 Source cards: [2017-vins-mono](../../../research/papers/geometry-calibration-slam/2017-vins-mono.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +65,10 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Preintegrate a Short IMU Window](/problems/short-window-imu-preintegration). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply SE(3) Exponential and Logarithm Maps](/problems/se3-exponential-logarithm). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -76,7 +84,7 @@ Align visual motion with inertial scale, gravity, and bias.
 
 - **Runnable supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Resolve a rigid transform between two frames in a validated acyclic frame forest.
 - **Runnable supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Estimate a constant clock offset from corresponding event timestamps using a robust median.
-- **Proposed component, not runnable:** Detect Unobservable Initialization Motion.
+- **Runnable paper-associated component:** [Detect Unobservable Initialization Motion](/problems/initialization-observability-rank). Diagnose unsupported parameter directions in a supplied linearized visual-inertial initialization system.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,8 +96,8 @@ Combine visual, inertial, and retained-prior information.
 
 [Study the mechanism and math](/projects/2017-vins-mono#paper-section-optimize-coupled-residuals).
 
-- **Proposed component, not runnable:** Preintegrate a Short IMU Window.
-- **Proposed component, not runnable:** Build a Visual-Inertial Residual.
+- **Runnable paper-associated component:** [Preintegrate a Short IMU Window](/problems/short-window-imu-preintegration). Integrate one synchronized window of angular velocity and specific force in its initial body frame.
+- **Runnable paper-associated component:** [Build a Visual-Inertial Residual](/problems/visual-inertial-keyframe-residual). Combine a keyframe IMU residual with already computed visual residuals using declared diagonal uncertainties.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -101,7 +109,7 @@ Retain old information and use loop constraints.
 
 [Study the mechanism and math](/projects/2017-vins-mono#paper-section-marginalize-and-correct-drift).
 
-- **Proposed component, not runnable:** Marginalize a Visual-Inertial Window with a Schur Complement.
+- **Runnable paper-associated component:** [Marginalize a Visual-Inertial Window with a Schur Complement](/problems/schur-window-marginalization). Eliminate old state variables from a fixed linearized estimator window while preserving its quadratic information.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

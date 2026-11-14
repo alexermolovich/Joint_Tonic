@@ -62,10 +62,10 @@ execution_flow:
       column: 2
       row: 0
       section: Smooth sensor factors
-      problem_slugs: []
-      planned_problems:
-        - Assemble an IMU-Lidar Pose Constraint
-        - Reject Inconsistent Loop Closures
+      problem_slugs:
+        - imu-lidar-extrinsic-pose-residual
+        - loop-closure-consistency-gate
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -110,10 +110,10 @@ A surface residual is $r=n^\top(Rp+t-q)$, with $n$ a unit normal and distances i
 
 ### Smooth sensor factors
 
-The graph solves $\min_X\sum_k\|r_k(X)\|_{\Sigma_k^{-1}}^2$ with appropriate robust treatment. $X$ includes pose, velocity, and biases for inertial estimation. Lidar correction improves motion and bias estimates, which then improve later scan deskewing.
+The graph solves $\min_X\sum_k\|r_k(X)\|_{\Sigma_k^{-1}}^2$ with appropriate robust treatment. $X$ includes pose, velocity, and biases for inertial estimation. Lidar correction improves motion and bias estimates, which then improve later scan deskewing. The extrinsic pose exercise compares two supplied endpoint IMU poses with a measured lidar relative pose after applying the calibrated lidar mount. Its split translation/SO(3) residual is not the complete inertial velocity/bias factor. The loop exercise is an explicitly original covariance, overlap and temporal-separation gate for supplied registration evidence; it is not LIO-SAM’s ICP fitness rule or a correctness probability.
 
 
-**Planned component problems:** Assemble an IMU-Lidar Pose Constraint; Reject Inconsistent Loop Closures. These remain unreviewed implementation ideas without runnable exercises.
+**Implement these components:** [Assemble an IMU-Lidar Pose Constraint](/problems/imu-lidar-extrinsic-pose-residual) · [Reject Inconsistent Loop Closures](/problems/loop-closure-consistency-gate). Each linked exercise declares its bounded numerical and physical contract; these are not full estimator reproductions.
 
 ## Implement the components
 
@@ -123,8 +123,8 @@ The graph solves $\min_X\sum_k\|r_k(X)\|_{\Sigma_k^{-1}}^2$ with appropriate rob
 
 - [Deskew a Lidar Scan with Motion Estimates](/problems/deskew-lidar-points) — runnable bounded component.
 - [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals) — runnable bounded component.
-- Assemble an IMU-Lidar Pose Constraint.
-- Reject Inconsistent Loop Closures.
+- [Assemble an IMU-Lidar Pose Constraint](/problems/imu-lidar-extrinsic-pose-residual) — runnable bounded component.
+- [Reject Inconsistent Loop Closures](/problems/loop-closure-consistency-gate) — runnable bounded component.
 
 [Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 

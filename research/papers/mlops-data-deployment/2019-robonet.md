@@ -33,7 +33,51 @@ modalities:
 track_role: supporting
 open_access_status: open-access-preprint
 redistribution_note: Research copy only; verify the source license before redistribution.
-execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Unify heterogeneous episodes", "detail": "Preserve embodiment metadata while exposing a usable data interface.", "column": 0, "row": 0, "section": "Unify heterogeneous episodes", "problem_slugs": ["validate-robot-episodes", "map-shared-robot-episode"], "planned_problems": []}, {"id": "stage-2", "title": "Learn interaction models", "detail": "Predict future observations or infer actions between observations.", "column": 1, "row": 0, "section": "Learn interaction models", "problem_slugs": ["window-episode-without-crossing-boundaries", "build-robot-sequence-validity-masks"], "planned_problems": ["Align Actions and Images in a Video Window", "Compute a Masked Video-Prediction Loss"]}, {"id": "stage-3", "title": "Evaluate transfer", "detail": "Separate held-out robots and environments from training coverage.", "column": 2, "row": 0, "section": "Evaluate transfer", "problem_slugs": ["per-embodiment-transfer-matrix"], "planned_problems": ["Measure Cross-Robot Prediction Error"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "multi-robot data"}, {"from": "stage-2", "to": "stage-3", "label": "trained model"}]}
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Unify heterogeneous episodes
+      detail: Preserve embodiment metadata while exposing a usable data interface.
+      column: 0
+      row: 0
+      section: Unify heterogeneous episodes
+      problem_slugs:
+        - validate-robot-episodes
+        - map-shared-robot-episode
+      planned_problems: []
+    - id: stage-2
+      title: Learn interaction models
+      detail: Predict future observations or infer actions between observations.
+      column: 1
+      row: 0
+      section: Learn interaction models
+      problem_slugs:
+        - window-episode-without-crossing-boundaries
+        - build-robot-sequence-validity-masks
+        - robonet-transition-frame-windows
+        - robonet-masked-video-prediction-loss
+      planned_problems: []
+    - id: stage-3
+      title: Evaluate transfer
+      detail: Separate held-out robots and environments from training coverage.
+      column: 2
+      row: 0
+      section: Evaluate transfer
+      problem_slugs:
+        - per-embodiment-transfer-matrix
+        - robonet-cross-robot-prediction-error
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: multi-robot data
+    - from: stage-2
+      to: stage-3
+      label: trained model
 ---
 
 ## Core paper explanation
@@ -70,13 +114,13 @@ $$L_{\mathrm{pixel}}=\frac{\sum_t m_t\|\widehat I_{t+1}-I_{t+1}\|_F^2}{HWC\sum_t
 
 Pixel values here are normalized dimensionless intensities, and the denominator must be positive. This is an illustrative masked regression loss, not a claim that every RoboNet experiment uses this exact objective. For one valid two-pixel target $[0,1]$ and prediction $[0.2,0.8]$, loss is $(0.04+0.04)/2=0.04$; a padded frame contributes nothing.
 
-[Episode-safe windows](/problems/window-episode-without-crossing-boundaries) and [sequence masks](/problems/build-robot-sequence-validity-masks) implement the boundary/masking prerequisites. Image/action alignment and a complete video predictor remain separate proposed components.
+[Episode-safe windows](/problems/window-episode-without-crossing-boundaries) and [sequence masks](/problems/build-robot-sequence-validity-masks) implement the boundary/masking prerequisites. [Aligned image/action windows](/problems/robonet-transition-frame-windows) now implement the bounded indexing contract. A complete learned video predictor remains separate work.
 <!-- /joint-tonic-math-expansion -->
 
 **Component practice**
 
-- Align Actions and Images in a Video Window — unreviewed idea; contract and evaluator required.
-- Compute a Masked Video-Prediction Loss — unreviewed idea; contract and evaluator required.
+- [Align Actions and Images in a Video Window](/problems/robonet-transition-frame-windows).
+- [Compute a Masked Video-Prediction Loss](/problems/robonet-masked-video-prediction-loss).
 
 
 ### Evaluate transfer
@@ -91,7 +135,7 @@ For source embodiment s and evaluation embodiment t, an original transfer table 
 
 **Component practice**
 
-- Measure Cross-Robot Prediction Error — unreviewed idea; contract and evaluator required.
+- [Measure Cross-Robot Prediction Error](/problems/robonet-cross-robot-prediction-error).
 
 
 ## Implement the components
@@ -101,14 +145,18 @@ Runnable components and supporting prerequisites are attached to their matching 
 - **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 - **Supporting prerequisite:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode).
 
-**Planned component problems:**
+**Component status:**
 
-- Align Actions and Images in a Video Window — unreviewed idea; contract and evaluator required.
-- Compute a Masked Video-Prediction Loss — unreviewed idea; contract and evaluator required.
-- Measure Cross-Robot Prediction Error — unreviewed idea; contract and evaluator required.
+- [Align Actions and Images in a Video Window](/problems/robonet-transition-frame-windows).
+- [Compute a Masked Video-Prediction Loss](/problems/robonet-masked-video-prediction-loss).
+- [Measure Cross-Robot Prediction Error](/problems/robonet-cross-robot-prediction-error).
 
 These exercises implement their stated contracts, not a complete paper reproduction.
 
+
+## Scope of the runnable components
+
+Video windows preserve the action from frame t to t+1 and require nondecreasing episode identities. The prediction loss is normalized-pixel MSE over observed frames, with separate horizon support; it is not a learned video model. Cross-robot diagnostics expose pixel-weighted versus equal-episode error and do not by themselves establish held-out robot transfer.
 
 ## Why this matters on a robot
 

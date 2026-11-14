@@ -21,9 +21,10 @@
     "match-approximate-sensor-timestamps",
     "estimate-clock-offset-paired-events",
     "preintegrate-imu-translation",
-    "first-order-imu-bias-correction"
+    "first-order-imu-bias-correction",
+    "imu-preintegration-covariance"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +57,7 @@ The implementation path follows **Integrate relative rotation → Integrate velo
 
 Source cards: [2015-on-manifold-preintegration](../../../research/papers/geometry-calibration-slam/2015-on-manifold-preintegration.md).
 
-**Available now:** 3 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -107,7 +108,7 @@ Compare predicted state change with preintegrated measurements.
 [Study the mechanism and math](/projects/2015-on-manifold-preintegration#paper-section-form-a-keyframe-factor).
 
 - **Runnable paper-associated component:** [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction). Apply supplied first-order bias Jacobians to an existing preintegrated measurement.
-- **Proposed component, not runnable:** Propagate Preintegration Covariance.
+- **Runnable paper-associated component:** [Propagate Preintegration Covariance](/problems/imu-preintegration-covariance). `preintegration_covariance(rotation_vectors, specific_force, durations, noise_variance)` rotation_vectors(N,3) body-frame integrated angular increments radians, norm<=3; force(N,3) bias-corrected body specificforce m/s² abs<=100;dt(N)seconds[1e-6,1],sum<=100,N0..1024;noise_variance(N,6) in[0,100], per-sample discrete variances of gyroscope(rad/s) then accelerometer(m/s²), NOT continuous spectral densities. Start rotation R=I,cov P=zeros9. State error order(theta radians,velocity m/s,position m), theta right-local current-body, velocity/position initialbody. For eachOLD R and h=dt, phi=rotvec, E=Exp(phi), rightJacobian Jr=I−(1−cosθ)/θ²[phi]x+(θ−sinθ)/θ³[phi]x² with analytic small-angle continuation. A block rows [[E.T,0,0],[-R[f]x h,I,0],[-.5R[f]x h²,I h,I]]. B block rows [[Jr h,0],[0,R h],[0,.5R h²]]. P'=A P A.T+B diag(q) B.T, symmetrize roundoff; R'=R E. Return covariance(N+1,9,9) and final_rotation(3,3). This reproduces the nine-state first-order noise recurrence with supplied increments, fixed biases, and diagonal discrete sensor noise; no bias random walk or continuous-noise discretization. Exampleonezero-rotation/force step h1,qgyro1,qaccel4=>diagtheta1,diagv4,diagp1 and each matching v/p covariance2. ExampleN0=>singlezero9matrix,Ridentity. Independent oracle propagates noise impulse columns through the error recurrence before forming their Gram matrix.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

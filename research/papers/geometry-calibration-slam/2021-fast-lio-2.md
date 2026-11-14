@@ -60,9 +60,9 @@ execution_flow:
       column: 2
       row: 0
       section: Maintain the local map
-      problem_slugs: []
-      planned_problems:
-        - Update an Incremental Local Map
+      problem_slugs:
+        - incremental-voxel-local-map
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -102,10 +102,10 @@ $H$ is the residual Jacobian and $R_z$ measurement covariance. The actual iterat
 
 ### Maintain the local map
 
-The ikd-Tree supports adding transformed points, deleting points outside the local region, and downsampling. Map resolution trades geometric detail against computation. Timestamped deskewing and lidar–IMU extrinsics remain necessary even though handcrafted feature extraction is removed.
+The ikd-Tree supports adding transformed points, deleting points outside the local region, and downsampling. Map resolution trades geometric detail against computation. Timestamped deskewing and lidar–IMU extrinsics remain necessary even though handcrafted feature extraction is removed. The linked local-map exercise makes the update decisions deterministic: transform the scan, prune an inclusive world-aligned box, and retain the center-nearest point per world-origin voxel with stable identity ties. It is a bounded batch teaching model, not an ikd-Tree implementation or its performance claim.
 
 
-**Planned component problems:** Update an Incremental Local Map. These remain unreviewed implementation ideas without runnable exercises.
+**Implement these components:** [Update an Incremental Local Map](/problems/incremental-voxel-local-map). Each linked exercise declares its bounded numerical and physical contract; these are not full estimator reproductions.
 
 ## Implement the components
 
@@ -116,7 +116,7 @@ The ikd-Tree supports adding transformed points, deleting points outside the loc
 - Propagate an Error-State IMU Mean and Covariance.
 - [Associate Scan Points with Local Map Planes](/problems/associate-local-map-planes) — runnable bounded component.
 - [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals) — runnable bounded component.
-- Update an Incremental Local Map.
+- [Update an Incremental Local Map](/problems/incremental-voxel-local-map) — runnable bounded component.
 
 [Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 

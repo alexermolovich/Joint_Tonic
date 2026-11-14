@@ -17,9 +17,12 @@
     "hil-serl"
   ],
   "runnable_problem_slugs": [
-    "offline-rollout-checkpoint-gate"
+    "hilserl-intervention-segments",
+    "hilserl-mix-corrective-replay",
+    "offline-rollout-checkpoint-gate",
+    "hilserl-autonomous-update-gate"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +55,7 @@ The implementation path follows **Collect policy and corrective actions → Lear
 
 Source cards: [2024-hil-serl](../../../research/papers/robot-learning-rl/2024-hil-serl.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -72,7 +75,7 @@ Let a human temporarily take control when behavior needs correction.
 
 [Study the mechanism and math](/projects/2024-hil-serl#paper-section-collect-policy-and-corrective-actions).
 
-- **Proposed component, not runnable:** Label Human Intervention Segments.
+- **Runnable paper-associated component:** [Label Human Intervention Segments](/problems/hilserl-intervention-segments). A human override changes the action that the robot actually experiences.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -84,7 +87,7 @@ Combine demonstration/correction evidence with online experience.
 
 [Study the mechanism and math](/projects/2024-hil-serl#paper-section-learn-from-mixed-replay).
 
-- **Proposed component, not runnable:** Mix Intervention and Autonomous Replay.
+- **Runnable paper-associated component:** [Mix Intervention and Autonomous Replay](/problems/hilserl-mix-corrective-replay). Corrective and autonomous transitions answer different questions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,7 +100,7 @@ Distribute new policies and track success without assistance.
 [Study the mechanism and math](/projects/2024-hil-serl#paper-section-update-and-evaluate-autonomy).
 
 - **Runnable supporting prerequisite:** [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Choose a candidate only when offline loss, rollout coverage and exact success-rate gates all pass.
-- **Proposed component, not runnable:** Gate an Online Policy Update.
+- **Runnable paper-associated component:** [Gate an Online Policy Update](/problems/hilserl-autonomous-update-gate). A candidate that succeeds only with human corrections has not shown autonomous improvement.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

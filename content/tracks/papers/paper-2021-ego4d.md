@@ -16,8 +16,12 @@
     "mlops-data-deployment",
     "ego4d"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "ego4d-annotation-frame-ranges",
+    "ego4d-temporal-leakage-groups",
+    "egocentric-activity-confusion-report"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Index temporal observations → Construct benc
 
 Source cards: [2021-ego4d](../../../research/papers/mlops-data-deployment/2021-ego4d.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Keep video, annotations, and consent-related provenance aligned.
 
 [Study the mechanism and math](/projects/2021-ego4d#paper-section-index-temporal-observations).
 
-- **Proposed component, not runnable:** Align Egocentric Video Annotations.
+- **Runnable paper-associated component:** [Align Egocentric Video Annotations](/problems/ego4d-annotation-frame-ranges). Variable-frame-rate video cannot be aligned reliably with a nominal FPS multiplication.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Use task-specific targets and leakage-resistant splits.
 
 [Study the mechanism and math](/projects/2021-ego4d#paper-section-construct-benchmark-examples).
 
-- **Proposed component, not runnable:** Build Leakage-Safe Temporal Splits.
+- **Runnable paper-associated component:** [Build Leakage-Safe Temporal Splits](/problems/ego4d-temporal-leakage-groups). Adjacent clips can share nearly identical context even when they do not overlap.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Separate learned perception from executable robot behavior.
 
 [Study the mechanism and math](/projects/2021-ego4d#paper-section-evaluate-human-to-robot-relevance).
 
-- **Proposed component, not runnable:** Aggregate Evaluation by Activity Slice.
+- **Runnable paper-associated component:** [Aggregate Evaluation by Activity Slice](/problems/egocentric-activity-confusion-report). An overall activity accuracy can hide a class with almost no labeled examples.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

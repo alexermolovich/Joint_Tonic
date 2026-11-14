@@ -16,8 +16,12 @@
     "geometry-calibration-slam",
     "orb-slam-2"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "pose-guided-binary-feature-association",
+    "reprojection-pose-hypothesis-inliers",
+    "relocalization-landmark-coverage"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +54,14 @@ The implementation path follows **Track visual landmarks → Optimize local geom
 
 Source cards: [2016-orb-slam-2](../../../research/papers/geometry-calibration-slam/2016-orb-slam-2.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Track visual landmarks** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Select Geometric Pose Inliers](/problems/reprojection-pose-hypothesis-inliers). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +75,7 @@ Associate image keypoints with map points.
 
 [Study the mechanism and math](/projects/2016-orb-slam-2#paper-section-track-visual-landmarks).
 
-- **Proposed component, not runnable:** Associate Map Points with Image Features.
+- **Runnable paper-associated component:** [Associate Map Points with Image Features](/problems/pose-guided-binary-feature-association). Associate visible map landmarks with image features using predicted pixels and packed binary descriptors.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Refine keyframe poses and landmark positions.
 
 [Study the mechanism and math](/projects/2016-orb-slam-2#paper-section-optimize-local-geometry).
 
-- **Proposed component, not runnable:** Select Geometric Pose Inliers.
+- **Runnable paper-associated component:** [Select Geometric Pose Inliers](/problems/reprojection-pose-hypothesis-inliers). Compare supplied camera-pose hypotheses using normalized geometric reprojection errors.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +99,7 @@ Recognize previously mapped places and correct drift.
 
 [Study the mechanism and math](/projects/2016-orb-slam-2#paper-section-close-loops-and-relocalize).
 
-- **Proposed component, not runnable:** Evaluate a Relocalization Candidate.
+- **Runnable paper-associated component:** [Evaluate a Relocalization Candidate](/problems/relocalization-landmark-coverage). Evaluate relocalization candidates using distinct geometric landmarks and image coverage.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

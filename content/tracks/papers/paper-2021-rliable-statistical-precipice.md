@@ -20,10 +20,12 @@
   ],
   "runnable_problem_slugs": [
     "robot-episode-confidence-intervals",
+    "rliable-interquartile-mean",
     "edge-inference-release-gate",
-    "slice-metrics-regressions"
+    "slice-metrics-regressions",
+    "rliable-stratified-performance-profile"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -56,7 +58,7 @@ The implementation path follows **Preserve task and seed strata → Aggregate ro
 
 Source cards: [2021-rliable-statistical-precipice](../../../research/papers/mlops-data-deployment/2021-rliable-statistical-precipice.md).
 
-**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -90,7 +92,7 @@ Aggregate robustly across runs. See the original explanation and component statu
 
 [Study the mechanism and math](/projects/2021-rliable-statistical-precipice#paper-section-aggregate-robustly-across-runs).
 
-- **Proposed component, not runnable:** Compute an Interquartile Mean Benchmark Score.
+- **Runnable paper-associated component:** [Compute an Interquartile Mean Benchmark Score](/problems/rliable-interquartile-mean). A few exceptionally lucky or unlucky training seeds can dominate an ordinary mean.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -104,7 +106,7 @@ Compare distributions and uncertainty. See the original explanation and componen
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
 - **Runnable supporting prerequisite:** [Compare Slice Metrics Without Hiding Regressions](/problems/slice-metrics-regressions). Compare Slice Metrics Without Hiding Regressions
-- **Proposed component, not runnable:** Bootstrap a Stratified Performance Profile.
+- **Runnable paper-associated component:** [Bootstrap a Stratified Performance Profile](/problems/rliable-stratified-performance-profile). A performance profile asks what fraction of runs clear each score threshold.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

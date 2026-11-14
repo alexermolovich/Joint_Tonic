@@ -42,18 +42,18 @@ execution_flow:
       column: 0
       row: 0
       section: Collect policy and corrective actions
-      problem_slugs: []
-      planned_problems:
-        - Label Human Intervention Segments
+      problem_slugs:
+        - hilserl-intervention-segments
+      planned_problems: []
     - id: stage-2
       title: Learn from mixed replay
       detail: Combine demonstration/correction evidence with online experience.
       column: 1
       row: 0
       section: Learn from mixed replay
-      problem_slugs: []
-      planned_problems:
-        - Mix Intervention and Autonomous Replay
+      problem_slugs:
+        - hilserl-mix-corrective-replay
+      planned_problems: []
     - id: stage-3
       title: Update and evaluate autonomy
       detail: Distribute new policies and track success without assistance.
@@ -62,8 +62,8 @@ execution_flow:
       section: Update and evaluate autonomy
       problem_slugs:
         - offline-rollout-checkpoint-gate
-      planned_problems:
-        - Gate an Online Policy Update
+        - hilserl-autonomous-update-gate
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -86,7 +86,7 @@ Follow the data through the mechanism. Training objectives and inference behavio
 Record executed action $a_t$ and source label $h_t\in\{\mathrm{policy},\mathrm{human}\}$. When a human intervenes, the replay transition must contain the action actually sent to the controller, not the policy proposal that was overridden.
 
 
-**Planned exercise:** Label Human Intervention Segments.
+**Implement this component:** [Label Human Intervention Segments](/problems/hilserl-intervention-segments).
 
 
 ### Learn from mixed replay
@@ -118,7 +118,9 @@ This static trace makes source identity explicit and doubles as the text alterna
 A teaching replay mixture is $D_{\mathrm{batch}}\sim\eta D_{\mathrm{demo}}+(1-\eta)D_{\mathrm{online}}$. The actual system's buffer composition and sampling schedule must be retained. Critic targets use $y=r+\gamma(1-d)V_{\mathrm{target}}(s')$ under the chosen off-policy algorithm.
 
 
-**Planned exercise:** Mix Intervention and Autonomous Replay.
+**Implement this component:** [Mix Intervention and Autonomous Replay](/problems/hilserl-mix-corrective-replay).
+
+The exercise uses explicitly disjoint human and autonomous source pools with recorded priorities and half-up quotas. This is a reproducible teaching recipe; it does not assert that the paper's online and demonstration buffers are disjoint. Both the provenance label and the executed command survive sampling.
 
 
 ### Update and evaluate autonomy
@@ -126,16 +128,18 @@ A teaching replay mixture is $D_{\mathrm{batch}}\sim\eta D_{\mathrm{demo}}+(1-\e
 A success classifier supplies task reward from observations. Classifier false positives can be exploited by the policy. Report autonomous success separately from training success with interventions, together with human time, interaction budget, and policy version.
 
 
-**Planned exercise:** Gate an Online Policy Update.
+**Implement this component:** [Gate an Online Policy Update](/problems/hilserl-autonomous-update-gate).
+
+This original gate compares observed rates after removing assisted trials. Missing autonomous evidence fails the gate; the result provides neither a statistical confidence guarantee nor authorization to run hardware.
 
 
 ## Implement the components
 
 Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Collect policy and corrective actions:** Label Human Intervention Segments (planned).
-- **Learn from mixed replay:** Mix Intervention and Autonomous Replay (planned).
-- **Update and evaluate autonomy:** Gate an Online Policy Update (planned).
+- **Collect policy and corrective actions:** [Label Human Intervention Segments](/problems/hilserl-intervention-segments).
+- **Learn from mixed replay:** [Mix Intervention and Autonomous Replay](/problems/hilserl-mix-corrective-replay).
+- **Update and evaluate autonomy:** [Gate an Online Policy Update](/problems/hilserl-autonomous-update-gate).
 
 ## Why this matters on a robot
 

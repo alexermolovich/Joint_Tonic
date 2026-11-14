@@ -1,0 +1,76 @@
+{
+  "slug": "r3m-temporal-language-objective",
+  "title": "Combine Temporal and Language Alignment Losses",
+  "version": "1.0.0",
+  "number": 556,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2022-r3m",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "representation_objective",
+  "paperIds": [
+    "2022-r3m"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Nearby visual states, meaningful language progress and compact features provide different learning signals.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Embedding coordinates, supplied logits, normalized robot state and normalized actions are dimensionless. Frame indices are ordinal positions, not timestamps in seconds."
+    },
+    "axes": "Video, frame, feature and policy-channel dimensions follow the typed contract",
+    "timestamp_assumptions": "Triplets stay in one video and the negative comes from another. Policy rows are supplied observations with explicit training/evaluation membership; no temporal transitions are inferred.",
+    "batching": "Video, frame, feature and policy-channel dimensions follow the typed contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "13e36bea1313cd41265ea8514fdc54ff857622d15a668805ba761c2fdb6d76c1"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded R3M component. The sampler is an explicit sequential recorded-draw recipe, the loss pins valid-row mean reduction and anchor regularization, and the policy uses an affine head rather than the paper's BatchNorm/MLP. No pretrained model or benchmark reproduction claim.",
+    "primary_urls": [
+      "https://arxiv.org/html/2203.12601v3"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2022-r3m.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

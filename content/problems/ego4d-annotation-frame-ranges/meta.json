@@ -1,0 +1,81 @@
+{
+  "slug": "ego4d-annotation-frame-ranges",
+  "title": "Align Egocentric Video Annotations",
+  "version": "1.0.0",
+  "number": 937,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "dataset-evaluation",
+    "2021-ego4d"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "annotation_frame_ranges",
+  "paperIds": [
+    "2021-ego4d"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Variable-frame-rate video cannot be aligned reliably with a nominal FPS multiplication.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared physical frames; no inferred transforms"
+    ],
+    "units": {
+      "timestamps/endpoints": "integer nanoseconds on one source-video clock",
+      "returned ranges": "half-open frame indices"
+    },
+    "axes": "Frame times(T,),annotation intervals(A,2),output(A,2),input annotation order preserved.",
+    "timestamp_assumptions": "Integer nanoseconds on source-video clock where applicable; no wall clock",
+    "batching": "Frame times(T,),annotation intervals(A,2),output(A,2),input annotation order preserved."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "706bfc339eaa61cba56b69c94de1ff535a70ddbe41dbec00eef5f0d03d539b20"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded operational teaching component. Backlog PB-012",
+    "primary_urls": [
+      "https://arxiv.org/abs/2110.07058"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2021-ego4d.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

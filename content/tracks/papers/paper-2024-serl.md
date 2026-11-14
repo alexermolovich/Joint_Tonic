@@ -17,9 +17,13 @@
     "serl"
   ],
   "runnable_problem_slugs": [
-    "offline-rollout-checkpoint-gate"
+    "serl-success-reward-failure-audit",
+    "offline-rollout-checkpoint-gate",
+    "serl-merge-replay-sources",
+    "serl-actor-learner-schedule",
+    "serl-intervention-reset-statistics"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +56,7 @@ The implementation path follows **Define control and reward → Run asynchronous
 
 Source cards: [2024-serl](../../../research/papers/robot-learning-rl/2024-serl.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -72,7 +76,7 @@ Expose a stable robot interface and task-success signal.
 
 [Study the mechanism and math](/projects/2024-serl#paper-section-define-control-and-reward).
 
-- **Proposed component, not runnable:** Validate Success-Classifier Rewards on Robot Failures.
+- **Runnable paper-associated component:** [Validate Success-Classifier Rewards on Robot Failures](/problems/serl-success-reward-failure-audit). A success classifier can be exploited if it mistakes recurring robot failures for completed tasks.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -85,8 +89,8 @@ Reuse robot transitions through off-policy replay.
 [Study the mechanism and math](/projects/2024-serl#paper-section-run-asynchronous-collection-and-learning).
 
 - **Runnable supporting prerequisite:** [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Choose a candidate only when offline loss, rollout coverage and exact success-rate gates all pass.
-- **Proposed component, not runnable:** Merge Online and Demonstration Replay.
-- **Proposed component, not runnable:** Schedule Actor-Learner Updates.
+- **Runnable paper-associated component:** [Merge Online and Demonstration Replay](/problems/serl-merge-replay-sources). Replay sources may contain the same transition, especially after demonstrations are also copied into an online buffer.
+- **Runnable paper-associated component:** [Schedule Actor-Learner Updates](/problems/serl-actor-learner-schedule). The learner should not consume an unbounded update budget merely because it runs faster than robot collection.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -98,7 +102,7 @@ Use explicit reset procedures or learned forward/backward policies.
 
 [Study the mechanism and math](/projects/2024-serl#paper-section-reset-and-evaluate-repeatedly).
 
-- **Proposed component, not runnable:** Record Intervention and Reset Statistics.
+- **Runnable paper-associated component:** [Record Intervention and Reset Statistics](/problems/serl-intervention-reset-statistics). Training time, human effort and reset overhead describe different costs.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -62,8 +62,8 @@ execution_flow:
       section: Form a keyframe factor
       problem_slugs:
         - first-order-imu-bias-correction
-      planned_problems:
-        - Propagate Preintegration Covariance
+        - imu-preintegration-covariance
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -111,12 +111,12 @@ For one zero-bias sample with identity rotation, specific force $(2,0,0)$ meters
 
 For world gravity $g$, the velocity residual is
 $$r_v=R_i^\top(v_j-v_i-g\Delta t_{ij})-\Delta v_{ij}.$$
-Rotation, position, and bias residuals complete the factor; whiten with the propagated covariance. Small bias changes use analytic first-order correction, while large changes may require reintegration.
+Rotation, position, and bias residuals complete the factor; whiten with the propagated covariance. Small bias changes use analytic first-order correction, while large changes may require reintegration. The covariance exercise constructs the nine-state first-order rotation/velocity/position recurrence with a right SO(3) Jacobian and discrete per-sample gyro/accelerometer variances. It retains cross-covariances but excludes bias random walks and continuous-noise discretization.
 
 
 **Implement these components:** [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction). Each exercise states its bounded numerical and frame conventions; it does not reproduce the complete estimator.
 
-**Planned component problems:** Propagate Preintegration Covariance. These remain unreviewed implementation ideas without runnable exercises.
+**Implement these components:** [Propagate Preintegration Covariance](/problems/imu-preintegration-covariance). Each linked exercise declares its bounded numerical and physical contract; these are not full estimator reproductions.
 
 ## Implement the components
 
@@ -126,7 +126,7 @@ Rotation, position, and bias residuals complete the factor; whiten with the prop
 
 - [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation) — runnable bounded component.
 - [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation) — runnable bounded component.
-- Propagate Preintegration Covariance.
+- [Propagate Preintegration Covariance](/problems/imu-preintegration-covariance) — runnable bounded component.
 - [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction) — runnable bounded component.
 
 [Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.

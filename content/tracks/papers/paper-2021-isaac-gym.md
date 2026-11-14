@@ -17,10 +17,13 @@
     "isaac-gym"
   ],
   "runnable_problem_slugs": [
+    "isaac-gym-batch-joint-state",
+    "isaac-gym-steady-state-throughput",
     "window-episode-without-crossing-boundaries",
-    "build-robot-sequence-validity-masks"
+    "build-robot-sequence-validity-masks",
+    "simulator-selective-environment-reset"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +56,7 @@ The implementation path follows **Create parallel environments → Step physics 
 
 Source cards: [2021-isaac-gym](../../../research/papers/simulation-sim2real/2021-isaac-gym.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -74,7 +77,7 @@ Instantiate batched robots with explicit state indexing.
 
 [Study the mechanism and math](/projects/2021-isaac-gym#paper-section-create-parallel-environments).
 
-- **Proposed component, not runnable:** Batch Independent Simulator States.
+- **Runnable paper-associated component:** [Batch Independent Simulator States](/problems/isaac-gym-batch-joint-state). Simulator state is often exposed as a flattened buffer.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -86,7 +89,7 @@ Keep observations, actions, and rollouts resident on the GPU.
 
 [Study the mechanism and math](/projects/2021-isaac-gym#paper-section-step-physics-and-policy-on-device).
 
-- **Proposed component, not runnable:** Measure Simulation and Learning Throughput.
+- **Runnable paper-associated component:** [Measure Simulation and Learning Throughput](/problems/isaac-gym-steady-state-throughput). Compilation and initialization can dominate a short simulator benchmark.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,7 +103,7 @@ Apply per-environment resets and log randomized parameters.
 
 - **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
 - **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
-- **Proposed component, not runnable:** Reset Completed Environments Selectively.
+- **Runnable paper-associated component:** [Reset Completed Environments Selectively](/problems/simulator-selective-environment-reset). Only completed environments should restart.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

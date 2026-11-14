@@ -16,8 +16,13 @@
     "simulation-sim2real",
     "deepmind-control-suite"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "dm-control-timestep-validation",
+    "dm-control-action-repeat",
+    "dm-control-tolerance-reward",
+    "dm-control-seeded-return-summary"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Configure dynamics and observations → Comput
 
 Source cards: [2018-deepmind-control-suite](../../../research/papers/simulation-sim2real/2018-deepmind-control-suite.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,8 +75,8 @@ Declare state, actuators, timestep, and task inputs.
 
 [Study the mechanism and math](/projects/2018-deepmind-control-suite#paper-section-configure-dynamics-and-observations).
 
-- **Proposed component, not runnable:** Validate a Continuous-Control Time Step.
-- **Proposed component, not runnable:** Implement Action Repeat Correctly.
+- **Runnable paper-associated component:** [Validate a Continuous-Control Time Step](/problems/dm-control-timestep-validation). A simulator transition carries both an episode-boundary marker and a bootstrap discount.
+- **Runnable paper-associated component:** [Implement Action Repeat Correctly](/problems/dm-control-action-repeat). Holding an action for several simulator transitions changes the control period.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -83,7 +88,7 @@ Map task variables into bounded tolerance-based scores.
 
 [Study the mechanism and math](/projects/2018-deepmind-control-suite#paper-section-compute-interpretable-reward).
 
-- **Proposed component, not runnable:** Evaluate a Bounded Continuous-Control Reward.
+- **Runnable paper-associated component:** [Evaluate a Bounded Continuous-Control Reward](/problems/dm-control-tolerance-reward). A tolerance reward distinguishes a target interval from a smoothly decaying neighborhood around it.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Report returns under fixed evaluation and seed conventions.
 
 [Study the mechanism and math](/projects/2018-deepmind-control-suite#paper-section-compare-learning-runs).
 
-- **Proposed component, not runnable:** Aggregate Seeded Benchmark Returns.
+- **Runnable paper-associated component:** [Aggregate Seeded Benchmark Returns](/problems/dm-control-seeded-return-summary). A training seed with many recorded evaluation episodes should not silently receive more weight than another seed.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

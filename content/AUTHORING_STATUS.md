@@ -2,9 +2,9 @@
 
 Generated from `CURRICULUM.md`, published metadata, and existing draft folders. Refresh with `node scripts/update-authoring-status.mjs`. A complete file package is **not** an independent review or a published evaluator.
 
-Scope: **314 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
+Scope: **365 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
 
-Coverage: 314 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 321 published problems; some are supporting components rather than identical named roadmap entries.
+Coverage: 365 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 372 published problems; some are supporting components rather than identical named roadmap entries.
 
 ## Work and review lanes
 
@@ -278,6 +278,21 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Build Distributional Reward and Ensemble-Value Targets](problems/tdmpc2-distributional-ensemble-targets/) | 7.1 | Runnable |
 | [Score Candidate Action Trajectories](problems/tdmpc2-candidate-trajectory-scores/) | 7.1 | Runnable |
 | [Update a Sampling-Based Planner](problems/tdmpc2-weighted-elite-planner/) | 7.1 | Runnable |
+| [Validate Success-Classifier Rewards on Robot Failures](problems/serl-success-reward-failure-audit/) | 7.1 | Runnable |
+| [Merge Online and Demonstration Replay](problems/serl-merge-replay-sources/) | 7.1 | Runnable |
+| [Schedule Actor-Learner Updates](problems/serl-actor-learner-schedule/) | 7.1 | Runnable |
+| [Label Human Intervention Segments](problems/hilserl-intervention-segments/) | 7.1 | Runnable |
+| [Mix Intervention and Autonomous Replay](problems/hilserl-mix-corrective-replay/) | 7.1 | Runnable |
+| [Gate an Online Policy Update](problems/hilserl-autonomous-update-gate/) | 7.1 | Runnable |
+| [Record Intervention and Reset Statistics](problems/serl-intervention-reset-statistics/) | 7.1 | Runnable |
+| [Sample Time-Contrastive Video Triplets](problems/r3m-time-contrastive-video-triplets/) | 7.1 | Runnable |
+| [Combine Temporal and Language Alignment Losses](problems/r3m-temporal-language-objective/) | 7.1 | Runnable |
+| [Evaluate Frozen Features in a Small Policy](problems/r3m-frozen-feature-policy-step/) | 7.1 | Runnable |
+| [Compute Gait Tracking and Stability Metrics](problems/locomotion-tracking-stability-metrics/) | 7.1 | Runnable |
+| [Reset Failed Locomotion Environments](problems/locomotion-failure-reset-batch/) | 7.1 | Runnable |
+| [Sample Terrain Difficulty by Policy Progress](problems/locomotion-terrain-progress-curriculum/) | 7.1 | Runnable |
+| [Compute Belief Reconstruction and Teacher-Action Losses](problems/perceptive-teacher-belief-loss/) | 7.1 | Runnable |
+| [Evaluate Foot Clearance Across Terrain Slices](problems/perceptive-terrain-foot-clearance/) | 7.1 | Runnable |
 | [Validate a Tactile Image Capture Contract](problems/digit-capture-contract/) | 7.2 | Runnable |
 | [Subtract a Tactile Reference Image](problems/digit-reference-subtraction/) | 7.2 | Runnable |
 | [Estimate Contact Patch Statistics](problems/digit-contact-patch-statistics/) | 7.2 | Runnable |
@@ -325,6 +340,22 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Construct Coarse Correspondence Candidates](problems/dual-softmax-coarse-matches/) | 7.4 | Runnable |
 | [Refine a Match in a Local Window](problems/local-window-match-expectation/) | 7.4 | Runnable |
 | [Filter Geometrically Inconsistent Matches](problems/sampson-epipolar-match-gate/) | 7.4 | Runnable |
+| [Detect Unobservable Initialization Motion](problems/initialization-observability-rank/) | 7.4 | Runnable |
+| [Preintegrate a Short IMU Window](problems/short-window-imu-preintegration/) | 7.4 | Runnable |
+| [Build a Visual-Inertial Residual](problems/visual-inertial-keyframe-residual/) | 7.4 | Runnable |
+| [Marginalize a Visual-Inertial Window with a Schur Complement](problems/schur-window-marginalization/) | 7.4 | Runnable |
+| [Associate Map Points with Image Features](problems/pose-guided-binary-feature-association/) | 7.4 | Runnable |
+| [Select Geometric Pose Inliers](problems/reprojection-pose-hypothesis-inliers/) | 7.4 | Runnable |
+| [Evaluate a Relocalization Candidate](problems/relocalization-landmark-coverage/) | 7.4 | Runnable |
+| [Evaluate Trajectory Error After Alignment](problems/aligned-trajectory-position-error/) | 7.4 | Runnable |
+| [Construct Relative Pose Measurements from Local Odometry](problems/relative-odometry-edges/) | 7.4 | Runnable |
+| [Assemble Sensor-Specific Pose Factors](problems/global-sensor-pose-factors/) | 7.4 | Runnable |
+| [Compare Drift Across Sensor Configurations](problems/sensor-configuration-drift/) | 7.4 | Runnable |
+| [Propagate Preintegration Covariance](problems/imu-preintegration-covariance/) | 7.4 | Runnable |
+| [Assemble an IMU-Lidar Pose Constraint](problems/imu-lidar-extrinsic-pose-residual/) | 7.4 | Runnable |
+| [Reject Inconsistent Loop Closures](problems/loop-closure-consistency-gate/) | 7.4 | Runnable |
+| [Update an Incremental Local Map](problems/incremental-voxel-local-map/) | 7.4 | Runnable |
+| [Validate a Visual-Inertial Initialization](problems/visual-inertial-initialization-gate/) | 7.4 | Runnable |
 | [Measure Per-Channel Activation and Weight Ranges](problems/smoothquant-channel-ranges/) | 7.5 | Runnable |
 | [Apply an Equivalent Channel Rescaling](problems/smoothquant-equivalent-rescaling/) | 7.5 | Runnable |
 | [Quantize Weights and Activations to Int8](problems/smoothquant-int8-linear-layer/) | 7.5 | Runnable |
@@ -345,6 +376,26 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Generate a Data-Use Risk Report](problems/robot-data-use-risk-report/) | 7.5 | Runnable |
 | [Validate a Model Card Schema](problems/robot-model-card-schema/) | 7.5 | Runnable |
 | [Detect Paused or Corrupted Action Segments](problems/roboturk-action-segments/) | 7.5 | Runnable |
+| [Compute an Interquartile Mean Benchmark Score](problems/rliable-interquartile-mean/) | 7.5 | Runnable |
+| [Bootstrap a Stratified Performance Profile](problems/rliable-stratified-performance-profile/) | 7.5 | Runnable |
+| [Validate a Continuous-Control Time Step](problems/dm-control-timestep-validation/) | 7.5 | Runnable |
+| [Implement Action Repeat Correctly](problems/dm-control-action-repeat/) | 7.5 | Runnable |
+| [Evaluate a Bounded Continuous-Control Reward](problems/dm-control-tolerance-reward/) | 7.5 | Runnable |
+| [Aggregate Seeded Benchmark Returns](problems/dm-control-seeded-return-summary/) | 7.5 | Runnable |
+| [Batch Independent Simulator States](problems/isaac-gym-batch-joint-state/) | 7.5 | Runnable |
+| [Reset Completed Environments Selectively](problems/simulator-selective-environment-reset/) | 7.5 | Runnable |
+| [Measure Simulation and Learning Throughput](problems/isaac-gym-steady-state-throughput/) | 7.5 | Runnable |
+| [Implement a Functional Physics Step Contract](problems/brax-functional-damped-step/) | 7.5 | Runnable |
+| [Build a Continual-Learning Task Sequence](problems/libero-continual-task-schedule/) | 7.5 | Runnable |
+| [Separate Task Semantics from Scene Variation](problems/libero-semantic-scene-factors/) | 7.5 | Runnable |
+| [Record a Continual-Learning Evaluation Matrix](problems/libero-evaluation-history-matrix/) | 7.5 | Runnable |
+| [Compute a Forward and Backward Transfer Matrix](problems/libero-forward-backward-transfer/) | 7.5 | Runnable |
+| [Align Actions and Images in a Video Window](problems/robonet-transition-frame-windows/) | 7.5 | Runnable |
+| [Compute a Masked Video-Prediction Loss](problems/robonet-masked-video-prediction-loss/) | 7.5 | Runnable |
+| [Measure Cross-Robot Prediction Error](problems/robonet-cross-robot-prediction-error/) | 7.5 | Runnable |
+| [Align Egocentric Video Annotations](problems/ego4d-annotation-frame-ranges/) | 7.5 | Runnable |
+| [Build Leakage-Safe Temporal Splits](problems/ego4d-temporal-leakage-groups/) | 7.5 | Runnable |
+| [Aggregate Evaluation by Activity Slice](problems/egocentric-activity-confusion-report/) | 7.5 | Runnable |
 | [Decode Normalized Boxes and Classes from Object Queries](problems/detr-decode-object-queries/) | 7.6 | Runnable |
 | [Flatten Spatial Features with Position and Padding Metadata](problems/detr-flatten-spatial-metadata/) | 7.6 | Runnable |
 | [Read a Normalized Class Token with a Linear Head](problems/vit-class-token-linear-head/) | 7.6 | Runnable |

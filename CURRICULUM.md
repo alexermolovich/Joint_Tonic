@@ -6,7 +6,7 @@
 
 This is the single navigational tree for topics, tracks, and named problems. It describes practical components to implement; it does not imply full reproduction of every paper. Each future problem begins as a Markdown file based on `research/templates/problem-blueprint.md`.
 
-Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **321 runnable packages** at this release checkpoint: 124 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
+Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **372 runnable packages** at this release checkpoint: 175 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
 
 The original ten launch problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
 
@@ -476,6 +476,21 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Build Distributional Reward and Ensemble-Value Targets
 - `[paper]` Score Candidate Action Trajectories
 - `[paper]` Update a Sampling-Based Planner
+- `[paper]` Validate Success-Classifier Rewards on Robot Failures
+- `[paper]` Merge Online and Demonstration Replay
+- `[paper]` Schedule Actor-Learner Updates
+- `[paper]` Label Human Intervention Segments
+- `[paper]` Mix Intervention and Autonomous Replay
+- `[paper]` Gate an Online Policy Update
+- `[paper]` Record Intervention and Reset Statistics
+- `[paper]` Sample Time-Contrastive Video Triplets
+- `[paper]` Combine Temporal and Language Alignment Losses
+- `[paper]` Evaluate Frozen Features in a Small Policy
+- `[paper]` Compute Gait Tracking and Stability Metrics
+- `[paper]` Reset Failed Locomotion Environments
+- `[paper]` Sample Terrain Difficulty by Policy Progress
+- `[paper]` Compute Belief Reconstruction and Teacher-Action Losses
+- `[paper]` Evaluate Foot Clearance Across Terrain Slices
 
 ### 7.2 Tactile Manipulation
 
@@ -532,6 +547,22 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Construct Coarse Correspondence Candidates
 - `[paper]` Refine a Match in a Local Window
 - `[paper]` Filter Geometrically Inconsistent Matches
+- `[paper]` Detect Unobservable Initialization Motion
+- `[paper]` Preintegrate a Short IMU Window
+- `[paper]` Build a Visual-Inertial Residual
+- `[paper]` Marginalize a Visual-Inertial Window with a Schur Complement
+- `[paper]` Associate Map Points with Image Features
+- `[paper]` Select Geometric Pose Inliers
+- `[paper]` Evaluate a Relocalization Candidate
+- `[paper]` Evaluate Trajectory Error After Alignment
+- `[paper]` Construct Relative Pose Measurements from Local Odometry
+- `[paper]` Assemble Sensor-Specific Pose Factors
+- `[paper]` Compare Drift Across Sensor Configurations
+- `[paper]` Propagate Preintegration Covariance
+- `[paper]` Assemble an IMU-Lidar Pose Constraint
+- `[paper]` Reject Inconsistent Loop Closures
+- `[paper]` Update an Incremental Local Map
+- `[paper]` Validate a Visual-Inertial Initialization
 
 ### 7.5 Robotics MLOps
 
@@ -555,6 +586,26 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Generate a Data-Use Risk Report
 - `[paper]` Validate a Model Card Schema
 - `[paper]` Detect Paused or Corrupted Action Segments
+- `[paper]` Compute an Interquartile Mean Benchmark Score
+- `[paper]` Bootstrap a Stratified Performance Profile
+- `[paper]` Validate a Continuous-Control Time Step
+- `[paper]` Implement Action Repeat Correctly
+- `[paper]` Evaluate a Bounded Continuous-Control Reward
+- `[paper]` Aggregate Seeded Benchmark Returns
+- `[paper]` Batch Independent Simulator States
+- `[paper]` Reset Completed Environments Selectively
+- `[paper]` Measure Simulation and Learning Throughput
+- `[paper]` Implement a Functional Physics Step Contract
+- `[paper]` Build a Continual-Learning Task Sequence
+- `[paper]` Separate Task Semantics from Scene Variation
+- `[paper]` Record a Continual-Learning Evaluation Matrix
+- `[paper]` Compute a Forward and Backward Transfer Matrix
+- `[paper]` Align Actions and Images in a Video Window
+- `[paper]` Compute a Masked Video-Prediction Loss
+- `[paper]` Measure Cross-Robot Prediction Error
+- `[paper]` Align Egocentric Video Annotations
+- `[paper]` Build Leakage-Safe Temporal Splits
+- `[paper]` Aggregate Evaluation by Activity Slice
 
 ### 7.6 Perception
 

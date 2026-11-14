@@ -16,8 +16,14 @@
     "humanoid-dexterity-tactile",
     "perceptive-locomotion"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 5,
+  "runnable_problem_slugs": [
+    "tdmpc2-candidate-trajectory-scores",
+    "palm-e-sensor-readiness",
+    "perceptive-teacher-belief-loss",
+    "se3-transform-points",
+    "perceptive-terrain-foot-clearance"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +56,15 @@ The implementation path follows **Train a privileged teacher → Learn a robust 
 
 Source cards: [2022-perceptive-locomotion](../../../research/papers/humanoid-dexterity-tactile/2022-perceptive-locomotion.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Train a privileged teacher** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Score Candidate Action Trajectories](/problems/tdmpc2-candidate-trajectory-scores). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Validate Missing-Modality and Stale-Sensor Inputs](/problems/palm-e-sensor-readiness). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +78,7 @@ Learn locomotion with accurate terrain and environmental information.
 
 [Study the mechanism and math](/projects/2022-perceptive-locomotion#paper-section-train-a-privileged-teacher).
 
-- **Proposed component, not runnable:** Score a Privileged Terrain Teacher Rollout.
+- **Runnable supporting prerequisite:** [Score Candidate Action Trajectories](/problems/tdmpc2-candidate-trajectory-scores). A candidate plan earns predicted rewards until its first terminal transition.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +90,8 @@ Fuse noisy exteroception with proprioceptive history.
 
 [Study the mechanism and math](/projects/2022-perceptive-locomotion#paper-section-learn-a-robust-belief-state).
 
-- **Proposed component, not runnable:** Compute Belief Reconstruction and Teacher-Action Losses.
-- **Proposed component, not runnable:** Detect Stale Perception in a Control Window.
+- **Runnable supporting prerequisite:** [Validate Missing-Modality and Stale-Sensor Inputs](/problems/palm-e-sensor-readiness). A tensor with the right shape may still describe the robot’s past.
+- **Runnable paper-associated component:** [Compute Belief Reconstruction and Teacher-Action Losses](/problems/perceptive-teacher-belief-loss). A student can imitate a teacher action even when some environmental labels are unavailable.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,8 +103,8 @@ Predict joint targets from the learned belief and velocity command.
 
 [Study the mechanism and math](/projects/2022-perceptive-locomotion#paper-section-deploy-with-onboard-sensing).
 
-- **Proposed component, not runnable:** Align Terrain Samples to the Robot Frame.
-- **Proposed component, not runnable:** Evaluate Foot Clearance Across Terrain Slices.
+- **Runnable supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Move camera-frame points into the world frame using a rigid transform.
+- **Runnable paper-associated component:** [Evaluate Foot Clearance Across Terrain Slices](/problems/perceptive-terrain-foot-clearance). Foot height becomes useful only relative to the nearby support surface.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

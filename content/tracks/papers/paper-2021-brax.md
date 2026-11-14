@@ -16,8 +16,11 @@
     "simulation-sim2real",
     "brax"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "brax-functional-damped-step",
+    "simulator-selective-environment-reset"
+  ],
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +53,7 @@ The implementation path follows **Express a functional simulation step → Batch
 
 Source cards: [2021-brax](../../../research/papers/simulation-sim2real/2021-brax.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +73,7 @@ Map explicit state and action to the next state.
 
 [Study the mechanism and math](/projects/2021-brax#paper-section-express-a-functional-simulation-step).
 
-- **Proposed component, not runnable:** Implement a Functional Physics Step Contract.
+- **Runnable paper-associated component:** [Implement a Functional Physics Step Contract](/problems/brax-functional-damped-step). A functional step receives every state variable explicitly and returns a new state.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +85,7 @@ Vectorize independent environments on accelerators.
 
 [Study the mechanism and math](/projects/2021-brax#paper-section-batch-and-compile-rollouts).
 
-- **Proposed component, not runnable:** Vectorize Environment Resets.
+- **Runnable paper-associated component:** [Reset Completed Environments Selectively](/problems/simulator-selective-environment-reset). Only completed environments should restart.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

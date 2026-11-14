@@ -18,9 +18,10 @@
   ],
   "runnable_problem_slugs": [
     "project-camera-points",
-    "se3-transform-points"
+    "se3-transform-points",
+    "egocentric-activity-confusion-report"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +54,7 @@ The implementation path follows **Align time and calibration → Relate views ge
 
 Source cards: [2023-ego-exo4d](../../../research/papers/mlops-data-deployment/2023-ego-exo4d.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 1 paper-associated runnable component; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -101,7 +102,7 @@ Use benchmark-specific language, pose, and procedural annotations.
 
 [Study the mechanism and math](/projects/2023-ego-exo4d#paper-section-evaluate-skilled-activity-tasks).
 
-- **Proposed component, not runnable:** Aggregate Evaluation by Activity Slice.
+- **Runnable paper-associated component:** [Aggregate Evaluation by Activity Slice](/problems/egocentric-activity-confusion-report). An overall activity accuracy can hide a class with almost no labeled examples.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

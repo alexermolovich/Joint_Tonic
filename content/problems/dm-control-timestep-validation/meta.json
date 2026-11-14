@@ -1,0 +1,82 @@
+{
+  "slug": "dm-control-timestep-validation",
+  "title": "Validate a Continuous-Control Time Step",
+  "version": "1.0.0",
+  "number": 922,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "simulation-evaluation",
+    "2018-deepmind-control-suite"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "validate_control_timestep",
+  "paperIds": [
+    "2018-deepmind-control-suite"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A simulator transition carries both an episode-boundary marker and a bootstrap discount.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Fixed caller-defined axes; no implicit coordinate transform"
+    ],
+    "units": {
+      "reward": "task reward units",
+      "discount": "dimensionless",
+      "observation": "caller-defined per-feature units"
+    },
+    "axes": "One scalar step record; observation(D,).",
+    "timestamp_assumptions": "No wall clock; transition order supplied explicitly where relevant",
+    "batching": "One scalar step record; observation(D,)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "9154ad9f06b545c5eee011d1b68a7676648baa2b930e8c92101fab3612c4d6fa"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full simulator or benchmark reproduction. Backlog PB-408",
+    "primary_urls": [
+      "https://github.com/google-deepmind/dm_env/blob/master/dm_env/_environment.py"
+    ],
+    "paper_card": "research/papers/simulation-sim2real/2018-deepmind-control-suite.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

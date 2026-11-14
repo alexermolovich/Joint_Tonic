@@ -1,0 +1,82 @@
+{
+  "slug": "libero-evaluation-history-matrix",
+  "title": "Record a Continual-Learning Evaluation Matrix",
+  "version": "1.0.0",
+  "number": 932,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "dataset-evaluation",
+    "2023-libero"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "continual_evaluation_matrix",
+  "paperIds": [
+    "2023-libero"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A final score cannot show when a robot gained or lost a skill.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared physical frames; no inferred transforms"
+    ],
+    "units": {
+      "stage": "training-stage ordinal,0 is initial policy",
+      "counts/successes": "distinct evaluation-trial counts",
+      "rates": "dimensionless success fraction"
+    },
+    "axes": "Output(K+1,K): rows training stage, columns declared task order.",
+    "timestamp_assumptions": "Integer nanoseconds on source-video clock where applicable; no wall clock",
+    "batching": "Output(K+1,K): rows training stage, columns declared task order."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "8a77fa7262521e73c4b97145a6990c4637453d8031b0778dfca0dec0874a3c03"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded operational teaching component. Backlog PB-327",
+    "primary_urls": [
+      "https://arxiv.org/abs/2306.03310"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2023-libero.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

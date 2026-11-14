@@ -1,0 +1,82 @@
+{
+  "slug": "isaac-gym-steady-state-throughput",
+  "title": "Measure Simulation and Learning Throughput",
+  "version": "1.0.0",
+  "number": 928,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "simulation-evaluation",
+    "2021-isaac-gym"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "simulation_throughput",
+  "paperIds": [
+    "2021-isaac-gym"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compilation and initialization can dominate a short simulator benchmark.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Fixed caller-defined axes; no implicit coordinate transform"
+    ],
+    "units": {
+      "timestamps/duration": "integer nanoseconds",
+      "steps_per_second": "completed environment transitions/second",
+      "updates_per_second": "learner updates/second"
+    },
+    "axes": "Chronological iteration vectors(N,), aggregate scalars.",
+    "timestamp_assumptions": "Integer nanoseconds on one synchronized monotonic clock",
+    "batching": "Chronological iteration vectors(N,), aggregate scalars."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "84e0e7c9936ad628869e4a0f3201d8efd2c4c4688db3a411c0601413e2935856"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full simulator or benchmark reproduction. Backlog PB-280",
+    "primary_urls": [
+      "https://arxiv.org/abs/2108.10470"
+    ],
+    "paper_card": "research/papers/simulation-sim2real/2021-isaac-gym.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

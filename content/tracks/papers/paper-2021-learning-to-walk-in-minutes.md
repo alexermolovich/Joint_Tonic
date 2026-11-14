@@ -17,11 +17,14 @@
     "learning-to-walk-in-minutes"
   ],
   "runnable_problem_slugs": [
+    "locomotion-failure-reset-batch",
+    "locomotion-terrain-progress-curriculum",
     "window-episode-without-crossing-boundaries",
     "build-robot-sequence-validity-masks",
-    "mpc-tracking-cost"
+    "mpc-tracking-cost",
+    "locomotion-tracking-stability-metrics"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +57,7 @@ The implementation path follows **Collect parallel locomotion rollouts → Adapt
 
 Source cards: [2021-learning-to-walk-in-minutes](../../../research/papers/humanoid-dexterity-tactile/2021-learning-to-walk-in-minutes.md).
 
-**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,7 +79,7 @@ Batch robot states, velocity commands, and actions on the GPU.
 
 [Study the mechanism and math](/projects/2021-learning-to-walk-in-minutes#paper-section-collect-parallel-locomotion-rollouts).
 
-- **Proposed component, not runnable:** Reset Failed Locomotion Environments.
+- **Runnable paper-associated component:** [Reset Failed Locomotion Environments](/problems/locomotion-failure-reset-batch). Reset logic should identify why an episode ended before replacing state.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +91,7 @@ Move each environment through a performance-based curriculum.
 
 [Study the mechanism and math](/projects/2021-learning-to-walk-in-minutes#paper-section-adapt-terrain-difficulty).
 
-- **Proposed component, not runnable:** Sample Terrain Difficulty by Policy Progress.
+- **Runnable paper-associated component:** [Sample Terrain Difficulty by Policy Progress](/problems/locomotion-terrain-progress-curriculum). A terrain curriculum changes difficulty from measured progress rather than a generic success label.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -103,7 +106,7 @@ Optimize locomotion rewards and validate the physical controller.
 - **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
 - **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
 - **Runnable supporting prerequisite:** [Evaluate an MPC Tracking Cost](/problems/mpc-tracking-cost). Score a finite-horizon predicted trajectory with stage, control-effort, and terminal penalties.
-- **Proposed component, not runnable:** Compute Gait Tracking and Stability Metrics.
+- **Runnable paper-associated component:** [Compute Gait Tracking and Stability Metrics](/problems/locomotion-tracking-stability-metrics). Command tracking and body stability describe different parts of locomotion.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

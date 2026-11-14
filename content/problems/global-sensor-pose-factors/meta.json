@@ -1,0 +1,81 @@
+{
+  "slug": "global-sensor-pose-factors",
+  "title": "Assemble Sensor-Specific Pose Factors",
+  "version": "1.0.0",
+  "number": 851,
+  "difficulty": "Medium",
+  "domain": "Geometry and state estimation",
+  "topics": [
+    "geometry-calibration-slam",
+    "vins-fusion"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "global_factors",
+  "paperIds": [
+    "2019-vins-fusion"
+  ],
+  "prerequisites": [
+    "compose-frame-transforms"
+  ],
+  "visualization": "markdown",
+  "summary": "`global_factors(world_from_body, body_from_sensor, gps, magnetic, world_field, height, std, valid)` transforms(N,4,4) and shared(4,4),0<=N<=4096. Sensor offset/rotation known; one collocated GPS/magnetometer/barometer frame is a teaching restriction. GPS(N,3) world ENU meters, magnetic(N,3) sensor-frame field vector in microtesla, world_field(3) ENU same units. Require each magnetic norm and world_field norm>1e-9 including masked rows. Height(N) is sensor altitude meters in same ENU datum (pressure conversion already done). std(N,7) in[1e-6,1000], ordered3 GPS meters,3 unit-direction dimensionless,1 height meters; valid(N,3) GPS/magnetic/barometer availability. Predicted sensor pose Ts=Tb Tbs. Residual signs measured-minus-predicted: gps-p_s, magnetic/norm\u2212R_s.T(world_field/norm), height-p_s,z. Return raw(N,7),whitened(N,7),cost Pythonfloat .5sum(whitened\u00b2); unavailable entire sensor block zero, all supplied values still validated. Whitening uses diagonal std, not full covariance. No calibrated field magnitude heuristic or bias estimation. Example allidentity, gps[1,2,3],mag[1,0,0],worldfield[1,0,0],height4,std1,allvalid=>raw[1,2,3,0,0,0,4],cost15. Examplebodyidentity, sensor offset[1,0,0],sensorrotationRz90, gps[1,0,0],mag[0,-2,0],field[5,0,0],height0=>allzero.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Explicit world, body, camera or dimensionless scaled-state frame in the contract"
+    ],
+    "units": {
+      "values": "Meters, seconds, radians, pixels, or dimensionless normalized quantities as defined per argument"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "dadf30295b504c994cc1c604fb8f841ef4d552c3c48114e4bc550a6733267897"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1901.03642"
+    ],
+    "implementation_urls": []
+  }
+}

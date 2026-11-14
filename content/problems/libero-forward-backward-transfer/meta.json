@@ -1,0 +1,81 @@
+{
+  "slug": "libero-forward-backward-transfer",
+  "title": "Compute a Forward and Backward Transfer Matrix",
+  "version": "1.0.0",
+  "number": 933,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "dataset-evaluation",
+    "2023-libero"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "continual_transfer_report",
+  "paperIds": [
+    "2023-libero"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Transfer compares evaluations taken at meaningful points in a learning sequence.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared physical frames; no inferred transforms"
+    ],
+    "units": {
+      "rates": "dimensionless success fractions",
+      "transfer/forgetting": "success-rate differences"
+    },
+    "axes": "Rates/observed(K+1,K), task j learned at row j+1; returned vectors(K,).",
+    "timestamp_assumptions": "Integer nanoseconds on source-video clock where applicable; no wall clock",
+    "batching": "Rates/observed(K+1,K), task j learned at row j+1; returned vectors(K,)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "46d2bf4a3d854497738468b62585afd1d8c23cec93cb9cc231fb182a39f01163"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded operational teaching component. Backlog PB-115",
+    "primary_urls": [
+      "https://arxiv.org/abs/2306.03310"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2023-libero.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

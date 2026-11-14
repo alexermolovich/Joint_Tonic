@@ -16,8 +16,12 @@
     "geometry-calibration-slam",
     "orb-slam-3"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "visual-inertial-initialization-gate",
+    "visual-inertial-keyframe-residual",
+    "aligned-trajectory-position-error"
+  ],
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +54,14 @@ The implementation path follows **Initialize inertial estimation → Track and r
 
 Source cards: [2020-orb-slam-3](../../../research/papers/geometry-calibration-slam/2020-orb-slam-3.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Initialize inertial estimation** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Build a Visual-Inertial Residual](/problems/visual-inertial-keyframe-residual). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Detect Unobservable Initialization Motion](/problems/initialization-observability-rank). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +75,7 @@ Estimate scale, gravity, velocity, and bias with probabilistic priors.
 
 [Study the mechanism and math](/projects/2020-orb-slam-3#paper-section-initialize-inertial-estimation).
 
-- **Proposed component, not runnable:** Validate a Visual-Inertial Initialization.
+- **Runnable paper-associated component:** [Validate a Visual-Inertial Initialization](/problems/visual-inertial-initialization-gate). `validate_initialization(scale, gravity, gyro_bias, accel_bias, residuals, valid, jacobian, limits)` scale builtinfloat/int[1e-6,1e3];gravity3worldm/s²,gyro_bias3rad/s,accel_bias3m/s²;residuals(R)alreadywhiteneddimensionless,valid(R)bool,R0..4096;jacobian(R,D)dimensionless whitened/scaled gauge-fixed,1<=D<=32,abs<=1000;limits(7)floats = [min_scale,max_scale,gravity_tolerance,max_gyro_norm,max_accel_norm,max_rms,relative_rank_cutoff], scaleintervalwithin[1e-6,1e3]ordered, otherthresholds[0,1000], cutoff[1e-12,.01]. Eligible rowsvalid determine RMSandSVD rank strict sigma>cut*sigma_max. Return countint,rankint,rmsfloat(NaNifnone),gravity_errorfloat abs(normgravity−9.81),checks bool(6) ordered [atleastDvalidrows AND rankD, minscale<=scale<=maxscale, gravityerror<=tol, gyronorm<=max,accelnorm<=max,rms<=max],acceptedbool(allchecks). No-evidence RMScheckFalse. Original inspectable diagnostic over supplied initialization candidate, not optimizer, ORB-SLAM3 exact acceptanceheuristic, or nonlinearobservability proof. Gravity directionnotgated: estimateisworldframe and onlymagnitudecheck. ExampleD1,R1,J[[1]],residual[.2],validTrue,scale1,g[0,0,-9.81],biases0,limits[.5,2,.1,.1,.1,.2,1e-6]=>allTrue,rms.2,rank1. ExampletwoidenticalJrows[[1,0],[1,0]],residual0=>rank1,firstFalse,rejectevenperfectfit.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Optimize feature reprojection and inertial constraints together.
 
 [Study the mechanism and math](/projects/2020-orb-slam-3#paper-section-track-and-refine-a-map).
 
-- **Proposed component, not runnable:** Combine Reprojection and Inertial Residuals in a Local Window.
+- **Runnable supporting prerequisite:** [Build a Visual-Inertial Residual](/problems/visual-inertial-keyframe-residual). Combine a keyframe IMU residual with already computed visual residuals using declared diagonal uncertainties.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +99,8 @@ Geometrically verify common places across atlas maps.
 
 [Study the mechanism and math](/projects/2020-orb-slam-3#paper-section-reuse-and-merge-maps).
 
+- **Runnable paper-associated component:** [Evaluate Trajectory Error After Alignment](/problems/aligned-trajectory-position-error). Align time-matched estimated and reference camera positions before reporting absolute position error.
 - **Proposed component, not runnable:** Merge Consistent Map Transforms.
-- **Proposed component, not runnable:** Evaluate Trajectory Error After Alignment.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

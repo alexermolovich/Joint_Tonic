@@ -1,0 +1,82 @@
+{
+  "slug": "simulator-selective-environment-reset",
+  "title": "Reset Completed Environments Selectively",
+  "version": "1.0.0",
+  "number": 927,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "simulation-evaluation",
+    "2021-isaac-gym"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "reset_environment_batch",
+  "paperIds": [
+    "2021-isaac-gym",
+    "2021-brax"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Only completed environments should restart.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Fixed caller-defined axes; no implicit coordinate transform"
+    ],
+    "units": {
+      "state": "matching caller-defined per-column units and frames",
+      "episode_ids/steps": "dimensionless integer counters"
+    },
+    "axes": "State/reset(B,D); mask/counters(B,); outputs retain batch order.",
+    "timestamp_assumptions": "No wall clock; transition order supplied explicitly where relevant",
+    "batching": "State/reset(B,D); mask/counters(B,); outputs retain batch order."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "7331311279ab01b59b37fff269c1e817891a4191bd494587e6fcd6ce17e4d80d"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full simulator or benchmark reproduction. Backlog PB-342,PB-441",
+    "primary_urls": [
+      "https://arxiv.org/abs/2108.10470"
+    ],
+    "paper_card": "research/papers/simulation-sim2real/2021-isaac-gym.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

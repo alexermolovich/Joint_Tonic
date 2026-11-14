@@ -69,7 +69,10 @@
         }
       ],
       "backlog_id": "PB-003",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "egocentric-activity-confusion-report",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Aggregate Generalization Across Scene Families",
@@ -148,7 +151,10 @@
         }
       ],
       "backlog_id": "PB-007",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dm-control-seeded-return-summary",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Aggregate Token Scores into Region Scores",
@@ -208,7 +214,10 @@
         }
       ],
       "backlog_id": "PB-010",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robonet-transition-frame-windows",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Align Camera and Gripper Timestamps",
@@ -246,7 +255,10 @@
         }
       ],
       "backlog_id": "PB-012",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "ego4d-annotation-frame-ranges",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Align Instruction Embeddings with Manipulation Observations",
@@ -330,7 +342,7 @@
     {
       "title": "Align Terrain Samples to the Robot Frame",
       "normalized": "align terrain samples to the robot frame",
-      "existing_slug": null,
+      "existing_slug": "se3-transform-points",
       "papers": [
         "2022-perceptive-locomotion"
       ],
@@ -344,7 +356,9 @@
         }
       ],
       "backlog_id": "PB-017",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Camera-frame terrain points use a supplied calibrated transform into a fixed robot-base-at-capture reference declared as the target world frame. No moving-frame inverse or map interpolation.",
+      "independent_review": "Independent frame/contract comparison approved by perception_completion."
     },
     {
       "title": "Apply a First-Order Bias Correction",
@@ -638,7 +652,10 @@
         }
       ],
       "backlog_id": "PB-031",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "imu-lidar-extrinsic-pose-residual",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Assemble Obstacle and Prior Residuals",
@@ -679,7 +696,10 @@
         }
       ],
       "backlog_id": "PB-033",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "global-sensor-pose-factors",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Assemble Sparse and Dense RGB-D Alignment Residuals",
@@ -736,7 +756,10 @@
         }
       ],
       "backlog_id": "PB-036",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "pose-guided-binary-feature-association",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Associate Scan Points with Local Map Planes",
@@ -938,7 +961,10 @@
         }
       ],
       "backlog_id": "PB-046",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "isaac-gym-batch-joint-state",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Bootstrap a Stratified Performance Profile",
@@ -957,7 +983,10 @@
         }
       ],
       "backlog_id": "PB-047",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rliable-stratified-performance-profile",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Bound a Sequential Convex Trust-Region Step",
@@ -1039,7 +1068,10 @@
         }
       ],
       "backlog_id": "PB-051",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "libero-continual-task-schedule",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build a Dense Reprojection Residual",
@@ -1238,7 +1270,10 @@
         }
       ],
       "backlog_id": "PB-061",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "visual-inertial-keyframe-residual",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build Advantage-Weighted Action Weights",
@@ -1426,7 +1461,10 @@
         }
       ],
       "backlog_id": "PB-070",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "ego4d-temporal-leakage-groups",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build Object-Centric Prompt Tokens",
@@ -1842,7 +1880,7 @@
     {
       "title": "Combine Reprojection and Inertial Residuals in a Local Window",
       "normalized": "combine reprojection and inertial residuals in a local window",
-      "existing_slug": null,
+      "existing_slug": "visual-inertial-keyframe-residual",
       "papers": [
         "2020-orb-slam-3"
       ],
@@ -1856,7 +1894,9 @@
         }
       ],
       "backlog_id": "PB-092",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Two-keyframe local window with supplied visual pixel residuals, coupled gravity-corrected rotation/velocity/position inertial residuals and diagonal whitening. No reprojection generation, multi-keyframe graph, bias-state residual or bundle-adjustment optimization.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Combine Skill Likelihood and Feasibility Scores",
@@ -1894,7 +1934,10 @@
         }
       ],
       "backlog_id": "PB-094",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "r3m-temporal-language-objective",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compare Activation-Weighted Quantization Error",
@@ -1973,7 +2016,10 @@
         }
       ],
       "backlog_id": "PB-098",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sensor-configuration-drift",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compare gradient weights across confidence levels",
@@ -2315,7 +2361,10 @@
         }
       ],
       "backlog_id": "PB-115",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "libero-forward-backward-transfer",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute a Hand-Retargeting Geometry Residual",
@@ -2391,7 +2440,10 @@
         }
       ],
       "backlog_id": "PB-119",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robonet-masked-video-prediction-loss",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute a Multi-View Critic Regression Loss",
@@ -2608,7 +2660,10 @@
         }
       ],
       "backlog_id": "PB-129",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rliable-interquartile-mean",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute Belief Reconstruction and Teacher-Action Losses",
@@ -2627,7 +2682,10 @@
         }
       ],
       "backlog_id": "PB-130",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "perceptive-teacher-belief-loss",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute Collector and Task Coverage",
@@ -2693,7 +2751,10 @@
         }
       ],
       "backlog_id": "PB-133",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "locomotion-tracking-stability-metrics",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute Group-Wise Quantization Parameters",
@@ -3239,7 +3300,10 @@
         }
       ],
       "backlog_id": "PB-160",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "relative-odometry-edges",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Convert Dense Class Logits to Independent Sigmoid Probabilities",
@@ -3601,7 +3665,7 @@
     {
       "title": "Detect Stale Perception in a Control Window",
       "normalized": "detect stale perception in a control window",
-      "existing_slug": null,
+      "existing_slug": "palm-e-sensor-readiness",
       "papers": [
         "2022-perceptive-locomotion"
       ],
@@ -3615,7 +3679,9 @@
         }
       ],
       "backlog_id": "PB-179",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Control-query rows use synchronized seconds, inclusive age thresholds and missing/future sensor evidence. No recurrent belief, imputation or clock correction.",
+      "independent_review": "Independent contract comparison approved by perception_completion."
     },
     {
       "title": "Detect Unobservable Initialization Motion",
@@ -3634,7 +3700,10 @@
         }
       ],
       "backlog_id": "PB-180",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "initialization-observability-rank",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Differentiate Rendered Color on a Small Synthetic Field",
@@ -3955,7 +4024,10 @@
         }
       ],
       "backlog_id": "PB-196",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dm-control-tolerance-reward",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate a Cooperative Interaction Episode",
@@ -4012,7 +4084,10 @@
         }
       ],
       "backlog_id": "PB-199",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "relocalization-landmark-coverage",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Compositional Manipulation Slices",
@@ -4050,7 +4125,10 @@
         }
       ],
       "backlog_id": "PB-201",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "perceptive-terrain-foot-clearance",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Frozen Features in a Small Policy",
@@ -4069,7 +4147,10 @@
         }
       ],
       "backlog_id": "PB-202",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "r3m-frozen-feature-policy-step",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Grasp Precision Under a Safety Threshold",
@@ -4406,7 +4487,10 @@
         }
       ],
       "backlog_id": "PB-219",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "aligned-trajectory-position-error",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Transfer by Environment Slice",
@@ -4783,7 +4867,10 @@
         }
       ],
       "backlog_id": "PB-238",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "hilserl-autonomous-update-gate",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Gather Visible Patch Tokens with Position Indices",
@@ -4867,7 +4954,7 @@
     {
       "title": "Handle Asynchronous Sensor Timestamps",
       "normalized": "handle asynchronous sensor timestamps",
-      "existing_slug": null,
+      "existing_slug": "match-approximate-sensor-timestamps",
       "papers": [
         "2019-vins-fusion"
       ],
@@ -4881,7 +4968,9 @@
         }
       ],
       "backlog_id": "PB-243",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Bounded nearest-reference association on an already synchronized clock, inclusive tolerance, lower-index ties and reference reuse. No clock correction, interpolation or online queue.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Implement a Functional Physics Step Contract",
@@ -4900,7 +4989,10 @@
         }
       ],
       "backlog_id": "PB-244",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "brax-functional-damped-step",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Implement Action Repeat Correctly",
@@ -4919,7 +5011,10 @@
         }
       ],
       "backlog_id": "PB-245",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dm-control-action-repeat",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Implement bilinear ROI sampling",
@@ -5143,7 +5238,10 @@
         }
       ],
       "backlog_id": "PB-256",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "hilserl-intervention-segments",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Linearize a Signed-Distance Collision Penalty",
@@ -5279,7 +5377,10 @@
         }
       ],
       "backlog_id": "PB-263",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "schur-window-marginalization",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Mask Cross-Attention by Image Position",
@@ -5432,7 +5533,10 @@
         }
       ],
       "backlog_id": "PB-271",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robonet-cross-robot-prediction-error",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Measure Domain Shift Between Simulated Scenes",
@@ -5606,7 +5710,10 @@
         }
       ],
       "backlog_id": "PB-280",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "isaac-gym-steady-state-throughput",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Measure Stale-Action Latency",
@@ -5682,7 +5789,10 @@
         }
       ],
       "backlog_id": "PB-284",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "serl-merge-replay-sources",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Mix Intervention and Autonomous Replay",
@@ -5701,7 +5811,10 @@
         }
       ],
       "backlog_id": "PB-285",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "hilserl-mix-corrective-replay",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Mix Static and Mobile Demonstration Batches",
@@ -6035,7 +6148,10 @@
         }
       ],
       "backlog_id": "PB-302",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "short-window-imu-preintegration",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Preintegrate Bias-Corrected IMU Velocity and Position",
@@ -6236,7 +6352,10 @@
         }
       ],
       "backlog_id": "PB-312",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "imu-preintegration-covariance",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Pull Back a Local Motion Metric",
@@ -6542,7 +6661,10 @@
         }
       ],
       "backlog_id": "PB-327",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "libero-evaluation-history-matrix",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Record a Deterministic Rollout Manifest",
@@ -6580,7 +6702,10 @@
         }
       ],
       "backlog_id": "PB-329",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "serl-intervention-reset-statistics",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Recover Failed Worker Tasks Idempotently",
@@ -6662,7 +6787,10 @@
         }
       ],
       "backlog_id": "PB-333",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "loop-closure-consistency-gate",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Reject Unmatched Features with Dustbins",
@@ -6840,7 +6968,10 @@
         }
       ],
       "backlog_id": "PB-342",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "simulator-selective-environment-reset",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Reset Failed Locomotion Environments",
@@ -6859,7 +6990,10 @@
         }
       ],
       "backlog_id": "PB-343",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "locomotion-failure-reset-batch",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Resolve Perception Results into Control Calls",
@@ -7265,7 +7399,10 @@
         }
       ],
       "backlog_id": "PB-363",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "locomotion-terrain-progress-curriculum",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Sample Time-Contrastive Video Triplets",
@@ -7284,7 +7421,10 @@
         }
       ],
       "backlog_id": "PB-364",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "r3m-time-contrastive-video-triplets",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Schedule Actor-Learner Updates",
@@ -7303,7 +7443,10 @@
         }
       ],
       "backlog_id": "PB-365",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "serl-actor-learner-schedule",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Schedule Asynchronous Policy Chunks",
@@ -7346,7 +7489,7 @@
     {
       "title": "Score a Privileged Terrain Teacher Rollout",
       "normalized": "score a privileged terrain teacher rollout",
-      "existing_slug": null,
+      "existing_slug": "tdmpc2-candidate-trajectory-scores",
       "papers": [
         "2022-perceptive-locomotion"
       ],
@@ -7360,7 +7503,9 @@
         }
       ],
       "backlog_id": "PB-368",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Score supplied teacher rewards and termination with zero terminal values and a fixed control interval. Discounted return only; no privileged policy, training or safety claim.",
+      "independent_review": "Independent contract comparison approved by perception_completion."
     },
     {
       "title": "Score Candidate Action Trajectories",
@@ -7545,7 +7690,10 @@
         }
       ],
       "backlog_id": "PB-377",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "reprojection-pose-hypothesis-inliers",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Select hard negative classification examples",
@@ -7624,7 +7772,10 @@
         }
       ],
       "backlog_id": "PB-381",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "libero-semantic-scene-factors",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Solve a Circle-Plane Rotation Subproblem",
@@ -8127,7 +8278,10 @@
         }
       ],
       "backlog_id": "PB-406",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "incremental-voxel-local-map",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Update Poses in a Small Bundle-Adjustment Problem",
@@ -8165,7 +8319,10 @@
         }
       ],
       "backlog_id": "PB-408",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dm-control-timestep-validation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate a Demonstration Replay Bundle",
@@ -8522,7 +8679,10 @@
         }
       ],
       "backlog_id": "PB-425",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "visual-inertial-initialization-gate",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate Actions Inferred from Retargeted States",
@@ -8757,7 +8917,10 @@
         }
       ],
       "backlog_id": "PB-437",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "serl-success-reward-failure-audit",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate Task-Specific Output Grammars",
@@ -8833,7 +8996,10 @@
         }
       ],
       "backlog_id": "PB-441",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "simulator-selective-environment-reset",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Verify IK Solutions with Forward Kinematics",
@@ -9015,10 +9181,10 @@
       "independent_review": "root contract; perception_completion code and source scope"
     }
   ],
-  "reviewed_reuse_count": 12,
-  "unreviewed_new_title_count": 313,
+  "reviewed_reuse_count": 17,
+  "unreviewed_new_title_count": 256,
   "staged_new_packages": 0,
   "staged_proposed_titles": 0,
-  "published_new_packages": 121,
-  "published_proposed_titles": 125
+  "published_new_packages": 172,
+  "published_proposed_titles": 177
 }
