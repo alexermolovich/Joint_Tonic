@@ -81,3 +81,28 @@ test('checked-in evaluators use canonical bytes and every declared provenance ha
   assert.ok(report.problems > 0);
   assert.deepEqual(report.issues, []);
 });
+
+test('every checked-in problem source can be hashed with strict UTF-8 validation', () => {
+  const problems = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../content/problems');
+  const directories = fs.readdirSync(problems, { withFileTypes: true }).filter(entry => entry.isDirectory());
+  assert.ok(directories.length > 0);
+  for (const entry of directories) {
+    const directory = path.join(problems, entry.name);
+    assert.doesNotThrow(() => catalogSourceIdentity(directory), entry.name);
+  }
+  // These legacy CP1252 notes must preserve their intended Unicode characters.
+  for (const [slug, phrase] of [
+    ['aggregate-policy-returns', 'policy\u2019s'],
+    ['compare-pipeline-measurements', 'request\u2019s'],
+    ['extract-elastic-subnetwork', 'O(L C\u00b2 K\u00b2)'],
+    ['finite-difference-gradient-check', 'O(MD\u00b2)'],
+    ['pareto-edge-model-selection', 'O(N\u00b2)'],
+    ['reuse-tensor-buffers', 'O(N\u00b2)'],
+    ['robot-episode-confidence-intervals', 'metric\u2019s'],
+    ['seed-deterministic-evaluation', 'episode\u2019s'],
+  ]) {
+    const bytes = fs.readFileSync(path.join(problems, slug, 'solution.md'));
+    assert.ok(bytes.toString('utf8').includes(phrase), slug);
+    assert.deepEqual(bytes, canonicalSourceBytes('solution.md', bytes), slug);
+  }
+});
