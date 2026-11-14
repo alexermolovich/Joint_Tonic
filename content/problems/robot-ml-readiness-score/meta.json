@@ -1,0 +1,85 @@
+{
+  "slug": "robot-ml-readiness-score",
+  "title": "Score a Robot ML System for Production Readiness",
+  "version": "1.0.0",
+  "number": 308,
+  "difficulty": "Easy",
+  "domain": "MLOps",
+  "topics": [
+    "production-readiness",
+    "test-evidence"
+  ],
+  "minutes": 20,
+  "framework": "Python",
+  "entrypoint": "readiness_score",
+  "paperIds": [
+    "2017-ml-test-score"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Aggregate documented manual and automated checks without letting strong categories conceal missing ones.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; actual local bubblewrap Run and Submit verified",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": []
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "score": "dimensionless rubric points"
+    },
+    "axes": "Four fixed readiness categories; list positions are distinct declared checks.",
+    "timestamp_assumptions": "One already-curated evidence snapshot; no freshness inference.",
+    "batching": "One system score per call."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "unequal category coverage",
+      "all categories empty"
+    ],
+    "hidden_case_families": [
+      "all automated",
+      "manual-only categories",
+      "invalid statuses/keys",
+      "seven-item category bound",
+      "nonmutation"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "e8f993a309d580742a9265bfa95c6ad0833a8762dcaed3fdc58892659f13370d"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:e8f993a309d580742a9265bfa95c6ad0833a8762dcaed3fdc58892659f13370d",
+    "evaluator_sha256": "e8f993a309d580742a9265bfa95c6ad0833a8762dcaed3fdc58892659f13370d",
+    "generated_fixture_hash": "e8f993a309d580742a9265bfa95c6ad0833a8762dcaed3fdc58892659f13370d"
+  },
+  "provenance": {
+    "authoring_notes": "The half-point/manual, full-point/automated and minimum-category aggregation follows the paper. Supplied check lists and robot examples are original; this function does not reproduce the paper's full28-check questionnaire or certify operational safety.",
+    "primary_urls": [
+      "https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2017-ml-test-score.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

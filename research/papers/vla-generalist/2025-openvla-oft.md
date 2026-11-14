@@ -16,102 +16,59 @@ modalities: ["rgb","text","robot-state","actions"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode context and action slots","detail":"Condition a chunk of output positions on the current observation.","column":0,"row":0,"section":"Encode context and action slots","problem_slugs":[],"planned_problems":["Construct Parallel Action-Chunk Targets"]},{"id":"stage-2","title":"Regress continuous actions","detail":"Fine-tune with absolute error on normalized targets.","column":1,"row":0,"section":"Regress continuous actions","problem_slugs":[],"planned_problems":["Measure Fine-Tuning Throughput"]},{"id":"stage-3","title":"Execute and measure throughput","detail":"Use chunks while measuring actual closed-loop timing.","column":2,"row":0,"section":"Execute and measure throughput","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Compare Policy Latency Under Serving Settings"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"chunk predictions"},{"from":"stage-2","to":"stage-3","label":"trained action head"}]}
 ---
+## Core paper explanation
 
-# Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success
+OpenVLA-OFT studies a practical fine-tuning recipe: parallel action decoding, action chunks, continuous outputs, and a simple L1 objective. These changes target action-generation throughput and flexible observation/action interfaces.
 
-## Agent brief
+## Execution flow
 
-Study training and inference design choices that improve VLA adaptation throughput. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-## Contribution
+### Encode context and action slots
 
-Study training and inference design choices that improve VLA adaptation throughput.
+Let context $c$ include images, instruction, and any supported state input. The model predicts a chunk $\hat A=f_\theta(c)\in\mathbb R^{H\times d}$. Parallel decoding predicts action slots together instead of repeatedly invoking a token-by-token autoregressive action loop.
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Construct Parallel Action-Chunk Targets. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Prerequisite concepts
+### Regress continuous actions
 
-- Sequence modeling, action units, control frequencies, multimodal batching, and policy evaluation.
+For batch size $B$,
+$$L_1=\frac1{BHd}\sum_{b,t,j}|\hat A_{btj}-A_{btj}|.$$
+$A$ and $\hat A$ must share normalization and embodiment semantics. This objective learns conditional medians per output component; it is not an explicit multimodal action sampler like diffusion.
 
-## Method map
+<!-- joint-tonic-component:stage-2 -->
+- **Planned component:** Measure Fine-Tuning Throughput. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Construct Parallel Action-Chunk Targets | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Measure Fine-Tuning Throughput | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Compare Policy Latency Under Serving Settings | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
+### Execute and measure throughput
 
-## Data and evaluation
+A useful deployment measure is $r_{\mathrm{generation}}=H/T_{\mathrm{infer}}$ actions per second, where $T_{\mathrm{infer}}$ is measured wall time. This is not the observation refresh rate or guaranteed control frequency. Specify how much of each chunk is executed before replanning and benchmark under realistic image/state input loads.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+<!-- joint-tonic-component:stage-3 -->
+- **Related implementation prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+- **Planned component:** Compare Policy Latency Under Serving Settings. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Limitations and failure modes
+## Implement the components
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Implementation decomposition
+- [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate)
 
-1. Construct Parallel Action-Chunk Targets.
-2. Measure Fine-Tuning Throughput.
-3. Compare Policy Latency Under Serving Settings.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Planned components: Construct Parallel Action-Chunk Targets; Measure Fine-Tuning Throughput; Compare Policy Latency Under Serving Settings. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-## Problem blueprints
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-### Problem: Construct Parallel Action-Chunk Targets
+## Why this matters on a robot
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the construct parallel action-chunk targets component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Faster generation can support high-frequency manipulation. Longer chunks may still increase open-loop error, and L1 regression can average incompatible behaviors; task success and recovery matter alongside throughput.
 
-### Problem: Measure Fine-Tuning Throughput
+## Sources and scope
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure fine-tuning throughput component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Primary paper](https://arxiv.org/abs/2502.19645) · [Open-access manuscript](https://arxiv.org/pdf/2502.19645)
 
-### Problem: Compare Policy Latency Under Serving Settings
-
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compare policy latency under serving settings component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
-
-## Visual teaching plan
-
-- Plot adaptation cost against rollout quality and inference latency.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
-
-## MLOps and deployment extensions
-
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2502.19645)
-- [Open-access author manuscript](https://arxiv.org/pdf/2502.19645)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

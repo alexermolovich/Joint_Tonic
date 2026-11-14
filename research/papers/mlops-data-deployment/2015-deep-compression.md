@@ -16,102 +16,67 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Prune and retrain","detail":"Remove weak connections and recover task quality.","column":0,"row":0,"section":"Prune and retrain","problem_slugs":[],"planned_problems":["Apply a Weight-Pruning Mask"]},{"id":"stage-2","title":"Share quantized weights","detail":"Assign remaining weights to learned centroids.","column":1,"row":0,"section":"Share quantized weights","problem_slugs":[],"planned_problems":["Quantize Shared Weight Centroids"]},{"id":"stage-3","title":"Encode and benchmark","detail":"Huffman-code repeated symbols and measure actual deployment.","column":2,"row":0,"section":"Encode and benchmark","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Compute a Compressed Model Storage Budget"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"sparse weights"},{"from":"stage-2","to":"stage-3","label":"quantized representation"}]}
 ---
 
-# Deep Compression: Compressing Deep Neural Networks with Pruning, Trained Quantization and Huffman Coding
+## Core paper explanation
 
-## Agent brief
+Deep Compression combines network pruning, trained weight sharing, and Huffman coding. The stages reduce different kinds of storage redundancy; smaller files do not automatically imply faster inference on hardware without suitable sparse or low-bit kernels.
 
-Study pruning and low-bit representation as an inference-storage optimization pipeline. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study pruning and low-bit representation as an inference-storage optimization pipeline.
+### Prune and retrain
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A magnitude mask can be expressed as $m_i=\mathbf1[|w_i|\ge\tau]$, with effective weight $m_iw_i$. Retraining preserves the sparsity pattern while adjusting surviving parameters. Threshold choice is layer-dependent in the actual compression procedure.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Apply a Weight-Pruning Mask — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Apply a Weight-Pruning Mask | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Quantize Shared Weight Centroids | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Compute a Compressed Model Storage Budget | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Share quantized weights
 
-## Data and evaluation
+For centroid codebook $c_{1:K}$, assign $a_i=\arg\min_k|w_i-c_k|^2$. Shared-centroid training accumulates gradients:
+$$\frac{\partial L}{\partial c_k}=\sum_{i:a_i=k}\frac{\partial L}{\partial w_i}.$$
+Storage includes indices, sparse structure, and the codebook, not only $\log_2K$ bits per nonzero weight.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Quantize Shared Weight Centroids — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Encode and benchmark
 
-1. Apply a Weight-Pruning Mask.
-2. Quantize Shared Weight Centroids.
-3. Compute a Compressed Model Storage Budget.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For symbol probabilities $p_k$ and code lengths $\ell_k$, average coding cost is $\bar\ell=\sum_kp_k\ell_k$. Entropy coding reduces serialized size but may require decoding before computation. Benchmark accuracy, peak memory, and latency on the intended runtime.
 
-## Problem blueprints
 
-### Problem: Apply a Weight-Pruning Mask
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the apply a weight-pruning mask component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Compute a Compressed Model Storage Budget — unreviewed idea; contract and evaluator required.
 
-### Problem: Quantize Shared Weight Centroids
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the quantize shared weight centroids component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Compute a Compressed Model Storage Budget
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute a compressed model storage budget component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Apply a Weight-Pruning Mask — unreviewed idea; contract and evaluator required.
+- Quantize Shared Weight Centroids — unreviewed idea; contract and evaluator required.
+- Compute a Compressed Model Storage Budget — unreviewed idea; contract and evaluator required.
 
-- Compare dense, pruned, and quantized weight distributions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Compression helps memory-constrained edge computers. Sparse indexing overhead, unsupported kernels, and accuracy loss on rare robot scenes can negate headline compression ratios.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1510.00149)
-- [Open-access author manuscript](https://arxiv.org/pdf/1510.00149)
+[Primary paper](https://arxiv.org/abs/1510.00149) · [Open-access manuscript](https://arxiv.org/pdf/1510.00149)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

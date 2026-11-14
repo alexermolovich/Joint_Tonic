@@ -1,18 +1,13 @@
-# Take a PID Step with Conditional Anti-Windup
+# PID with Integral Anti-Windup
 
-**Status: planned; no runnable implementation yet.**
+Implement **pid_step(error, previous_error, integral, dt, gains, output_limits)**.
 
-A robot joint cannot execute commands beyond its actuator limits. Compute a discrete PID command without allowing the integral state to keep accumulating error that pushes farther into saturation.
+The first four inputs are finite Python or NumPy real scalars excluding bool; 0<dt<=1e6. Other scalar magnitudes are <=1e6. gains=(kp,ki,kd) contains three finite nonnegative values <=1e6. output_limits=(lower,upper) contains two finite values of magnitude <=1e6, lower<upper. Reject numeric strings, booleans, complex data, malformed shapes, nonfinite inputs and nonfinite intermediate calculations with ValueError.
 
-## Contract
+Errors refer to consecutive samples of one joint in radians on one clock; integral is radian-seconds and dt seconds. Gain units are command/rad, command/(rad*s), command*s/rad. Return three Python floats (command,next_integral,derivative).
 
-Planned function: pid_step(error, previous_error, integral, dt, gains, output_limits).
+Compute derivative=(error-previous_error)/dt, candidate integral Ic=integral+error*dt, and candidate command uc=kp*error+ki*Ic+kd*derivative. Reject Ic exactly when (uc>upper and error>0) or (uc<lower and error<0). Otherwise accept it, including exact equality. Recompute effort using the accepted integral, then clip to the limits. Inputs remain unchanged.
 
-Errors are radians at consecutive control instants. The integral stores accumulated error in radian-seconds; dt is positive seconds. Gains (kp,ki,kd) are finite nonnegative scalars with units that make every term an actuator command. Limits are finite and increasing.
+No derivative filtering, simulator integration or motor safety guarantee.
 
-Compute derivative = (error-previous_error)/dt and candidate integral = integral + error*dt. Form the candidate command with that integral. Reject the candidate integral when the command exceeds the upper limit and error is positive, or falls below the lower limit and error is negative. Otherwise accept it. Recompute using the accepted integral, then clamp the output. Return command, next integral, and derivative.
-
-## Scope and assessment
-
-Use the caller-supplied previous error; derivative-on-measurement and filtering are later extensions. Reject nonfinite inputs and nonpositive time. Grade the exact conditional integration rule, saturation direction, and unsaturated recovery. See [examples.md](examples.md). This is a planned component.
-
+NumPy CPU; numerical tolerance rtol=1e-7, atol=1e-9. Masks, shapes and errors are exact.

@@ -16,102 +16,67 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Push task states forward","detail":"Map configuration and velocity into each task space.","column":0,"row":0,"section":"Push task states forward","problem_slugs":[],"planned_problems":["Push Robot State into a Task Space"]},{"id":"stage-2","title":"Pull policies back","detail":"Combine natural-form forces and metrics in joint space.","column":1,"row":0,"section":"Pull policies back","problem_slugs":[],"planned_problems":["Pull Back a Local Motion Metric"]},{"id":"stage-3","title":"Resolve the acceleration","detail":"Recover a joint acceleration from the combined natural form.","column":2,"row":0,"section":"Resolve the acceleration","problem_slugs":[],"planned_problems":["Combine Competing Task-Space Accelerations"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"task policies"},{"from":"stage-2","to":"stage-3","label":"root force and metric"}]}
 ---
 
-# RMPflow: A Computational Graph for Automatic Motion Policy Generation
+## Core paper explanation
 
-## Agent brief
+RMPflow composes local acceleration policies through a tree of task maps. Each policy carries a metric describing its directional importance, allowing goal attraction, obstacle avoidance, and other behaviors to combine consistently through robot kinematics.
 
-Combine local motion policies through geometry-consistent transformations on a computation graph. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Combine local motion policies through geometry-consistent transformations on a computation graph.
+### Push task states forward
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For task map $x=\psi(q)$ and Jacobian $J=\partial\psi/\partial q$,
+$$\dot x=J\dot q,\qquad \ddot x=J\ddot q+\dot J\dot q.$$
+$q$ contains joint coordinates; task coordinates may be positions, distances, or other quantities. Their units determine metric interpretation.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Push Robot State into a Task Space — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Push Robot State into a Task Space | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Pull Back a Local Motion Metric | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Combine Competing Task-Space Accelerations | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Pull policies back
 
-## Data and evaluation
+For leaf natural forms $(f_i,M_i)$, the pullback is
+$$M=\sum_iJ_i^\top M_iJ_i,\qquad f=\sum_iJ_i^\top(f_i-M_i\dot J_i\dot q).$$
+The curvature term matters when task maps vary with configuration. Leaf forces themselves must include the geometric terms required by their chosen metric/policy construction.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Pull Back a Local Motion Metric — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Resolve the acceleration
 
-1. Push Robot State into a Task Space.
-2. Pull Back a Local Motion Metric.
-3. Combine Competing Task-Space Accelerations.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The resolved policy is $\ddot q=M^\dagger f$, with pseudoinverse when necessary. Regularization and rank handling change behavior in weakly weighted directions. RMPflow is reactive policy composition; it is not a global obstacle-route planner.
 
-## Problem blueprints
 
-### Problem: Push Robot State into a Task Space
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the push robot state into a task space component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Combine Competing Task-Space Accelerations — unreviewed idea; contract and evaluator required.
 
-### Problem: Pull Back a Local Motion Metric
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the pull back a local motion metric component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Combine Competing Task-Space Accelerations
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the combine competing task-space accelerations component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Push Robot State into a Task Space — unreviewed idea; contract and evaluator required.
+- Pull Back a Local Motion Metric — unreviewed idea; contract and evaluator required.
+- Combine Competing Task-Space Accelerations — unreviewed idea; contract and evaluator required.
 
-- Draw a task-space tree and animate goals and obstacle-avoidance vectors.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Task-space behaviors can be reused across kinematic chains. Local minima, conflicting objectives, and incorrect Jacobian derivatives can still cause undesirable motion; the composition rules do not guarantee success for arbitrary leaf policies.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1811.07049)
-- [Open-access author manuscript](https://arxiv.org/pdf/1811.07049)
+[Primary paper](https://arxiv.org/abs/1811.07049) · [Open-access manuscript](https://arxiv.org/pdf/1811.07049)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -16,102 +16,69 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Map operator motion","detail":"Translate mobile-device motion into a robot control reference.","column":0,"row":0,"section":"Map operator motion","problem_slugs":["se3-transform-points"],"planned_problems":["Map Operator Motion into a Robot Control Frame"]},{"id":"stage-2","title":"Stream control and feedback","detail":"Run a session with synchronized actions and visual observations.","column":1,"row":0,"section":"Stream control and feedback","problem_slugs":[],"planned_problems":["Detect Paused or Corrupted Action Segments"]},{"id":"stage-3","title":"Curate demonstrations","detail":"Store complete episodes and task outcomes for learning.","column":2,"row":0,"section":"Curate demonstrations","problem_slugs":["validate-robot-episodes"],"planned_problems":["Validate a Teleoperation Demonstration","Compute Collector and Task Coverage"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"operator commands"},{"from":"stage-2","to":"stage-3","label":"session trajectories"}]}
 ---
 
-# RoboTurk: A Crowdsourcing Platform for Robotic Skill Learning through Imitation
+## Core paper explanation
 
-## Agent brief
+RoboTurk supports scalable robot demonstration collection through commodity mobile-device teleoperation and remote visual feedback. Its contribution is a collection platform and interface, with demonstration quality and usability evaluated experimentally.
 
-Study crowdsourced robot demonstration collection and its quality-control interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study crowdsourced robot demonstration collection and its quality-control interfaces.
+### Map operator motion
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A teaching relative-pose interface uses $\Delta T=T_{\mathrm{phone},0}^{-1}T_{\mathrm{phone},t}$, then maps that displacement into the robot's controller frame. The exact scaling, clutching, and orientation conventions belong to the teleoperation interface; raw phone coordinates are not robot coordinates.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Map Operator Motion into a Robot Control Frame — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Teleoperation Demonstration | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Compute Collector and Task Coverage | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Detect Paused or Corrupted Action Segments | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Stream control and feedback
 
-## Data and evaluation
+End-to-end feedback age is $\Delta t=t_{\mathrm{display}}-t_{\mathrm{capture}}$. This diagnostic includes capture, transport, processing, and display delay. The paper studies operation under network variation; it does not establish arbitrary latency tolerance for every robot task.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Detect Paused or Corrupted Action Segments — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Curate demonstrations
 
-1. Validate a Teleoperation Demonstration.
-2. Compute Collector and Task Coverage.
-3. Detect Paused or Corrupted Action Segments.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+An episode is a time-ordered sequence $(o_t,a_t,t_t)$ with task metadata and termination outcome. Validate monotonic timestamps, action units, missing frames, and successful/failed completion labels. Collection infrastructure and downstream imitation-learning results are separate evaluation layers.
 
-## Problem blueprints
 
-### Problem: Validate a Teleoperation Demonstration
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a teleoperation demonstration component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Validate a Teleoperation Demonstration — unreviewed idea; contract and evaluator required.
+- Compute Collector and Task Coverage — unreviewed idea; contract and evaluator required.
 
-### Problem: Compute Collector and Task Coverage
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute collector and task coverage component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Detect Paused or Corrupted Action Segments
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the detect paused or corrupted action segments component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Map Operator Motion into a Robot Control Frame — unreviewed idea; contract and evaluator required.
+- Detect Paused or Corrupted Action Segments — unreviewed idea; contract and evaluator required.
+- Validate a Teleoperation Demonstration — unreviewed idea; contract and evaluator required.
+- Compute Collector and Task Coverage — unreviewed idea; contract and evaluator required.
 
-- Show demonstration timelines with collection-health and quality indicators.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Accessible teleoperation can broaden demonstration coverage. Network jitter, operator differences, and controller saturation change the recorded action distribution; retain these collection conditions instead of flattening all trajectories into identical examples.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1811.02790)
-- [Open-access author manuscript](https://arxiv.org/pdf/1811.02790)
+[Primary paper](https://arxiv.org/abs/1811.02790) · [Open-access manuscript](https://arxiv.org/pdf/1811.02790)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,85 @@
+{
+  "slug": "dependency-graph-blast-radius",
+  "title": "Compute Dependency-Graph Blast Radius",
+  "version": "1.0.0",
+  "number": 301,
+  "difficulty": "Easy",
+  "domain": "MLOps",
+  "topics": [
+    "dependency-management",
+    "change-impact"
+  ],
+  "minutes": 25,
+  "framework": "Python",
+  "entrypoint": "blast_radius",
+  "paperIds": [
+    "2015-hidden-technical-debt"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Identify declared downstream consumers affected by a component change.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; tested using the local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [],
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2"
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "ids": "dimensionless"
+    },
+    "axes": "not-applicable",
+    "timestamp_assumptions": "One immutable dependency snapshot; no event time.",
+    "batching": "One graph and one changed set per call."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "branched pipeline",
+      "feedback cycle",
+      "empty changed set"
+    ],
+    "hidden_case_families": [
+      "multiple roots",
+      "duplicate edges/roots",
+      "self-loop",
+      "unknown IDs",
+      "long chain"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "b2523f7a6d25c7f11a7900bd9f7b7e60d76808e6d26e3a92a7858744062d2e51"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:b2523f7a6d25c7f11a7900bd9f7b7e60d76808e6d26e3a92a7858744062d2e51",
+    "generated_fixture_hash": "b2523f7a6d25c7f11a7900bd9f7b7e60d76808e6d26e3a92a7858744062d2e51"
+  },
+  "provenance": {
+    "authoring_notes": "Original instructional contract, examples, and diagrams; no copied paper code or figures.",
+    "primary_urls": [
+      "https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2015-hidden-technical-debt.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

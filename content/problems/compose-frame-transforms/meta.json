@@ -1,0 +1,78 @@
+{
+  "slug": "compose-frame-transforms",
+  "title": "Compose and Invert Coordinate Transforms",
+  "version": "1.0.0",
+  "number": 14,
+  "difficulty": "Medium",
+  "domain": "Geometry",
+  "topics": [
+    "frames"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "compose_transforms",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compose timestamped, frame-labeled rigid transforms and construct the inverse in the correct frame.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "a",
+      "b",
+      "c"
+    ],
+    "units": {
+      "translation": "meters",
+      "stamp": "seconds",
+      "rotation": "dimensionless"
+    },
+    "axes": "Right-handed frames; transforms act on homogeneous column vectors.",
+    "timestamp_assumptions": "One synchronized measurement clock; no offset correction.",
+    "batching": "Two transform records; no batch dimension."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-7,
+    "atol": 1e-9,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "boundary",
+      "validation",
+      "empty-where-supported",
+      "immutability",
+      "scale"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "b5ee2b93cdc7182a133599ae91b7c44f91239d8efb9cfdfb68fff6d963ef0ac6"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-1-homogeneous-transformation-matrices/"
+    ],
+    "implementation_urls": []
+  }
+}

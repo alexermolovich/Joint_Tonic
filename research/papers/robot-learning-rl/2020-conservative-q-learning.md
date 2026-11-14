@@ -16,102 +16,59 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Fit logged transitions","detail":"Construct Bellman targets from a fixed dataset.","column":0,"row":0,"section":"Fit logged transitions","problem_slugs":[],"planned_problems":["Construct Offline Bellman Targets with Termination Masks"]},{"id":"stage-2","title":"Penalize unsupported values","detail":"Lower broad action values relative to dataset actions.","column":1,"row":0,"section":"Penalize unsupported values","problem_slugs":[],"planned_problems":["Compute a Conservative Q Penalty","Compare Logged and Sampled Action Values"]},{"id":"stage-3","title":"Extract and evaluate a policy","detail":"Improve behavior while checking conservatism and coverage.","column":2,"row":0,"section":"Extract and evaluate a policy","problem_slugs":[],"planned_problems":["Evaluate Offline Policy Support"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"critic predictions"},{"from":"stage-2","to":"stage-3","label":"regularized critic"}]}
 ---
 
-# Conservative Q-Learning for Offline Reinforcement Learning
+## Core paper explanation
 
-## Agent brief
+CQL addresses offline reinforcement learning by penalizing overoptimistic action values outside the logged behavior distribution. It couples Bellman fitting with a conservative regularizer rather than assuming arbitrary critic-selected actions are supported by data.
 
-Penalize overoptimistic action values to improve learning from fixed logged data. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Penalize overoptimistic action values to improve learning from fixed logged data.
+### Fit logged transitions
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For dataset $D$, the ordinary critic term is $L_{\mathrm{TD}}=\mathbb E_D[(Q(s,a)-y)^2]$. Offline training cannot collect new transitions to correct every mistaken high-value prediction, making unsupported actions especially problematic.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Construct Offline Bellman Targets with Termination Masks.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Compute a Conservative Q Penalty | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Compare Logged and Sampled Action Values | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Evaluate Offline Policy Support | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Penalize unsupported values
 
-## Data and evaluation
+A discrete-action CQL form is
+$$L=L_{\mathrm{TD}}+\alpha\mathbb E_s\left[\log\sum_a e^{Q(s,a)}-\mathbb E_{a\sim D(\cdot\mid s)}Q(s,a)\right].$$
+Continuous-action implementations approximate the action integral using sampled proposals and appropriate density corrections; directly summing a few arbitrary actions is not identical.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Compute a Conservative Q Penalty.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Compare Logged and Sampled Action Values.
 
-## Implementation decomposition
 
-1. Compute a Conservative Q Penalty.
-2. Compare Logged and Sampled Action Values.
-3. Evaluate Offline Policy Support.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Extract and evaluate a policy
 
-## Problem blueprints
+Larger $\alpha$ strengthens the conservative pressure but can also suppress useful actions. Theoretical lower-bound results depend on the stated assumptions; the regularizer is not an unconditional safety certificate. Evaluate offline selection separately from real rollout success.
 
-### Problem: Compute a Conservative Q Penalty
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the compute a conservative q penalty component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Evaluate Offline Policy Support.
 
-### Problem: Compare Logged and Sampled Action Values
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compare logged and sampled action values component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Evaluate Offline Policy Support
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate offline policy support component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Fit logged transitions:** Construct Offline Bellman Targets with Termination Masks (planned).
+- **Penalize unsupported values:** Compute a Conservative Q Penalty (planned); Compare Logged and Sampled Action Values (planned).
+- **Extract and evaluate a policy:** Evaluate Offline Policy Support (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Show Q values for logged and out-of-support actions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Conservative values help reuse logged robot experience without unrestricted exploration. Dataset gaps and biased reward labels remain limits; excessive conservatism can keep a policy from improving beyond weak demonstrations.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2006.04779) · [Open-access manuscript](https://arxiv.org/pdf/2006.04779)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2006.04779)
-- [Open-access author manuscript](https://arxiv.org/pdf/2006.04779)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

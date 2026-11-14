@@ -1,0 +1,87 @@
+{
+  "slug": "physical-ai-incident-triage",
+  "title": "Triage a Physical-AI Deployment Incident",
+  "version": "1.0.0",
+  "number": 310,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "incident-analysis",
+    "robot-monitoring"
+  ],
+  "minutes": 30,
+  "framework": "Python",
+  "entrypoint": "triage_events",
+  "paperIds": [
+    "2017-ml-test-score"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Reduce a bounded event window into a deterministic operator queue without confusing duplicates, stale events or severity.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; actual local bubblewrap Run and Submit verified",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": []
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "time": "integer milliseconds on one synchronized run clock",
+      "count": "event records"
+    },
+    "axes": "Component IDs identify logging sources, not robot axes.",
+    "timestamp_assumptions": "Include the closed window [now_ms-window_ms,now_ms]; negative cutoff is allowed.",
+    "batching": "One event snapshot; group retained records by component."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "severity and aggregation",
+      "closed-window cutoff"
+    ],
+    "hidden_case_families": [
+      "priority ties",
+      "duplicate records",
+      "empty window",
+      "future timestamps",
+      "invalid fields and bounds",
+      "immutable inputs"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "a2f791f9ff895da2dbc72a949164a9e08ce0d8829932a60334e4eae4a1be40b8"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:a2f791f9ff895da2dbc72a949164a9e08ce0d8829932a60334e4eae4a1be40b8",
+    "evaluator_sha256": "a2f791f9ff895da2dbc72a949164a9e08ce0d8829932a60334e4eae4a1be40b8",
+    "generated_fixture_hash": "a2f791f9ff895da2dbc72a949164a9e08ce0d8829932a60334e4eae4a1be40b8"
+  },
+  "provenance": {
+    "authoring_notes": "The paper motivates monitored operational evidence. The event taxonomy, severity mapping and queue ordering are original educational policy; this function summarizes synthetic events and cannot stop, recover or approve a real robot.",
+    "primary_urls": [
+      "https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2017-ml-test-score.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

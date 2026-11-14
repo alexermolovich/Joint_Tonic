@@ -16,102 +16,65 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Instantiate a task variation","detail":"Set objects, language descriptions, and valid initial conditions.","column":0,"row":0,"section":"Instantiate a task variation","problem_slugs":[],"planned_problems":["Build a Task-Variation Sampler"]},{"id":"stage-2","title":"Generate demonstrations","detail":"Use authored waypoints and motion planning to collect trajectories.","column":1,"row":0,"section":"Generate demonstrations","problem_slugs":["validate-robot-episodes"],"planned_problems":["Validate Demonstration Waypoints"]},{"id":"stage-3","title":"Evaluate held-out behavior","detail":"Measure task success under the declared observation and action interface.","column":2,"row":0,"section":"Evaluate held-out behavior","problem_slugs":[],"planned_problems":["Score Multi-Stage Task Completion"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"task instance"},{"from":"stage-2","to":"stage-3","label":"policy rollouts"}]}
 ---
 
-# RLBench: The Robot Learning Benchmark & Learning Environment
+## Core paper explanation
 
-## Agent brief
+RLBench provides manipulation tasks, variations, visual/proprioceptive observations, and planner-generated demonstrations. Task waypoints and success conditions make demonstrations reproducible while keeping learning methods independent of the data generator.
 
-Study robot learning with standardized task variations and demonstration interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study robot learning with standardized task variations and demonstration interfaces.
+### Instantiate a task variation
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A reproducible instance is $(\mathrm{task},\mathrm{variation},\mathrm{seed},\mathrm{assets})$. This tuple is a teaching provenance contract. Variations may change object identity, color, placement, or other task parameters; they are not necessarily independent tasks.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Build a Task-Variation Sampler — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build a Task-Variation Sampler | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Validate Demonstration Waypoints | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Score Multi-Stage Task Completion | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Generate demonstrations
 
-## Data and evaluation
+A planned path $q_{0:H}$ must satisfy collision and task constraints throughout execution. Store observations and actions at the controller timestep, not only sparse waypoints. A waypoint path is privileged generation information and should not become a learner input unless the experiment explicitly permits it.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Validate Demonstration Waypoints — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Evaluate held-out behavior
 
-1. Build a Task-Variation Sampler.
-2. Validate Demonstration Waypoints.
-3. Score Multi-Stage Task Completion.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Success rate is $\hat p=N^{-1}\sum_iS_i$, with $S_i$ computed by task-specific predicates. Report task/variation splits and action mode. Comparing joint-velocity and end-effector-pose policies without naming their controllers hides materially different problems.
 
-## Problem blueprints
 
-### Problem: Build a Task-Variation Sampler
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build a task-variation sampler component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Score Multi-Stage Task Completion — unreviewed idea; contract and evaluator required.
 
-### Problem: Validate Demonstration Waypoints
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate demonstration waypoints component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Score Multi-Stage Task Completion
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the score multi-stage task completion component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Build a Task-Variation Sampler — unreviewed idea; contract and evaluator required.
+- Validate Demonstration Waypoints — unreviewed idea; contract and evaluator required.
+- Score Multi-Stage Task Completion — unreviewed idea; contract and evaluator required.
 
-- Show variation parameters and ordered manipulation waypoints.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Standardized demonstrations support reproducible imitation learning. Planner trajectories can omit human-like recovery and contain privileged geometric assumptions that a visual policy must still learn to handle.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1909.12271)
-- [Open-access author manuscript](https://arxiv.org/pdf/1909.12271)
+[Primary paper](https://arxiv.org/abs/1909.12271) · [Open-access manuscript](https://arxiv.org/pdf/1909.12271)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

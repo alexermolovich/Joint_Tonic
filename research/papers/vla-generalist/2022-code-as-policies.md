@@ -16,102 +16,59 @@ modalities: ["rgb","text","robot-state","actions"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Generate a policy program","detail":"Translate a task and API context into program tokens.","column":0,"row":0,"section":"Generate a policy program","problem_slugs":[],"planned_problems":["Validate a Restricted Robot Program AST"]},{"id":"stage-2","title":"Expand helper functions","detail":"Recursively define missing functions.","column":1,"row":0,"section":"Expand helper functions","problem_slugs":[],"planned_problems":["Trace a Composed Robot Policy"]},{"id":"stage-3","title":"Execute grounded operations","detail":"Call perception and motion primitives with live state.","column":2,"row":0,"section":"Execute grounded operations","problem_slugs":["se3-transform-points"],"planned_problems":["Resolve Perception Results into Control Calls"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"generated program"},{"from":"stage-2","to":"stage-3","label":"resolved functions"}]}
 ---
+## Core paper explanation
 
-# Code as Policies: Language Model Programs for Embodied Control
+Code as Policies uses language-model-generated programs to compose robot perception and control APIs. The generated policy can express geometry, branching, loops, and helper functions, rather than selecting only a single predefined skill.
 
-## Agent brief
+## Execution flow
 
-Generate executable robot-policy programs that compose perception and control interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-## Contribution
+### Generate a policy program
 
-Generate executable robot-policy programs that compose perception and control interfaces.
+For instruction $\ell$ and API context $c$, a code model represents
+$$p(z\mid\ell,c)=\prod_t p(z_t\mid z_{<t},\ell,c),$$
+where $z_t$ are program tokens. This describes code generation, not the probability that the resulting physical behavior is correct. Prompt examples establish available functions and argument conventions.
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Validate a Restricted Robot Program AST. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Prerequisite concepts
+### Expand helper functions
 
-- Sequence modeling, action units, control frequencies, multimodal batching, and policy evaluation.
+Hierarchical generation detects undefined function calls and requests implementations. As a teaching dependency model, let $G=(F,E)$ have one node per function and edges for calls. Executability requires every reachable call to resolve to a generated definition or approved API. Recursive code generation is a construction strategy; it does not prove termination or safety.
 
-## Method map
+<!-- joint-tonic-component:stage-2 -->
+- **Planned component:** Trace a Composed Robot Policy. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Restricted Robot Program AST | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Resolve Perception Results into Control Calls | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Trace a Composed Robot Policy | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
+### Execute grounded operations
 
-## Data and evaluation
+A geometric instruction may compute $p^W=R_{WC}p^C+t_{WC}$ before calling a controller. Here points and translation are in meters and $R_{WC}$ maps camera-frame vectors into the world frame. Generated code must respect these API contracts. Run educational programs in isolation; real motion requires independent bounds and controller checks.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+<!-- joint-tonic-component:stage-3 -->
+- **Related implementation prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
+- **Planned component:** Resolve Perception Results into Control Calls. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Limitations and failure modes
+## Implement the components
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Implementation decomposition
+- [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points)
 
-1. Validate a Restricted Robot Program AST.
-2. Resolve Perception Results into Control Calls.
-3. Trace a Composed Robot Policy.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Planned components: Validate a Restricted Robot Program AST; Trace a Composed Robot Policy; Resolve Perception Results into Control Calls. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-## Problem blueprints
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-### Problem: Validate a Restricted Robot Program AST
+## Why this matters on a robot
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a restricted robot program ast component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+The method makes compositional robot instructions explicit and inspectable. A syntactically valid program may use stale detections, wrong units, or a nonexistent object; logs should preserve generated code, API versions, observations, and command outcomes.
 
-### Problem: Resolve Perception Results into Control Calls
+## Sources and scope
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the resolve perception results into control calls component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Primary paper](https://arxiv.org/abs/2209.07753) · [Open-access manuscript](https://arxiv.org/pdf/2209.07753)
 
-### Problem: Trace a Composed Robot Policy
-
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the trace a composed robot policy component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
-
-## Visual teaching plan
-
-- Render a program trace linked to a simulated robot action sequence.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
-
-## MLOps and deployment extensions
-
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2209.07753)
-- [Open-access author manuscript](https://arxiv.org/pdf/2209.07753)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

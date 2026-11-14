@@ -16,102 +16,59 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Learn latent dynamics","detail":"Combine recurrent state with stochastic posterior and prior representations.","column":0,"row":0,"section":"Learn latent dynamics","problem_slugs":[],"planned_problems":["Compute a Balanced Latent-Model Loss"]},{"id":"stage-2","title":"Represent diverse target scales","detail":"Use signed logarithmic transforms and distributional targets.","column":1,"row":0,"section":"Represent diverse target scales","problem_slugs":[],"planned_problems":["Encode Symlog Two-Hot Reward Targets"]},{"id":"stage-3","title":"Improve behavior in imagination","detail":"Roll out latent states and train actor/critic from predicted returns.","column":2,"row":0,"section":"Improve behavior in imagination","problem_slugs":[],"planned_problems":["Build Lambda-Return Targets","Roll Out Imagined Latent Trajectories"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"model predictions"},{"from":"stage-2","to":"stage-3","label":"trained world model"}]}
 ---
 
-# Mastering Diverse Domains through World Models
+## Core paper explanation
 
-## Agent brief
+DreamerV3 learns a latent world model from real experience and improves behavior using imagined trajectories. Scale-robust prediction and normalization choices help one configuration work across diverse task domains.
 
-Learn a reusable world model and improve behavior through imagined latent trajectories. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Learn a reusable world model and improve behavior through imagined latent trajectories.
+### Learn latent dynamics
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A recurrent state $h_t$ and stochastic state $z_t$ model observations. The prior $p(z_t\mid h_t)$ predicts without the current image; the posterior $q(z_t\mid h_t,x_t)$ uses it. KL terms with different stop-gradient placements train dynamics and representations, alongside reconstruction, reward, and continuation prediction.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Compute a Balanced Latent-Model Loss.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Compute a Balanced Latent-Model Loss | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Build Lambda-Return Targets | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Roll Out Imagined Latent Trajectories | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Represent diverse target scales
 
-## Data and evaluation
+The transforms are
+$$\operatorname{symlog}(x)=\operatorname{sign}(x)\log(1+|x|),\quad \operatorname{symexp}(y)=\operatorname{sign}(y)(e^{|y|}-1).$$
+Two-hot targets distribute mass between adjacent bins to represent continuous rewards/values. The precise bin locations and decoded expectation matter; this is not ordinary one-hot classification of rounded returns.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Encode Symlog Two-Hot Reward Targets.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Improve behavior in imagination
 
-1. Compute a Balanced Latent-Model Loss.
-2. Build Lambda-Return Targets.
-3. Roll Out Imagined Latent Trajectories.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A lambda return has recursion $G_t^\lambda=r_t+\gamma c_t[(1-\lambda)V_{t+1}+\lambda G_{t+1}^\lambda]$, where $c_t$ is predicted continuation. The actor optimizes imagined outcomes while real interaction refreshes model data. World-model errors can compound beyond observed experience.
 
-## Problem blueprints
 
-### Problem: Compute a Balanced Latent-Model Loss
+**Planned exercise:** Build Lambda-Return Targets.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the compute a balanced latent-model loss component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Roll Out Imagined Latent Trajectories.
 
-### Problem: Build Lambda-Return Targets
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the build lambda-return targets component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Roll Out Imagined Latent Trajectories
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the roll out imagined latent trajectories component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Learn latent dynamics:** Compute a Balanced Latent-Model Loss (planned).
+- **Represent diverse target scales:** Encode Symlog Two-Hot Reward Targets (planned).
+- **Improve behavior in imagination:** Build Lambda-Return Targets (planned); Roll Out Imagined Latent Trajectories (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Link observed and imagined trajectory segments with uncertainty indicators.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Imagination can reuse expensive robot observations efficiently. Incorrect contact dynamics or continuation predictions can produce attractive imagined plans that fail physically.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2301.04104) · [Open-access manuscript](https://arxiv.org/pdf/2301.04104)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2301.04104)
-- [Open-access author manuscript](https://arxiv.org/pdf/2301.04104)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,107 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { chromium } from "@playwright/test";
+
+test("Run and play renders actual function output and reruns edited code", { timeout: 120000 }, async () => {
+  const browser = await chromium.launch({ channel: "msedge", headless: true });
+  const outputCode = value => `import numpy as np\ndef interpolate_fr3_joints(q_start, q_goal, num_steps):\n    return np.tile(np.array([${value}, -.3, .2, -1.8, .1, 1.9, -.4], dtype=np.float64), (num_steps, 1))\n`;
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+    await context.addInitScript(code => localStorage.setItem("joint-tonic.workspace.v1", JSON.stringify({ id: "fr3-actual-output-test-20261113", drafts: { "fr3-joint-interpolation": code } })), outputCode(.7));
+    const page = await context.newPage();
+    await page.goto("http://localhost:3000/problems/fr3-joint-interpolation");
+    await page.getByRole("tab", { name: "Simulation", exact: true }).click();
+    const actualPose = value => page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200 && response.request().postDataJSON()?.q?.[0] === value, { timeout: 45000 });
+    const firstPose = actualPose(.7);
+    await page.getByRole("button", { name: "Run and play", exact: true }).click();
+    assert.equal((await (await firstPose).json()).q[0], .7, "robot uses returned .7, not reference goal .4");
+    await page.getByRole("button", { name: "Pause", exact: true }).waitFor();
+    await page.getByText("Keep going. Inspect the cases below.", { exact: true }).waitFor();
+    await page.getByRole("tab", { name: "Code", exact: true }).click();
+    const editor = page.locator(".monaco-editor textarea.inputarea").first();
+    await editor.focus();
+    await page.keyboard.press("Control+a");
+    await page.keyboard.insertText(outputCode(-.6));
+    await page.getByRole("tab", { name: "Simulation", exact: true }).click();
+    assert.ok(await page.getByRole("slider", { name: "Trajectory waypoint" }).isDisabled());
+    const secondPose = actualPose(-.6);
+    await page.getByRole("button", { name: "Run and play", exact: true }).click();
+    assert.equal((await (await secondPose).json()).q[0], -.6, "edited function is evaluated before replay");
+    await page.getByRole("button", { name: "Pause", exact: true }).click();
+    await page.getByRole("tab", { name: "Code", exact: true }).click();
+    await page.getByRole("tab", { name: "Simulation", exact: true }).click();
+    await page.getByRole("button", { name: "Play your result", exact: true }).waitFor();
+    assert.equal(await page.getByRole("button", { name: "Pause", exact: true }).count(), 0, "tab switch does not restart playback");
+  } finally { await browser.close(); }
+});
+
+test("FR3 opens MuJoCo, preserves editor, and replays isolated learner output", { timeout: 120000 }, async () => {
+  const reference = fs.readFileSync("content/problems/fr3-joint-interpolation/reference.py", "utf8");
+  const browser = await chromium.launch({ channel: "msedge", headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+    await context.addInitScript(code => {
+      if (!localStorage.getItem("joint-tonic.workspace.v1")) localStorage.setItem("joint-tonic.workspace.v1", JSON.stringify({ id: "fr3-ui-test-workspace-20261113", drafts: { "fr3-joint-interpolation": code } }));
+    }, fs.readFileSync("content/problems/fr3-joint-interpolation/starter.py", "utf8"));
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    const initialFrame = page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200, { timeout: 45000 });
+    await page.goto("http://localhost:3000/problems/fr3-joint-interpolation");
+    const frame = await (await initialFrame).json();
+    assert.equal(frame.model, "franka_fr3");
+    assert.equal(frame.backend_version, "3.3.7");
+    assert.equal(frame.q.length, 7);
+    assert.equal(await page.getByRole("tab", { name: "Code", exact: true }).getAttribute("aria-selected"), "true");
+    await page.getByRole("tab", { name: "Simulation", exact: true }).click();
+    const robot = page.getByRole("img", { name: "MuJoCo rendering", exact: false });
+    await robot.waitFor();
+    assert.ok(await robot.evaluate(image => image.complete && image.naturalWidth === 640));
+    const cameraView = page.getByRole("group", { name: "Interactive MuJoCo camera", exact: true });
+    const bounds = await cameraView.boundingBox();
+    const orbitResponse = page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200 && response.request().postDataJSON()?.camera?.azimuth !== 135);
+    await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x + bounds.width / 2 + 80, bounds.y + bounds.height / 2 + 25, { steps: 8 });
+    await page.mouse.up();
+    const orbited = await (await orbitResponse).json();
+    assert.notEqual(orbited.camera.azimuth, 135);
+    assert.deepEqual(orbited.q, frame.q);
+    const zoomResponse = page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200 && response.request().postDataJSON()?.camera?.distance < 1.8);
+    await page.mouse.wheel(0, -100);
+    const zoomed = await (await zoomResponse).json();
+    assert.ok(zoomed.camera.distance < 1.8);
+    await cameraView.focus();
+    const resetCamera = page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200 && response.request().postDataJSON()?.camera?.azimuth === 135 && response.request().postDataJSON()?.camera?.distance === 1.8);
+    await cameraView.press("r");
+    assert.deepEqual((await (await resetCamera).json()).camera, { azimuth: 135, elevation: -24, distance: 1.8 });
+    await page.getByRole("tab", { name: "Simulation", exact: true }).press("ArrowLeft");
+    assert.equal(await page.getByRole("tab", { name: "Code", exact: true }).getAttribute("aria-selected"), "true");
+    await page.getByRole("button", { name: "Run", exact: true }).click();
+    await page.getByText("Public tests passed.", { exact: true }).waitFor({ timeout: 45000 });
+    await page.getByRole("tab", { name: "Simulation", exact: true }).click();
+    await page.getByRole("button", { name: "Play your result", exact: true }).waitFor();
+    const lastFrame = page.waitForResponse(response => response.url().endsWith("/api/simulator/fr3") && response.status() === 200 && response.request().postDataJSON()?.q?.[0] === .4);
+    await page.getByRole("slider", { name: "Trajectory waypoint" }).fill("40");
+    const goal = await (await lastFrame).json();
+    assert.deepEqual(goal.q, [.4, -.3, .2, -1.8, .1, 1.9, -.4]);
+    assert.notDeepEqual(goal.tool_position_m, frame.tool_position_m);
+    await page.getByText("Waypoint 41 / 41", { exact: false }).waitFor();
+    await page.screenshot({ path: ".local/fr3-workspace.png" });
+    await page.getByRole("button", { name: "Play your result", exact: true }).click();
+    await page.waitForFunction(() => Number(document.querySelector('input[aria-label="Trajectory waypoint"]')?.value) > 0);
+    await page.getByRole("button", { name: "Pause", exact: true }).click();
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("joint-tonic.workspace.v1")));
+    assert.equal(saved.drafts["fr3-joint-interpolation"], reference);
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "no narrow-screen overflow");
+    await page.route("**/api/simulator/fr3", route => route.fulfill({ status: 503, json: { error: "Simulator test offline" } }));
+    await page.getByRole("button", { name: "Reset robot to home", exact: true }).click();
+    await page.getByRole("alert").filter({ hasText: "Simulator test offline" }).waitFor();
+    await page.unroute("**/api/simulator/fr3");
+    await page.getByRole("button", { name: "Retry simulator", exact: true }).click();
+    await page.getByRole("alert").filter({ hasText: "Simulator test offline" }).waitFor({ state: "hidden" });
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
+});

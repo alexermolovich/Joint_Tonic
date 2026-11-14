@@ -16,102 +16,76 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Select centroids, group metric neighborhoods, and aggregate local features hierarchically; feature propagation supports point-wise outputs.","nodes":[{"id":"stage-1","title":"Sample representative centroids","detail":"Use farthest-point sampling to spread a bounded set of representatives.","column":0,"row":0,"section":"Sample representative centroids","problem_slugs":[],"planned_problems":["Implement farthest-point sampling"]},{"id":"stage-2","title":"Group local neighborhoods","detail":"Find nearby points and express their offsets relative to a centroid.","column":1,"row":0,"section":"Group local neighborhoods","problem_slugs":[],"planned_problems":["Perform bounded-radius neighborhood grouping"]},{"id":"stage-3","title":"Aggregate and propagate features","detail":"Pool shared local features, then interpolate coarser information when point-wise output is needed.","column":2,"row":0,"section":"Aggregate and propagate features","problem_slugs":[],"planned_problems":["Interpolate coarse features onto fine points"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"centroids"},{"from":"stage-2","to":"stage-3","label":"local point groups"}]}
 ---
 
-# PointNet++: Deep Hierarchical Feature Learning on Point Sets in a Metric Space
+## Core paper explanation
 
-## Agent brief
+PointNet++ builds hierarchical point-cloud features by applying PointNet-style aggregation to local neighborhoods. It samples representative centroids, groups nearby points in metric space, and learns local features before repeating at a coarser scale. This introduces local spatial structure that a single global PointNet pooling operation does not explicitly capture.
 
-Build hierarchical point features by combining sampled centroids, metric neighborhoods, and local feature aggregation. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Select centroids, group metric neighborhoods, and aggregate local features hierarchically; feature propagation supports point-wise outputs.
 
-Build hierarchical point features by combining sampled centroids, metric neighborhoods, and local feature aggregation.
+### Sample representative centroids
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For selected centroid set $S$, select the next point by
 
-## Prerequisite concepts
+$$
+x_{\mathrm{next}}=\arg\max_{x_i}\min_{s\in S}\|x_i-s\|_2.
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+Distances are measured in the cloud’s coordinate units. Initialize deterministically for a reproducible exercise and specify tie order. Farthest-point sampling depends on geometry, so rescaling coordinates changes meaningful neighborhood radii even if the selected order is unchanged.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Farthest-Point Sampling | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Ball-Query Neighborhood Grouping | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Pool Local Point Features | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
+**Planned component problems:** Implement farthest-point sampling. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Data and evaluation
+### Group local neighborhoods
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+For centroid $c$ and radius $r>0$,
 
-## Limitations and failure modes
+$$
+\mathcal N_r(c)=\{i:\|x_i-c\|_2\le r\},
+\qquad \Delta x_i=x_i-c.
+$$
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Ball queries differ from fixed-count nearest neighbors: they preserve a metric radius but yield variable neighborhood sizes. Define truncation, padding, and empty-neighborhood behavior. Multi-scale grouping combines information from several radii to improve robustness to density variation.
 
-## Implementation decomposition
 
-1. Farthest-Point Sampling.
-2. Ball-Query Neighborhood Grouping.
-3. Pool Local Point Features.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Planned component problems:** Perform bounded-radius neighborhood grouping. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Problem blueprints
+### Aggregate and propagate features
 
-### Problem: Farthest-Point Sampling
+A local set feature is $g_c=\max_{i\in\mathcal N_r(c)}h(\Delta x_i,f_i)$. A typical propagation step uses inverse-distance interpolation:
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the farthest-point sampling component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+\hat f(x)=\frac{\sum_{j\in\mathcal N_k(x)}w_jf_j}{\sum_jw_j},
+\qquad w_j=\frac1{\|x-c_j\|_2^p}.
+$$
 
-### Problem: Ball-Query Neighborhood Grouping
+Exact coincident points need an explicit rule instead of division by zero. Skip-connected fine features can supplement the interpolated coarse features. [SE(3) transforms](/problems/se3-transform-points) help ensure all grouped points share the intended frame.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the ball-query neighborhood grouping component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Pool Local Point Features
+**Planned component problems:** Interpolate coarse features onto fine points. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the pool local point features component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-- Color each sampled centroid and its neighborhood in a point-cloud viewer.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+**Planned components:**
 
-## MLOps and deployment extensions
+- Implement farthest-point sampling.
+- Perform bounded-radius neighborhood grouping.
+- Interpolate coarse features onto fine points.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Canonical sources
+## Why this matters on a robot
 
-- [Primary arXiv record](https://arxiv.org/abs/1706.02413)
-- [Open-access author manuscript](https://arxiv.org/pdf/1706.02413)
+Depth sensors produce nonuniform point density, missing returns, and range-dependent noise. Neighborhood radii encode a physical scale, so a meters-versus-millimeters mismatch can collapse local structure. Test sparse and occluded regions alongside uniformly sampled synthetic clouds.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Sources and scope
 
+[Primary paper](https://arxiv.org/abs/1706.02413) · [Open-access manuscript](https://arxiv.org/pdf/1706.02413)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,92 @@
+{
+  "slug": "training-serving-transform-skew",
+  "title": "Detect Training-Serving Transform Skew",
+  "version": "1.0.1",
+  "number": 304,
+  "difficulty": "Easy",
+  "domain": "MLOps",
+  "topics": [
+    "preprocessing-parity",
+    "deployment-validation"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "transform_skew",
+  "paperIds": [
+    "2017-tfx-production-ml-platform"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Locate transformed feature cells that disagree between training and serving beyond declared tolerances.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; tested using the local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [
+      "numpy"
+    ],
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2"
+  },
+  "physical_contract": {
+    "frames": [
+      "Caller-declared identical frame for each matched feature; no coordinate transform is performed."
+    ],
+    "units": {
+      "values": "per-feature physical unit",
+      "atol": "same unit as its feature",
+      "rtol": "dimensionless"
+    },
+    "axes": "Rows are aligned observations; columns preserve feature_names order.",
+    "timestamp_assumptions": "Row i on both sides is the same captured observation at the same timestamp; no resampling or clock conversion.",
+    "batching": "Two float64 tensors (N,D), one tolerance vector (D,)."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "absolute tolerance equality",
+      "relative tolerance with zero reference",
+      "empty aligned batch"
+    ],
+    "hidden_case_families": [
+      "shape mismatch without broadcasting",
+      "duplicate feature names",
+      "NaN/infinity rejection",
+      "zero feature columns",
+      "negative tolerance",
+      "float32 rejection"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "3b7061dc0fecf5c6fb888393d0d3484c3af7b2d2f1aa8fae6a585d3a6c2cc0a8"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:3b7061dc0fecf5c6fb888393d0d3484c3af7b2d2f1aa8fae6a585d3a6c2cc0a8",
+    "generated_fixture_hash": "3b7061dc0fecf5c6fb888393d0d3484c3af7b2d2f1aa8fae6a585d3a6c2cc0a8"
+  },
+  "provenance": {
+    "authoring_notes": "Original instructional contract, examples, and diagrams; no copied paper code or figures.",
+    "primary_urls": [
+      "https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2017-tfx-production-ml-platform.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

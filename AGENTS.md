@@ -29,8 +29,8 @@ In order:
 
 ## Environment and deployment boundary
 
-- The current implementation phase is local-server only: local Next.js, local Supabase services, and a separate local Python evaluator/worker.
-- Do not deploy to Vercel, create or mutate hosted Supabase resources, run remote migrations, or add production secrets unless the user explicitly requests the deployment phase.
+- The website and evaluator remain local-server only. The user has authorized the supplied hosted Supabase project for email/password Auth and account display metadata; local Supabase remains supported. See docs/supabase-auth.md.
+- Outside the authorized hosted Auth/account flow, do not deploy to Vercel, create or mutate hosted Supabase resources, run remote migrations, or add production secrets unless the user explicitly requests the deployment phase. This account slice needs only a publishable key; never use a secret/service-role key in the browser.
 - Keep the web/control plane compatible with Vercel and database/auth/storage compatible with Supabase.
 - Never run untrusted learner code in Vercel Functions, Vercel Edge Functions, Supabase Edge Functions, or PostgreSQL. Use the separate sandbox-worker interface defined in `SPEC.md`.
 - Local development must work without hosted credentials. Keep environment-specific configuration outside problem content and evaluator logic.
@@ -150,6 +150,14 @@ MLOps is first-class content, not only infrastructure. Include tasks for dataset
 Every backend feature that changes a submission, evaluation, or published content state must be observable with structured logs, a correlation ID, and privacy-safe metrics. Model/problem versions and evaluator images must be traceable from every score.
 
 ## Quality gates
+
+### Issue-to-PR workflow
+
+- Scouts coordinate review areas and deduplicate findings before opening issues.
+- Assign one concrete issue to a dedicated fix worker in an isolated `codex/` branch/worktree. Preserve unrelated local feature changes.
+- The worker reproduces the defect, implements the smallest coherent fix, runs focused checks, and prepares a PR linking the issue.
+- The main agent reviews the exact diff and relevant checks, then merges ready issue-fix PRs. The user has authorized this workflow; a separate per-PR merge confirmation is not required.
+- Do not bypass branch protection, required checks, or automatic approval rejections. Report blockers and retain concrete local drafts when a remote action is unavailable.
 
 Before handing off a change:
 

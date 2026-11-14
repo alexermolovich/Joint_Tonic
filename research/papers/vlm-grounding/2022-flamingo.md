@@ -16,102 +16,62 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Resample visual features","detail":"Compress variable-sized features into a fixed token set.","column":0,"row":0,"section":"Resample visual features","problem_slugs":[],"planned_problems":["Resample Variable Visual Features"]},{"id":"stage-2","title":"Gate visual conditioning","detail":"Inject image information into language layers.","column":1,"row":0,"section":"Gate visual conditioning","problem_slugs":[],"planned_problems":["Gate a Multimodal Residual Update"]},{"id":"stage-3","title":"Predict interleaved text","detail":"Train next-token prediction; prompt at inference.","column":2,"row":0,"section":"Predict interleaved text","problem_slugs":[],"planned_problems":["Mask Cross-Attention by Image Position"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"visual tokens"},{"from":"stage-2","to":"stage-3","label":"conditioned language state"}]}
 ---
 
-# Flamingo: a Visual Language Model for Few-Shot Learning
+## Core paper explanation
 
-## Agent brief
+Flamingo connects a frozen visual encoder and frozen language model with trainable visual resampling and gated cross-attention. It accepts interleaved images and text, enabling few-shot prompting without updating the large pretrained backbones.
 
-Condition a language model on interleaved visual inputs through resampled visual features and cross-attention. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Condition a language model on interleaved visual inputs through resampled visual features and cross-attention.
+### Resample visual features
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+The image encoder yields $X\in\mathbb R^{N\times d_v}$. Learned latent queries $Q\in\mathbb R^{M\times d}$ produce a fixed-length visual representation. The cross-attention mechanism is
+$$Z=\operatorname{softmax}(QK^\top/\sqrt d)V,$$
+where keys and values incorporate visual features; the actual Perceiver Resampler also allows latent information into its attention. $M$ stays fixed as image/video feature count changes.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Planned component problems:** Resample Variable Visual Features. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Gate visual conditioning
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Resample Variable Visual Features | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Mask Cross-Attention by Image Position | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Gate a Multimodal Residual Update | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+A simplified gated residual is
+$$h'=h+\tanh(\alpha)\operatorname{CrossAttn}(h,Z).$$
+The learned scalar gate starts at zero, preserving the pretrained language computation initially. Gated dense layers accompany the attention layers. Image-causal masking controls which visual input each text position can attend to.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problems:** Gate a Multimodal Residual Update. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Limitations and failure modes
+### Predict interleaved text
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+For text sequence $y$, the likelihood is
+$$p(y\mid X)=\prod_t p(y_t\mid y_{<t},X_{\le t}).$$
+$X_{\le t}$ denotes visual inputs preceding position $t$. The implementation's direct cross-attention mask selects the most recent preceding image; language self-attention can carry earlier context. Demonstrations in a prompt are context, not gradient updates.
 
-## Implementation decomposition
 
-1. Resample Variable Visual Features.
-2. Mask Cross-Attention by Image Position.
-3. Gate a Multimodal Residual Update.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Planned component problems:** Mask Cross-Attention by Image Position. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Problem blueprints
+## Implement the components
 
-### Problem: Resample Variable Visual Features
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the resample variable visual features component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Mask Cross-Attention by Image Position
+- Resample Variable Visual Features.
+- Gate a Multimodal Residual Update.
+- Mask Cross-Attention by Image Position.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the mask cross-attention by image position component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-### Problem: Gate a Multimodal Residual Update
+## Why this matters on a robot
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the gate a multimodal residual update component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Visual-language context can explain a scene history, but generated descriptions do not provide calibrated contact state or control guarantees. Long histories, stale frames, and incorrect image/text ordering can change an answer.
 
-## Visual teaching plan
+## Sources and scope
 
-- Draw interleaved images and text with visible attention boundaries.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+[Primary paper](https://arxiv.org/abs/2204.14198) · [Open-access manuscript](https://arxiv.org/pdf/2204.14198)
 
-## MLOps and deployment extensions
-
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2204.14198)
-- [Open-access author manuscript](https://arxiv.org/pdf/2204.14198)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

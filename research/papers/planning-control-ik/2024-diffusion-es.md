@@ -16,102 +16,70 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample and score candidates","detail":"Generate a trajectory population and evaluate black-box reward.","column":0,"row":0,"section":"Sample and score candidates","problem_slugs":[],"planned_problems":["Evaluate a Batch of Trajectories with a Black-Box Cost"]},{"id":"stage-2","title":"Select promising trajectories","detail":"Resample parents according to reward.","column":1,"row":0,"section":"Select promising trajectories","problem_slugs":[],"planned_problems":["Rank Candidates with a Black-Box Cost"]},{"id":"stage-3","title":"Mutate through denoising","detail":"Add limited noise and denoise selected parents again.","column":2,"row":0,"section":"Mutate through denoising","problem_slugs":[],"planned_problems":["Mutate a Trajectory with Partial Denoising","Preserve Feasible Start and Goal Conditions"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"reward scores"},{"from":"stage-2","to":"stage-3","label":"selected parents"}]}
 ---
 
-# Diffusion-ES: Gradient-free Planning with Diffusion for Autonomous Driving and Zero-Shot Instruction Following
+## Core paper explanation
 
-## Agent brief
+Diffusion-ES combines a learned trajectory diffusion prior with gradient-free evolutionary search. Black-box reward can score candidates, while truncated noise-and-denoise mutations explore nearby plausible trajectories.
 
-Combine diffusion trajectory proposals with black-box optimization for test-time planning. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Combine diffusion trajectory proposals with black-box optimization for test-time planning.
+### Sample and score candidates
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For population $\{\tau_i\}_{i=1}^N$, compute $R_i=R(\tau_i)$. Reward may include nondifferentiable rules or external evaluators. The method needs reliable scores, not reward gradients.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Evaluate a Batch of Trajectories with a Black-Box Cost — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Mutate a Trajectory with Partial Denoising | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Rank Candidates with a Black-Box Cost | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Preserve Feasible Start and Goal Conditions | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
 
-## Data and evaluation
+### Select promising trajectories
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+A reward-weighted selection distribution has the form
+$$p_i=\frac{\exp((R_i-R_{\max})/T)}{\sum_j\exp((R_j-R_{\max})/T)},$$
+with temperature $T>0$. Lower temperature favors exploitation; identical scores should preserve a valid distribution. This selection operation must not be confused with changing the learned diffusion model's weights.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Component practice**
 
-## Implementation decomposition
+- Rank Candidates with a Black-Box Cost — unreviewed idea; contract and evaluator required.
 
-1. Mutate a Trajectory with Partial Denoising.
-2. Rank Candidates with a Black-Box Cost.
-3. Preserve Feasible Start and Goal Conditions.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+### Mutate through denoising
 
-### Problem: Mutate a Trajectory with Partial Denoising
+Mutation first constructs $\tau^k=\sqrt{\bar\alpha_k}\tau+\sqrt{1-\bar\alpha_k}\epsilon$, then runs the learned reverse process back to a trajectory. Truncating at a moderate noise level preserves more parent structure; decreasing mutation noise across iterations narrows the search. Re-score every mutated candidate.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the mutate a trajectory with partial denoising component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Rank Candidates with a Black-Box Cost
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the rank candidates with a black-box cost component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Mutate a Trajectory with Partial Denoising — unreviewed idea; contract and evaluator required.
+- Preserve Feasible Start and Goal Conditions — unreviewed idea; contract and evaluator required.
 
-### Problem: Preserve Feasible Start and Goal Conditions
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the preserve feasible start and goal conditions component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-- Show candidate trajectory populations across optimization iterations.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
 
-## MLOps and deployment extensions
+**Planned component problems:**
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- Evaluate a Batch of Trajectories with a Black-Box Cost — unreviewed idea; contract and evaluator required.
+- Rank Candidates with a Black-Box Cost — unreviewed idea; contract and evaluator required.
+- Mutate a Trajectory with Partial Denoising — unreviewed idea; contract and evaluator required.
+- Preserve Feasible Start and Goal Conditions — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-- [Primary arXiv record](https://arxiv.org/abs/2402.06559)
-- [Open-access author manuscript](https://arxiv.org/pdf/2402.06559)
+## Why this matters on a robot
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+Black-box planning can incorporate discrete task logic and complex evaluation functions. Reward bugs, expensive scoring, and population collapse can still dominate performance; gradient-free search does not eliminate model or reward error.
 
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2402.06559) · [Open-access manuscript](https://arxiv.org/pdf/2402.06559)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

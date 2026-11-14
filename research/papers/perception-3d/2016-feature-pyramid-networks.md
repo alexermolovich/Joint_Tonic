@@ -16,102 +16,78 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Read backbone levels, fuse coarse semantics into finer maps, and choose the appropriate pyramid representation for each detection region.","nodes":[{"id":"stage-1","title":"Project backbone levels","detail":"Give different-resolution backbone maps a shared feature width.","column":0,"row":0,"section":"Project backbone levels","problem_slugs":[],"planned_problems":["Project Multi-Scale Backbone Maps to a Shared Channel Width"]},{"id":"stage-2","title":"Fuse top-down features","detail":"Add upsampled coarse features to a corresponding lateral map.","column":1,"row":0,"section":"Fuse top-down features","problem_slugs":[],"planned_problems":["Fuse lateral and top-down maps","Verify odd-resolution shape alignment"]},{"id":"stage-3","title":"Assign region scale","detail":"Choose a feature level according to the region’s image-space size.","column":2,"row":0,"section":"Assign region scale","problem_slugs":[],"planned_problems":["Assign regions to pyramid levels"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"lateral maps"},{"from":"stage-2","to":"stage-3","label":"feature pyramid"}]}
 ---
 
-# Feature Pyramid Networks for Object Detection
+## Core paper explanation
 
-## Agent brief
+Feature Pyramid Networks combine high-level semantic features with higher-resolution spatial features. A top-down pathway upsamples coarse representations and joins them with lateral projections from the backbone. The result provides semantically useful feature maps at several scales without computing separate image pyramids for every input.
 
-Fuse coarse semantic feature maps with finer spatial maps through a top-down feature pyramid. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Read backbone levels, fuse coarse semantics into finer maps, and choose the appropriate pyramid representation for each detection region.
 
-Fuse coarse semantic feature maps with finer spatial maps through a top-down feature pyramid.
+### Project backbone levels
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Let backbone level $C_\ell\in\mathbb R^{H_\ell\times W_\ell\times d_\ell}$. A lateral1×1convolution creates $L_\ell$ with common width $d$:
 
-## Prerequisite concepts
+$$
+L_\ell=\operatorname{Conv}_{1\times1}(C_\ell)\in\mathbb R^{H_\ell\times W_\ell\times d}.
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+Equal channel width makes addition possible. It does not guarantee spatial alignment when inputs have odd dimensions or a different padding convention.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build Top-Down Feature Fusion | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Align Lateral Feature Shapes | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Assign Objects to Pyramid Levels | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problem:** Project Multi-Scale Backbone Maps to a Shared Channel Width. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Limitations and failure modes
+### Fuse top-down features
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+A simplified top-down recurrence is
 
-## Implementation decomposition
+$$
+P_\ell=\operatorname{Conv}_{3\times3}\left(L_\ell+
+\operatorname{Upsample}(P_{\ell+1};H_\ell,W_\ell)\right).
+$$
 
-1. Build Top-Down Feature Fusion.
-2. Align Lateral Feature Shapes.
-3. Assign Objects to Pyramid Levels.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The explicit target shape avoids relying on a scale factor that can be wrong by one pixel. The3×3convolution reduces artifacts introduced by upsampling/fusion. Backpropagation reaches both the lateral and top-down paths.
 
-## Problem blueprints
 
-### Problem: Build Top-Down Feature Fusion
+**Planned component problems:** Fuse lateral and top-down maps; Verify odd-resolution shape alignment. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build top-down feature fusion component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+### Assign region scale
 
-### Problem: Align Lateral Feature Shapes
+The paper’s region assignment uses a logarithmic scale rule of the form
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the align lateral feature shapes component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+k=\left\lfloor k_0+\log_2\left(\frac{\sqrt{wh}}{224}\right)\right\rfloor,
+$$
 
-### Problem: Assign Objects to Pyramid Levels
+where $w,h$ are region dimensions in pixels and the canonical level is $k_0=4$. Clamp to available levels. Doubling both region dimensions moves the assignment up one pyramid level. This rule uses image-space geometry; a physical object’s size in meters is not directly substituted.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the assign objects to pyramid levels component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-## Visual teaching plan
+**Planned component problems:** Assign regions to pyramid levels. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- Draw aligned pyramid levels with live tensor shapes and object-size assignments.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Implement the components
 
-## MLOps and deployment extensions
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+**Planned components:**
 
-## Canonical sources
+- Project Multi-Scale Backbone Maps to a Shared Channel Width.
+- Fuse lateral and top-down maps.
+- Verify odd-resolution shape alignment.
+- Assign regions to pyramid levels.
 
-- [Primary arXiv record](https://arxiv.org/abs/1612.03144)
-- [Open-access author manuscript](https://arxiv.org/pdf/1612.03144)
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Why this matters on a robot
 
+A feature pyramid helps a single image representation cover distant and nearby objects. Incorrect level assignment or one-pixel alignment errors can affect small-object localization disproportionately. Test odd image dimensions and bounding boxes near scale boundaries.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1612.03144) · [Open-access manuscript](https://arxiv.org/pdf/1612.03144)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

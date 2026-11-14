@@ -16,102 +16,63 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Deskew lidar measurements","detail":"Move points captured at different times into one scan frame.","column":0,"row":0,"section":"Deskew lidar measurements","problem_slugs":[],"planned_problems":["Deskew a Lidar Scan with Motion Estimates"]},{"id":"stage-2","title":"Align local scan features","detail":"Match edge and surface features against a local map.","column":1,"row":0,"section":"Align local scan features","problem_slugs":[],"planned_problems":["Compute Point-to-Line and Point-to-Plane Scan Residuals"]},{"id":"stage-3","title":"Smooth sensor factors","detail":"Combine inertial, lidar, GPS, and loop constraints when available.","column":2,"row":0,"section":"Smooth sensor factors","problem_slugs":[],"planned_problems":["Assemble an IMU-Lidar Pose Constraint","Reject Inconsistent Loop Closures"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"deskewed scan"},{"from":"stage-2","to":"stage-3","label":"relative pose factors"}]}
 ---
 
-# LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping
+## Core paper explanation
 
-## Agent brief
+LIO-SAM couples lidar and IMU through factor-graph smoothing. IMU preintegration supplies motion estimates for scan deskewing and initialization, while lidar alignment constrains drift and helps estimate inertial biases.
 
-Study tightly coupled lidar-inertial odometry with factor-graph state estimation. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study tightly coupled lidar-inertial odometry with factor-graph state estimation.
+### Deskew lidar measurements
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For point $p^{L_t}$ captured at time $t$, its reference-scan coordinates are
+$$p^{L_0}=T_{WL_0}^{-1}T_{WL_t}p^{L_t}.$$
+Transforms include lidar–IMU extrinsics. A scan is not instantaneous; per-point timestamps and motion interpolation determine whether deskewing is meaningful.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Prerequisite practice:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). These supporting skills do not complete this model stage.
 
-## Method map
+**Planned component problems:** Deskew a Lidar Scan with Motion Estimates. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Deskew a Lidar Scan with Motion Estimates | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Assemble an IMU-Lidar Pose Constraint | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Reject Inconsistent Loop Closures | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+### Align local scan features
 
-## Data and evaluation
+A surface residual is $r=n^\top(Rp+t-q)$, with $n$ a unit normal and distances in meters. Edge features use distance-to-line geometry. Local keyframe maps bound registration work and reduce dependence on a monolithic global point cloud.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+**Planned component problem:** Compute Point-to-Line and Point-to-Plane Scan Residuals. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-1. Deskew a Lidar Scan with Motion Estimates.
-2. Assemble an IMU-Lidar Pose Constraint.
-3. Reject Inconsistent Loop Closures.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Smooth sensor factors
 
-## Problem blueprints
+The graph solves $\min_X\sum_k\|r_k(X)\|_{\Sigma_k^{-1}}^2$ with appropriate robust treatment. $X$ includes pose, velocity, and biases for inertial estimation. Lidar correction improves motion and bias estimates, which then improve later scan deskewing.
 
-### Problem: Deskew a Lidar Scan with Motion Estimates
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the deskew a lidar scan with motion estimates component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:** Assemble an IMU-Lidar Pose Constraint; Reject Inconsistent Loop Closures. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Assemble an IMU-Lidar Pose Constraint
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the assemble an imu-lidar pose constraint component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Reject Inconsistent Loop Closures
+**Planned components:**
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the reject inconsistent loop closures component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Deskew a Lidar Scan with Motion Estimates.
+- Compute Point-to-Line and Point-to-Plane Scan Residuals.
+- Assemble an IMU-Lidar Pose Constraint.
+- Reject Inconsistent Loop Closures.
 
-## Visual teaching plan
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- Overlay raw and deskewed scans with pose-graph constraints.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Coupling is valuable during rapid motion or short visual outages. Feature-poor geometry, timing errors, and a wrong lidar–IMU transform can make the estimator confidently wrong.
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2007.00258) · [Open-access manuscript](https://arxiv.org/pdf/2007.00258)
 
-- [Primary arXiv record](https://arxiv.org/abs/2007.00258)
-- [Open-access author manuscript](https://arxiv.org/pdf/2007.00258)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

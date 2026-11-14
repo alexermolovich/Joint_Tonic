@@ -16,102 +16,67 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build a trajectory prior","detail":"Represent smooth state evolution with a sparse Gaussian process.","column":0,"row":0,"section":"Build a trajectory prior","problem_slugs":[],"planned_problems":["Build a Gaussian-Process Smoothness Factor"]},{"id":"stage-2","title":"Add obstacle factors","detail":"Penalize insufficient clearance along the robot body.","column":1,"row":0,"section":"Add obstacle factors","problem_slugs":[],"planned_problems":["Assemble Obstacle and Prior Residuals"]},{"id":"stage-3","title":"Interpolate and optimize","detail":"Check intermediate states without introducing every one as a variable.","column":2,"row":0,"section":"Interpolate and optimize","problem_slugs":[],"planned_problems":["Interpolate a Trajectory Between Support States"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"trajectory prior"},{"from":"stage-2","to":"stage-3","label":"sparse factor graph"}]}
 ---
 
-# Continuous-Time Gaussian Process Motion Planning via Probabilistic Inference
+## Core paper explanation
 
-## Agent brief
+Gaussian-process motion planning treats a smooth continuous-time trajectory as a probabilistic prior and obstacles as likelihood factors. Sparse Markov structure makes trajectory optimization and interpolation efficient.
 
-Represent continuous-time trajectories with sparse Gaussian-process constraints and factor-graph inference. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Represent continuous-time trajectories with sparse Gaussian-process constraints and factor-graph inference.
+### Build a trajectory prior
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For stacked support states $\theta$, the prior is
+$$p(\theta)\propto\exp[-\tfrac12(\theta-\mu)^\top K^{-1}(\theta-\mu)].$$
+States may include configuration and velocity. A linear time-varying stochastic differential equation induces the sparse precision structure; an arbitrary dense GP kernel does not provide the same computational property.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Build a Gaussian-Process Smoothness Factor — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build a Gaussian-Process Smoothness Factor | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Interpolate a Trajectory Between Support States | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Assemble Obstacle and Prior Residuals | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Add obstacle factors
 
-## Data and evaluation
+With signed distance $d(q)$ positive in free space, a teaching hinge residual is $h(q)=\max(0,\epsilon-d(q))$. The MAP objective becomes
+$$E=\tfrac12\|\theta-\mu\|_{K^{-1}}^2+\tfrac12\|h(\theta)\|_{\Sigma^{-1}}^2.$$
+Robot geometry and workspace distance fields determine the obstacle residuals.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Assemble Obstacle and Prior Residuals — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Interpolate and optimize
 
-1. Build a Gaussian-Process Smoothness Factor.
-2. Interpolate a Trajectory Between Support States.
-3. Assemble Obstacle and Prior Residuals.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+GP interpolation estimates intermediate states from neighboring support states. Nonlinear least squares updates the support trajectory while evaluating obstacle factors at interpolated times. Finite interpolation checks do not by themselves prove continuous collision freedom.
 
-## Problem blueprints
 
-### Problem: Build a Gaussian-Process Smoothness Factor
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build a gaussian-process smoothness factor component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Interpolate a Trajectory Between Support States — unreviewed idea; contract and evaluator required.
 
-### Problem: Interpolate a Trajectory Between Support States
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the interpolate a trajectory between support states component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Assemble Obstacle and Prior Residuals
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the assemble obstacle and prior residuals component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Build a Gaussian-Process Smoothness Factor — unreviewed idea; contract and evaluator required.
+- Assemble Obstacle and Prior Residuals — unreviewed idea; contract and evaluator required.
+- Interpolate a Trajectory Between Support States — unreviewed idea; contract and evaluator required.
 
-- Show sparse support states and interpolated paths through obstacles.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Smoothness priors make optimization efficient and physically interpretable. A local optimizer can remain in a poor homotopy class or miss thin obstacles; initialization and independent collision validation remain necessary.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1707.07383)
-- [Open-access author manuscript](https://arxiv.org/pdf/1707.07383)
+[Primary paper](https://arxiv.org/abs/1707.07383) · [Open-access manuscript](https://arxiv.org/pdf/1707.07383)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -3,6 +3,7 @@ import contextlib
 import importlib.util
 import io
 import json
+from pathlib import Path
 import resource
 import runpy
 import sys
@@ -40,6 +41,8 @@ logs = LimitedLog()
 tests = []
 error = None
 failure_category = None
+preview = None
+preview_error = None
 try:
     with contextlib.redirect_stdout(logs), contextlib.redirect_stderr(logs):
         suite = runpy.run_path('/work/cases.py')['TESTS']
@@ -60,6 +63,18 @@ try:
                 result['message'] = f'{type(exc).__name__}: {exc}'[:1600] if visibility == 'public' else f'{type(exc).__name__}: Hidden case did not satisfy the documented contract.'
             result['duration_ms'] = round((time.monotonic() - begin) * 1000, 2)
             tests.append(result)
+        # This optional module is an authored PUBLIC fixture. Learner code still
+        # runs in this disposable sandbox; it never receives a simulator handle.
+        if Path('/work/preview.py').is_file():
+            try:
+                preview = runpy.run_path('/work/preview.py')['build_preview'](solution)
+                if len(json.dumps(preview, allow_nan=False)) > 20000:
+                    raise ValueError('Preview exceeds the bounded trajectory size')
+            except OutputLimitExceeded:
+                raise
+            except BaseException:
+                preview = None
+                preview_error = 'The public demonstration did not return a valid bounded joint trajectory.'
 except BaseException as exc:
     error = f'{type(exc).__name__}: {exc}'[:2000]
     failure_category = 'learner-output-limit' if logs.exceeded else 'learner-import'
@@ -72,4 +87,5 @@ elif not error and any(not test['passed'] for test in tests):
 
 print(json.dumps({'tests': tests, 'passed': bool(tests) and all(t['passed'] for t in tests) and not error,
                  'error': error, 'failure_category': failure_category,
+                 'preview': preview, 'preview_error': preview_error,
                  'logs': logs.getvalue(), 'duration_ms': round((time.monotonic()-started)*1000, 2)}))

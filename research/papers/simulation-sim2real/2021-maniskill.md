@@ -16,102 +16,71 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample an object instance","detail":"Choose a task and articulated asset with declared geometry.","column":0,"row":0,"section":"Sample an object instance","problem_slugs":[],"planned_problems":["Stratify Manipulation Object Instances"]},{"id":"stage-2","title":"Construct 3D observations","detail":"Transform visible depth into the policy point-cloud frame.","column":1,"row":0,"section":"Construct 3D observations","problem_slugs":["se3-transform-points","unproject-depth-map"],"planned_problems":["Validate Manipulation Task Observations"]},{"id":"stage-3","title":"Learn and test manipulation","detail":"Evaluate policies on held-out object geometries.","column":2,"row":0,"section":"Learn and test manipulation","problem_slugs":[],"planned_problems":["Normalize Action Bounds Across Tasks","Evaluate Skill Success Across Object Instances"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"camera observations"},{"from":"stage-2","to":"stage-3","label":"point clouds and demonstrations"}]}
 ---
 
-# ManiSkill: Generalizable Manipulation Skill Benchmark with Large-Scale Demonstrations
+## Core paper explanation
 
-## Agent brief
+ManiSkill benchmarks manipulation across articulated objects with substantial geometric and topological variation. Point-cloud/RGB-D observations and demonstrations support studying generalizable perception and policy learning.
 
-Study generalizable manipulation skills across articulated objects and task families. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study generalizable manipulation skills across articulated objects and task families.
+### Sample an object instance
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Split object identities into disjoint training and test sets. Reusing the same mesh with a new random seed tests state variation, not unseen-object generalization. Joint definitions and success predicates belong to the asset/task pair.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Stratify Manipulation Object Instances — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate Manipulation Task Observations | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Normalize Action Bounds Across Tasks | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Evaluate Skill Success Across Object Instances | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Construct 3D observations
 
-## Data and evaluation
+For pixel homogeneous coordinate $\tilde u$ and depth $z$,
+$$p_C=zK^{-1}\tilde u,\qquad p_B=T_{BC}p_C.$$
+This pinhole formula requires axial depth and calibrated intrinsics; lens distortion or range-along-ray depth needs a different conversion. Declare whether policy points are camera-, base-, or world-frame.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Unproject a Depth Map into a Point Cloud](/problems/unproject-depth-map). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Validate Manipulation Task Observations — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Learn and test manipulation
 
-1. Validate Manipulation Task Observations.
-2. Normalize Action Bounds Across Tasks.
-3. Evaluate Skill Success Across Object Instances.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Report success $\hat p_c$ per object category and instance, then state the weighting used for the aggregate. Equal episode weighting can overrepresent frequently sampled objects. Demonstration-based and interaction-based methods need comparable data/compute accounting.
 
-## Problem blueprints
 
-### Problem: Validate Manipulation Task Observations
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate manipulation task observations component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Normalize Action Bounds Across Tasks — unreviewed idea; contract and evaluator required.
+- Evaluate Skill Success Across Object Instances — unreviewed idea; contract and evaluator required.
 
-### Problem: Normalize Action Bounds Across Tasks
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the normalize action bounds across tasks component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Evaluate Skill Success Across Object Instances
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
+- **Supporting prerequisite:** [Unproject a Depth Map into a Point Cloud](/problems/unproject-depth-map).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate skill success across object instances component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Stratify Manipulation Object Instances — unreviewed idea; contract and evaluator required.
+- Validate Manipulation Task Observations — unreviewed idea; contract and evaluator required.
+- Normalize Action Bounds Across Tasks — unreviewed idea; contract and evaluator required.
+- Evaluate Skill Success Across Object Instances — unreviewed idea; contract and evaluator required.
 
-- Compare skill rollouts across object shapes and articulations.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Geometric variation tests whether a policy understands how objects move rather than memorizing one handle. Occluded joints and unseen articulation structure remain difficult even with accurate point clouds.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2107.14483)
-- [Open-access author manuscript](https://arxiv.org/pdf/2107.14483)
+[Primary paper](https://arxiv.org/abs/2107.14483) · [Open-access manuscript](https://arxiv.org/pdf/2107.14483)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

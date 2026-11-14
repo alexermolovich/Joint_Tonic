@@ -26,85 +26,81 @@ modalities:
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Declare a robotics workload, correlate trace events through the graph, and compare quality-constrained timing on identified hardware.","nodes":[{"id":"stage-1","title":"Declare workload boundaries","detail":"Specify inputs, outputs, graph stages, rates, and measurement scope.","column":0,"row":0,"section":"Declare workload boundaries","problem_slugs":[],"planned_problems":["Declare Reproducible Robotics Benchmark Boundaries"]},{"id":"stage-2","title":"Analyze the timed graph","detail":"Separate processing time, waiting, transfer, and parallel work.","column":1,"row":0,"section":"Analyze the timed graph","problem_slugs":["inference-latency-percentiles"],"planned_problems":["Derive End-to-End Latency from Robotics Trace Events","Measure Throughput and Jitter Across a ROS-Style Graph"]},{"id":"stage-3","title":"Compare valid runs","detail":"Report distributions and configuration identity rather than a context-free speed number.","column":2,"row":0,"section":"Compare valid runs","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Compare Black-Box and Grey-Box Pipeline Measurements"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"correlated traces"},{"from":"stage-2","to":"stage-3","label":"timing distributions"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Implement trace analysis for a ROS-style computation graph. Distinguish black-box end-to-end measurement from grey-box instrumentation that reveals component bottlenecks.
+RobotPerf studies benchmarking of robotics computation across hardware platforms with explicit workloads and measurement methodology. It distinguishes black-box end-to-end observations from instrumentation that exposes component-level timing. The important educational boundary is reconstructing a timed computation graph without conflating sensor frequency, throughput, and latency.
 
-## Contribution
+## Execution flow
 
-RobotPerf provides vendor-neutral robotics benchmarks around ROS 2 and spans perception, localization, control, and related workloads. It formalizes black-box and grey-box approaches for comparable compute-system measurements.
+Declare a robotics workload, correlate trace events through the graph, and compare quality-constrained timing on identified hardware.
 
-## Prerequisite concepts
+### Declare workload boundaries
 
-- Distributed timestamps and trace events
-- Directed robotics computation graphs
-- Latency, throughput, jitter, and power metrics
-- ROS 2 concepts are helpful but not required
-
-## Essential theory
-
-For a correlated message path, black-box end-to-end latency is
+For input event $i$ at time $t_i^{\mathrm{in}}$ and its associated output at $t_i^{\mathrm{out}}$,
 
 $$
-L_{\mathrm{e2e}}=t_{\mathrm{output}}-t_{\mathrm{input}}.
+L_i=t_i^{\mathrm{out}}-t_i^{\mathrm{in}}.
 $$
 
-Grey-box spans decompose this interval into node execution, transport, queueing, and idle gaps. On a dependency DAG, the critical path is the path with maximum accumulated duration, not necessarily the sum of all node times.
+Both timestamps must share a clock or an explicit synchronization correction. Correlation IDs should link the same work item across stages; pairing outputs with the nearest input timestamp can mismeasure buffered pipelines.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Trace correlator | Out-of-order ROS-style events | Complete spans and rejected records | Each accepted span has one unambiguous causal identity | Correlate one message path |
-| Metric aggregator | Correlated spans | Latency, jitter, throughput, and deadline metrics | Units and percentile conventions are explicit | Summarize one workload run |
-| Critical-path analyzer | Dependency DAG and node/transport durations | Critical path and slack | Only causally valid DAG paths are compared | Compute longest path for one trace graph |
+**Component practice**
 
-- Standardized robotics workloads
-- ROS 2 graph as a common integration layer
-- Black-box input/output timing
-- Grey-box internal event tracing
-- Reproducible hardware/software metadata
-- Cross-platform result comparison
+- Declare Reproducible Robotics Benchmark Boundaries — unreviewed idea; contract and evaluator required.
 
-## Data and evaluation
+### Analyze the timed graph
 
-Provide synthetic traces for camera, preprocessing, detector, planner, and controller nodes, including concurrency and missing events. Grade correlation, critical-path latency, throughput, jitter, and handling of malformed traces.
+For a strictly serial path $P$, end-to-end latency is the sum of service and waiting times:
 
-## Limitations and failure modes
+$$
+L_P=\sum_{v\in P}(S_v+W_v).
+$$
 
-Instrumentation can perturb the system, and results are only comparable under aligned workload definitions. Synthetic traces do not capture scheduling, thermal, network, or real-time operating-system effects.
+Parallel graphs require critical-path reasoning rather than summing every event duration. Instrumentation can change timing, so document probe overhead and compare grey-box measurements with the external workload boundary.
 
-## Implementation decomposition
 
-1. Parse normalized send, receive, start, and finish events.
-2. Correlate messages across nodes and reject ambiguous spans.
-3. Compute node and end-to-end statistics.
-4. Identify the critical path and bottleneck contributions.
-5. Attach complete hardware/software provenance.
+**Component practice**
 
-## Problem blueprints
+- Supporting prerequisite: [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Derive End-to-End Latency from Robotics Trace Events — unreviewed idea; contract and evaluator required.
+- Measure Throughput and Jitter Across a ROS-Style Graph — unreviewed idea; contract and evaluator required.
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Correlate Robotics Traces | Data processing | Hard | Out-of-order events with IDs | Complete spans and rejected records | Exact correlation, duplicate/missing-event handling |
-| End-to-End Latency and Jitter | Metrics | Medium | Completed spans | Distribution and jitter metrics | Units, percentile convention, stable grouping |
-| Critical Path in a ROS Graph | Graph algorithm | Hard | Node durations and dependencies | Critical path and slack | Correct longest path on DAG, clear cycle failure |
+### Compare valid runs
 
-## Visual teaching plan
+Throughput is completed work divided by observation time; latency is time per correlated work item. A pipeline can improve throughput while worsening tail latency. [Edge model release gating](/problems/edge-inference-release-gate) provides related practice with explicit quality and latency records. Benchmark results also require workload, device, driver, runtime, and measurement-mode identity.
 
-- Toggle between black-box input/output timing and grey-box internal spans.
-- Gantt chart of correlated messages across perception, planning, and control nodes.
-- Critical-path overlay on the robotics computation graph.
-- Hardware comparison dashboard for latency, jitter, throughput, power, and deadline misses.
 
-## MLOps and deployment extensions
+**Component practice**
 
-Run benchmarks in CI on representative robot SKUs and after firmware, driver, model, or compiler changes. Gate releases on deadline misses and per-stage regressions, not only mean latency.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Compare Black-Box and Grey-Box Pipeline Measurements — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+## Implement the components
 
-- [arXiv landing page](https://arxiv.org/abs/2309.09212)
-- [arXiv PDF](https://arxiv.org/pdf/2309.09212)
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
+- **Supporting prerequisite:** [Compute p50, p90, and p99 Inference Latency](/problems/inference-latency-percentiles).
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+
+**Planned component problems:**
+
+- Declare Reproducible Robotics Benchmark Boundaries — unreviewed idea; contract and evaluator required.
+- Derive End-to-End Latency from Robotics Trace Events — unreviewed idea; contract and evaluator required.
+- Measure Throughput and Jitter Across a ROS-Style Graph — unreviewed idea; contract and evaluator required.
+- Compare Black-Box and Grey-Box Pipeline Measurements — unreviewed idea; contract and evaluator required.
+
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
+
+## Why this matters on a robot
+
+Robotics graphs include sensors, middleware, transfers, accelerators, and controllers. Measuring one kernel can miss the bottleneck that delays an actual command. Trace loss, clock mismatch, and dropped messages must be reported rather than silently discarded.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2309.09212) · [Open-access manuscript](https://arxiv.org/pdf/2309.09212)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

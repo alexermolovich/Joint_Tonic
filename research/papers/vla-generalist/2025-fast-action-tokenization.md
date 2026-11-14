@@ -16,102 +16,60 @@ modalities: ["rgb","text","robot-state","actions"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Transform the action chunk","detail":"Apply a temporal discrete cosine transform per action channel.","column":0,"row":0,"section":"Transform the action chunk","problem_slugs":[],"planned_problems":["Transform an Action Chunk into Frequency Coefficients"]},{"id":"stage-2","title":"Quantize and compress","detail":"Flatten low-frequency coefficients first, then apply BPE.","column":1,"row":0,"section":"Quantize and compress","problem_slugs":[],"planned_problems":["Quantize Compressed Action Coefficients"]},{"id":"stage-3","title":"Decode a physical chunk","detail":"Invert BPE, dequantize, and apply the inverse transform.","column":2,"row":0,"section":"Decode a physical chunk","problem_slugs":[],"planned_problems":["Measure Codec Rate-Distortion Tradeoffs"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"DCT coefficients"},{"from":"stage-2","to":"stage-3","label":"generated action tokens"}]}
 ---
+## Core paper explanation
 
-# FAST: Efficient Action Tokenization for Vision-Language-Action Models
+FAST tokenizes an action chunk in frequency space, then compresses quantized coefficients with byte-pair encoding. This reduces the redundant token sequence produced by independently binning many highly correlated high-frequency actions.
 
-## Agent brief
+## Execution flow
 
-Compress continuous action sequences into a representation suitable for autoregressive policies. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-## Contribution
+### Transform the action chunk
 
-Compress continuous action sequences into a representation suitable for autoregressive policies.
+For normalized actions $A\in\mathbb R^{H\times d}$, an orthonormal DCT-II convention is
+$$C_{kj}=\gamma_k\sum_{t=0}^{H-1}A_{tj}\cos\!\left[\frac\pi H(t+1/2)k\right],$$
+with $\gamma_0=\sqrt{1/H}$ and $\gamma_k=\sqrt{2/H}$ for $k>0$. Match the tokenizer's normalization convention; low frequencies describe slow variation across the chunk.
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Transform an Action Chunk into Frequency Coefficients. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Prerequisite concepts
+### Quantize and compress
 
-- Sequence modeling, action units, control frequencies, multimodal batching, and policy evaluation.
+With precision scale $s>0$, coefficient quantization can be expressed as
+$$Q_{kj}=\operatorname{round}(sC_{kj}).$$
+FAST flattens coefficients with low-frequency components first across action dimensions, then learns BPE merges. Quantization is lossy; BPE is lossless relative to the integer coefficient sequence. The trained vocabulary and flattening order are part of the artifact.
 
-## Method map
+<!-- joint-tonic-component:stage-2 -->
+- **Planned component:** Quantize Compressed Action Coefficients. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Transform an Action Chunk into Frequency Coefficients | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Quantize Compressed Action Coefficients | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Measure Codec Rate-Distortion Tradeoffs | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
+### Decode a physical chunk
 
-## Data and evaluation
+Reconstruction is $\hat A=\operatorname{IDCT}(Q/s)$. Under an orthonormal transform, $\|A-\hat A\|_F=\|C-Q/s\|_F$, making coefficient error interpretable. Restore per-channel physical scales afterward and reject malformed decoded lengths before commanding a robot.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+<!-- joint-tonic-component:stage-3 -->
+- **Planned component:** Measure Codec Rate-Distortion Tradeoffs. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Limitations and failure modes
+## Implement the components
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Implementation decomposition
 
-1. Transform an Action Chunk into Frequency Coefficients.
-2. Quantize Compressed Action Coefficients.
-3. Measure Codec Rate-Distortion Tradeoffs.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+Planned components: Transform an Action Chunk into Frequency Coefficients; Quantize Compressed Action Coefficients; Measure Codec Rate-Distortion Tradeoffs. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-### Problem: Transform an Action Chunk into Frequency Coefficients
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the transform an action chunk into frequency coefficients component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-### Problem: Quantize Compressed Action Coefficients
+Compression can make autoregressive action learning more practical at high control frequencies. Smooth average reconstruction can hide brief contact-critical errors; evaluate peak channel errors and task success as well as token count.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the quantize compressed action coefficients component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Sources and scope
 
-### Problem: Measure Codec Rate-Distortion Tradeoffs
+[Primary paper](https://arxiv.org/abs/2501.09747) · [Open-access manuscript](https://arxiv.org/pdf/2501.09747)
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure codec rate-distortion tradeoffs component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
-
-## Visual teaching plan
-
-- Show action reconstruction error as the compression budget changes.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
-
-## MLOps and deployment extensions
-
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2501.09747)
-- [Open-access author manuscript](https://arxiv.org/pdf/2501.09747)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

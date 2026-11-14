@@ -1,0 +1,86 @@
+{
+  "slug": "bev-ego-motion-warp",
+  "title": "Warp a Previous BEV with Ego Motion",
+  "version": "1.0.0",
+  "number": 124,
+  "difficulty": "Hard",
+  "domain": "Perception",
+  "topics": [
+    "bevformer",
+    "paper-component"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "warp_previous_bev",
+  "paperIds": [
+    "2022-bevformer"
+  ],
+  "prerequisites": [
+    "se3-transform-points"
+  ],
+  "visualization": "markdown",
+  "summary": "Warp a Previous BEV with Ego Motion",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Explicit caller grid/view frames in statement"
+    ],
+    "units": {
+      "features": "dimensionless; BEV geometry in metres where stated"
+    },
+    "axes": "previous(H,W,C), previous_from_current(3,3), origin(2,); output(H,W,C).",
+    "timestamp_assumptions": "One explicitly paired batch; no internal clock.",
+    "batching": "previous(H,W,C), previous_from_current(3,3), origin(2,); output(H,W,C)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 0.000001,
+    "atol": 1e-7,
+    "public_case_families": [
+      "worked-examples",
+      "minimal-shape"
+    ],
+    "hidden_case_families": [
+      "validation",
+      "edge-policy",
+      "layout",
+      "preservation",
+      "independent-oracle",
+      "scale"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "af2500673cdfed29e98ac3c1460af262df83c6c318f8094aa2da2003e222ec13"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching task; variants explicitly distinguished from full paper systems.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2203.17270"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/vision-vlm-3d/2022-bevformer.md",
+    "manifest": "research/manifests/vision-vlm-3d.md"
+  }
+}

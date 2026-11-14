@@ -1,13 +1,7 @@
-# Progressive hints
+# Hints
 
-## Hint 1
+1. Locate the first source time at or after each query with searchsorted.
 
-Locate the source samples on either side of each camera timestamp. Received-message order does not define the correct pair.
+2. Handle exact equality before selecting a bracket.
 
-## Hint 2
-
-Handle exact source timestamps before rejecting a long interpolation gap. Then apply one time fraction to all joint channels.
-
-## Hint 3
-
-A query outside the measured range is not an interpolation. Preserve its row with NaNs and false validity, and apply the same policy to excessive internal gaps.
+3. Initialize output with NaN; fill only exact or admissible rows.

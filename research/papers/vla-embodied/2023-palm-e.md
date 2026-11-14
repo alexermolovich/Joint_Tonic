@@ -24,124 +24,76 @@ modalities:
 track_role: "core"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Continuous observations become language-width embeddings, those embeddings are interleaved with text, and the language model predicts the requested output. Any downstream robot skill execution remains a separate interface.","nodes":[{"id":"stage-1","title":"Embed sensor evidence","detail":"Project visual or state features into the language model’s token width.","column":0,"row":0,"section":"Embed sensor evidence","problem_slugs":["palm-e-project-sensor-features"],"planned_problems":["Validate Missing-Modality and Stale-Sensor Inputs"]},{"id":"stage-2","title":"Interleave modalities and text","detail":"Construct an ordered sequence whose positions preserve observation context.","column":1,"row":0,"section":"Interleave modalities and text","problem_slugs":[],"planned_problems":["Interleave Image, State, and Text Tokens","Collate Variable Multimodal Sequences"]},{"id":"stage-3","title":"Generate the requested output","detail":"Predict language conditioned on the assembled embodied context.","column":2,"row":0,"section":"Generate the requested output","problem_slugs":[],"planned_problems":["Build a Multimodal Causal Attention Mask"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"sensor embeddings"},{"from":"stage-2","to":"stage-3","label":"multimodal sequence"}]}
 ---
+## Core paper explanation
 
-# PaLM-E: An Embodied Multimodal Language Model
+PaLM-E incorporates continuous visual and state information into a language model’s token sequence. Modality encoders transform observations into vectors of the language model’s embedding width, allowing sensor evidence and text to participate in one autoregressive reasoning process. Its robot-oriented use is embodied reasoning and planning; generating a textual plan is distinct from proving that every step is physically executable.
 
-## Agent brief
+## Execution flow
 
-Use PaLM-E to teach multimodal sequence assembly, not large-model replication. A good exercise projects continuous observations into the language-model embedding width, interleaves them with text tokens, and constructs labels/masks that train only the intended outputs.
+Continuous observations become language-width embeddings, those embeddings are interleaved with text, and the language model predicts the requested output. Any downstream robot skill execution remains a separate interface.
 
-## Contribution
+### Embed sensor evidence
 
-- **Changed:** PaLM-E treats images and continuous sensor estimates as learned embeddings inserted into a language-model sequence. Joint training across embodied tasks and general vision-language/language data shows how a single model can reason about robot plans while retaining broad semantic capabilities.
-- **Evidence:** The reported evaluation is summarized below; the proposed exercises use deterministic small-scale proxies.
-- **Not established:** The paper does not establish universal safety, unsupported-embodiment robustness, or equivalence of an educational reproduction.
-
-## Prerequisite concepts
-
-- Token embeddings and causal language modeling
-- Vision encoders and projection layers
-- Multitask batching and loss masking
-- Embodied planning versus low-level control
-
-## Method map
-
-| Component | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Modality encoder | Image or robot state | Continuous features | Modality-specific order is stable | Validate feature shapes and batching |
-| Projection | Modality features | LM-width embeddings | Final width equals `d_model` | Implement a typed projection registry |
-| Sequence composer | Text and sensor embeddings | Interleaved sequence | Placeholder order and counts agree | Build multimodal collation |
-| Causal model | Interleaved embeddings and masks | Next-token distributions | Prompt/sensor positions are excluded from loss | Construct causal and label masks |
-| Plan validator | Generated plan and world schema | Validity and first failure | Only allowlisted grounded actions pass | Implement symbolic preconditions |
-
-## Essential equations
-
-For modality encoder \(f_m\) and learned projection \(P_m\), an embodied observation becomes language-width embeddings
+For modality $m$, an encoder $f_m$ and projection $P_m$ yield
 
 $$
-E_m(x)=P_m f_m(x)\in\mathbb R^{n_m\times d_{\text{LM}}}.
+E_m=P_m(f_m(x_m))\in\mathbb R^{n_m\times d_{\mathrm{LM}}}.
 $$
 
-After interleaving sensor and text embeddings into \(E=(e_1,\ldots,e_n)\), causal generation uses
+Here $n_m$ is that modality’s token count and $d_{\mathrm{LM}}$ is the language embedding width. The notation allows a learned projection, not necessarily one matrix multiplication. Original sensor units and frames belong to the input contract; the projected embedding coordinates no longer carry those physical units directly.
+
+<!-- joint-tonic-component:stage-1 -->
+- **Implement this component:** [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features).
+- **Planned component:** Validate Missing-Modality and Stale-Sensor Inputs. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
+
+### Interleave modalities and text
+
+A multimodal prompt can be represented as
 
 $$
-\mathcal L_{\text{gen}}=-\sum_{i\in\mathcal T_{\text{target}}}\log p_\theta(y_i\mid E,y_{<i}),
+E=[E_{\mathrm{text},1};E_{\mathrm{image}};E_{\mathrm{text},2};E_{\mathrm{state}};\ldots].
 $$
 
-where prompt and sensor positions are excluded from \(\mathcal T_{\text{target}}\).
+Its total length is the sum of all inserted token counts. Position IDs, causal masks, and target-label positions must follow this assembled order. Dropping an image block without updating those arrays can train the model against the wrong output positions even though every tensor has a valid dtype.
 
-## Visual teaching plan
+<!-- joint-tonic-component:stage-2 -->
+- **Planned component:** Interleave Image, State, and Text Tokens. This is an idea or blueprint, not a runnable exercise yet.
+- **Planned component:** Collate Variable Multimodal Sequences. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-- **Sequence composer:** drag image/state/text blocks into a prompt and inspect token positions, modality IDs, and loss masks.
-- **Projection view:** compare source feature width with LM width and show how multiple visual tokens expand context length.
-- **Plan checker:** animate a generated symbolic plan and stop at the first violated precondition.
+### Generate the requested output
 
-## Data and evaluation
+For output tokens $y_1,\ldots,y_T$, teacher-forced training minimizes
 
-- **Reported setting and protocol:** The paper jointly evaluates embodied planning/manipulation, visual question answering, captioning, and language tasks, with attention to transfer across tasks and model scales. A compact reproduction should measure sequence correctness, modality ablations, mask correctness, and transfer between two small task families.
-- **Compute/hardware interpretation:** Reported scale and physical hardware materially affect comparability; do not infer equivalence from a toy run.
-- **Educational boundary:** Use synthetic or licensed fixtures and report mechanism-level metrics separately from closed-loop outcomes.
+$$
+\mathcal L=-\sum_{i=1}^{T}\log p_\theta(y_i\mid E,y_{<i}).
+$$
 
-## Limitations and failure modes
+The target mask excludes prompt and sensor positions from output-token supervision. If the output is a plan, validate each proposed skill against the available skill library and current state. The probability of a sentence is not the probability that a controller can perform it.
 
-- High-level text generation does not itself guarantee safe executable control.
-- Large-scale gains are expensive to reproduce and may depend on unavailable data.
-- Sensor-token alignment and truncation policies can silently remove crucial context.
-- Fluent plans can be physically invalid or ungrounded.
+<!-- joint-tonic-component:stage-3 -->
+- **Planned component:** Build a Multimodal Causal Attention Mask. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Implementation decomposition
+## Implement the components
 
-1. Define typed placeholders for each non-text modality.
-2. Encode and project each observation into one or more embeddings.
-3. Replace placeholders without changing intended token order.
-4. Build causal attention, padding, and loss masks.
-5. Add task IDs and weighted multitask losses.
-6. Validate generated plans with a separate symbolic or simulator checker.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Problem blueprints
+- [Project Continuous Sensor Features into Language Width](/problems/palm-e-project-sensor-features)
 
-### Problem: Interleave multimodal embeddings
+Planned components: Validate Missing-Modality and Stale-Sensor Inputs; Interleave Image, State, and Text Tokens; Collate Variable Multimodal Sequences; Build a Multimodal Causal Attention Mask. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** text embeddings, placeholder positions, per-example sensor embeddings
-- **Outputs:** combined embeddings, attention mask, modality map
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** stable order, variable counts, padding behavior, gradient flow, shape validation
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-### Problem: Build labels for embodied generation
+## Why this matters on a robot
 
-- **Type:** pipeline
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** multimodal prompt segments and target text
-- **Outputs:** input IDs/embeddings, causal mask, labels with ignored prompt positions
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** no target leakage, correct ignore index, truncation policy, batched padding
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+Interleaving enables questions and plans to depend on current observations, but stale frames and ambiguous references can corrupt reasoning. Keep observation timestamps and object identities available to the execution system. Evaluate plan grounding separately from language quality.
 
-### Problem: Validate a generated robot plan
+## Sources and scope
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** generated action strings, object/state schema, preconditions/effects
-- **Outputs:** validity result and first failing step
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** parser robustness, precondition updates, unknown-object handling, precise diagnostics
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+[Primary paper](https://arxiv.org/abs/2303.03378) · [Open-access manuscript](https://arxiv.org/pdf/2303.03378)
 
-## MLOps and deployment extensions
-
-- Version the tokenizer, placeholder vocabulary, modality encoders, and projection shapes together. Log truncation rates per modality and task. Before sending a generated plan to hardware, require schema validation, feasibility checks, and an allowlisted action compiler; language-model confidence is not a safety gate.
-
-## Canonical sources
-
-- [Primary landing page](https://arxiv.org/abs/2303.03378)
-- [Open-access PDF](https://arxiv.org/pdf/2303.03378)
-- [Official code or project page](https://palm-e.github.io/)
-
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

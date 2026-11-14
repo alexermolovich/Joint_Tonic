@@ -16,102 +16,61 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Train with privileged extrinsics","detail":"Encode simulated environment factors for the base policy.","column":0,"row":0,"section":"Train with privileged extrinsics","problem_slugs":[],"planned_problems":["Build Privileged Dynamics-Latent Supervision"]},{"id":"stage-2","title":"Infer extrinsics from history","detail":"Train an adaptation module against the privileged latent.","column":1,"row":0,"section":"Infer extrinsics from history","problem_slugs":[],"planned_problems":["Window Proprioceptive History","Estimate a Latent Dynamics Context"]},{"id":"stage-3","title":"Run asynchronous adaptation","detail":"Use the latest inferred latent for high-rate control.","column":2,"row":0,"section":"Run asynchronous adaptation","problem_slugs":[],"planned_problems":["Track the Age of an Asynchronous Adaptation Latent","Evaluate Policy Recovery After a Parameter Change"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"state-action history"},{"from":"stage-2","to":"stage-3","label":"adapted latent"}]}
 ---
 
-# RMA: Rapid Motor Adaptation for Legged Robots
+## Core paper explanation
 
-## Agent brief
+RMA learns a locomotion policy conditioned on a latent description of environmental factors, then trains an adaptation module to infer that latent from recent state/action history. Deployment uses the inferred latent rather than privileged simulator parameters.
 
-Adapt locomotion to changing physical conditions through an online adaptation interface. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Adapt locomotion to changing physical conditions through an online adaptation interface.
+### Train with privileged extrinsics
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+An environment encoder maps factors $e_t$ to $z_t=\mu(e_t)$. The base policy predicts $a_t=\pi(o_t,z_t)$. Factors can describe properties unavailable directly on the robot; their role is to teach useful adaptive behavior in simulation.
 
-## Prerequisite concepts
 
-- Kinematics, contact state, reward decomposition, imitation learning, tactile reference images, and safe rollout metrics.
+**Planned exercise:** Build Privileged Dynamics-Latent Supervision.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Window Proprioceptive History | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Estimate a Latent Dynamics Context | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Evaluate Policy Recovery After a Parameter Change | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
+### Infer extrinsics from history
 
-## Data and evaluation
+With history $h_t=(o_{t-H:t},a_{t-H:t-1})$, train
+$$L_{\mathrm{adapt}}=\mathbb E\|\phi(h_t)-\mu(e_t)\|_2^2.$$
+The target is a learned latent, not necessarily interpretable friction or mass. On-policy data helps align histories with the behavior encountered during deployment.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Window Proprioceptive History.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Estimate a Latent Dynamics Context.
 
-## Implementation decomposition
 
-1. Window Proprioceptive History.
-2. Estimate a Latent Dynamics Context.
-3. Evaluate Policy Recovery After a Parameter Change.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Run asynchronous adaptation
 
-## Problem blueprints
+At deployment, $\hat z_t=\phi(h_t)$ replaces privileged $z_t$. The paper runs adaptation slower than the base controller, which consumes the most recent available latent. Timestamp the estimate; sudden changes can occur faster than the history window can identify them.
 
-### Problem: Window Proprioceptive History
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the window proprioceptive history component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Track the Age of an Asynchronous Adaptation Latent.
 
-### Problem: Estimate a Latent Dynamics Context
+**Planned exercise:** Evaluate Policy Recovery After a Parameter Change.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the estimate a latent dynamics context component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Policy Recovery After a Parameter Change
+## Implement the components
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate policy recovery after a parameter change component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-## Visual teaching plan
+- **Train with privileged extrinsics:** Build Privileged Dynamics-Latent Supervision (planned).
+- **Infer extrinsics from history:** Window Proprioceptive History (planned); Estimate a Latent Dynamics Context (planned).
+- **Run asynchronous adaptation:** Track the Age of an Asynchronous Adaptation Latent (planned); Evaluate Policy Recovery After a Parameter Change (planned).
 
-- Plot terrain or dynamics shifts beside inferred adaptation state.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+History-based adaptation can compensate for payload, terrain, and dynamics changes without retraining. Unobservable parameters, misleading contact histories, and stale adaptation estimates remain limits.
 
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2107.04034) · [Open-access manuscript](https://arxiv.org/pdf/2107.04034)
 
-- [Primary arXiv record](https://arxiv.org/abs/2107.04034)
-- [Open-access author manuscript](https://arxiv.org/pdf/2107.04034)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

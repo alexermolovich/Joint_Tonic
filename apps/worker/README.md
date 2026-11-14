@@ -11,6 +11,14 @@ The environment contains NumPy 2.2.4 and PyTorch 2.6.0+cpu. The current report/r
 
 ## Verification
 
+For a content change, check just the affected author-owned references in both public Run and full Submit:
+
+~~~bash
+/home/alex/.venvs/joint-tonic/bin/python apps/worker/check_references.py --sandbox unproject-depth-map pid-anti-windup
+~~~
+
+Omit the slugs to check all published metadata entries. Omit --sandbox only for a fast trusted-reference arithmetic check; learner submissions must always use the isolated worker. Missing evaluator files and empty/public-only/hidden-only test sets fail validation. The checker discovers the catalog rather than assuming ten problems. Use the broader containment suite below when the execution boundary changes or a failure warrants it.
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 \
   /home/alex/.venvs/joint-tonic/bin/python tests/worker_checks.py

@@ -16,102 +16,82 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Shared image features generate anchor-based proposals, proposals are filtered into regions of interest, and a second head predicts their final classes and boxes.","nodes":[{"id":"stage-1","title":"Encode anchor targets","detail":"Represent target boxes as offsets relative to an anchor’s center and size.","column":0,"row":0,"section":"Encode anchor targets","problem_slugs":[],"planned_problems":["Generate dense anchors","Encode and decode proposal regression targets"]},{"id":"stage-2","title":"Select region proposals","detail":"Use foreground scores, box decoding, clipping, and duplicate removal.","column":1,"row":0,"section":"Select region proposals","problem_slugs":["box-iou-broadcast","class-aware-nms"],"planned_problems":["Filter proposals and test region-feature alignment"]},{"id":"stage-3","title":"Classify and refine regions","detail":"Convert variable regions into fixed-size features for a second prediction head.","column":2,"row":0,"section":"Classify and refine regions","problem_slugs":[],"planned_problems":["Pool Proposal Regions and Apply Class-Specific Box Deltas"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"anchor predictions"},{"from":"stage-2","to":"stage-3","label":"regions of interest"}]}
 ---
 
-# Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks
+## Core paper explanation
 
-## Agent brief
+Faster R-CNN uses a region-proposal network to suggest object regions from shared image features, then a second stage classifies and refines those regions. Sharing the feature backbone avoids running a separate expensive proposal system. The two-stage design creates clear implementation boundaries: anchors and regression targets, proposal filtering, and region-based prediction.
 
-Learn region proposals and refine them through a second-stage detector. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Shared image features generate anchor-based proposals, proposals are filtered into regions of interest, and a second head predicts their final classes and boxes.
 
-Learn region proposals and refine them through a second-stage detector.
+### Encode anchor targets
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For anchor $(x_a,y_a,w_a,h_a)$ and target $(x,y,w,h)$ in the same image coordinates,
 
-## Prerequisite concepts
+$$
+t_x=(x-x_a)/w_a,\quad t_y=(y-y_a)/h_a,
+\quad t_w=\log(w/w_a),\quad t_h=\log(h/h_a).
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+The offsets are dimensionless. Anchors need positive width and height, and anchor enumeration order must agree with the prediction tensor. Decode with $x=x_a+w_at_x$ and $w=w_ae^{t_w}$, with analogous vertical terms.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Generate Dense Anchors | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Encode Proposal Regression Targets | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Filter Region Proposals | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
+**Planned component problems:** Generate dense anchors; Encode and decode proposal regression targets. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Data and evaluation
+### Select region proposals
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+The proposal objective combines classification and regression over suitable anchors:
 
-## Limitations and failure modes
+$$
+\mathcal L_{\mathrm{RPN}}=\frac1{N_c}\sum_i\mathcal L_{\mathrm{cls}}(p_i,p_i^*)
++\frac{\lambda}{N_r}\sum_i p_i^*\mathcal L_{\mathrm{reg}}(t_i,t_i^*).
+$$
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Only positive anchors contribute regression targets. [IoU](/problems/box-iou-broadcast) supports matching and overlap checks. [NMS](/problems/class-aware-nms) provides the duplicate-removal mechanism, although the proposal stage uses foreground proposals rather than final semantic classes.
 
-## Implementation decomposition
 
-1. Generate Dense Anchors.
-2. Encode Proposal Regression Targets.
-3. Filter Region Proposals.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Implement this component:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast) · [Run Class-Aware Non-Maximum Suppression](/problems/class-aware-nms). Use the suppression primitive with one class for class-agnostic proposals; proposal scoring, regression and region extraction remain separate.
 
-## Problem blueprints
+**Planned component problems:** Filter proposals and test region-feature alignment. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Generate Dense Anchors
+### Classify and refine regions
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the generate dense anchors component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Region-of-interest pooling produces a fixed feature shape for every proposal. A head predicts class probabilities and an additional box correction. A typical robust coordinate penalty is
 
-### Problem: Encode Proposal Regression Targets
+$$
+\operatorname{smoothL1}(x)=\begin{cases}\tfrac12x^2,&|x|<1,\\|x|-\tfrac12,&|x|\ge1.\end{cases}
+$$
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the encode proposal regression targets component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Quantized pooling regions can lose spatial precision; this limitation later motivates ROIAlign in Mask R-CNN. Keep the first-stage and second-stage regression reference boxes distinct.
 
-### Problem: Filter Region Proposals
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the filter region proposals component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-## Visual teaching plan
 
-- Overlay anchors and proposals with score and overlap controls.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+**Planned component problem:** Pool Proposal Regions and Apply Class-Specific Box Deltas. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## MLOps and deployment extensions
+## Implement the components
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- **Related implementation skill:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Run Class-Aware Non-Maximum Suppression](/problems/class-aware-nms). This isolates a supporting mechanism, not this paper's complete method.
 
-## Canonical sources
+**Planned components:**
 
-- [Primary arXiv record](https://arxiv.org/abs/1506.01497)
-- [Open-access author manuscript](https://arxiv.org/pdf/1506.01497)
+- Generate dense anchors.
+- Encode and decode proposal regression targets.
+- Filter proposals and test region-feature alignment.
+- Pool Proposal Regions and Apply Class-Specific Box Deltas.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
+## Why this matters on a robot
+
+Two-stage refinement can improve localization, but it adds proposal-count and latency tradeoffs. Invalid anchor ordering or resize transforms can corrupt every final box. Benchmark crowded scenes and proposal truncation, not only isolated objects.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1506.01497) · [Open-access manuscript](https://arxiv.org/pdf/1506.01497)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

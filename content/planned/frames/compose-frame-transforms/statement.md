@@ -1,17 +1,13 @@
 # Compose and Invert Coordinate Transforms
 
-**Status: planned.** A camera is mounted on a robot base whose pose is known in the world. Produce the camera-to-world transform and its inverse without confusing the frame of each translation.
+Implement **compose_transforms(first, second)**. Each input is a dict with required keys matrix, target, source, stamp and unit; ignore extra keys.
 
-## Contract
+matrix is a finite real integer/floating array-like (4,4), with translation magnitude per component <=1e6. Reject bool, complex, string or object matrix dtypes. Its last row is [0,0,0,1] within atol=1e-9, rtol=0. Its rotation R satisfies R.T@R=I and det(R)=1 with the same absolute tolerance. Do not repair invalid matrices.
 
-Inputs are two finite, proper homogeneous matrices `T_ab` and `T_bc`, each `(4,4)`, plus their frame labels. The notation means **a-from-b**: multiplying `T_ab` by a column point in frame b expresses that point in frame a. Both transforms describe the same timestamp; translation uses meters.
+target and source are nonempty strings without surrounding whitespace. first.source must equal second.target. Both unit fields must equal the string "m". Each stamp is a finite real Python or NumPy scalar (not bool) in [-1e6,1e6]; stamps must be exactly equal. Validate frame/unit/time compatibility before matrix multiplication.
 
-Return a new `T_ac` and `T_ca`, each `(4,4)`. Compose in the order `T_ab @ T_bc`. Inversion must rotate the negative translation into the inverse frame. Preserve inputs.
+first means a-from-b; second means b-from-c. Return a tuple of independent float64 arrays (T_ac,T_ca), each (4,4). Compute rotation R_ac=R_ab@R_bc and translation t_ac=R_ab@t_bc+t_ab; use an exact [0,0,0,1] bottom row. Invert rigidly with rotation R_ac.T and translation -R_ac.T@t_ac. Preserve inputs and return new storage.
 
-Reject non-rigid transforms, nonfinite values, malformed shapes, different units/timestamps, or a middle frame that does not match. Frame-label compatibility is checked before numerical multiplication. Do not reinterpret a matrix whose labels are reversed.
+Every documented violation raises ValueError. Same target/source labels are permitted (including a chain that returns to its starting frame). No calibration estimation or interpolation across timestamps.
 
-## Expected capability
-
-Trace a calibration chain and verify the inverse by transforming a point out and back. This exercise does not estimate calibration from observations.
-
-See [worked inputs and outcomes](examples.md), [theory](theory.md), and [progressive hints](hints.md).
+NumPy CPU; numerical tolerance rtol=1e-7, atol=1e-9. Masks, shapes and errors are exact.

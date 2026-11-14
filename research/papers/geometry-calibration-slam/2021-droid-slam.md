@@ -16,102 +16,66 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Project dense correspondences","detail":"Use current poses and depths to relate image pixels.","column":0,"row":0,"section":"Project dense correspondences","problem_slugs":[],"planned_problems":["Build a Dense Reprojection Residual"]},{"id":"stage-2","title":"Predict correspondence updates","detail":"Use a recurrent network to refine targets and confidence.","column":1,"row":0,"section":"Predict correspondence updates","problem_slugs":[],"planned_problems":["Apply Recurrent Dense Correspondence and Confidence Updates"]},{"id":"stage-3","title":"Run dense bundle adjustment","detail":"Jointly solve for pose and inverse-depth changes.","column":2,"row":0,"section":"Run dense bundle adjustment","problem_slugs":[],"planned_problems":["Select Edges for a Frame Graph","Update Poses in a Small Bundle-Adjustment Problem"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"correlation features"},{"from":"stage-2","to":"stage-3","label":"targets and weights"}]}
 ---
 
-# DROID-SLAM: Deep Visual SLAM for Monocular, Stereo, and RGB-D Cameras
+## Core paper explanation
 
-## Agent brief
+DROID-SLAM alternates learned correspondence refinement with a differentiable dense bundle-adjustment layer. The network predicts correspondence corrections and confidence while geometric optimization jointly updates camera poses and inverse depths.
 
-Study learned geometric SLAM through recurrent correspondence and optimization interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study learned geometric SLAM through recurrent correspondence and optimization interfaces.
+### Project dense correspondences
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For pixel $u_i$, inverse depth $d_i$, and relative pose $T_{ji}$,
+$$u_{ij}=\pi(T_{ji}\pi^{-1}(u_i,d_i)).$$
+Features and correlation volumes provide visual evidence around these current geometric predictions.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Prerequisite practice:** [Project Camera Points into Pixels](/problems/project-camera-points). These supporting skills do not complete this model stage.
 
-## Method map
+**Planned component problems:** Build a Dense Reprojection Residual. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build a Dense Reprojection Residual | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Select Edges for a Frame Graph | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Update Poses in a Small Bundle-Adjustment Problem | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+### Predict correspondence updates
 
-## Data and evaluation
+The recurrent update predicts target corrections $\delta_{ij}$ and weights $w_{ij}$. Set $\hat u_{ij}=u_{ij}+\delta_{ij}$. Weights express how strongly the geometric solve should trust each correspondence; they do not automatically constitute calibrated physical uncertainty.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+**Planned component problem:** Apply Recurrent Dense Correspondence and Confidence Updates. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-1. Build a Dense Reprojection Residual.
-2. Select Edges for a Frame Graph.
-3. Update Poses in a Small Bundle-Adjustment Problem.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Run dense bundle adjustment
 
-## Problem blueprints
+The dense objective is
+$$E(T,d)=\sum_{ij}\|\hat u_{ij}-\pi(T_{ji}\pi^{-1}(u_i,d_i))\|_{w_{ij}}^2.$$
+Linearization and a Schur complement exploit the pose/depth structure. Recurrent updates repeat with improved geometry. Stereo or RGB-D measurements can constrain scale at inference; monocular geometry retains its gauge ambiguity.
 
-### Problem: Build a Dense Reprojection Residual
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build a dense reprojection residual component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:** Select Edges for a Frame Graph; Update Poses in a Small Bundle-Adjustment Problem. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Select Edges for a Frame Graph
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the select edges for a frame graph component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Update Poses in a Small Bundle-Adjustment Problem
+**Planned components:**
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the update poses in a small bundle-adjustment problem component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Build a Dense Reprojection Residual.
+- Apply Recurrent Dense Correspondence and Confidence Updates.
+- Select Edges for a Frame Graph.
+- Update Poses in a Small Bundle-Adjustment Problem.
 
-## Visual teaching plan
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- Display dense flow residuals and frame-graph optimization progress.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Learned matching and explicit geometry can complement each other. Dynamic objects, disconnected frame graphs, and poor depth initialization can still break tracking; monitor residuals and connectivity rather than only network confidence.
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2108.10869) · [Open-access manuscript](https://arxiv.org/pdf/2108.10869)
 
-- [Primary arXiv record](https://arxiv.org/abs/2108.10869)
-- [Open-access author manuscript](https://arxiv.org/pdf/2108.10869)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

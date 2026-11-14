@@ -1,0 +1,79 @@
+{
+  "slug": "batch-variable-robot-episodes",
+  "title": "Batch Variable-Length Episodes with Masks",
+  "version": "1.0.0",
+  "number": 319,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "offline-demonstrations",
+    "padding",
+    "episode-boundaries"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "batch_episodes",
+  "paperIds": [
+    "2021-robomimic"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Pad complete robot episodes to a shared horizon without confusing valid zeros with padding.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; actual local bubblewrap Run and Submit verified",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [
+      "numpy"
+    ]
+  },
+  "physical_contract": "Batch items are independent episodes or evaluation records. Action channels preserve upstream units, coordinate frames and control ordering; no timing or physical quantity is inferred. Scalar loss and success metrics are dimensionless under supplied evaluation contracts.",
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "unequal episode lengths",
+      "empty episode with valid zero",
+      "all-empty episodes"
+    ],
+    "hidden_case_families": [
+      "noncontiguous storage and shapes",
+      "dtype/value/width contract",
+      "declared padded-size budget"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "216c2c501de19967e00496bfd2dcfb1c33f256d79d730a10c7cde5745ce5444f"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:216c2c501de19967e00496bfd2dcfb1c33f256d79d730a10c7cde5745ce5444f",
+    "evaluator_sha256": "216c2c501de19967e00496bfd2dcfb1c33f256d79d730a10c7cde5745ce5444f",
+    "generated_fixture_hash": "216c2c501de19967e00496bfd2dcfb1c33f256d79d730a10c7cde5745ce5444f"
+  },
+  "provenance": {
+    "authoring_notes": "robomimic motivates careful offline data handling and comparing supervised objectives with closed-loop evaluation. The exact bounded interface and deterministic policy here are original teaching choices, not the complete robomimic data loader or evaluation system.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2108.03298"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2021-robomimic.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

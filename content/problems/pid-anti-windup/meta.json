@@ -1,0 +1,77 @@
+{
+  "slug": "pid-anti-windup",
+  "title": "PID with Integral Anti-Windup",
+  "version": "1.0.0",
+  "number": 13,
+  "difficulty": "Easy",
+  "domain": "Control",
+  "topics": [
+    "control"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "pid_step",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compute bounded joint-control effort with conditional integration that still permits unwinding.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "one-robot-joint"
+    ],
+    "units": {
+      "error": "radians",
+      "integral": "radian-seconds",
+      "dt": "seconds",
+      "command": "normalized actuator effort"
+    },
+    "axes": "Positive error commands positive joint actuation.",
+    "timestamp_assumptions": "One synchronized measurement clock; no offset correction.",
+    "batching": "One scalar control step; gains length3, limits length2."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-7,
+    "atol": 1e-9,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "boundary",
+      "validation",
+      "empty-where-supported",
+      "immutability",
+      "scale"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "3c1976638ad49b4d1c4eea68e0db6c10e6f2d6ad27bcc74512f9cc7f713e4ae9"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://www.cds.caltech.edu/~murray/books/AM05/pdf/fbs-pid_01Jan19.pdf"
+    ],
+    "implementation_urls": []
+  }
+}

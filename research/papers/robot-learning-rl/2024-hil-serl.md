@@ -16,102 +16,55 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Collect policy and corrective actions","detail":"Let a human temporarily take control when behavior needs correction.","column":0,"row":0,"section":"Collect policy and corrective actions","problem_slugs":[],"planned_problems":["Label Human Intervention Segments"]},{"id":"stage-2","title":"Learn from mixed replay","detail":"Combine demonstration/correction evidence with online experience.","column":1,"row":0,"section":"Learn from mixed replay","problem_slugs":[],"planned_problems":["Mix Intervention and Autonomous Replay"]},{"id":"stage-3","title":"Update and evaluate autonomy","detail":"Distribute new policies and track success without assistance.","column":2,"row":0,"section":"Update and evaluate autonomy","problem_slugs":[],"planned_problems":["Gate an Online Policy Update"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"labeled transitions"},{"from":"stage-2","to":"stage-3","label":"learner updates"}]}
 ---
 
-# Precise and Dexterous Robotic Manipulation via Human-in-the-Loop Reinforcement Learning
+## Core paper explanation
 
-## Agent brief
+HIL-SERL combines real-robot off-policy reinforcement learning with human demonstrations and online corrective interventions. An actor, learner, replay storage, and learned success rewards form an integrated training system.
 
-Improve real robot policies with an online learning loop that incorporates human intervention. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Improve real robot policies with an online learning loop that incorporates human intervention.
+### Collect policy and corrective actions
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Record executed action $a_t$ and source label $h_t\in\{\mathrm{policy},\mathrm{human}\}$. When a human intervenes, the replay transition must contain the action actually sent to the controller, not the policy proposal that was overridden.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Label Human Intervention Segments.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Label Human Intervention Segments | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Mix Intervention and Autonomous Replay | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Gate an Online Policy Update | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Learn from mixed replay
 
-## Data and evaluation
+A teaching replay mixture is $D_{\mathrm{batch}}\sim\eta D_{\mathrm{demo}}+(1-\eta)D_{\mathrm{online}}$. The actual system's buffer composition and sampling schedule must be retained. Critic targets use $y=r+\gamma(1-d)V_{\mathrm{target}}(s')$ under the chosen off-policy algorithm.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Mix Intervention and Autonomous Replay.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Update and evaluate autonomy
 
-1. Label Human Intervention Segments.
-2. Mix Intervention and Autonomous Replay.
-3. Gate an Online Policy Update.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A success classifier supplies task reward from observations. Classifier false positives can be exploited by the policy. Report autonomous success separately from training success with interventions, together with human time, interaction budget, and policy version.
 
-## Problem blueprints
 
-### Problem: Label Human Intervention Segments
+**Planned exercise:** Gate an Online Policy Update.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the label human intervention segments component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Mix Intervention and Autonomous Replay
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the mix intervention and autonomous replay component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-### Problem: Gate an Online Policy Update
+- **Collect policy and corrective actions:** Label Human Intervention Segments (planned).
+- **Learn from mixed replay:** Mix Intervention and Autonomous Replay (planned).
+- **Update and evaluate autonomy:** Gate an Online Policy Update (planned).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the gate an online policy update component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Corrections can focus expensive experience on useful recovery behavior. Hidden human assistance or incorrect action-source logging can make a policy appear more autonomous than it is.
 
-- Annotate autonomous and intervention segments in a robot episode timeline.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2410.21845) · [Open-access manuscript](https://arxiv.org/pdf/2410.21845)
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2410.21845)
-- [Open-access author manuscript](https://arxiv.org/pdf/2410.21845)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

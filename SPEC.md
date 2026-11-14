@@ -1,7 +1,8 @@
 # Joint Tonic product specification
 
 **Status:** Implementation-ready baseline  
-**Version:** 1.0.0  
+**Version:** 1.1.0
+
 **Date:** 2026-11-13  
 **Audience:** Product, design, content, research, platform, and evaluation engineers
 
@@ -75,11 +76,22 @@ Joint Tonic will adopt these general interaction patterns while using original d
 
 - **Problems:** searchable standalone exercises.
 - **Tracks:** ordered curricula, including paper implementations.
-- **Papers:** curated paper map with prerequisites, tracks, and implementation coverage.
+- `/tracks` keeps the three introductory paths and adds a searchable, topic-filtered track for every canonical research paper. Each `/tracks/paper-{paper-id}` page exposes ordered component exercises, prerequisite links, proposed components and a paper-specific integration/evaluation/reproducibility plan from `content/tracks/papers/`. Available exercise progress is separate from pending integration assessment; paper tracks do not imply full-paper reproduction. The left navigation groups these tracks by research topic. `content/PAPER_TRACKS.md` is the complete Markdown index, synchronized with the paper library.
+- **Projects:** topic sheets leading to paper-based model explanations, execution graphs, and linked coding components.
 - **Systems:** MLOps and production-robotics scenarios.
 - **Progress:** completed problems, track state, strengths, and saved work.
 
 Later: team classrooms, benchmark labs, authoring studio, and community discussion.
+
+Site navigation is a persistent left tree, replacing the horizontal header, announcement strip, and footer navigation. It contains Home, Problems with individual exercises, Tracks with learning paths, Projects with topics and papers, Systems, Progress, and Settings. Expand/collapse controls reveal nested entries; search filters page and paper names. The current page is marked. Desktop can collapse the tree into an icon rail without remounting the workspace; narrow screens use the rail and an accessible drawer with Escape/focus restoration. Existing project and paper pages use this shared tree rather than duplicate navigation panels.
+
+The Projects index at `/projects` groups the research corpus into nine topic sheets at `/projects/sheets/{topic}`. Each source paper opens at `/projects/{paper-id}` with orientation, a model execution flow, mathematical explanations, and available coding exercises. The original source title and citation remain visible. Existing `/papers` URLs redirect to Projects, including alternate IDs for the same canonical paper.
+
+Project topics live under Projects in the shared left tree; the selected topic, search, availability filter, and cards occupy the main column. Topic counts reflect the full corpus, independently of search. Individual paper views follow the browser pattern of the [TensorTonic research reference](https://www.tensortonic.com/research?paper=lstm): a searchable, grouped paper list on the left, with the selected paper's summary, actual linked-problem progress, implementation stages, and model diagram on the right. Detailed mathematics and practice links continue below. The current topic/paper is marked in navigation; no large topic grid precedes the content.
+
+Cards distinguish **coding components available**, **model explanation available**, and **in preparation**. Stage counts come from validated execution-flow metadata. Linked-problem counts combine direct paper associations and flow-node links without duplicates; these can include prerequisites and do not measure full paper reproduction. Cards show the linked exercises' difficulty breakdown and actual locally saved solved count. Search covers titles, authors, and topics; filters separate coding availability from explanation availability. Incomplete authoring cards show a preparation notice instead of agent instructions. Research PDFs remain local authoring references.
+
+Every paper flow stage associates exercises with the mechanism explained by that stage. `problem_slugs` contains verified runnable tasks; `planned_problems` contains original future-exercise titles, using exact curriculum/blueprint names when available. Planned titles never create dead problem routes. A unique exact title match can become a runnable association when its problem is published; keyword guesses and ambiguous titles do not. The graph shows runnable/planned counts and an Implement link for a single runnable component, or a link to that stage's exercise list. Stage lists and the corresponding math explanation provide the problem name, implementation scope and supporting-prerequisite distinction. New paper ideas do not silently expand the approved curriculum.
 
 ### 5.2 Problem catalog
 
@@ -90,7 +102,7 @@ The catalog must support:
 - Sort by recommended, newest, difficulty, duration, and completion.
 - Cards/rows showing title, difficulty, domain, runtime/framework, estimated time, paper badge, and solve status.
 - Shareable URL state for filters, search, sorting, and pagination.
-- Signed-out browsing; sign-in is required only to persist private progress or submit.
+- Signed-out browsing. The local prototype continues to allow browser-local Run/Submit; hosted private progress and authoritative account-owned submissions require the later server-verified persistence adapter. Account login alone does not change evaluator ownership.
 
 Initial top-level domains:
 
@@ -106,16 +118,28 @@ Initial top-level domains:
 | Robotics MLOps | data quality/lineage, training pipelines, packaging, edge inference, monitoring, rollback |
 | Safety and evaluation | OOD, uncertainty, scenario coverage, guardrails, incident analysis |
 
+The local catalog uses a compact problem list with horizontal topic chips, runtime tabs derived from available problems, search, difficulty/status filters, and sorting. Filter state is shareable in the URL. A progress sidebar links to the next exercise and guided paths; narrow screens prioritize the list. Original robotics icons identify the domains in both filters and rows.
+
+### 5.3 Visual direction
+
+Default to Gruvbox Dark: warm charcoal surfaces, orange accents, and cream text. Settings offers immediately applied, locally persisted Gruvbox Dark, Slate Dark, Warm Light, and Graphite choices. Graphite is an opt-in alternative inspired by the reference's neutral dark surfaces, clear white/gray text, and mint accent; adding it does not change the existing default or saved preference. Shared semantic colors apply to navigation, catalogs, problem material, full-window Theory, charts, and the code editor. Use the system sans-serif stack observed on the TensorTonic reference (Segoe UI on Windows), with 16–17px reading text and a separate monospace code font. Keep positive and negative results visually distinct and labeled, keyboard focus visible, and layouts responsive.
+
+Learning-path cards show real solved counts and a difficulty breakdown, with concrete component-oriented titles. Keep cards without artwork until the user supplies approved imagery. The supplied robot-arm illustration accompanies the manipulation-related VLM/VLA path; provenance is recorded in `docs/user-provided-media.md`. Original robotics topic icons identify frames, cameras, grippers, robot learning, and deployment.
+
+### 5.4 Local account statistics
+
+The Progress page is the local account dashboard: solved totals, saved submissions, graded acceptance, current/best recorded streaks, an activity calendar, robotics-domain breakdowns, recent unique completions, learning paths, and drafts. Use actual local records and clearly show empty/loading states. Acceptance excludes platform errors; day-based activity uses the browser's local calendar dates. History metrics cover only the latest 100 retained submissions, while solved totals use the persistent solved set. Explain this limit in the interface. Rank, XP, awards, and quizzes require defined rules/content before appearing as product metrics.
+
 ## 6. Learner workspace
 
-Desktop uses a resizable two-pane layout: learning material on the left and code/results on the right. Mobile uses a single pane with persistent tab switching.
+The local desktop workspace fills the available viewport beside the collapsible navigation tree, with learning material on the left and code/results on the right. A compact breadcrumb identifies the current problem; the problem title appears once in the learning pane. Equal-width desktop panes have no large outer frame or margins. Run/Submit sit in the editor toolbar, and the results panel collapses to its header to return space to the editor. Appearance links to Settings. Narrow screens stack the learning and coding panes. Resizable panes and mobile pane switching remain follow-up work.
 
 ### 6.1 Content tabs and Tensor Tonic workflow parity
 
 The learner workspace targets functional parity with the relevant Tensor Tonic learning loop: separate learning tabs, an adjacent code workspace, immediate Run/Submit feedback, and saved progress. Joint Tonic uses original design and content, and adds physical contracts plus paper/MLOps traceability.
 
 - **Problem:** goal, contract, examples, constraints, and submission requirements.
-- **Theory:** original intuition, LaTeX mathematics, worked examples, interactive/static visuals, paper links, prerequisites, robot relevance, and failure modes.
+- **Theory:** original intuition, LaTeX mathematics, worked examples, interactive/static visuals, paper links, prerequisites, robot relevance, and failure modes. Theory is an ordinary tab within the left learning pane, alongside Problem and Solution; it never opens a full-screen modal. The editor and results remain visible and mounted on the right, preserving drafts and active evaluation. The shared problem heading introduces the article. Essential equations use readable, horizontally scrollable display cards, and the interactive visual and numerical readouts fit the learning pane with a text alternative.
 - **Solution:** locked until solve or explicit reveal; reference implementation, complexity, alternatives, and failure modes.
 - **Submissions:** immutable records with content/evaluator/runtime version, status, score, resources, and code snapshot.
 - **Notes:** private autosaved Markdown notes with optional links to lines or test failures.
@@ -133,7 +157,7 @@ The learner workspace targets functional parity with the relevant Tensor Tonic l
 
 ### 6.3 Robot simulator sidecar
 
-Problems that benefit from embodied feedback—especially forward/inverse kinematics, motion planning, control, collision, and sim-to-real tasks—may open a resizable **Robot View** beside Theory and Code. Desktop supports three panes (learning material, code/results, robot view); narrow layouts switch the robot view into a full-width tab. The learner can reset, play/pause, single-step, scrub a deterministic replay, select a camera, toggle frames/collision geometry, and inspect target/current pose and joint values.
+Problems that benefit from embodied feedback—especially forward/inverse kinematics, motion planning, control, collision, and sim-to-real tasks—may provide a **Simulation** tab in the right coding pane. The current FR3 slice keeps learning material/Theory on the left and switches Code/Simulation on the right without unmounting the editor. Opening the problem initializes the local MuJoCo model; playback starts only on explicit user action. The learner can reset, play/pause, single-step, scrub a deterministic replay, select a camera, toggle frames/collision geometry, and inspect target/current pose and joint values.
 
 The sidecar supports two backend adapters:
 
@@ -224,9 +248,25 @@ The UI must distinguish:
 
 Every step declares what differs from the paper. Track progress is a dependency graph, although most launch tracks present a recommended linear path.
 
+### 8.1 Paper explanation and execution flow
+
+Use the interaction pattern of the [TensorTonic RAG project](https://www.tensortonic.com/projects/rag-from-scratch): orientation, ordered components, a system-flow overview, and composition/evaluation. All Joint Tonic explanations and diagrams are original and specific to the referenced robotics paper.
+
+- Open with what the method does, its inputs/outputs, and what the learner can implement today.
+- Pair the ordered component list with an execution graph. Nodes link to the corresponding explanation section; runnable problem links sit directly beneath the relevant stage and beside the component's math in the article.
+- Show actual data/model dependencies, branching and conditioning inputs. Label edges with meaningful tensors, shapes or signals. Distinguish training, inference, evaluation and robot-time loops. Systems and dataset papers use their operational pipeline rather than an invented neural architecture.
+- Explain each component with intuition, substantial essential LaTeX mathematics, locally defined symbols/shapes/units/frames, and a small numerical or tensor example where useful. State how the coding task differs from the full paper.
+- End with integration, evaluation, failure modes, and reproduction limits. Paper stages without implemented exercises remain explanation links; planned problems never masquerade as runnable exercises.
+- Store graph nodes/edges in `execution_flow` YAML frontmatter alongside the paper Markdown. Validate IDs, coordinates, edges, exact plain-text section headings, and actual problem slugs. See `research/templates/paper-card.md`. Invalid metadata must not remove the rest of the paper from the catalog.
+- The graph supports keyboard links, all three themes, contained scrolling at narrow widths, and an equivalent text flow. No copying of source-site or paper figures is needed.
+
+Roll out the new format in reviewed batches, beginning with Diffusion Policy. The existence of a library card does not mean its mathematical explanation and flow have already been reviewed.
+
 ## 9. Launch curriculum
 
 `MVP_10.md` defines the first ten problems to author and implement. `CURRICULUM.md` is the larger named roadmap: 189 practical problem candidates across shared foundations, vision/VLM/3D perception, VLA/embodied learning, and robotics MLOps/deployment/sim-to-real. A roadmap name is a candidate until a reviewed problem-blueprint Markdown file promotes it to an implementation commitment.
+
+The local catalog now expands incrementally from that baseline. `content/AUTHORING_STATUS.md` records each named entry as queued, planned, drafted, reviewed, or runnable, generated from the curriculum and content files. Runnable entries have complete versioned packages and pass public Run plus hidden Submit in the existing isolated worker. Standalone theory may use a purposeful static table or shape trace with `visualization: markdown`; an unrelated interactive diagram must never substitute for a missing adapter. Reference verification discovers published metadata and supports focused slug selection instead of a fixed ten-problem count. Shared local runtime caps remain 18 seconds wall time, 10 CPU seconds, and 4 GiB address space per process; smaller authoring targets are not represented as enforced budgets.
 
 ### 9.1 Foundation problems
 
@@ -346,7 +386,7 @@ Required human-authored material: summary, prompt, theory, examples, hints, solu
 
 ## 12. Technical architecture
 
-The coding phase is **local-server only**. Do not create, connect, or mutate Vercel or hosted Supabase resources until the user explicitly starts deployment work. The production control-plane target is Vercel plus Supabase; code and migrations must remain compatible with that target.
+The website and evaluator remain **local-server only**. The user has authorized connecting this localhost application to their supplied hosted Supabase project for email/password Auth and account metadata. This narrow exception does not authorize Vercel deployment, remote schema migrations, or moving learner execution to hosted functions. The production control-plane target is Vercel plus Supabase; code and migrations must remain compatible with that target.
 
 ### 12.1 Applications
 
@@ -565,3 +605,25 @@ Specification work is complete for the local vertical slice. No unresolved produ
 
 The first coding milestone is: scaffold the local Next.js application and local Supabase migrations, define the versioned problem schema/content loader, establish the separate local Python evaluator interface, and implement Problems 1 and 3 from `MVP_10.md` as the end-to-end reference slice.
 
+
+### Account Auth implementation
+
+`/account` supports email/password signup, confirmation, sign-in, sign-out on this device, and an editable display name stored in Supabase Auth user metadata. `/auth/reset-password` handles recovery and authenticated password changes. PKCE email callbacks must open in the requesting browser. The Auth SDK refreshes and persists sessions; session errors are visible. Metadata is display-only, never an authorization source. This first account slice does not require the public.profiles database table or a remote migration. That table remains reserved for the later database persistence adapter.
+
+The left navigation and Settings link to Account. Anonymous reading and the local evaluator remain usable. Existing drafts, notes, bookmarks, results, and progress remain shared device-local workspace data, clearly labeled; they are not silently imported or presented as cloud-synced/private account data. Never treat the browser workspace UUID or local solved flags as authenticated/verified learning records. Future account-owned APIs must validate Supabase identity server-side and enforce RLS before accepting those records.
+
+Configuration uses only NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or legacy anonymous key), in ignored apps/web/.env.local. HTTPS hosted Auth and loopback local Auth are supported; secret keys are rejected. No service-role key is required. Supabase redirect allowlisting and email delivery remain project-dashboard setup; see docs/supabase-auth.md.
+
+For the current testing phase, signup should not require email confirmation, as requested by the user. Set Confirm email OFF in the hosted Supabase Email provider settings; the public client cannot mutate that project configuration. The existing signup flow accepts an immediate Supabase session. If confirmation remains enabled remotely, the application must still report the real pending-confirmation state, never fabricate authentication or bypass it with a privileged browser key. Password recovery remains email-based. No MFA challenge is implemented in this slice.
+
+### First MuJoCo problem: Franka Research 3 joint interpolation
+
+`/problems/fr3-joint-interpolation` introduces linear interpolation between two seven-joint configurations in radians. The reference asset must be the actual Menagerie Franka Research 3, with pinned upstream commit, file hashes, license notices, and documented tool frame. This is joint-space kinematics, not Cartesian IK, closed-loop dynamics, collision checking, or a hardware safety guarantee.
+
+Opening this problem requests the home pose from a separate loopback-only MuJoCo service. The service lazily initializes the approved model and returns a bounded rendered PNG, joint vector and tool pose. It never accepts code, paths, assets, arbitrary models, or remote URLs. The same right-hand pane has keyboard-accessible Code and Simulation tabs; changing tabs preserves code and notes. The left Theory remains available. Offline/rendering failures have a retry state and do not block coding or grading.
+
+The isolated evaluator optionally executes an authored `preview.py` public demonstration fixture for this problem and returns at most101 seven-joint waypoints, with finite values and model-limit validation before native simulation. These data are explicitly untrusted visual output, independent of grading, never hidden-test trajectories or privileged execution instructions. The frontend labels the evaluated code snapshot and warns when the current draft differs. No reference trajectory replaces failed learner output. Reset returns to model home; waypoint selection and explicit Play/Pause provide replay without autoplay, including for reduced-motion users. The Simulation tab continuously requests live MuJoCo frames while visible. Mouse/touch drag or arrow keys orbit the camera; wheel, +/− and buttons zoom; Reset camera restores the default view. One request at a time reads the latest camera/pose, avoiding a backlog during dragging. Hidden browser tabs pause the stream; failures wait for user retry. Playback advances on a display clock and slow rendering can skip displayed waypoints; this does not claim physical timing. The FR3 demonstration editor is prefilled with its reference solution for new or untouched drafts, per the user’s request; Reset code restores the starter and custom drafts are preserved.
+
+The existing worker caps still apply to preview generation (18s wall,10s CPU,4GiB address space,64KiB stdout); rendering uses its own bounded loopback protocol. MuJoCo native failures are platform/display errors, not learner grading failures. `docs/mujoco-fr3.md` describes reproducible setup and known limitations.
+
+The FR3 Simulation pane offers **Run and play** before any result exists or after an editor change. This explicit action evaluates the current code snapshot in the isolated worker and starts playback only when that job returns a valid bounded preview matching the current draft. Existing fresh results can be replayed without rerunning. Editing stops playback and disables scrubbing stale output until rerun. The view exposes the exact public function arguments and selected returned row. Valid bounded output remains inspectable even if numerical grading fails; invalid output never receives a reference fallback. Each explicit run/play request starts playback at most once, and changing tabs does not restart it.

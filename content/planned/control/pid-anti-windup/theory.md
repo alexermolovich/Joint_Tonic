@@ -1,37 +1,56 @@
-# Take a PID Step with Conditional Anti-Windup: theory
+# Stop integral state fighting an actuator limit
 
 ## Intuition
 
-An integral term remembers persistent tracking error. That memory helps overcome a steady load or bias, but it can become harmful when the actuator is already at its limit. The controller keeps demanding more than the motor can deliver, the integral grows, and the joint may overshoot after the constraint disappears. Anti-windup limits this artificial memory growth.
+A joint controller may request more effort than a motor can deliver. Clipping the command restricts output but does not stop integral state accumulating. That state can keep commanding excessive effort after the target error shrinks.
 
-## The discrete controller state
+## One discrete update
 
-At control step $k$, error $e_k$ is desired minus measured joint angle in radians. The interval $\Delta t>0$ is seconds. Let $I_{k-1}$ be accumulated error in radian-seconds. The previous error is measured at the preceding control instant.
-
-$$
-D_k=\frac{e_k-e_{k-1}}{\Delta t},\qquad
-I^*=I_{k-1}+e_k\Delta t.
-$$
-
-The proportional gain converts radians to command units. Integral and derivative gains provide corresponding conversions from radian-seconds and radians per second. No term should be added unless its resulting physical unit agrees with the others.
+Let $e_k,e_{k-1}$ be consecutive angular errors in radians, $\Delta t>0$ the period in seconds, and $I_{k-1}$ the previous integral in radian-seconds. The candidate update is
 
 $$
-u^*=K_pe_k+K_iI^*+K_dD_k.
+d_k=\frac{e_k-e_{k-1}}{\Delta t},\qquad
+I_c=I_{k-1}+e_k\Delta t,\qquad
+u_c=K_p e_k+K_i I_c+K_d d_k.
 $$
 
-This lesson uses conditional integration. If $u^*>u_{\max}$ with $e_k>0$, or $u^*<u_{\min}$ with $e_k<0$, retain the old integral. Otherwise accept the candidate. Recompute the command with the accepted state and clamp it to the actuator range. An error that drives the command back toward its feasible range may still reduce the integral.
+The derivative $d_k$ has rad/s units. Gains $K_p,K_i,K_d$ have command/rad, command/(rad·s), and command·s/rad units respectively, so all three effort terms can be added.
 
-## Worked joint example
+For lower and upper limits $\ell<h$, conditional integration selects
 
-Use $K_p=2$, $K_i=1$, $K_d=0$, limits $[-1,1]$, old integral 0, error 1 rad, and interval 0.1 s. The candidate integral is 0.1 and candidate command 2.1. Positive error pushes beyond the upper limit, so the integral stays zero. The final command is clamped from 2 to 1.
+$$
+I_k=\begin{cases}
+I_{k-1},&(u_c>h\land e_k>0)\lor(u_c<\ell\land e_k<0),\\
+I_c,&\text{otherwise}.
+\end{cases}
+$$
 
-With error 0.2 rad and the same initial state, the candidate command is 0.42. It is feasible, so the integral becomes 0.02 and the output remains 0.42.
+Recompute $u=K_p e_k+K_i I_k+K_d d_k$ and return $\min(h,\max(\ell,u))$. A rejected integral must not influence this step's command.
 
-## Visual explanation
+## Visual: the decision path
 
-Plot desired/measured angle, actuator command with limit lines, and integral state on aligned time axes. A saturation marker explains why an integration step was accepted or rejected. A numerical state table provides the same information without animation.
+| Candidate effort | Error | Integral decision | Reason |
+|---|---|---|---|
+| Above upper limit | Positive | Keep old state | Prevent positive windup |
+| Below lower limit | Negative | Keep old state | Prevent negative windup |
+| Above upper limit | Negative | Accept candidate | Allow unwinding |
+| Within or exactly on limits | Either | Accept candidate | No outward saturation |
 
-## Robot relevance and failure modes
+Read the table as a decision diagram: effort and error jointly choose stored state; clipping happens afterward. It is a static text alternative.
 
-Using milliseconds as seconds changes both integral and derivative behavior. Applying anti-windup only after storing the enlarged integral defeats the rule. Noise can make a raw derivative unstable, and joint-angle wrapping requires a separate error convention. This deterministic component prepares a low-level control loop that can execute higher-level learned action chunks; it does not replace actuator modeling or safety limits.
+With $e_k=0.2$ rad, $I_{k-1}=0$, $\Delta t=0.1$ s and gains (2,1,0), candidate integral is 0.02 rad·s and command $0.4+0.02=0.42$. Limits ±1 permit integration.
 
+## Why this matters on a robot
+
+An arm pressing against a stop can build a large integral, then overshoot when contact ends. Conditional integration addresses this state buildup; it does not guarantee stability, enforce joint limits, or protect hardware.
+
+A common error freezes integration whenever effort saturates, preventing useful unwinding. Another uses a nominal period despite timestamp jitter, distorting both derivative and integral.
+
+## Check your understanding
+
+- Do we integrate exactly on the limit? Yes; rejection uses strict inequalities.
+- Can output still saturate after rejecting integration? Yes; proportional or derivative effort can exceed the limit alone.
+
+## Source and scope
+
+Åström and Murray's [Feedback Systems](https://fbswiki.org/wiki/index.php/Feedback_Systems) gives the control context. This task defines a particular conditional-integration discretization; alternative anti-windup designs are outside its contract.

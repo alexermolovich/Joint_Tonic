@@ -1,0 +1,23 @@
+{
+  "slug": "rt2-serialize-action-tokens",
+  "title": "Serialize Robot Actions as Discrete Tokens",
+  "version": "1.0.0",
+  "number": 210,
+  "difficulty": "Easy",
+  "domain": "Robot learning",
+  "topics": [
+    "2023-rt-2",
+    "policy-interface"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "serialize_action_tokens",
+  "paperIds": [
+    "2023-rt-2"
+  ],
+  "prerequisites": [
+    "rt1-action-codec"
+  ],
+  "visualization": "markdown",
+  "summary": "Serialize Robot Actions as Discrete Tokens"
+}

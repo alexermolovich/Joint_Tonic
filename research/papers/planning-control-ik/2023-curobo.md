@@ -16,102 +16,69 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Generate goal configurations","detail":"Solve collision-aware IK from multiple seeds.","column":0,"row":0,"section":"Generate goal configurations","problem_slugs":["se3-transform-points"],"planned_problems":["Batch Forward-Kinematics Queries"]},{"id":"stage-2","title":"Optimize parallel trajectories","detail":"Combine endpoint, collision, and smoothness costs.","column":1,"row":0,"section":"Optimize parallel trajectories","problem_slugs":[],"planned_problems":["Compute a Signed-Distance Collision Cost"]},{"id":"stage-3","title":"Validate and time the motion","detail":"Check refined trajectories and produce executable samples.","column":2,"row":0,"section":"Validate and time the motion","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Rank Multi-Seed Motion Trajectories"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"trajectory seeds"},{"from":"stage-2","to":"stage-3","label":"optimized candidates"}]}
 ---
 
-# cuRobo: Parallelized Collision-Free Minimum-Jerk Robot Motion Generation
+## Core paper explanation
 
-## Agent brief
+cuRobo accelerates manipulator motion generation with GPU-parallel inverse kinematics, collision checking, trajectory optimization, and geometric planning. Many seeds and efficient optimization improve the chance of quickly finding a valid smooth motion.
 
-Study parallel collision-free robot motion generation through batched kinematics and trajectory costs. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study parallel collision-free robot motion generation through batched kinematics and trajectory costs.
+### Generate goal configurations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For desired end-effector pose $T^*$, IK penalizes translation and orientation residuals while respecting joint limits and collision geometry. Candidate configurations $q^*_k$ seed trajectories from the current state. A successful endpoint solve does not validate the path to it.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Batch Forward-Kinematics Queries — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Batch Forward-Kinematics Queries | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Compute a Signed-Distance Collision Cost | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Rank Multi-Seed Motion Trajectories | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Optimize parallel trajectories
 
-## Data and evaluation
+A schematic cost is
+$$J(q_{0:H})=J_{\mathrm{goal}}+\lambda_cJ_{\mathrm{collision}}+\lambda_j\sum_t\|\dddot q_t\|_2^2.$$
+Finite-difference jerk includes the timestep cubed in its denominator; omitting time changes the physical meaning. The paper combines particle-based optimization and L-BFGS with a parallel noisy line search.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Compute a Signed-Distance Collision Cost — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Validate and time the motion
 
-1. Batch Forward-Kinematics Queries.
-2. Compute a Signed-Distance Collision Cost.
-3. Rank Multi-Seed Motion Trajectories.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Collision costs rely on the declared robot collision model and environment representation. Check interpolated motion, limits, and timing after optimization; use a geometric planner when needed for better initialization. Published GPU timing is workload-specific, not a deadline guarantee for arbitrary scenes.
 
-## Problem blueprints
 
-### Problem: Batch Forward-Kinematics Queries
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the batch forward-kinematics queries component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Rank Multi-Seed Motion Trajectories — unreviewed idea; contract and evaluator required.
 
-### Problem: Compute a Signed-Distance Collision Cost
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute a signed-distance collision cost component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Rank Multi-Seed Motion Trajectories
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the rank multi-seed motion trajectories component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Batch Forward-Kinematics Queries — unreviewed idea; contract and evaluator required.
+- Compute a Signed-Distance Collision Cost — unreviewed idea; contract and evaluator required.
+- Rank Multi-Seed Motion Trajectories — unreviewed idea; contract and evaluator required.
 
-- Show many candidate arm paths and the chosen collision-free trajectory.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Parallel seeds can make difficult manipulation planning practical. Simplified collision spheres, stale obstacles, and missed thin geometry can invalidate an otherwise smooth path.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2310.17274)
-- [Open-access author manuscript](https://arxiv.org/pdf/2310.17274)
+[Primary paper](https://arxiv.org/abs/2310.17274) · [Open-access manuscript](https://arxiv.org/pdf/2310.17274)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

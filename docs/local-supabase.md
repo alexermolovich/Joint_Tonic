@@ -1,5 +1,7 @@
 # Optional local Supabase persistence
 
+Account login is now implemented separately: see [Supabase login and accounts](supabase-auth.md). The user authorized hosted Supabase Auth for the localhost website. Display names persist in Auth metadata; the database/workspace adapters below remain future work. The client now accepts HTTPS hosted endpoints as well as loopback HTTP(S).
+
 Joint Tonic currently runs without a database daemon. The application reads problem/paper content from the repository, stores drafts, notes, bookmarks and displayed progress in browser localStorage under joint-tonic.workspace.v1, and stores worker job records under .local/jobs. Those records are local development state. They are not signed-in cross-device persistence or authoritative database-backed learning records.
 
 The schema in supabase/migrations is the next persistence layer. Adding environment variables creates an optional browser client; it does not switch the existing workspace or worker adapters automatically.
@@ -59,7 +61,7 @@ if (client) {
 }
 ~~~
 
-getSupabaseBrowserClient returns null on the server, when configuration is absent, or when the URL is not a loopback HTTP(S) endpoint. The current development boundary is local services only. The cached client uses real @supabase/supabase-js auth/session handling.
+getSupabaseBrowserClient returns null on the server, when configuration is absent/invalid, for non-loopback HTTP, or for a secret key. The cached client uses real @supabase/supabase-js auth/session handling. Hosted HTTPS Auth is the authorized exception to the local development boundary.
 
 ## Apply or reset migrations locally
 

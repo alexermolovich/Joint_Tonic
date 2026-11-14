@@ -16,102 +16,57 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build a spatial observation and pick map","detail":"Use a calibrated top-down representation to score grasp locations.","column":0,"row":0,"section":"Build a spatial observation and pick map","problem_slugs":[],"planned_problems":["Build a Pick Heatmap"]},{"id":"stage-2","title":"Transport pick features","detail":"Cross-correlate the selected object context with scene features.","column":1,"row":0,"section":"Transport pick features","problem_slugs":[],"planned_problems":["Correlate a Pick Feature Crop with a Place Map"]},{"id":"stage-3","title":"Train and execute spatial actions","detail":"Supervise demonstrated pick and placement locations.","column":2,"row":0,"section":"Train and execute spatial actions","problem_slugs":[],"planned_problems":["Decode a Spatial Action Distribution"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"pick location"},{"from":"stage-2","to":"stage-3","label":"placement scores"}]}
 ---
 
-# Transporter Networks: Rearranging the Visual World for Robotic Manipulation
+## Core paper explanation
 
-## Agent brief
+Transporter Networks predict pick-and-place actions using spatial feature maps. A feature crop at the selected pick location is cross-correlated with the scene to find a compatible placement, preserving useful geometric structure.
 
-Use spatially structured visual features and cross-correlation to predict pick-and-place actions. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Use spatially structured visual features and cross-correlation to predict pick-and-place actions.
+### Build a spatial observation and pick map
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A fused RGB-D heightmap links image-grid cells to workspace positions. The pick network predicts a distribution $p_{\mathrm{pick}}(u\mid o)$. Cell size in meters and workspace bounds determine how a pixel action maps to the robot.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Build a Pick Heatmap.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build a Pick Heatmap | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Correlate a Pick Feature Crop with a Place Map | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Decode a Spatial Action Distribution | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Transport pick features
 
-## Data and evaluation
+For pick-centered crop features $\psi$ and scene features $\phi$,
+$$Q_{\mathrm{place}}(v)=\sum_{\delta,c}\psi(o[u+\delta])_c\,\phi(o[v+\delta])_c.$$
+Rotated crop hypotheses extend the search over orientation. This is cross-correlation, so the kernel is not flipped as in mathematical convolution.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Correlate a Pick Feature Crop with a Place Map.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Train and execute spatial actions
 
-1. Build a Pick Heatmap.
-2. Correlate a Pick Feature Crop with a Place Map.
-3. Decode a Spatial Action Distribution.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A compact supervised loss is $L=-\log p_{\mathrm{pick}}(u^*)-\log p_{\mathrm{place}}(v^*\mid u^*)$. Pose extensions add additional action components. Calibration and motion planning turn spatial predictions into executable robot motion.
 
-## Problem blueprints
 
-### Problem: Build a Pick Heatmap
+**Planned exercise:** Decode a Spatial Action Distribution.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build a pick heatmap component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Correlate a Pick Feature Crop with a Place Map
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the correlate a pick feature crop with a place map component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-### Problem: Decode a Spatial Action Distribution
+- **Build a spatial observation and pick map:** Build a Pick Heatmap (planned).
+- **Transport pick features:** Correlate a Pick Feature Crop with a Place Map (planned).
+- **Train and execute spatial actions:** Decode a Spatial Action Distribution (planned).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the decode a spatial action distribution component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Spatial structure improves data efficiency for rearrangement. Heightmap occlusions, overlapping objects, and incorrect pixel-to-world calibration can still produce invalid grasps or placements.
 
-- Move a pick crop over a feature map and visualize placement correlation.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2010.14406) · [Open-access manuscript](https://arxiv.org/pdf/2010.14406)
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2010.14406)
-- [Open-access author manuscript](https://arxiv.org/pdf/2010.14406)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

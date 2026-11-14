@@ -16,102 +16,61 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Estimate human and object motion","detail":"Recover temporally aligned hand and object geometry from video.","column":0,"row":0,"section":"Estimate human and object motion","problem_slugs":[],"planned_problems":["Map Human Demonstration Segments to Robot Time","Validate a Hand-Object Pose Sequence"]},{"id":"stage-2","title":"Retarget to robot kinematics","detail":"Match geometric relationships despite different hand morphology.","column":1,"row":0,"section":"Retarget to robot kinematics","problem_slugs":[],"planned_problems":["Compute a Hand-Retargeting Geometry Residual","Evaluate Retargeted Motion Feasibility"]},{"id":"stage-3","title":"Infer actions and learn","detail":"Turn retargeted states into robot control supervision.","column":2,"row":0,"section":"Infer actions and learn","problem_slugs":[],"planned_problems":["Validate Actions Inferred from Retargeted States"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"estimated poses"},{"from":"stage-2","to":"stage-3","label":"robot-state trajectory"}]}
 ---
 
-# DexMV: Imitation Learning for Dexterous Manipulation from Human Videos
+## Core paper explanation
 
-## Agent brief
+DexMV converts human manipulation videos into robot demonstrations by estimating hand/object pose, retargeting hand motion, and inferring robot actions. The inferred demonstrations then support imitation-augmented reinforcement learning in paired simulation tasks.
 
-Study dexterous manipulation learned from human demonstration and motion interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study dexterous manipulation learned from human demonstration and motion interfaces.
+### Estimate human and object motion
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Pose estimates provide human hand keypoints $p_i^H(t)$ and object pose $T_{WO}(t)$. All observations must share a consistent metric scale and time reference. Occlusion errors propagate into later retargeting, so uncertainty should not disappear when producing a robot trajectory.
 
-## Prerequisite concepts
 
-- Kinematics, contact state, reward decomposition, imitation learning, tactile reference images, and safe rollout metrics.
+**Planned exercise:** Map Human Demonstration Segments to Robot Time.
 
-## Method map
+**Planned exercise:** Validate a Hand-Object Pose Sequence.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Map Human Demonstration Segments to Robot Time | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Validate a Hand-Object Pose Sequence | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Evaluate Retargeted Motion Feasibility | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
 
-## Data and evaluation
+### Retarget to robot kinematics
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+A schematic retargeting objective is
+$$q^*=\arg\min_q\sum_iw_i\|v_i^R(q)-s\,v_i^H\|_2^2+\lambda\|q-q_{\mathrm{prev}}\|_2^2.$$
+$v_i$ are selected hand vectors, $s$ handles scale, and joint limits constrain $q$. This summarizes geometric matching and temporal regularity; the exact paper objective uses its chosen keypoint relationships.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Compute a Hand-Retargeting Geometry Residual.
 
-## Implementation decomposition
+**Planned exercise:** Evaluate Retargeted Motion Feasibility.
 
-1. Map Human Demonstration Segments to Robot Time.
-2. Validate a Hand-Object Pose Sequence.
-3. Evaluate Retargeted Motion Feasibility.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+### Infer actions and learn
 
-### Problem: Map Human Demonstration Segments to Robot Time
+Robot actions must be estimated through the simulation/control model; differentiating positions alone does not determine contact torques. Demonstrations can supervise state-only imitation or state–action learning, depending on the algorithm. Evaluate whether inferred actions actually reproduce the intended object interaction.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the map human demonstration segments to robot time component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Validate a Hand-Object Pose Sequence
+**Planned exercise:** Validate Actions Inferred from Retargeted States.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate a hand-object pose sequence component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Retargeted Motion Feasibility
+## Implement the components
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate retargeted motion feasibility component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-## Visual teaching plan
+- **Estimate human and object motion:** Map Human Demonstration Segments to Robot Time (planned); Validate a Hand-Object Pose Sequence (planned).
+- **Retarget to robot kinematics:** Compute a Hand-Retargeting Geometry Residual (planned); Evaluate Retargeted Motion Feasibility (planned).
+- **Infer actions and learn:** Validate Actions Inferred from Retargeted States (planned).
 
-- Display human and robot hand poses aligned around the same object.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Video expands access to dexterous demonstrations but leaves dynamics unobserved. Wrong contact timing, pose scale, or hand morphology mapping can produce visually similar yet physically impossible robot behavior.
 
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2108.05877) · [Open-access manuscript](https://arxiv.org/pdf/2108.05877)
 
-- [Primary arXiv record](https://arxiv.org/abs/2108.05877)
-- [Open-access author manuscript](https://arxiv.org/pdf/2108.05877)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

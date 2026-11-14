@@ -1,0 +1,23 @@
+{
+  "slug": "act-cvae-loss",
+  "title": "Compute a Masked CVAE Reconstruction and KL Loss",
+  "version": "1.0.0",
+  "number": 207,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "2023-aloha-act",
+    "policy-components"
+  ],
+  "minutes": 35,
+  "framework": "PyTorch",
+  "entrypoint": "cvae_loss",
+  "paperIds": [
+    "2023-aloha-act"
+  ],
+  "prerequisites": [
+    "act-sliding-action-chunks"
+  ],
+  "visualization": "markdown",
+  "summary": "Isolate ACT's L1 reconstruction plus diagonal-Gaussian KL objective."
+}

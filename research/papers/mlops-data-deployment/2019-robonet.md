@@ -1,117 +1,144 @@
 ---
 schema_version: 1
-paper_id: "2019-robonet"
-title: "RoboNet: Large-Scale Multi-Robot Learning"
-authors: ["Dasari, Sudeep","Ebert, Frederik","Tian, Stephen","Nair, Suraj","Bucher, Bernadette","Schmeckpeper, Karl","Singh, Siddharth","Levine, Sergey","Finn, Chelsea"]
+paper_id: 2019-robonet
+title: 'RoboNet: Large-Scale Multi-Robot Learning'
+authors:
+  - 'Dasari, Sudeep'
+  - 'Ebert, Frederik'
+  - 'Tian, Stephen'
+  - 'Nair, Suraj'
+  - 'Bucher, Bernadette'
+  - 'Schmeckpeper, Karl'
+  - 'Singh, Siddharth'
+  - 'Levine, Sergey'
+  - 'Finn, Chelsea'
 year: 2019
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1910.11215"
-pdf_url: "https://arxiv.org/pdf/1910.11215"
-local_pdf: "./2019-robonet.pdf"
-sha256: "01a03705dfb76192445b8c09fa3e85d67a1d9165b2c00df3672cfd10cc66052a"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1910.11215'
+pdf_url: 'https://arxiv.org/pdf/1910.11215'
+local_pdf: ./2019-robonet.pdf
+sha256: 01a03705dfb76192445b8c09fa3e85d67a1d9165b2c00df3672cfd10cc66052a
 bytes: 4846317
 pages: 15
-topics: ["mlops-data-deployment","robonet"]
-modalities: ["datasets","model-artifacts","logs","metrics"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+topics:
+  - mlops-data-deployment
+  - robonet
+modalities:
+  - datasets
+  - model-artifacts
+  - logs
+  - metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Unify heterogeneous episodes
+      detail: Preserve embodiment metadata while exposing a usable data interface.
+      column: 0
+      row: 0
+      section: Unify heterogeneous episodes
+      problem_slugs:
+        - validate-robot-episodes
+        - map-shared-robot-episode
+      planned_problems: []
+    - id: stage-2
+      title: Learn interaction models
+      detail: Predict future observations or infer actions between observations.
+      column: 1
+      row: 0
+      section: Learn interaction models
+      problem_slugs: []
+      planned_problems:
+        - Align Actions and Images in a Video Window
+        - Compute a Masked Video-Prediction Loss
+    - id: stage-3
+      title: Evaluate transfer
+      detail: Separate held-out robots and environments from training coverage.
+      column: 2
+      row: 0
+      section: Evaluate transfer
+      problem_slugs: []
+      planned_problems:
+        - Measure Cross-Robot Prediction Error
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: multi-robot data
+    - from: stage-2
+      to: stage-3
+      label: trained model
 ---
 
-# RoboNet: Large-Scale Multi-Robot Learning
+## Core paper explanation
 
-## Agent brief
+RoboNet combines visual interaction data from multiple robot platforms to study transfer across robots, cameras, objects, and environments. The paper evaluates both action-conditioned visual prediction and inverse-model approaches.
 
-Study heterogeneous multi-robot visual-interaction data and its prediction interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study heterogeneous multi-robot visual-interaction data and its prediction interfaces.
+### Unify heterogeneous episodes
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A record includes image $I_t$, robot state $s_t$, action $a_t$, and embodiment metadata $e$. Shape compatibility does not establish semantic compatibility: an end-effector displacement and a joint command need distinct decoders and units.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode). Uses the bounded contract; no full paper reproduction is claimed.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Map Robot Logs into a Shared Episode Schema | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Align Actions and Images in a Video Window | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Measure Cross-Robot Prediction Error | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
 
-## Data and evaluation
+### Learn interaction models
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+The forward interface is $p(I_{t+1:t+H}\mid I_{\le t},a_{t:t+H-1},e)$; an inverse interface is $p(a_t\mid I_t,I_{t+1},e)$. These describe the evaluated learning directions. They are not a claim that one shared loss or action space applies to every model.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Component practice**
 
-## Implementation decomposition
+- Align Actions and Images in a Video Window — unreviewed idea; contract and evaluator required.
+- Compute a Masked Video-Prediction Loss — unreviewed idea; contract and evaluator required.
 
-1. Map Robot Logs into a Shared Episode Schema.
-2. Align Actions and Images in a Video Window.
-3. Measure Cross-Robot Prediction Error.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+### Evaluate transfer
 
-### Problem: Map Robot Logs into a Shared Episode Schema
+For target-domain evaluation, report $\Delta=\mathrm{score}_{\mathrm{pretrain+adapt}}-\mathrm{score}_{\mathrm{target-only}}$ at a matched target-data budget. This teaching comparison isolates transfer benefit; camera, object, and robot holdouts answer different generalization questions.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the map robot logs into a shared episode schema component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Align Actions and Images in a Video Window
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the align actions and images in a video window component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Measure Cross-Robot Prediction Error — unreviewed idea; contract and evaluator required.
 
-### Problem: Measure Cross-Robot Prediction Error
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure cross-robot prediction error component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
 
-- Compare synchronized action and image sequences from different robots.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Supporting prerequisite:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode).
 
-## MLOps and deployment extensions
+**Planned component problems:**
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- Align Actions and Images in a Video Window — unreviewed idea; contract and evaluator required.
+- Compute a Masked Video-Prediction Loss — unreviewed idea; contract and evaluator required.
+- Measure Cross-Robot Prediction Error — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+These exercises implement their stated contracts, not a complete paper reproduction.
 
-- [Primary arXiv record](https://arxiv.org/abs/1910.11215)
-- [Open-access author manuscript](https://arxiv.org/pdf/1910.11215)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Why this matters on a robot
 
+Multi-robot experience can reduce target-domain data requirements. Action normalization errors, camera shortcuts, and leakage between collection sites can imitate transfer without delivering robust behavior.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1910.11215) · [Open-access manuscript](https://arxiv.org/pdf/1910.11215)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

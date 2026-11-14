@@ -16,102 +16,63 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Observe scene and objects","detail":"Expose camera observations and declared object state.","column":0,"row":0,"section":"Observe scene and objects","problem_slugs":[],"planned_problems":["Track Object-State Preconditions"]},{"id":"stage-2","title":"Apply a valid interaction","detail":"Check action preconditions and report success or failure.","column":1,"row":0,"section":"Apply a valid interaction","problem_slugs":[],"planned_problems":["Validate a Simulator Action Grammar"]},{"id":"stage-3","title":"Evaluate embodied tasks","detail":"Measure goal completion with controlled scene splits.","column":2,"row":0,"section":"Evaluate embodied tasks","problem_slugs":[],"planned_problems":["Detect an Invalid Interaction Transition"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"selected action"},{"from":"stage-2","to":"stage-3","label":"interaction trace"}]}
 ---
 
-# AI2-THOR: An Interactive 3D Environment for Visual AI
+## Core paper explanation
 
-## Agent brief
+AI2-THOR provides interactive indoor scenes where an agent can navigate and change object states. Its useful learning boundary is the relationship between visual observations, action preconditions, and environment transitions.
 
-Study interactive indoor simulation through discrete actions and object-state transitions. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study interactive indoor simulation through discrete actions and object-state transitions.
+### Observe scene and objects
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A partially observed interaction model is $o_t\sim O(\cdot\mid s_t)$, where $s_t$ includes object poses and state such as open/closed. This is a teaching formalization of the simulator interface, not a new algorithm from the paper. Hidden simulator metadata must not silently become policy input.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Track Object-State Preconditions — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Simulator Action Grammar | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Track Object-State Preconditions | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Detect an Invalid Interaction Transition | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Apply a valid interaction
 
-## Data and evaluation
+An action $a$ has a precondition $P_a(s)$ and transition $s'=F(s,a)$ when valid. Opening an object and picking it up are different state changes. An invalid action should produce an explicit outcome; assuming every command changes the world corrupts training labels.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Validate a Simulator Action Grammar — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Evaluate embodied tasks
 
-1. Validate a Simulator Action Grammar.
-2. Track Object-State Preconditions.
-3. Detect an Invalid Interaction Transition.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For goal predicate $G$, episode success is $S=\mathbf1[G(s_T)]$. Additional efficiency metrics require a stated action budget and reset protocol. Hold out scenes or object configurations to test generalization rather than repeated memorization.
 
-## Problem blueprints
 
-### Problem: Validate a Simulator Action Grammar
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a simulator action grammar component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Detect an Invalid Interaction Transition — unreviewed idea; contract and evaluator required.
 
-### Problem: Track Object-State Preconditions
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the track object-state preconditions component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Detect an Invalid Interaction Transition
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the detect an invalid interaction transition component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Track Object-State Preconditions — unreviewed idea; contract and evaluator required.
+- Validate a Simulator Action Grammar — unreviewed idea; contract and evaluator required.
+- Detect an Invalid Interaction Transition — unreviewed idea; contract and evaluator required.
 
-- Draw an object state machine linked to room observations.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Interactive simulation exposes causal object-state changes absent from static images. Discrete actions and idealized preconditions can hide real controller and contact failures, so transfer claims need physical evaluation.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1712.05474)
-- [Open-access author manuscript](https://arxiv.org/pdf/1712.05474)
+[Primary paper](https://arxiv.org/abs/1712.05474) · [Open-access manuscript](https://arxiv.org/pdf/1712.05474)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

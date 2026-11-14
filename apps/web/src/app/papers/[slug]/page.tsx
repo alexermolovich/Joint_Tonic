@@ -1,2 +1,11 @@
-import Link from"next/link";import{notFound}from"next/navigation";import{ArrowLeft,ArrowUpRight,BookOpen,FileCode2}from"lucide-react";import{getPapers,getProblems,tracks}from"@/lib/content";import{Markdown}from"@/components/markdown";
-export const dynamic="force-dynamic";export default async function Page({params}:{params:Promise<{slug:string}>}){const{slug}=await params;const paper=getPapers().find(p=>p.id===slug);if(!paper)notFound();const problems=getProblems().filter(p=>paper.problemSlugs.includes(p.slug));const relatedTracks=tracks.filter(t=>t.slugs.some(s=>paper.problemSlugs.includes(s)));return <main id="main" className="page detail-page"><Link href="/papers" className="back-link"><ArrowLeft size={14}/> Paper library</Link><div className="paper-detail-header"><div className="eyebrow">RESEARCH NOTE / {paper.year}</div><h1>{paper.title}</h1><p className="paper-authors">{paper.authors.join(", ")}</p><a className="button secondary" target="_blank" rel="noreferrer" href={paper.primaryUrl}>Read the original paper <ArrowUpRight size={15}/></a></div><div className="paper-detail-layout"><article><Markdown>{paper.content}</Markdown></article><aside className="detail-sidebar"><div className="progress-card"><span className="eyebrow">IMPLEMENT THE IDEA</span>{problems.length?problems.map(p=><Link className="paper-problem-link" key={p.slug} href={`/problems/${p.slug}`}><FileCode2 size={17}/><span>{p.title}<small>{p.difficulty} · {p.framework}</small></span><ArrowUpRight size={13}/></Link>):<><h3>Collected for a future track.</h3><p className="muted">Research notes are available. Runnable problems will appear here after their content and evaluators are reviewed.</p><Link className="text-link" href="/problems">Explore the first ten <ArrowUpRight size={13}/></Link></>}{relatedTracks.map(t=><Link className="button secondary full" href={`/tracks/${t.slug}`} key={t.slug}>Open related track <ArrowUpRight size={13}/></Link>)}</div><div className="side-tip"><BookOpen size={21}/><p>Theory, diagrams, and problem implementations are independently authored. Follow the primary paper for the full methodology and evidence.</p></div></aside></div></main>}
+import { notFound, redirect } from "next/navigation";
+import { getPapers } from "@/lib/content";
+import { findProject } from "@/lib/projects";
+
+export const dynamic = "force-dynamic";
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const paper = findProject(getPapers(), slug);
+  if (!paper) notFound();
+  redirect(`/projects/${paper.id}`);
+}

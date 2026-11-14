@@ -2,6 +2,8 @@
 
 This directory is the curated research corpus used to design Joint Tonic paper tracks and standalone physical-AI problems. It is intentionally organized for both humans and coding agents.
 
+Current inventory: **156 distinct primary papers and 157 paired Markdown/PDF artifacts**. The pre-existing duplicate Open X-Embodiment topic card is preserved. The [balanced six-paper expansion](manifests/balanced-expansion-156.md) adds geometry, planning, perception, mobile manipulation, dataset infrastructure and evaluation uncertainty. These sources do not automatically expand the approved 189-problem curriculum.
+
 ## Library map
 
 ```text
@@ -26,12 +28,14 @@ Every paper has two adjacent artifacts with the same basename:
 
 ```text
 YYYY-short-title.pdf    # open-access source artifact for research use
-YYYY-short-title.md     # original agent-oriented summary and problem map
+YYYY-short-title.md     # original paper explanation, math, execution flow, and problem map
 ```
 
 PDFs remain in the local research library and are intentionally excluded from Git. Open access does not imply redistribution rights, and the full local corpus is too large for a normal source repository. GitHub contains the Markdown cards and provenance manifests, which link to canonical sources.
 
 Agents should read the Markdown card first and open the PDF when they need to verify a detail, equation, figure, ablation, or limitation. The Markdown card is not a complete transcription and must not be treated as a substitute citation for the primary source.
+
+All current cards have original learner-facing core explanations, mathematical notation and execution flows. The `execution_flow` frontmatter renders a clickable model/system graph and component list; each node associates runnable problem slugs or clearly marked planned component titles with the relevant explanation section. Follow the paper-card template and `SPEC.md` §8.1, and preserve provenance fields. [Explanation validation status](EXPLANATION_STATUS.md) and the [component implementation map](FLOW_PROBLEM_MAP.md) distinguish content coverage from runnable implementations and full-paper reproduction.
 
 ## Topic collections
 

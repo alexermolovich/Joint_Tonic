@@ -16,102 +16,81 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Parameterize valid 3D Gaussians, project their covariance into the camera, and composite ordered contributions to render pixels.","nodes":[{"id":"stage-1","title":"Parameterize scene primitives","detail":"Use positions, rotations, scales, opacity, and view-dependent color.","column":0,"row":0,"section":"Parameterize scene primitives","problem_slugs":[],"planned_problems":["Build Gaussian Covariances from Rotation and Scale"]},{"id":"stage-2","title":"Project Gaussian footprints","detail":"Approximate perspective projection locally with a Jacobian.","column":1,"row":0,"section":"Project Gaussian footprints","problem_slugs":[],"planned_problems":["Project anisotropic covariance into an image"]},{"id":"stage-3","title":"Composite visible contributions","detail":"Accumulate sorted opacity-weighted colors and optimize image agreement.","column":2,"row":0,"section":"Composite visible contributions","problem_slugs":[],"planned_problems":["Composite depth-ordered Gaussian contributions","Measure primitive contribution for density control"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"3D primitives"},{"from":"stage-2","to":"stage-3","label":"image-space splats"}]}
 ---
 
-# 3D Gaussian Splatting for Real-Time Radiance Field Rendering
+## Core paper explanation
 
-## Agent brief
+3D Gaussian Splatting represents a scene as explicit anisotropic Gaussian primitives with learnable position, covariance, opacity, and appearance. Rendering projects those primitives into image-space ellipses and composites their contributions in visibility order. Optimization changes both primitive parameters and their density, allowing a compact explicit scene to explain observed images.
 
-Represent scenes with optimized 3D Gaussians and render them through differentiable splatting. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Parameterize valid 3D Gaussians, project their covariance into the camera, and composite ordered contributions to render pixels.
 
-Represent scenes with optimized 3D Gaussians and render them through differentiable splatting.
+### Parameterize scene primitives
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A Gaussian centered at $\mu\in\mathbb R^3$ with covariance $\Sigma$ has unnormalized density
 
-## Prerequisite concepts
+$$
+G(x)=\exp\left[-\tfrac12(x-\mu)^\top\Sigma^{-1}(x-\mu)\right],
+\qquad\Sigma=RSS^\top R^\top.
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+$R$ is a rotation and $S$ contains nonnegative scale parameters. This factorization keeps covariance positive semidefinite; inverse operations require nondegenerate scales. Coordinates and covariance must share the scene’s frame and length units.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Project Gaussian Covariance into an Image | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Composite Ordered Gaussian Contributions | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Prune Low-Contribution Scene Primitives | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problem:** Build Gaussian Covariances from Rotation and Scale. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Limitations and failure modes
+### Project Gaussian footprints
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Let $R_{cw}$ rotate world coordinates into camera coordinates and let $J$ be the2×3Jacobian of perspective projection at the Gaussian center. The projected covariance is
 
-## Implementation decomposition
+$$
+\Sigma_{2D}=J R_{cw}\Sigma R_{cw}^\top J^\top.
+$$
 
-1. Project Gaussian Covariance into an Image.
-2. Composite Ordered Gaussian Contributions.
-3. Prune Low-Contribution Scene Primitives.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Its units are squared pixels. [SE(3) transformation](/problems/se3-transform-points) and [camera projection](/problems/project-camera-points) are useful prerequisites. Near-zero or negative camera depth cannot be treated as an ordinary visible splat.
 
-## Problem blueprints
 
-### Problem: Project Gaussian Covariance into an Image
+**Prerequisite practice:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points) · [Project Camera Points into Pixels](/problems/project-camera-points). These supporting skills do not complete this model stage.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the project gaussian covariance into an image component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:** Project anisotropic covariance into an image. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Composite Ordered Gaussian Contributions
+### Composite visible contributions
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the composite ordered gaussian contributions component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+For primitives sorted front to back at a pixel, a standard compositing expression is
 
-### Problem: Prune Low-Contribution Scene Primitives
+$$
+C=\sum_i c_i\alpha_i\prod_{j<i}(1-\alpha_j).
+$$
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the prune low-contribution scene primitives component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Here $\alpha_i$ combines learned opacity with the projected Gaussian footprint, and $c_i$ can depend on viewing direction through appearance coefficients. The product is remaining transmittance. Sorting, early termination, and tile assignment affect rendering correctness and speed; a global unsorted sum is not equivalent.
 
-## Visual teaching plan
 
-- Inspect projected ellipses and their alpha-compositing order.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+**Planned component problems:** Composite depth-ordered Gaussian contributions; Measure primitive contribution for density control. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## MLOps and deployment extensions
+## Implement the components
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
 
-## Canonical sources
+**Planned components:**
 
-- [Primary arXiv record](https://arxiv.org/abs/2308.04079)
-- [Open-access author manuscript](https://arxiv.org/pdf/2308.04079)
+- Build Gaussian Covariances from Rotation and Scale.
+- Project anisotropic covariance into an image.
+- Composite depth-ordered Gaussian contributions.
+- Measure primitive contribution for density control.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
+## Why this matters on a robot
+
+Fast photorealistic rendering is useful for reconstruction and simulation, but splat opacity is not automatically a collision surface. Unobserved regions, moving objects, and inaccurate camera poses can produce artifacts that look plausible from training views. Evaluate geometry and rendering separately.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2308.04079) · [Open-access manuscript](https://arxiv.org/pdf/2308.04079)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

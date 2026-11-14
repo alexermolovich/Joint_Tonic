@@ -16,102 +16,65 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode the environment","detail":"Compress an obstacle point cloud into a planning representation.","column":0,"row":0,"section":"Encode the environment","problem_slugs":[],"planned_problems":["Encode Obstacles into a Fixed Feature"]},{"id":"stage-2","title":"Predict bidirectional waypoints","detail":"Grow paths from start and goal toward one another.","column":1,"row":0,"section":"Predict bidirectional waypoints","problem_slugs":[],"planned_problems":["Predict and Validate an Intermediate Waypoint"]},{"id":"stage-3","title":"Validate and repair","detail":"Check every edge and replan infeasible segments.","column":2,"row":0,"section":"Validate and repair","problem_slugs":[],"planned_problems":["Repair an Infeasible Planned Segment"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"environment code"},{"from":"stage-2","to":"stage-3","label":"candidate path"}]}
 ---
 
-# Motion Planning Networks
+## Core paper explanation
 
-## Agent brief
+MPNet encodes obstacles and predicts successive path waypoints. Its neural planner proposes paths quickly, while explicit collision checking, path contraction, and replanning handle feasibility.
 
-Study learned motion planning through environment encodings and waypoint prediction interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study learned motion planning through environment encodings and waypoint prediction interfaces.
+### Encode the environment
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+An encoder maps obstacle points $X_{\mathrm{obs}}$ to latent vector $z=E(X_{\mathrm{obs}})$. The representation is trained before the waypoint predictor. Point-cloud coordinates and robot configuration coordinates need a consistent workspace convention.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Encode Obstacles into a Fixed Feature — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Encode Obstacles into a Fixed Feature | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Predict and Validate an Intermediate Waypoint | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Repair an Infeasible Planned Segment | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Predict bidirectional waypoints
 
-## Data and evaluation
+A planning network predicts
+$$q_{\mathrm{next}}=P_\theta(q_{\mathrm{current}},q_{\mathrm{target}},z).$$
+Supervised training uses expert-path next states, with an error such as $\|q_{\mathrm{next}}-q^*\|_2^2$. The bidirectional heuristic alternates growth direction and tries to connect the two partial paths.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Predict and Validate an Intermediate Waypoint — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Validate and repair
 
-1. Encode Obstacles into a Fixed Feature.
-2. Predict and Validate an Intermediate Waypoint.
-3. Repair an Infeasible Planned Segment.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A path $\tau=(q_0,\ldots,q_H)$ is accepted only if every interpolated edge passes the collision checker. Lazy state contraction shortens unnecessary detours, and replanning repairs invalid segments. Neural output alone is not a certificate of feasibility.
 
-## Problem blueprints
 
-### Problem: Encode Obstacles into a Fixed Feature
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the encode obstacles into a fixed feature component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Repair an Infeasible Planned Segment — unreviewed idea; contract and evaluator required.
 
-### Problem: Predict and Validate an Intermediate Waypoint
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the predict and validate an intermediate waypoint component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Repair an Infeasible Planned Segment
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the repair an infeasible planned segment component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Encode Obstacles into a Fixed Feature — unreviewed idea; contract and evaluator required.
+- Predict and Validate an Intermediate Waypoint — unreviewed idea; contract and evaluator required.
+- Repair an Infeasible Planned Segment — unreviewed idea; contract and evaluator required.
 
-- Show learned waypoints, collision checks, and repaired path segments.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Learned proposals can accelerate repeated planning in familiar environments. Out-of-distribution geometry and narrow passages can defeat the network; preserve the checker and explicit failure return rather than executing an unchecked path.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1806.05767)
-- [Open-access author manuscript](https://arxiv.org/pdf/1806.05767)
+[Primary paper](https://arxiv.org/abs/1806.05767) · [Open-access manuscript](https://arxiv.org/pdf/1806.05767)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

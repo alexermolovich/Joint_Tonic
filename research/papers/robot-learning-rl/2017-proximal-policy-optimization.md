@@ -16,102 +16,59 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Collect advantages and old probabilities","detail":"Freeze the behavior policy for a rollout batch.","column":0,"row":0,"section":"Collect advantages and old probabilities","problem_slugs":[],"planned_problems":["Normalize Batched Advantages"]},{"id":"stage-2","title":"Optimize the clipped surrogate","detail":"Limit the benefit of large policy-ratio changes.","column":1,"row":0,"section":"Optimize the clipped surrogate","problem_slugs":[],"planned_problems":["Compute the Clipped Policy Surrogate","Report Policy Update Clip Fractions"]},{"id":"stage-3","title":"Update value and collect again","detail":"Fit value targets, monitor policy change, and refresh experience.","column":2,"row":0,"section":"Update value and collect again","problem_slugs":[],"planned_problems":["Compute Value Targets Across Episode Boundaries"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"rollout batch"},{"from":"stage-2","to":"stage-3","label":"updated policy"}]}
 ---
 
-# Proximal Policy Optimization Algorithms
+## Core paper explanation
 
-## Agent brief
+PPO reuses a batch of on-policy experience for several optimization epochs while clipping the policy-ratio surrogate. The clipping discourages excessive improvement claims from large probability changes without imposing an exact trust-region constraint.
 
-Use a clipped policy-ratio objective to constrain practical policy-gradient updates. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Use a clipped policy-ratio objective to constrain practical policy-gradient updates.
+### Collect advantages and old probabilities
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For action $a_t$, retain $\log\pi_{\mathrm{old}}(a_t\mid s_t)$ and advantage estimate $\hat A_t$. Returns and advantages must respect terminal versus time-limit boundaries. Old log probabilities are fixed targets during the update.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Normalize Batched Advantages.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Compute the Clipped Policy Surrogate | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Normalize Batched Advantages | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Report Policy Update Clip Fractions | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Optimize the clipped surrogate
 
-## Data and evaluation
+Define $r_t=\exp(\log\pi_\theta-\log\pi_{\mathrm{old}})$. Maximize
+$$L^{\mathrm{clip}}=\mathbb E_t\min(r_t\hat A_t,\operatorname{clip}(r_t,1-\varepsilon,1+\varepsilon)\hat A_t).$$
+The minimum handles positive and negative advantages differently. Clipping the ratio does not mean clipping gradients or guaranteeing a global KL bound.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Compute the Clipped Policy Surrogate.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Report Policy Update Clip Fractions.
 
-## Implementation decomposition
 
-1. Compute the Clipped Policy Surrogate.
-2. Normalize Batched Advantages.
-3. Report Policy Update Clip Fractions.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Update value and collect again
 
-## Problem blueprints
+A value term commonly uses $(V_\theta(s_t)-\hat R_t)^2$, with entropy regularization encouraging exploration. Coefficients and any value clipping are implementation choices that must be declared. After bounded epochs, collect a new batch under the updated policy.
 
-### Problem: Compute the Clipped Policy Surrogate
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the compute the clipped policy surrogate component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Compute Value Targets Across Episode Boundaries.
 
-### Problem: Normalize Batched Advantages
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the normalize batched advantages component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Report Policy Update Clip Fractions
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the report policy update clip fractions component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Collect advantages and old probabilities:** Normalize Batched Advantages (planned).
+- **Optimize the clipped surrogate:** Compute the Clipped Policy Surrogate (planned); Report Policy Update Clip Fractions (planned).
+- **Update value and collect again:** Compute Value Targets Across Episode Boundaries (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Plot clipped and unclipped objectives across probability ratios.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+PPO is convenient for parallel robot simulation. Stale data, incorrectly scaled continuous-action log probabilities, and reward exploitation can undermine training despite a well-behaved clipped loss.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/1707.06347) · [Open-access manuscript](https://arxiv.org/pdf/1707.06347)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1707.06347)
-- [Open-access author manuscript](https://arxiv.org/pdf/1707.06347)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

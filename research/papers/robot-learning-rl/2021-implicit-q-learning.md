@@ -16,102 +16,63 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Fit an expectile value","detail":"Weight positive and negative residuals asymmetrically.","column":0,"row":0,"section":"Fit an expectile value","problem_slugs":[],"planned_problems":["Compute an Expectile Regression Loss"]},{"id":"stage-2","title":"Back up the critic","detail":"Use the learned value without sampling an out-of-dataset maximizer.","column":1,"row":0,"section":"Back up the critic","problem_slugs":[],"planned_problems":["Build IQL Critic Targets with Terminal Masks","Validate an Offline Dataset Split"]},{"id":"stage-3","title":"Extract an advantage-weighted policy","detail":"Prefer better logged actions while retaining supervised fitting.","column":2,"row":0,"section":"Extract an advantage-weighted policy","problem_slugs":[],"planned_problems":["Build Advantage-Weighted Action Weights"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"expectile value"},{"from":"stage-2","to":"stage-3","label":"critic and value"}]}
 ---
 
-# Offline Reinforcement Learning with Implicit Q-Learning
+## Core paper explanation
 
-## Agent brief
+IQL learns from offline data without maximizing Q over unseen actions during critic fitting. It estimates an upper expectile value from dataset actions, then extracts a policy through advantage-weighted behavior cloning.
 
-Learn from offline data using expectile value fitting and advantage-weighted policy extraction. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Learn from offline data using expectile value fitting and advantage-weighted policy extraction.
+### Fit an expectile value
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For $u=Q_{\mathrm{target}}(s,a)-V(s)$,
+$$L_V=\mathbb E_D[|\tau-\mathbf1[u<0]|u^2],\qquad \tau\in(0,1).$$
+Choosing $\tau>1/2$ emphasizes higher-value dataset actions. An expectile is not a quantile; its residual penalty is quadratic.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Compute an Expectile Regression Loss.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Compute an Expectile Regression Loss | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Build Advantage-Weighted Action Weights | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Validate an Offline Dataset Split | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Back up the critic
 
-## Data and evaluation
+Fit
+$$L_Q=\mathbb E_D[(Q(s,a)-r-\gamma(1-d)V(s'))^2].$$
+Stop gradients through targets as required. $d$ denotes true termination; mishandling time-limit truncation biases the value estimate.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Build IQL Critic Targets with Terminal Masks.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Validate an Offline Dataset Split.
 
-## Implementation decomposition
 
-1. Compute an Expectile Regression Loss.
-2. Build Advantage-Weighted Action Weights.
-3. Validate an Offline Dataset Split.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Extract an advantage-weighted policy
 
-## Problem blueprints
+With advantage $A=Q_{\mathrm{target}}-V$, minimize
+$$L_\pi=-\mathbb E_D[e^{\beta A(s,a)}\log\pi(a\mid s)].$$
+Practical weights may be capped for stability. Larger $\beta$ concentrates on high-advantage samples; it does not create data for actions absent from the dataset.
 
-### Problem: Compute an Expectile Regression Loss
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the compute an expectile regression loss component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Build Advantage-Weighted Action Weights.
 
-### Problem: Build Advantage-Weighted Action Weights
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the build advantage-weighted action weights component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Validate an Offline Dataset Split
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate an offline dataset split component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Fit an expectile value:** Compute an Expectile Regression Loss (planned).
+- **Back up the critic:** Build IQL Critic Targets with Terminal Masks (planned); Validate an Offline Dataset Split (planned).
+- **Extract an advantage-weighted policy:** Build Advantage-Weighted Action Weights (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Plot asymmetric value residual penalties and policy weights.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+IQL can exploit mixed-quality robot logs without direct online exploration during training. Poor action coverage and erroneous rewards still limit what its policy can learn.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2110.06169) · [Open-access manuscript](https://arxiv.org/pdf/2110.06169)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2110.06169)
-- [Open-access author manuscript](https://arxiv.org/pdf/2110.06169)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

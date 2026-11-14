@@ -16,102 +16,71 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Express axis geometry","detail":"Represent revolute joints through axes and link offsets.","column":0,"row":0,"section":"Express axis geometry","problem_slugs":["se3-transform-points"],"planned_problems":["Express Revolute Joint-Axis Geometry"]},{"id":"stage-2","title":"Solve geometric subproblems","detail":"Reduce joint angles to circle and plane intersections.","column":1,"row":0,"section":"Solve geometric subproblems","problem_slugs":[],"planned_problems":["Solve a Circle-Plane Rotation Subproblem"]},{"id":"stage-3","title":"Assemble and verify branches","detail":"Combine subproblem roots into full joint solutions.","column":2,"row":0,"section":"Assemble and verify branches","problem_slugs":[],"planned_problems":["Enumerate Valid Joint-Angle Branches","Verify IK Solutions with Forward Kinematics"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"axis relationships"},{"from":"stage-2","to":"stage-3","label":"candidate angles"}]}
 ---
 
-# IK-Geo: Unified Robot Inverse Kinematics Using Subproblem Decomposition
+## Core paper explanation
 
-## Agent brief
+IK-Geo solves inverse kinematics by decomposing robot geometry into canonical circle-intersection subproblems. Kinematic families defined by intersecting or parallel joint axes determine which analytic reductions or low-dimensional searches apply.
 
-Decompose inverse kinematics into reusable geometric subproblems. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Decompose inverse kinematics into reusable geometric subproblems.
+### Express axis geometry
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Rotation about unit axis $k$ uses Rodrigues' formula:
+$$R(k,\theta)=I+\sin\theta[k]_\times+(1-\cos\theta)[k]_\times^2.$$
+$[k]_\times v=k\times v$. Axis directions and link offsets must be expressed in the frames required by the robot's forward-kinematics convention.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Express Revolute Joint-Axis Geometry — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Solve a Circle-Plane Rotation Subproblem | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Enumerate Valid Joint-Angle Branches | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Verify IK Solutions with Forward Kinematics | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Solve geometric subproblems
 
-## Data and evaluation
+A basic subproblem seeks $\theta$ with $R(k,\theta)p_1=p_2$. Project perpendicular to $k$: $u=p_1-k(k^\top p_1)$ and $v=p_2-k(k^\top p_2)$. When compatible and nondegenerate,
+$$\theta=\operatorname{atan2}(k^\top(u\times v),u^\top v).$$
+Axial components and perpendicular lengths must agree for an exact solution; singular and least-squares cases require separate handling.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Solve a Circle-Plane Rotation Subproblem — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Assemble and verify branches
 
-1. Solve a Circle-Plane Rotation Subproblem.
-2. Enumerate Valid Joint-Angle Branches.
-3. Verify IK Solutions with Forward Kinematics.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Enumerate applicable branches, enforce joint limits, and recompute forward kinematics. Position error is measured in meters and orientation error in radians. Some kinematic families permit closed-form solutions; general cases use the paper's reduced searches rather than one universal formula.
 
-## Problem blueprints
 
-### Problem: Solve a Circle-Plane Rotation Subproblem
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the solve a circle-plane rotation subproblem component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Enumerate Valid Joint-Angle Branches — unreviewed idea; contract and evaluator required.
+- Verify IK Solutions with Forward Kinematics — unreviewed idea; contract and evaluator required.
 
-### Problem: Enumerate Valid Joint-Angle Branches
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the enumerate valid joint-angle branches component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Verify IK Solutions with Forward Kinematics
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the verify ik solutions with forward kinematics component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Express Revolute Joint-Axis Geometry — unreviewed idea; contract and evaluator required.
+- Solve a Circle-Plane Rotation Subproblem — unreviewed idea; contract and evaluator required.
+- Enumerate Valid Joint-Angle Branches — unreviewed idea; contract and evaluator required.
+- Verify IK Solutions with Forward Kinematics — unreviewed idea; contract and evaluator required.
 
-- Draw circle intersections and corresponding arm joint configurations.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Geometric decomposition exposes multiple IK branches and singularities clearly. An algebraically valid solution may collide or require an unsafe transition; trajectory feasibility remains separate from endpoint IK.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2211.05737)
-- [Open-access author manuscript](https://arxiv.org/pdf/2211.05737)
+[Primary paper](https://arxiv.org/abs/2211.05737) · [Open-access manuscript](https://arxiv.org/pdf/2211.05737)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

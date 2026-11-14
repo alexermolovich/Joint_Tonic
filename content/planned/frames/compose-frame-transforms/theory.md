@@ -1,48 +1,58 @@
-# A calibration chain is a route between frames
+# Compose coordinates without losing their frames
 
 ## Intuition
 
-A point observed by a wrist camera passes through two coordinate descriptions before the planner can use it: camera to robot base, then base to world. The matrices describe these changes of coordinates. Multiplication follows the route; it does not mean “apply the matrix nearest the world name first.”
+A camera mount offset is measured in the robot base frame. When the base rotates, that offset rotates in the world too. Simply adding the two translations ignores the orientation of the first frame.
 
-Write $T_{ab}$ for **a-from-b**, containing rotation $R_{ab}$ and translation $t_{ab}$. The columns of $R_{ab}$ are b's axes expressed in a, while $t_{ab}$ is b's origin expressed in a. Translation is measured in meters; rotations are dimensionless. All calibrations here refer to one synchronized instant.
+## Frame cancellation
 
-## Composition with physical meaning
-
-For a camera point $p_c$, first express it in b and then in a:
+Let $T_{ab}$ mean a-from-b and $T_{bc}$ mean b-from-c. All frames are right-handed and all translations are meters at the same timestamp. A homogeneous column point obeys $\bar{\mathbf p}_a=T_{ab}\bar{\mathbf p}_b$. Substitution gives
 
 $$
-p_b=R_{bc}p_c+t_{bc},\qquad
-p_a=R_{ab}p_b+t_{ab}.
+T_{ac}=T_{ab}T_{bc}
+=\begin{bmatrix}
+R_{ab}R_{bc}&R_{ab}\mathbf t_{bc}+\mathbf t_{ab}\\
+\mathbf0^\top&1
+\end{bmatrix}.
 $$
 
-Substitution gives the composed rotation and translation:
+Each $R$ is a dimensionless 3×3 proper rotation; each $\mathbf t$ is a 3-vector. Adjacent b labels cancel. Reversing the matrix order usually expresses no meaningful chain under these labels.
+
+To return to frame c, solve $\mathbf p_a=R_{ac}\mathbf p_c+\mathbf t_{ac}$:
 
 $$
-R_{ac}=R_{ab}R_{bc},\qquad
-t_{ac}=R_{ab}t_{bc}+t_{ab}.
+T_{ca}=\begin{bmatrix}
+R_{ac}^{\top}&-R_{ac}^{\top}\mathbf t_{ac}\\
+\mathbf0^\top&1
+\end{bmatrix}.
 $$
 
-The second translation cannot simply be added unchanged: it was measured along b's axes. The first rotation turns it into a's coordinates. Homogeneous multiplication packages exactly these operations as $T_{ac}=T_{ab}T_{bc}$.
+The inverse translation must also change frame; negating it alone is incorrect whenever rotation is present.
 
-For the inverse, orthogonality gives:
+## Visual: follow the camera origin
 
-$$
-R_{ca}=R_{ac}^{\mathsf T},\qquad
-t_{ca}=-R_{ac}^{\mathsf T}t_{ac}.
-$$
+| Stage | Coordinates | Units | Explanation |
+|---|---|---|---|
+| Camera origin in camera | (0,0,0) | m | Start |
+| Apply base-from-camera | (1,0,0) | m | Mount lies along base x |
+| Rotate into world | (0,1,0) | m | Base is turned +90° about z |
+| Add world base position | (1,1,0) | m | Base origin is (1,0,0) |
 
-Negating translation without rotating it leaves the answer in the wrong frame.
+This static frame trace is also a text alternative. The final point equals the translation column of T_ac. Applying the inverse rotation then translation returns it to (0,0,0).
 
-## A robot example
+## Validate meaning as well as shape
 
-Let the base be translated one meter along world x and rotated 90 degrees about world z. A camera one meter along base x is then at world position $(1,1,0)$, not $(2,0,0)$. Its mounting offset turns with the base. The inverse translation becomes $(-1,1,0)$ in the camera frame.
+A 4×4 array may encode scaling or reflection, not a robot pose. Require $R^\top R=I$ and $\det R=1$. The labels, meters and exact measurement timestamp are part of the same contract. This exercise rejects asynchronous records instead of silently mixing poses.
 
-## Visual and numerical checks
+## Why this matters on a robot
 
-The planned visual shows world, base, and camera axes with arrows labeled by direction. Selecting a point follows the two transformations; a table lists the intermediate coordinates. Compare this with a single composed transformation. An inverse round trip should restore the original point within tolerance.
+Wrong composition order can put a grasp beside the object even when every matrix looks reasonable. Millimeters treated as meters create a thousand-fold offset. Recording frame names, calibration version and measurement time helps detect these mistakes upstream.
 
-## Why it matters and what can fail
+## Check your understanding
 
-Frame-order bugs often produce plausible numbers and no runtime error. Their effect becomes obvious only when the robot rotates, because a mounting offset incorrectly stays aligned with the world. Carry frame IDs, timestamp, units, and calibration version with the matrix. This problem validates rigid transforms and known chains; it does not solve calibration, account for flexibility, or synchronize moving frames.
+- Is t_bc expressed in world coordinates? No, it is expressed in b.
+- Is a general inverse required? No, orthonormal rotations invert by transpose.
 
-[Modern Robotics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-1-homogeneous-transformation-matrices/) provides the frame convention; the explanation and fixtures here are original.
+## Source and prerequisite
+
+Read the [Modern Robotics transform explanation](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-1-homogeneous-transformation-matrices/), then compare with [transforming points](/problems/se3-transform-points). The records and validation policy here are original.

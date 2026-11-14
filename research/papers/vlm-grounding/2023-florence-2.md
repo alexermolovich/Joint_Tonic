@@ -16,102 +16,64 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode task and image","detail":"Combine visual evidence with the requested task.","column":0,"row":0,"section":"Encode task and image","problem_slugs":[],"planned_problems":["Route Task Prompts to Output Schemas"]},{"id":"stage-2","title":"Generate spatial tokens","detail":"Represent coordinates inside the output vocabulary.","column":1,"row":0,"section":"Generate spatial tokens","problem_slugs":[],"planned_problems":["Normalize Spatial Coordinates into Tokens"]},{"id":"stage-3","title":"Train and parse outputs","detail":"Apply token loss, then validate the task grammar.","column":2,"row":0,"section":"Train and parse outputs","problem_slugs":[],"planned_problems":["Parse Structured Detection Tokens"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"multimodal context"},{"from":"stage-2","to":"stage-3","label":"text and location tokens"}]}
 ---
 
-# Florence-2: Advancing a Unified Representation for a Variety of Vision Tasks
+## Core paper explanation
 
-## Agent brief
+Florence-2 represents diverse vision tasks as prompted sequence generation. Its vocabulary contains location tokens, allowing one encoder–decoder to describe images and produce structured boxes, OCR quadrilaterals, or polygons.
 
-Represent several vision tasks through a prompt-based sequence-to-sequence interface. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Represent several vision tasks through a prompt-based sequence-to-sequence interface.
+### Encode task and image
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A DaViT visual encoder and text task prompt form conditioning input $x$. The sequence model learns
+$$p(y\mid x)=\prod_{t=1}^{|y|}p(y_t\mid y_{<t},x).$$
+A task prompt determines the output grammar; it is not merely an extra descriptive caption.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Planned component problems:** Route Task Prompts to Output Schemas. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Generate spatial tokens
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Parse Structured Detection Tokens | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Normalize Spatial Coordinates into Tokens | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Route Task Prompts to Output Schemas | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+For a normalized coordinate $u\in[0,1]$, a pedagogical $Q$-bin codec is
+$$q=\min(Q-1,\lfloor Qu\rfloor),\qquad \hat u=(q+1/2)/Q.$$
+This illustrates quantization; an implementation must use the released tokenizer's precise rounding and dequantization rules. Florence-2 emits box corners, ordered OCR quadrilaterals, or polygon vertices according to the task.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problems:** Normalize Spatial Coordinates into Tokens. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Limitations and failure modes
+### Train and parse outputs
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Training uses
+$$L=-\sum_t\log p_\theta(y_t\mid y_{<t},x).$$
+At inference, parse the generated sequence into typed objects, reject incomplete coordinate groups, and map coordinates through the image preprocessing transform. Evaluate geometry with task metrics rather than token accuracy alone.
 
-## Implementation decomposition
 
-1. Parse Structured Detection Tokens.
-2. Normalize Spatial Coordinates into Tokens.
-3. Route Task Prompts to Output Schemas.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Prerequisite practice:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). These supporting skills do not complete this model stage.
 
-## Problem blueprints
+**Planned component problems:** Parse Structured Detection Tokens. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Parse Structured Detection Tokens
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the parse structured detection tokens component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Normalize Spatial Coordinates into Tokens
+**Planned components:**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the normalize spatial coordinates into tokens component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Route Task Prompts to Output Schemas.
+- Normalize Spatial Coordinates into Tokens.
+- Parse Structured Detection Tokens.
 
-### Problem: Route Task Prompts to Output Schemas
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the route task prompts to output schemas component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Structured generation can populate an object inventory from a camera frame. Quantization, invalid geometry, and incorrect rescaling can move a grasp target; box predictions are not metric 3D coordinates.
 
-- Toggle task prompts and show the corresponding parsed spatial output.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2311.06242) · [Open-access manuscript](https://arxiv.org/pdf/2311.06242)
 
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2311.06242)
-- [Open-access author manuscript](https://arxiv.org/pdf/2311.06242)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

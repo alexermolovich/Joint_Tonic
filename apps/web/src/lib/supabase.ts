@@ -4,7 +4,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let browserClient: SupabaseClient | null = null;
 
-/** Optional local client. The current workspace still uses localStorage. */
+/** Optional Auth client. Learning records still use the local workspace. */
 export function getSupabaseBrowserClient(): SupabaseClient | null {
   if (typeof window === "undefined") return null;
   if (browserClient) return browserClient;
@@ -16,7 +16,7 @@ export function getSupabaseBrowserClient(): SupabaseClient | null {
   )?.trim();
   if (!url || !key) return null;
 
-  // The current phase permits local services only. Hosted support is a later change.
+  // Public keys only. Hosted Auth is allowed over HTTPS; HTTP is loopback-only.
   let endpoint: URL;
   try {
     endpoint = new URL(url);
@@ -25,16 +25,18 @@ export function getSupabaseBrowserClient(): SupabaseClient | null {
   }
   if (
     !["http:", "https:"].includes(endpoint.protocol) ||
-    !["127.0.0.1", "localhost", "[::1]"].includes(endpoint.hostname) ||
+    (endpoint.protocol !== "https:" && !["127.0.0.1", "localhost", "[::1]"].includes(endpoint.hostname)) ||
     endpoint.username ||
     endpoint.password
   ) return null;
+  if (key.startsWith("sb_secret_")) return null;
 
   browserClient = createClient(url, key, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+      flowType: "pkce",
     },
   });
   return browserClient;

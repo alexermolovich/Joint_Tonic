@@ -16,102 +16,69 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Train a trajectory prior","detail":"Learn denoising from feasible motion examples.","column":0,"row":0,"section":"Train a trajectory prior","problem_slugs":["diffusion-action-noising"],"planned_problems":["Add Noise to a Joint-Space Path"]},{"id":"stage-2","title":"Guide toward low cost","detail":"Modify reverse sampling with differentiable planning objectives.","column":1,"row":0,"section":"Guide toward low cost","problem_slugs":[],"planned_problems":["Apply Collision-Cost Guidance During Denoising"]},{"id":"stage-3","title":"Check physical feasibility","detail":"Evaluate the generated motion independently of its likelihood.","column":2,"row":0,"section":"Check physical feasibility","problem_slugs":[],"planned_problems":["Check Endpoint and Smoothness Constraints"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"learned prior"},{"from":"stage-2","to":"stage-3","label":"guided trajectories"}]}
 ---
 
-# Motion Planning Diffusion: Learning and Planning of Robot Motions with Diffusion Models
+## Core paper explanation
 
-## Agent brief
+Motion Planning Diffusion learns a prior over robot trajectories and combines it with task and obstacle costs during denoising. The prior supplies plausible motion structure while guidance adapts samples to the current planning problem.
 
-Use diffusion-based trajectory priors with task and obstacle guidance for motion planning. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Use diffusion-based trajectory priors with task and obstacle guidance for motion planning.
+### Train a trajectory prior
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For normalized trajectory $\tau\in\mathbb R^{H\times d}$,
+$$\tau^k=\sqrt{\bar\alpha_k}\tau+\sqrt{1-\bar\alpha_k}\epsilon.$$
+The training objective teaches recovery from noise. Joint order, timestep, endpoint conditioning, and any velocity channels must remain consistent across the dataset.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Add Noise to a Joint-Space Path — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Add Noise to a Joint-Space Path | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Apply Collision-Cost Guidance During Denoising | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Check Endpoint and Smoothness Constraints | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Guide toward low cost
 
-## Data and evaluation
+A probabilistic teaching view is
+$$p(\tau\mid\mathrm{task})\propto p_\theta(\tau)\exp[-J(\tau)],$$
+so the guidance contribution is $-\nabla_\tau J$. The cost can include collision clearance and endpoint conditions. Guidance scaling and denoising covariance affect the practical update; this density expression is not a claim of exact posterior sampling by finite steps.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Apply Collision-Cost Guidance During Denoising — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Check physical feasibility
 
-1. Add Noise to a Joint-Space Path.
-2. Apply Collision-Cost Guidance During Denoising.
-3. Check Endpoint and Smoothness Constraints.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Check limits and collision clearance over the interpolated path. A high prior likelihood does not prove feasibility in a new environment, and a small sampled collision cost can miss obstacles between waypoints. Compare planning success, smoothness, and compute under the same environment geometry.
 
-## Problem blueprints
 
-### Problem: Add Noise to a Joint-Space Path
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the add noise to a joint-space path component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Check Endpoint and Smoothness Constraints — unreviewed idea; contract and evaluator required.
 
-### Problem: Apply Collision-Cost Guidance During Denoising
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the apply collision-cost guidance during denoising component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Check Endpoint and Smoothness Constraints
+- **Supporting prerequisite:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the check endpoint and smoothness constraints component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Add Noise to a Joint-Space Path — unreviewed idea; contract and evaluator required.
+- Apply Collision-Cost Guidance During Denoising — unreviewed idea; contract and evaluator required.
+- Check Endpoint and Smoothness Constraints — unreviewed idea; contract and evaluator required.
 
-- Scrub denoising steps as a path moves around obstacles.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+A learned prior can propose several motion modes around obstacles. Dataset coverage, cost gradients, and discretization resolution determine whether those modes remain useful in unfamiliar scenes.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2308.01557)
-- [Open-access author manuscript](https://arxiv.org/pdf/2308.01557)
+[Primary paper](https://arxiv.org/abs/2308.01557) · [Open-access manuscript](https://arxiv.org/pdf/2308.01557)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

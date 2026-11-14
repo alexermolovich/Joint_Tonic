@@ -1,0 +1,22 @@
+{
+  "slug": "rt1-causal-action-token-mask",
+  "title": "Build a Causal Action-Token Mask",
+  "version": "1.0.0",
+  "number": 202,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "rt1",
+    "causal-attention",
+    "action-token-layout"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "rt1_attention_mask",
+  "paperIds": [
+    "2022-rt-1"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Construct RT-1’s reference causal mask while preventing direct action-slot attention to action slots."
+}

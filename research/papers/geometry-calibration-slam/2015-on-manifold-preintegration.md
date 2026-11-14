@@ -16,102 +16,66 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Integrate relative rotation","detail":"Accumulate bias-corrected angular increments.","column":0,"row":0,"section":"Integrate relative rotation","problem_slugs":[],"planned_problems":["Integrate IMU Rotation Increments on SO3"]},{"id":"stage-2","title":"Integrate velocity and position","detail":"Accumulate specific force in the starting body frame.","column":1,"row":0,"section":"Integrate velocity and position","problem_slugs":[],"planned_problems":["Preintegrate Bias-Corrected IMU Velocity and Position"]},{"id":"stage-3","title":"Form a keyframe factor","detail":"Compare predicted state change with preintegrated measurements.","column":2,"row":0,"section":"Form a keyframe factor","problem_slugs":[],"planned_problems":["Propagate Preintegration Covariance","Apply a First-Order Bias Correction"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"relative rotations"},{"from":"stage-2","to":"stage-3","label":"preintegrated measurements"}]}
 ---
 
-# On-Manifold Preintegration for Real-Time Visual-Inertial Odometry
+## Core paper explanation
 
-## Agent brief
+On-manifold IMU preintegration summarizes many high-rate inertial samples into a constraint between keyframes. Rotation is integrated on SO(3), and bias Jacobians allow small bias corrections without replaying every sample.
 
-Aggregate high-rate inertial measurements into keyframe constraints while respecting rotation geometry. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Aggregate high-rate inertial measurements into keyframe constraints while respecting rotation geometry.
+### Integrate relative rotation
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Let $R_i$ map body-frame vectors to world coordinates. For angular rate $\omega_k$ in radians per second, gyro bias $b_g$, and sample duration $\Delta t$,
+$$\Delta R_{i,k+1}=\Delta R_{ik}\operatorname{Exp}((\omega_k-b_g)\Delta t).$$
+$\operatorname{Exp}$ maps a rotation vector into SO(3). Multiplication order follows this body-frame convention.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Planned component problems:** Integrate IMU Rotation Increments on SO3. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Integrate velocity and position
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Integrate IMU Rotation Increments on SO3 | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Propagate Preintegration Covariance | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Apply a First-Order Bias Correction | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+With accelerometer specific force $a_k$ and bias $b_a$ in meters per second squared,
+$$\Delta v_{i,k+1}=\Delta v_{ik}+\Delta R_{ik}(a_k-b_a)\Delta t,$$
+$$\Delta p_{i,k+1}=\Delta p_{ik}+\Delta v_{ik}\Delta t+\tfrac12\Delta R_{ik}(a_k-b_a)\Delta t^2.$$
+These first-order discrete updates show the mechanism. Covariance and bias Jacobians propagate alongside the mean.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned component problem:** Preintegrate Bias-Corrected IMU Velocity and Position. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Implementation decomposition
+### Form a keyframe factor
 
-1. Integrate IMU Rotation Increments on SO3.
-2. Propagate Preintegration Covariance.
-3. Apply a First-Order Bias Correction.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For world gravity $g$, the velocity residual is
+$$r_v=R_i^\top(v_j-v_i-g\Delta t_{ij})-\Delta v_{ij}.$$
+Rotation, position, and bias residuals complete the factor; whiten with the propagated covariance. Small bias changes use analytic first-order correction, while large changes may require reintegration.
 
-## Problem blueprints
 
-### Problem: Integrate IMU Rotation Increments on SO3
+**Planned component problems:** Propagate Preintegration Covariance; Apply a First-Order Bias Correction. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the integrate imu rotation increments on so3 component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Propagate Preintegration Covariance
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the propagate preintegration covariance component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Apply a First-Order Bias Correction
+- Integrate IMU Rotation Increments on SO3.
+- Preintegrate Bias-Corrected IMU Velocity and Position.
+- Propagate Preintegration Covariance.
+- Apply a First-Order Bias Correction.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the apply a first-order bias correction component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Compare raw IMU samples with the compact keyframe motion constraint.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Preintegration makes visual-inertial optimization practical without discarding high-rate IMU information. Wrong gravity sign, timestamp intervals, or IMU-to-camera extrinsics cause systematic drift that an optimizer cannot repair by adding more iterations.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/1512.02363) · [Open-access manuscript](https://arxiv.org/pdf/1512.02363)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1512.02363)
-- [Open-access author manuscript](https://arxiv.org/pdf/1512.02363)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

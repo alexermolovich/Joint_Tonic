@@ -16,102 +16,59 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Randomize simulated experience","detail":"Vary dynamics, observations, and delays during training.","column":0,"row":0,"section":"Randomize simulated experience","problem_slugs":["sample-dynamics-distributions"],"planned_problems":["Sample Hand Dynamics Randomization"]},{"id":"stage-2","title":"Learn recurrent reorientation control","detail":"Use observation history to adapt behavior implicitly.","column":1,"row":0,"section":"Learn recurrent reorientation control","problem_slugs":[],"planned_problems":["Compute Object Rotation Tracking Error"]},{"id":"stage-3","title":"Deploy with measured observations","detail":"Combine visual object pose and hand sensing in the trained interface.","column":2,"row":0,"section":"Deploy with measured observations","problem_slugs":[],"planned_problems":["Evaluate Robustness to Sensor and Actuator Noise"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"randomized rollouts"},{"from":"stage-2","to":"stage-3","label":"trained policy and pose estimator"}]}
 ---
 
-# Learning Dexterous In-Hand Manipulation
+## Core paper explanation
 
-## Agent brief
+Learning Dexterous In-Hand Manipulation transfers a recurrent control policy from heavily randomized simulation to a real robotic hand. A separately trained visual pose estimator and measured hand information supply the policy observations.
 
-Study dexterous in-hand control with simulation variation and real-world transfer constraints. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study dexterous in-hand control with simulation variation and real-world transfer constraints.
+### Randomize simulated experience
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Training optimizes $\mathbb E_{\theta\sim p(\theta),\tau\sim\pi,P_\theta}[R(\tau)]$, where $\theta$ includes uncertain physical and sensing properties. Randomization ranges and correlations define the robustness target; arbitrary broad variation can make learning unnecessarily difficult.
 
-## Prerequisite concepts
 
-- Kinematics, contact state, reward decomposition, imitation learning, tactile reference images, and safe rollout metrics.
+**Runnable component:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). A bounded scalar-randomization primitive; the paper uses additional hand, appearance and observation distributions.
 
-## Method map
+**Planned exercise:** Sample Hand Dynamics Randomization.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Sample Hand Dynamics Randomization | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Compute Object Rotation Tracking Error | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Evaluate Robustness to Sensor and Actuator Noise | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
 
-## Data and evaluation
+### Learn recurrent reorientation control
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+A recurrent controller updates $h_t=F(h_{t-1},o_t)$ and outputs $a_t\sim\pi(\cdot\mid h_t,o_t)$. For unit quaternions $q,q^*$, orientation error can be measured as
+$$e_R=2\arccos(\min(1,|q^{*\top}q|)).$$
+The absolute dot product handles the equivalent quaternion signs. Goal progress and dropping events shape the task reward.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Compute Object Rotation Tracking Error.
 
-## Implementation decomposition
 
-1. Sample Hand Dynamics Randomization.
-2. Compute Object Rotation Tracking Error.
-3. Evaluate Robustness to Sensor and Actuator Noise.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Deploy with measured observations
 
-## Problem blueprints
+The paper trains vision separately on randomized rendered scenes. Real observations must preserve pose conventions, fingertip geometry, timing, and action scaling. Recurrent memory can support adaptation but does not explicitly identify every physical parameter.
 
-### Problem: Sample Hand Dynamics Randomization
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the sample hand dynamics randomization component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Evaluate Robustness to Sensor and Actuator Noise.
 
-### Problem: Compute Object Rotation Tracking Error
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute object rotation tracking error component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Evaluate Robustness to Sensor and Actuator Noise
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate robustness to sensor and actuator noise component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Randomize simulated experience:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions) (runnable component); Sample Hand Dynamics Randomization (planned).
+- **Learn recurrent reorientation control:** Compute Object Rotation Tracking Error (planned).
+- **Deploy with measured observations:** Evaluate Robustness to Sensor and Actuator Noise (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Show target and actual object orientations with per-factor robustness plots.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Randomization and memory help tolerate modeling error in contact-rich dexterity. Unmodeled wear, sensor outages, or friction outside the training distribution can still cause object drops.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/1808.00177) · [Open-access manuscript](https://arxiv.org/pdf/1808.00177)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1808.00177)
-- [Open-access author manuscript](https://arxiv.org/pdf/1808.00177)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,88 @@
+{
+  "slug": "inference-latency-percentiles",
+  "title": "Compute p50, p90, and p99 Inference Latency",
+  "version": "1.0.0",
+  "number": 305,
+  "difficulty": "Easy",
+  "domain": "MLOps",
+  "topics": [
+    "latency",
+    "benchmarking",
+    "measurement"
+  ],
+  "minutes": 25,
+  "framework": "Python",
+  "entrypoint": "latency_percentiles",
+  "paperIds": [
+    "2019-mlperf-inference"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Summarize end-to-end request latency with explicitly defined nearest-rank p50, p90, and p99 values.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; tested using the local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [],
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2"
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "timestamps": "nanoseconds",
+      "outputs": "milliseconds"
+    },
+    "axes": "not-applicable",
+    "timestamp_assumptions": "Paired request arrival/completion on one monotonic clock; integer nanoseconds with a shared arbitrary origin.",
+    "batching": "Two lists of N paired requests; no batch-size weighting or warmup filtering."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 1e-9,
+    "public_case_families": [
+      "long tail",
+      "even sample count",
+      "empty trace"
+    ],
+    "hidden_case_families": [
+      "single zero-duration query",
+      "out-of-order completions",
+      "large clock origins with small differences",
+      "invalid clock direction",
+      "bool/noninteger rejection",
+      "duplicate durations"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "6efe41efa226b1e5406194da99f8feb3bb26e0a68b4aa36356a12a90ea833b89"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:6efe41efa226b1e5406194da99f8feb3bb26e0a68b4aa36356a12a90ea833b89",
+    "generated_fixture_hash": "6efe41efa226b1e5406194da99f8feb3bb26e0a68b4aa36356a12a90ea833b89"
+  },
+  "provenance": {
+    "authoring_notes": "Original instructional contract, examples, and diagrams; no copied paper code or figures.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1911.02549"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2019-mlperf-inference.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

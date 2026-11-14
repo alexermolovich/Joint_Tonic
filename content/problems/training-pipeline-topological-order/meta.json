@@ -1,0 +1,88 @@
+{
+  "slug": "training-pipeline-topological-order",
+  "title": "Topologically Schedule a Training Pipeline DAG",
+  "version": "1.0.0",
+  "number": 302,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "pipeline-orchestration",
+    "dependency-order"
+  ],
+  "minutes": 30,
+  "framework": "Python",
+  "entrypoint": "schedule_pipeline",
+  "paperIds": [
+    "2017-tfx-production-ml-platform"
+  ],
+  "prerequisites": [
+    "dependency-graph-blast-radius"
+  ],
+  "visualization": "markdown",
+  "summary": "Produce a deterministic valid execution order for an artifact-dependent training pipeline.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; tested using the local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [],
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2"
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "ids": "dimensionless"
+    },
+    "axes": "not-applicable",
+    "timestamp_assumptions": "Logical precedence only; no durations, timestamps, resources, or execution.",
+    "batching": "One complete pipeline graph per call."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "newly ready lexical priority",
+      "two-input merge",
+      "empty graph"
+    ],
+    "hidden_case_families": [
+      "duplicate edges",
+      "disconnected stages",
+      "disconnected cycle",
+      "self-loop",
+      "undeclared endpoints",
+      "deep pipeline"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "a6558a5fc8901e8cfde51ecee3ca05a1871de21c0de15d92363a2111eb455dd8"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:a6558a5fc8901e8cfde51ecee3ca05a1871de21c0de15d92363a2111eb455dd8",
+    "generated_fixture_hash": "a6558a5fc8901e8cfde51ecee3ca05a1871de21c0de15d92363a2111eb455dd8"
+  },
+  "provenance": {
+    "authoring_notes": "Original instructional contract, examples, and diagrams; no copied paper code or figures.",
+    "primary_urls": [
+      "https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2017-tfx-production-ml-platform.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

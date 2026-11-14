@@ -16,102 +16,63 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Propagate the inertial state","detail":"Predict pose, velocity, biases, and covariance.","column":0,"row":0,"section":"Propagate the inertial state","problem_slugs":[],"planned_problems":["Propagate an Error-State IMU Mean and Covariance"]},{"id":"stage-2","title":"Iterate point-to-map updates","detail":"Use raw-point geometric residuals without a feature-extraction stage.","column":1,"row":0,"section":"Iterate point-to-map updates","problem_slugs":[],"planned_problems":["Associate Scan Points with Local Map Planes","Compute a Point-to-Plane Residual"]},{"id":"stage-3","title":"Maintain the local map","detail":"Update an incremental spatial index.","column":2,"row":0,"section":"Maintain the local map","problem_slugs":[],"planned_problems":["Update an Incremental Local Map"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"predicted state"},{"from":"stage-2","to":"stage-3","label":"corrected scan pose"}]}
 ---
 
-# FAST-LIO2: Fast Direct LiDAR-inertial Odometry
+## Core paper explanation
 
-## Agent brief
+FAST-LIO2 registers raw lidar points directly to a map using a tightly coupled iterated Kalman filter. An incremental k-d tree supports fast nearest-neighbor lookup, map insertion, deletion, and local-map maintenance.
 
-Study fast lidar-inertial estimation through incremental map and measurement-update interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study fast lidar-inertial estimation through incremental map and measurement-update interfaces.
+### Propagate the inertial state
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For state estimate $x$ and IMU input $u$, propagation is $x^-_{k+1}=f(x_k,u_k,\Delta t)$. The error covariance follows
+$$P^-=FPF^\top+GQG^\top,$$
+where $F,G$ are linearized transition/noise Jacobians and $Q$ the discretized process-noise covariance. Rotation updates use manifold operations.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Associate Scan Points with Local Map Planes | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Compute a Point-to-Plane Residual | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Update an Incremental Local Map | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+**Planned component problem:** Propagate an Error-State IMU Mean and Covariance. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Data and evaluation
+### Iterate point-to-map updates
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+For local map plane $(n,q)$ and lidar point $p$, $r=n^\top(Rp+t-q)$. A local linear update uses
+$$K=PH^\top(HPH^\top+R_z)^{-1}.$$
+$H$ is the residual Jacobian and $R_z$ measurement covariance. The actual iterated manifold filter relinearizes and uses an efficient state-dimension formulation; this equation is the Kalman measurement-update core.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned component problems:** Associate Scan Points with Local Map Planes; Compute a Point-to-Plane Residual. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Implementation decomposition
+### Maintain the local map
 
-1. Associate Scan Points with Local Map Planes.
-2. Compute a Point-to-Plane Residual.
-3. Update an Incremental Local Map.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The ikd-Tree supports adding transformed points, deleting points outside the local region, and downsampling. Map resolution trades geometric detail against computation. Timestamped deskewing and lidar–IMU extrinsics remain necessary even though handcrafted feature extraction is removed.
 
-## Problem blueprints
 
-### Problem: Associate Scan Points with Local Map Planes
+**Planned component problems:** Update an Incremental Local Map. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the associate scan points with local map planes component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Compute a Point-to-Plane Residual
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute a point-to-plane residual component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Update an Incremental Local Map
+- Propagate an Error-State IMU Mean and Covariance.
+- Associate Scan Points with Local Map Planes.
+- Compute a Point-to-Plane Residual.
+- Update an Incremental Local Map.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the update an incremental local map component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Display local planes, scan points, and residual vectors.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Direct registration accommodates varied lidar scan patterns. Large planar or sparse scenes can leave some motion directions weakly observable; fast computation does not eliminate geometric degeneracy.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2107.06829) · [Open-access manuscript](https://arxiv.org/pdf/2107.06829)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2107.06829)
-- [Open-access author manuscript](https://arxiv.org/pdf/2107.06829)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

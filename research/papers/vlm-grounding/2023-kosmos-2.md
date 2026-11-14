@@ -16,102 +16,62 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode locations","detail":"Map two-dimensional positions to location tokens.","column":0,"row":0,"section":"Encode locations","problem_slugs":[],"planned_problems":["Encode Grounding Locations as Tokens"]},{"id":"stage-2","title":"Link phrases and boxes","detail":"Keep text spans attached to their spatial references.","column":1,"row":0,"section":"Link phrases and boxes","problem_slugs":[],"planned_problems":["Map Text Spans to Image Boxes"]},{"id":"stage-3","title":"Learn grounded sequences","detail":"Predict both ordinary and location tokens.","column":2,"row":0,"section":"Learn grounded sequences","problem_slugs":[],"planned_problems":["Validate Grounded Sequence Syntax"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"location tokens"},{"from":"stage-2","to":"stage-3","label":"grounded sequences"}]}
 ---
 
-# Kosmos-2: Grounding Multimodal Large Language Models to the World
+## Core paper explanation
 
-## Agent brief
+KOSMOS-2 associates text spans with image regions by adding location tokens to multimodal language modeling. The model can both interpret a referenced region and generate grounded text whose phrases point to bounding boxes.
 
-Connect text spans to visual locations for multimodal grounding. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Connect text spans to visual locations for multimodal grounding.
+### Encode locations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+The paper divides image width and height into $32$ bins, giving $32\times32$ location tokens. A row-major teaching convention is
+$$q=q_y\,32+q_x,\qquad q_x,q_y\in\{0,\ldots,31\}.$$
+Use the tokenizer's actual index convention when interoperating with weights. Two corner positions describe a box; these are image coordinates, not world-frame positions.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Planned component problems:** Encode Grounding Locations as Tokens. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Link phrases and boxes
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Encode Grounding Locations as Tokens | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Map Text Spans to Image Boxes | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Validate Grounded Sequence Syntax | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+For phrase tokens $w_{a:b}$, a structured output groups that span with its box location tokens. A basic validity condition is
+$$0\le x_1\le x_2\le1,\qquad 0\le y_1\le y_2\le1.$$
+This is a geometry check for decoded normalized corners, not the language-model objective. Preserve separators and support phrases referring to multiple boxes.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problems:** Map Text Spans to Image Boxes. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Limitations and failure modes
+### Learn grounded sequences
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Training applies next-token likelihood to discrete text and location tokens:
+$$L=-\sum_{t\in\mathcal D}\log p_\theta(y_t\mid y_{<t},I),$$
+where $\mathcal D$ indexes supervised discrete tokens. Visual feature positions are conditioning inputs, not discrete targets. Grounded image–text data supplies the phrase/region associations.
 
-## Implementation decomposition
 
-1. Encode Grounding Locations as Tokens.
-2. Map Text Spans to Image Boxes.
-3. Validate Grounded Sequence Syntax.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Planned component problems:** Validate Grounded Sequence Syntax. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Problem blueprints
+## Implement the components
 
-### Problem: Encode Grounding Locations as Tokens
+- **Related implementation skill:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the encode grounding locations as tokens component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Map Text Spans to Image Boxes
+- Encode Grounding Locations as Tokens.
+- Map Text Spans to Image Boxes.
+- Validate Grounded Sequence Syntax.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the map text spans to image boxes component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-### Problem: Validate Grounded Sequence Syntax
+## Why this matters on a robot
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate grounded sequence syntax component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Grounded language can make “pick this object” more explicit. The finite location grid limits precision, and a fluent phrase can still reference the wrong box; keep grounding evaluation separate from language quality.
 
-## Visual teaching plan
+## Sources and scope
 
-- Highlight grounded text spans and their associated image regions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+[Primary paper](https://arxiv.org/abs/2306.14824) · [Open-access manuscript](https://arxiv.org/pdf/2306.14824)
 
-## MLOps and deployment extensions
-
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2306.14824)
-- [Open-access author manuscript](https://arxiv.org/pdf/2306.14824)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

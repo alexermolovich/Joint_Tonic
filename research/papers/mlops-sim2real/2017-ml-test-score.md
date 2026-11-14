@@ -1,114 +1,158 @@
 ---
 schema_version: 1
-paper_id: "2017-ml-test-score"
-title: "The ML Test Score: A Rubric for ML Production Readiness and Technical Debt Reduction"
+paper_id: 2017-ml-test-score
+title: >-
+  The ML Test Score: A Rubric for ML Production Readiness and Technical Debt
+  Reduction
 authors:
-  - "Eric Breck"
-  - "Shanqing Cai"
-  - "Eric Nielsen"
-  - "Michael Salib"
-  - "D. Sculley"
+  - Eric Breck
+  - Shanqing Cai
+  - Eric Nielsen
+  - Michael Salib
+  - D. Sculley
 year: 2017
-venue_or_status: "IEEE Big Data 2017"
-primary_url: "https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/"
-pdf_url: "https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf"
-local_pdf: "./2017-ml-test-score.pdf"
-sha256: "8db5862dc7c7aaa2c55bb43bd42fc55531a0503782b7026b5811c00c98befd31"
+venue_or_status: IEEE Big Data 2017
+primary_url: >-
+  https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/
+pdf_url: 'https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf'
+local_pdf: ./2017-ml-test-score.pdf
+sha256: 8db5862dc7c7aaa2c55bb43bd42fc55531a0503782b7026b5811c00c98befd31
 bytes: 500055
 pages: 10
 topics:
-  - "mlops"
-  - "testing"
-  - "monitoring"
-  - "production-readiness"
-  - "deployment-gates"
+  - mlops
+  - testing
+  - monitoring
+  - production-readiness
+  - deployment-gates
 modalities:
-  - "test-results"
-  - "metrics"
-  - "data-slices"
-  - "operational-signals"
-track_role: "supporting"
-open_access_status: "open-access-proceedings"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+  - test-results
+  - metrics
+  - data-slices
+  - operational-signals
+track_role: supporting
+open_access_status: open-access-proceedings
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Gather reproducible evidence, evaluate named checks, and decide whether a
+    particular release satisfies its declared contract.
+  nodes:
+    - id: stage-1
+      title: Collect versioned evidence
+      detail: >-
+        Associate each test with the exact data, model, runtime, and evaluation
+        setup.
+      column: 0
+      row: 0
+      section: Collect versioned evidence
+      problem_slugs:
+        - record-artifact-lineage
+      planned_problems: []
+    - id: stage-2
+      title: Evaluate explicit checks
+      detail: 'Distinguish pass, fail, and missing evidence for each requirement.'
+      column: 1
+      row: 0
+      section: Evaluate explicit checks
+      problem_slugs:
+        - robot-ml-readiness-score
+      planned_problems: []
+    - id: stage-3
+      title: Gate the candidate release
+      detail: Require the critical checks to pass and expose every rejection reason.
+      column: 2
+      row: 0
+      section: Gate the candidate release
+      problem_slugs:
+        - edge-inference-release-gate
+        - slice-infrastructure-release-gate
+        - physical-ai-incident-triage
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: evidence artifacts
+    - from: stage-2
+      to: stage-3
+      label: check results
 ---
 
-## Agent brief
+## Core paper explanation
 
-Turn a production-readiness checklist into executable checks and a transparent deployment gate. The score must expose evidence and missing tests rather than becoming a single opaque number.
+The ML Test Score organizes production readiness around tests for data, models, infrastructure, and monitoring. It argues that offline model accuracy alone is insufficient evidence that an ML system is reliable. A useful implementation keeps individual checks and their evidence visible instead of hiding them behind one aggregate number. The logical gates below are teaching formalizations, not a replacement for the paper’s original rubric.
 
-## Contribution
+## Execution flow
 
-The paper organizes concrete tests around features and data, model development, infrastructure, and runtime monitoring. It gives teams a practical way to find production gaps before and after launch.
+Gather reproducible evidence, evaluate named checks, and decide whether a particular release satisfies its declared contract.
 
-## Prerequisite concepts
+### Collect versioned evidence
 
-- Unit, integration, and regression testing
-- Classification/regression metrics and slices
-- Monitoring thresholds and alert states
-- JSON or YAML configuration
-
-## Essential theory
-
-A transparent teaching score can weight applicable checks without treating waived items as passes. If \(z_i\in\{0,1\}\) is the result and \(w_i\) the importance of applicable check \(i\), define
+Represent check $i$ as $(v_i,e_i,t_i)$: tested version, evidence artifact, and evaluation time. A release decision is meaningful only if evidence corresponds to the candidate being released. For example,
 
 $$
-S=\frac{\sum_{i\in A}w_i z_i}{\sum_{i\in A}w_i}.
+\mathrm{current}_i=\mathbf1[v_i=v_{\mathrm{candidate}}]\mathbf1[t_i\ge t_{\mathrm{required}}].
 $$
 
-Hard safety blockers should be evaluated separately: a high \(S\) must not override a failed emergency-stop or command-bound test.
+This simple freshness contract must be defined per test; not every check expires on the same schedule.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Check evaluator | Check definitions and evidence | Pass, fail, waived, or not-applicable results | No result exists without attributable evidence | Evaluate one check category |
-| Score aggregator | Applicable weighted results | Category and total readiness scores | Not-applicable checks never inflate the denominator | Implement deterministic weighted aggregation |
-| Release gate | Scores and hard blockers | Release decision with reasons | A hard safety failure cannot be overridden by score | Evaluate one release policy |
+**Component practice**
 
-- Test catalog with applicability and evidence
-- Data and feature checks
-- Model-quality and reproducibility checks
-- Infrastructure integration checks
-- Live monitoring coverage and alerting
-- Readiness aggregation and release policy
+- Supporting prerequisite: [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Uses the bounded contract; no full paper reproduction is claimed.
 
-## Data and evaluation
+### Evaluate explicit checks
 
-Use synthetic project evidence containing passes, failures, waived checks, and not-applicable items. Grade score calculation, policy decisions, missing-evidence detection, and stable explanations.
+For quality $q$ and measured tail latency $\ell$, a small release contract may require
 
-## Limitations and failure modes
+$$
+q\ge q_{\min},\qquad \ell\le\ell_{\max}.
+$$
 
-A rubric is not a proof of safety. Weights and thresholds remain application-specific, and teams can game a score if evidence is not independently validated.
+Threshold direction, metric slice, hardware class, and sample count are part of each condition. Missing measurements are not zero-cost passes. Other checks concern data contracts, monitoring, rollback, and reproducibility rather than model scores.
 
-## Implementation decomposition
 
-1. Model check definitions, severity, applicability, and evidence.
-2. Evaluate checks against a project evidence bundle.
-3. Calculate category coverage without rewarding not-applicable items.
-4. Enforce hard blockers separately from weighted scores.
-5. Render machine-readable and human-readable reports.
+**Component practice**
 
-## Problem blueprints
+- Runnable component: [Score a Robot ML System for Production Readiness](/problems/robot-ml-readiness-score). Uses the bounded contract; no full paper reproduction is claimed.
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Production Readiness Score | MLOps utility | Easy | Check definitions and results | Category and total scores | Correct denominators, waivers, deterministic output |
-| Slice Regression Gate | Evaluation | Medium | Baseline/current metrics by slice | Pass/fail with regressed slices | Relative/absolute thresholds and missing-slice handling |
-| Staleness Monitor | Monitoring | Medium | Event times and age policies | Alert state and evidence | Boundary timestamps, clock order, severity escalation |
+### Gate the candidate release
 
-## Visual teaching plan
+For required checks $C$,
 
-- Radar or bar chart of readiness coverage by data, model, infrastructure, and monitoring category.
-- Interactive check list where pass/fail/waived states update \(S\) and the release decision.
-- Release-gate flow showing weighted evidence and independent hard blockers.
-- Timeline of feature, data, model, and deployment ages for staleness alerts.
+$$
+\mathrm{release}=\bigwedge_{i\in C}(\mathrm{status}_i=\mathrm{pass}).
+$$
 
-## MLOps and deployment extensions
+[Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate) implements a bounded quality/latency gate. It does not implement the full ML Test Score rubric. A deterministic list of reasons is more useful for remediation than a single unexplained false value.
 
-Include emergency-stop integration, command bounds, sensor dropout behavior, control-loop latency, safe fallback, fleet rollback, and hardware-in-the-loop evidence as hard blockers rather than optional score items.
 
-## Canonical sources
+**Component practice**
 
-- [Google Research publication page](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/)
-- [Official PDF](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf)
+- Runnable component: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Triage a Physical-AI Deployment Incident](/problems/physical-ai-incident-triage). Uses the bounded contract; no full paper reproduction is claimed.
 
+## Implement the components
+
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
+
+- **Supporting prerequisite:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage).
+- **Runnable component:** [Score a Robot ML System for Production Readiness](/problems/robot-ml-readiness-score).
+- **Runnable component:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+- **Runnable component:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate).
+- **Runnable component:** [Triage a Physical-AI Deployment Incident](/problems/physical-ai-incident-triage).
+
+These exercises implement their stated contracts, not a complete paper reproduction.
+
+
+## Why this matters on a robot
+
+Robot readiness also depends on calibration, control-loop timing, sensor health, and recovery behavior. A model can pass an aggregate benchmark while violating a critical operating slice. Tests must describe the operating envelope and the evidence supporting it.
+
+## Sources and scope
+
+[Primary paper](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) · [Open-access manuscript](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

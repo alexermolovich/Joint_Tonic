@@ -1,0 +1,93 @@
+{
+  "slug": "sample-dynamics-distributions",
+  "title": "Sample Mass, Friction, Delay, and Gain Distributions",
+  "version": "1.0.1",
+  "number": 306,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "dynamics-randomization",
+    "reproducible-simulation"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "sample_dynamics",
+  "paperIds": [
+    "2018-dynamics-randomization"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Convert reproducible unit draws into valid, explicitly typed per-episode physical parameter configurations.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; tested using the local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": [
+      "numpy"
+    ],
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2"
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "mass_kg": "kg",
+      "friction": "dimensionless Coulomb coefficient",
+      "gain_scale": "dimensionless multiplier",
+      "delay_ticks": "integer control ticks",
+      "dt_s": "seconds per control tick",
+      "delay_s": "seconds"
+    },
+    "axes": "Columns ordered mass, friction, delay, gain; scalars have no spatial axis.",
+    "timestamp_assumptions": "One draw row per episode reset; hold parameters fixed for that episode. Delay is integer control ticks of a supplied fixed dt_s.",
+    "batching": "float64 unit_draws shape (B,4); outputs each shape (B,)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-12,
+    "atol": 1e-12,
+    "public_case_families": [
+      "lower and geometric midpoint draws",
+      "fixed bounds",
+      "empty batch"
+    ],
+    "hidden_case_families": [
+      "half-open upper draw rejected",
+      "nonpositive log bounds",
+      "reversed bounds",
+      "wrong column count/dtype",
+      "near-upper integer delay bucket",
+      "unknown/missing bounds"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "e9453331d8d8cc7f88036078e50701d47eccfc6b490ed184f3c434db25492b62"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:e9453331d8d8cc7f88036078e50701d47eccfc6b490ed184f3c434db25492b62",
+    "generated_fixture_hash": "e9453331d8d8cc7f88036078e50701d47eccfc6b490ed184f3c434db25492b62"
+  },
+  "provenance": {
+    "authoring_notes": "Original instructional contract, examples, and diagrams; no copied paper code or figures.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1710.06537"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2018-dynamics-randomization.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

@@ -1,0 +1,23 @@
+.inline-theory{min-width:0;max-width:100%;color:var(--ink)}
+.inline-theory .prose{min-width:0;font-size:16px;line-height:1.8;color:var(--ink);overflow-wrap:anywhere}
+.inline-theory .prose h2{margin:28px 0 12px;font-size:21px;line-height:1.4;color:var(--heading)}
+.inline-theory>.prose:first-child h2:first-child{margin-top:0}
+.inline-theory .prose h3{font-size:18px;color:var(--heading)}
+.inline-theory .prose p{margin-bottom:18px}.inline-theory .prose li{margin-bottom:4px}
+.inline-theory .prose pre{max-width:100%;overflow-x:auto;padding:16px;background:var(--paper);border:1px solid var(--line)}
+.inline-theory .prose code{font-size:13px;color:var(--bright)}.inline-theory .prose pre code{color:var(--ink)}
+.inline-theory .prose table{display:block;max-width:100%;overflow-x:auto;font-size:13px}
+.inline-theory .prose .katex-display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;margin:20px 0;padding:20px 12px;background:var(--paper);border:1px solid var(--line);border-radius:6px;color:var(--heading);font-size:.98em;overflow-wrap:normal}
+.inline-theory-visual{min-width:0;max-width:100%;margin:24px 0}
+.inline-theory .visual-explorer{padding:16px;border-radius:7px;margin-bottom:0;min-width:0}
+.inline-theory .visual-explorer h3{margin:12px 0 16px;font-size:18px;line-height:1.4}
+.inline-theory .visual-stage{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin:14px 0}
+.inline-theory .visual-stage>svg{display:block;width:100%;height:auto;min-height:180px;max-height:none}
+.inline-theory .visual-readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.inline-theory .visual-readout{padding:12px 9px}.inline-theory .visual-readout span{font-size:11px;letter-spacing:.02em;overflow-wrap:anywhere}.inline-theory .visual-readout strong{font-size:17px;margin-top:8px}
+.inline-theory .visual-label{font-size:10px}.inline-theory .visual-label .icon-button{width:32px;height:32px;min-width:32px;min-height:32px;padding:8px;flex:none}
+.inline-theory .visual-label .icon-button>svg{width:13px;height:13px;min-width:13px;min-height:0;max-height:none}
+.inline-theory .visual-slider{grid-template-columns:minmax(78px,100px) minmax(0,1fr) 38px;gap:8px;font-size:12px;margin-top:16px}
+.inline-theory .visual-slider input{width:100%;min-width:0}.inline-theory .visual-slider .mono{font-size:12px}
+.inline-theory .visual-alt{font-size:13px;line-height:1.7;margin-top:16px}
+.inline-theory :is(button,a,input):focus-visible{outline:2px solid var(--accent);outline-offset:3px}

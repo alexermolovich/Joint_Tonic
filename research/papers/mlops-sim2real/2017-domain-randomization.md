@@ -31,86 +31,90 @@ modalities:
 track_role: "core"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Sample rendering parameters, generate labeled images, and evaluate transfer on held-out variations and real observations.","nodes":[{"id":"stage-1","title":"Sample appearance parameters","detail":"Choose a reproducible distribution over simulator visual factors.","column":0,"row":0,"section":"Sample appearance parameters","problem_slugs":[],"planned_problems":["Build a Seeded Visual Randomization Sampler","Stratify Texture, Lighting, Camera, and Distractor Factors","Version a Simulation Scenario Distribution"]},{"id":"stage-2","title":"Train across variation","detail":"Optimize task predictions over the sampled appearance distribution.","column":1,"row":0,"section":"Train across variation","problem_slugs":[],"planned_problems":["Average Per-Scenario Perception Losses"]},{"id":"stage-3","title":"Measure transfer and coverage","detail":"Report behavior across factor ranges rather than only a pooled average.","column":2,"row":0,"section":"Measure transfer and coverage","problem_slugs":[],"planned_problems":["Measure Performance Across Shift Buckets","Estimate Scenario Coverage and Confidence Intervals"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"randomized images"},{"from":"stage-2","to":"stage-3","label":"trained perception model"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Implement a seeded visual-domain randomizer and evaluate performance by randomization factor and shift bucket. The goal is to reason about coverage and transfer, not merely generate colorful images.
+Visual domain randomization varies simulator appearance so a perception model cannot rely on one narrow synthetic rendering style. Lighting, textures, object appearance, and camera-related nuisance factors are sampled during training. The goal is to learn useful task structure across that variation, making real images less exceptional than they would be under one fixed simulator appearance.
 
-## Contribution
+## Execution flow
 
-The paper shows that broad randomization of simulated visual factors can make a real scene appear like another training variation, enabling a perception model trained only in simulation to support real-world manipulation.
+Sample rendering parameters, generate labeled images, and evaluate transfer on held-out variations and real observations.
 
-## Prerequisite concepts
+### Sample appearance parameters
 
-- Supervised learning and object localization
-- Camera and rendering parameters
-- Random variables and experimental controls
-- Train/test distribution shift
-
-## Essential theory
-
-Let \(\phi\) denote simulator appearance parameters such as texture, lighting, camera pose, and clutter. Domain-randomized training minimizes an expected loss over a parameter distribution:
+Let $\xi$ contain lighting, texture, and other declared rendering parameters. Sample
 
 $$
-\min_\theta\;\mathbb{E}_{\phi\sim p(\phi)}\;\mathbb{E}_{(x,y)\sim \mathrm{Sim}(\phi)}
-[\ell(f_\theta(x),y)].
+\xi\sim p_{\mathrm{train}}(\xi),\qquad I=\operatorname{Render}(s,\xi).
 $$
 
-The practical design problem is choosing \(p(\phi)\) wide enough to cover relevant real conditions without making learning needlessly hard.
+The scene state $s$ determines task labels. Randomization must not silently change the label’s physical meaning. Seed every random source and record sampled parameters so a failure can be replayed.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Parameter sampler | Distribution spec and seed | Appearance parameter record | Samples are reproducible and inside declared bounds | Implement one seeded distribution family |
-| Synthetic generator | Scene plus sampled parameters | Labeled image and provenance | Labels and sampled parameters stay aligned | Render or synthesize one factorized scene |
-| Shift evaluator | Predictions, labels, factor metadata | Overall and sliced metrics | Every sample belongs to declared evaluation slices | Compute one per-factor robustness report |
+**Component practice**
 
-- Simulator scene and labeled target pose
-- Distributions over textures, lights, camera, clutter, and object appearance
-- Synthetic dataset generator with recorded seeds/parameters
-- Perception model and localization metric
-- Real-image transfer evaluation and factor ablations
+- Build a Seeded Visual Randomization Sampler — unreviewed idea; contract and evaluator required.
+- Stratify Texture, Lighting, Camera, and Distractor Factors — unreviewed idea; contract and evaluator required.
+- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
 
-## Data and evaluation
 
-Use a lightweight procedural 2D renderer or supplied synthetic features. Hold out factor combinations and a real-like target domain. Report localization error, success under a distance threshold, and per-factor robustness.
+### Train across variation
 
-## Limitations and failure modes
+For label $y(s)$ and model $f_\theta$, an expected-risk description is
 
-Randomization cannot cover every real artifact, and implausible samples may waste capacity. Success depends on the task, simulator labels, chosen ranges, and whether the randomized variables include the real failure modes.
+$$
+\min_\theta\mathbb E_{s,\xi}\,\ell(f_\theta(\operatorname{Render}(s,\xi)),y(s)).
+$$
 
-## Implementation decomposition
+Broadening a distribution is not automatically beneficial: randomization that destroys task evidence or creates impossible images can harm learning. Distinguish factors that vary appearance from factors that change the task itself.
 
-1. Define typed parameter distributions and safe ranges.
-2. Generate deterministic scenes from a master seed.
-3. Store every sampled parameter with the label.
-4. Stratify evaluation by individual and combined shifts.
-5. Tune ranges using coverage reports rather than test leakage.
 
-## Problem blueprints
+**Component practice**
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Seeded Scene Randomizer | Simulation utility | Medium | Distribution spec, seed, sample count | Parameter records or rendered scenes | Determinism, bounds, independence/declared coupling |
-| Stratified Randomization Plan | Sampling | Medium | Factor levels and budget | Balanced factor combinations | Coverage, budget, reproducible allocation |
-| Sim-to-Real Shift Report | Evaluation | Hard | Predictions, labels, factor metadata | Overall and per-shift metrics | Correct slices, confidence intervals, missing-slice handling |
-| Range Coverage Checker | Validation | Easy | Sampled values and allowed ranges | Coverage gaps and violations | Exact bounds, quantile summaries, clear evidence |
+- Average Per-Scenario Perception Losses — unreviewed idea; contract and evaluator required.
 
-## Visual teaching plan
 
-- Grid of one base scene with one factor changed at a time.
-- Interactive sliders for texture, light, camera, and clutter ranges with live coverage histograms.
-- Parallel-coordinates plot linking sampled parameters to localization error.
-- Train-distribution cloud versus real-condition point in a simplified 2D parameter space.
+### Measure transfer and coverage
 
-## MLOps and deployment extensions
+For evaluation bucket $b$, report risk $R_b=\mathbb E[\ell\mid\xi\in b]$ and sample count. A simple coverage diagnostic is
 
-Version the simulator, assets, renderer, parameter distribution, and seed manifest. Monitor real fleet conditions against training coverage and trigger new simulation generation when cameras, sites, or lighting move outside supported ranges.
+$$
+\mathrm{coverage}=\frac{\#\{b:n_b>0\}}{\#\{b\}}.
+$$
 
-## Canonical sources
+This is a teaching diagnostic, not a transfer guarantee. Held-out real images remain necessary because the simulator’s parameter family may omit important real effects.
 
-- [arXiv landing page](https://arxiv.org/abs/1703.06907)
-- [arXiv PDF](https://arxiv.org/pdf/1703.06907)
 
+**Component practice**
+
+- Measure Performance Across Shift Buckets — unreviewed idea; contract and evaluator required.
+- Estimate Scenario Coverage and Confidence Intervals — unreviewed idea; contract and evaluator required.
+
+
+## Implement the components
+
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
+
+
+**Planned component problems:**
+
+- Build a Seeded Visual Randomization Sampler — unreviewed idea; contract and evaluator required.
+- Stratify Texture, Lighting, Camera, and Distractor Factors — unreviewed idea; contract and evaluator required.
+- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
+- Average Per-Scenario Perception Losses — unreviewed idea; contract and evaluator required.
+- Measure Performance Across Shift Buckets — unreviewed idea; contract and evaluator required.
+- Estimate Scenario Coverage and Confidence Intervals — unreviewed idea; contract and evaluator required.
+
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
+
+## Why this matters on a robot
+
+Appearance variation can reduce reliance on synthetic textures, but it does not solve incorrect geometry, sensor timing, or dynamics. Camera blur, specular materials, and calibration changes may sit outside the randomization family. Track transfer failures by their physical cause.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1703.06907) · [Open-access manuscript](https://arxiv.org/pdf/1703.06907)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

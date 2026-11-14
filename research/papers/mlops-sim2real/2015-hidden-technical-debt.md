@@ -1,106 +1,158 @@
 ---
 schema_version: 1
-paper_id: "2015-hidden-technical-debt"
-title: "Hidden Technical Debt in Machine Learning Systems"
+paper_id: 2015-hidden-technical-debt
+title: Hidden Technical Debt in Machine Learning Systems
 authors:
-  - "D. Sculley"
-  - "Gary Holt"
-  - "Daniel Golovin"
-  - "Eugene Davydov"
-  - "Todd Phillips"
-  - "Dietmar Ebner"
-  - "Vinay Chaudhary"
-  - "Michael Young"
-  - "Jean-Francois Crespo"
-  - "Dan Dennison"
+  - D. Sculley
+  - Gary Holt
+  - Daniel Golovin
+  - Eugene Davydov
+  - Todd Phillips
+  - Dietmar Ebner
+  - Vinay Chaudhary
+  - Michael Young
+  - Jean-Francois Crespo
+  - Dan Dennison
 year: 2015
-venue_or_status: "NeurIPS 2015"
-primary_url: "https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html"
-pdf_url: "https://proceedings.neurips.cc/paper_files/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf"
-local_pdf: "./2015-hidden-technical-debt.pdf"
-sha256: "1a67da09a8bd5ba9a3577176e30aa2fbd88534e6baf0bc31522b4999f643d2a1"
+venue_or_status: NeurIPS 2015
+primary_url: >-
+  https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html
+pdf_url: >-
+  https://proceedings.neurips.cc/paper_files/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf
+local_pdf: ./2015-hidden-technical-debt.pdf
+sha256: 1a67da09a8bd5ba9a3577176e30aa2fbd88534e6baf0bc31522b4999f643d2a1
 bytes: 165614
 pages: 9
 topics:
-  - "mlops"
-  - "technical-debt"
-  - "dependency-management"
-  - "monitoring"
-  - "production-ml"
+  - mlops
+  - technical-debt
+  - dependency-management
+  - monitoring
+  - production-ml
 modalities:
-  - "system-graphs"
-  - "metadata"
-  - "operational-metrics"
-track_role: "foundation"
-open_access_status: "open-access-proceedings"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+  - system-graphs
+  - metadata
+  - operational-metrics
+track_role: foundation
+open_access_status: open-access-proceedings
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Map dependencies, trace the impact of a proposed change, and attach evidence
+    to release/monitoring decisions.
+  nodes:
+    - id: stage-1
+      title: Map system dependencies
+      detail: >-
+        Record data sources, transforms, models, and downstream consumers as a
+        directed graph.
+      column: 0
+      row: 0
+      section: Map system dependencies
+      problem_slugs:
+        - dependency-graph-blast-radius
+      planned_problems: []
+    - id: stage-2
+      title: Inspect coupling and feedback
+      detail: Find changes that can alter both predictions and future training inputs.
+      column: 1
+      row: 0
+      section: Inspect coupling and feedback
+      problem_slugs:
+        - detect-pipeline-feedback-loops
+      planned_problems: []
+    - id: stage-3
+      title: Control and observe changes
+      detail: 'Make ownership, validation, rollback, and consumer contracts explicit.'
+      column: 2
+      row: 0
+      section: Control and observe changes
+      problem_slugs:
+        - slice-infrastructure-release-gate
+        - physical-ai-incident-triage
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: dependency graph
+    - from: stage-2
+      to: stage-3
+      label: impact analysis
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use this paper to teach why a good model can still create a fragile robot product. The implementation target is a small analyzer for ML-system dependencies and operational risks, not a model-training exercise.
+Hidden Technical Debt in Machine Learning Systems explains why a model’s surrounding data and software dependencies can dominate long-term maintenance cost. Changing one feature or dataset can affect many downstream consumers; feedback loops can change the data that future training receives. The paper is a systems analysis, not a new learning algorithm. The equations here are explicit teaching models for reasoning about its dependency risks.
 
-## Contribution
+## Execution flow
 
-The paper names recurring ML-specific debt patterns: entangled signals, hidden feedback loops, undeclared data consumers, glue code, configuration debt, and changes in the outside world. It turns maintainability into a system-level design concern.
+Map dependencies, trace the impact of a proposed change, and attach evidence to release/monitoring decisions.
 
-## Prerequisite concepts
+### Map system dependencies
 
-- Directed graphs and cycle detection
-- Basic ML training and inference lifecycle
-- Configuration files and dependency metadata
-- Unit versus integration testing
+Let $G=(V,E)$ be a dependency graph and $A$ its adjacency matrix, with $A_{ij}=1$ when component $j$ consumes component $i$. The transitive reachability set of changed component $i$ is
 
-## Method map
+$$
+R(i)=\{j:\exists k\ge1,\ (A^k)_{ij}>0\}.
+$$
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Dependency inventory | Pipeline and ownership metadata | Typed system graph | Every reference resolves to a declared node | Parse and validate one system description |
-| Debt analyzer | System graph and monitor coverage | Ranked findings with evidence | Every finding names the rule and supporting path | Implement cycle, fan-out, or ownership checks independently |
+This formalizes change propagation; it is not a metric defined by the source paper. Undeclared consumers create missing edges, so a perfectly computed reachability set can still understate real impact.
 
-- Model and data dependency graph
-- Consumers and producers of features, labels, and predictions
-- Configuration surface and ownership metadata
-- Feedback-loop and change-risk analysis
-- Monitoring coverage map
 
-## Data and evaluation
+**Component practice**
 
-Use synthetic pipeline graphs with known cycles, shared features, undeclared consumers, and intentionally missing monitors. Grade against expected findings, false-positive count, and deterministic severity scoring.
+- Runnable component: [Compute Dependency-Graph Blast Radius](/problems/dependency-graph-blast-radius). Implements the bounded learning contract linked here, not the complete paper.
 
-## Limitations and failure modes
+### Inspect coupling and feedback
 
-This is a conceptual systems paper rather than an empirical benchmark. Risk categories require local judgment, and a static graph cannot reveal every runtime coupling or organizational failure.
+A feedback loop exists when a component can reach itself through a nonempty directed path. A simple operational model is
 
-## Implementation decomposition
+$$
+D_{t+1}=F(D_t,\pi_t,\mathrm{environment}),\qquad\pi_{t+1}=\operatorname{Train}(D_{t+1}).
+$$
 
-1. Define a typed node/edge schema for data, models, services, and monitors.
-2. Parse a pipeline description and validate references.
-3. Detect cycles, high-fan-out dependencies, and unowned nodes.
-4. Apply explicit risk rules with human-readable evidence.
-5. Produce a ranked debt report and remediation hints.
+The deployed policy $\pi_t$ influences future data $D_{t+1}$, so training data is not necessarily independent of earlier model decisions. Monitor this pathway rather than assuming a static dataset distribution.
 
-## Problem blueprints
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Dependency Blast Radius | Graph algorithm | Medium | Typed DAG and changed node | Sorted affected nodes and distances | Exact reachability, stable ordering, edge cases |
-| Feedback Loop Detector | Graph algorithm | Medium | Directed production graph | Cycles with supporting edges | Finds all expected cycles without duplicates |
-| Debt Risk Rubric | Systems reasoning | Hard | Graph plus ownership/monitor metadata | Per-risk evidence and severity | Rule accuracy, explanations, deterministic total score |
+**Component practice**
 
-## Visual teaching plan
+- Runnable component: [Detect Feedback Loops in an ML Pipeline](/problems/detect-pipeline-feedback-loops). Uses the bounded contract; no full paper reproduction is claimed.
 
-- Interactive dependency graph where selecting a changed feature reveals its blast radius.
-- Toggleable overlays for feedback loops, undeclared consumers, missing owners, and missing monitors.
-- Before/after architecture diagram showing glue code replaced by explicit component contracts.
-- Risk matrix linking each detected debt pattern to likelihood, impact, evidence, and mitigation.
+### Control and observe changes
 
-## MLOps and deployment extensions
+A transparent change gate can require every affected critical component to have fresh evidence:
 
-Add robot fleet, sensor firmware, calibration, simulator, safety monitor, and teleoperation nodes. Treat logged actions and later training labels as a possible feedback loop. Require owners and rollback plans for every on-robot model consumer.
+$$
+\mathrm{ready}=\bigwedge_{j\in R(i)\cap V_{\mathrm{critical}}}\mathrm{evidenceValid}(j).
+$$
 
-## Canonical sources
+This is a teaching policy, not the paper’s prescribed numeric score. Unknown evidence should remain unknown rather than being converted to a passing value. Record the version of inputs, transforms, models, and evaluators together.
 
-- [Official proceedings page](https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html)
-- [Official PDF](https://proceedings.neurips.cc/paper_files/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf)
 
+**Component practice**
+
+- Supporting prerequisite: [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Uses the bounded contract; no full paper reproduction is claimed.
+- Supporting prerequisite: [Triage a Physical-AI Deployment Incident](/problems/physical-ai-incident-triage). Uses the bounded contract; no full paper reproduction is claimed.
+
+## Implement the components
+
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
+
+- **Runnable component:** [Compute Dependency-Graph Blast Radius](/problems/dependency-graph-blast-radius).
+- **Runnable component:** [Detect Feedback Loops in an ML Pipeline](/problems/detect-pipeline-feedback-loops).
+- **Supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate).
+- **Supporting prerequisite:** [Triage a Physical-AI Deployment Incident](/problems/physical-ai-incident-triage).
+
+These exercises implement their stated contracts, not a complete paper reproduction.
+
+
+## Why this matters on a robot
+
+A robot policy changes what the robot observes, which objects it interacts with, and which failures enter the next dataset. Untracked data and calibration dependencies can make a small update unsafe or hard to diagnose. Dependency visibility is useful even when the neural network itself is unchanged.
+
+## Sources and scope
+
+[Primary paper](https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html) · [Open-access manuscript](https://proceedings.neurips.cc/paper_files/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

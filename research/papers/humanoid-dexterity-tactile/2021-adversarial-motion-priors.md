@@ -16,102 +16,59 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Compare motion transitions","detail":"Train a discriminator on reference and policy-generated motion features.","column":0,"row":0,"section":"Compare motion transitions","problem_slugs":[],"planned_problems":["Construct Motion Discriminator Features"]},{"id":"stage-2","title":"Convert discrimination into style reward","detail":"Reward transitions resembling reference motion.","column":1,"row":0,"section":"Convert discrimination into style reward","problem_slugs":[],"planned_problems":["Compute an Adversarial Style Reward"]},{"id":"stage-3","title":"Learn task-directed behavior","detail":"Combine style and goal rewards through reinforcement learning.","column":2,"row":0,"section":"Learn task-directed behavior","problem_slugs":[],"planned_problems":["Balance Task and Style Objectives"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"discriminator score"},{"from":"stage-2","to":"stage-3","label":"style reward"}]}
 ---
 
-# AMP: Adversarial Motion Priors for Stylized Physics-Based Character Control
+## Core paper explanation
 
-## Agent brief
+Adversarial Motion Priors learns a motion-style reward from reference state transitions. A policy then combines that learned style with task rewards, without needing to track one fixed clip phase at every timestep.
 
-Use adversarial motion priors to shape the style of learned physical behaviors. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Use adversarial motion priors to shape the style of learned physical behaviors.
+### Compare motion transitions
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For feature transitions $x=(\Phi(s),\Phi(s'))$, the least-squares discriminator core is
+$$L_D=\mathbb E_{x\sim D_M}(D(x)-1)^2+\mathbb E_{x\sim D_\pi}(D(x)+1)^2.$$
+$D_M$ is reference motion and $D_\pi$ policy experience. The paper also regularizes discriminator gradients. Features determine which aspects of style can be recognized.
 
-## Prerequisite concepts
 
-- Kinematics, contact state, reward decomposition, imitation learning, tactile reference images, and safe rollout metrics.
+**Planned exercise:** Construct Motion Discriminator Features.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Construct Motion Discriminator Features | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Compute an Adversarial Style Reward | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Balance Task and Style Objectives | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
+### Convert discrimination into style reward
 
-## Data and evaluation
+The bounded style reward is
+$$r_{\mathrm{style}}(x)=\max(0,1-\tfrac14(D(x)-1)^2).$$
+This follows the paper's least-squares formulation; substituting a sigmoid GAN reward changes the algorithm. A discriminator score is not a calibrated probability of physically safe motion.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Compute an Adversarial Style Reward.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Learn task-directed behavior
 
-1. Construct Motion Discriminator Features.
-2. Compute an Adversarial Style Reward.
-3. Balance Task and Style Objectives.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Use $r=w_sr_{\mathrm{style}}+w_gr_{\mathrm{goal}}$ with declared weights. The policy can compose behaviors from the motion distribution rather than following an explicit clip schedule. Evaluate both task success and motion quality; one can improve while the other degrades.
 
-## Problem blueprints
 
-### Problem: Construct Motion Discriminator Features
+**Planned exercise:** Balance Task and Style Objectives.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the construct motion discriminator features component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Compute an Adversarial Style Reward
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute an adversarial style reward component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-### Problem: Balance Task and Style Objectives
+- **Compare motion transitions:** Construct Motion Discriminator Features (planned).
+- **Convert discrimination into style reward:** Compute an Adversarial Style Reward (planned).
+- **Learn task-directed behavior:** Balance Task and Style Objectives (planned).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the balance task and style objectives component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Motion priors help produce coordinated locomotion or manipulation style. Reference-motion coverage and robot morphology constrain what transfers, and adversarial rewards can miss mechanically undesirable behavior outside their feature set.
 
-- Compare motion feature distributions and style/task reward curves.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2104.02180) · [Open-access manuscript](https://arxiv.org/pdf/2104.02180)
 
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2104.02180)
-- [Open-access author manuscript](https://arxiv.org/pdf/2104.02180)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -37,7 +37,7 @@ def record(name, passed, **details):
 def run_reference_checks():
     totals = {'problems': 0, 'public': 0, 'hidden': 0}
     for folder in sorted((ROOT/'content/problems').iterdir()):
-        if not (folder/'reference.py').exists():
+        if not (folder/'meta.json').exists():
             continue
         expected = runpy.run_path(str(folder/'cases.py'))['TESTS']
         result = worker.sandbox((folder/'reference.py').read_text(), folder.name, 'submit')
@@ -47,7 +47,8 @@ def run_reference_checks():
         totals['problems'] += 1
         totals['public'] += sum(visibility == 'public' for _, visibility, _ in expected)
         totals['hidden'] += sum(visibility == 'hidden' for _, visibility, _ in expected)
-    record('reference/problem-count', totals['problems'] == 10, **totals)
+    published = sum((folder/'meta.json').exists() for folder in (ROOT/'content/problems').iterdir() if folder.is_dir())
+    record('reference/problem-count', totals['problems'] == published and published > 0, expected=published, **totals)
     result = worker.sandbox(REFERENCE, SLUG, 'run')
     record('public-only run', result.get('passed') and result['tests'] and all(t['visibility'] == 'public' for t in result['tests']),
            tests=len(result.get('tests', [])))

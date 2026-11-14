@@ -16,105 +16,89 @@ modalities: ["3D point cloud"]
 track_role: "Foundational unordered 3D perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
+execution_flow: {"title":"Core execution flow","description":"Transform each point with shared weights, aggregate a permutation-invariant set description, and attach either a global or point-wise prediction head.","nodes":[{"id":"stage-1","title":"Encode each point","detail":"Apply one shared feature map to every point in the cloud.","column":0,"row":0,"section":"Encode each point","problem_slugs":["pointnet-transform-regularizer"],"planned_problems":["Build a Shared Point MLP and Global Feature","Validate Point-Cloud Density and Coordinate Conventions"]},{"id":"stage-2","title":"Pool the point set","detail":"Channel-wise maximum removes dependence on point ordering.","column":1,"row":0,"section":"Pool the point set","problem_slugs":["pointnet-symmetric-pooling"],"planned_problems":[]},{"id":"stage-3","title":"Classify or segment","detail":"Use a global head or combine local and global features at every point.","column":2,"row":0,"section":"Classify or segment","problem_slugs":["pointnet-local-global-features"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"point features"},{"from":"stage-2","to":"stage-3","label":"global descriptor"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use PointNet to introduce point-cloud learning without voxelization: shared per-point features, a symmetric aggregation operator, alignment transforms, and the difference between global classification and point-wise segmentation.
+PointNet learns directly from an unordered point set. A shared network maps each point to features, a symmetric pooling operation creates a global description, and task heads predict a set label or per-point labels. The central requirement is permutation invariance: changing the order of the same physical points must not change a global prediction. This differs from placing points into a regular voxel grid.
 
-## Contribution
+## Execution flow
 
-PointNet shows that a network can consume an unordered set directly. The central design is a shared point encoder followed by a permutation-invariant max reduction; segmentation reattaches the global descriptor to each local point feature.
+Transform each point with shared weights, aggregate a permutation-invariant set description, and attach either a global or point-wise prediction head.
 
-## Prerequisite concepts
+### Encode each point
 
-- Point sets, rigid transforms, and coordinate normalization
-- Shared multilayer perceptrons and batch normalization
-- Permutation invariance versus permutation equivariance
-- Classification and per-point segmentation losses
-
-## Method map
-
-1. Apply the same feature mapping to every point.
-2. Optionally predict input/feature alignment matrices with transform networks.
-3. Reduce point features with channel-wise maximum pooling.
-4. Classify from the global feature, or concatenate it back to local features for segmentation.
-5. Regularize the learned feature transform toward an orthogonal matrix.
-
-## Essential equations
-
-A PointNet-style set function has the form
+Let $X\in\mathbb R^{N\times3}$ contain $N$ points expressed in one declared coordinate frame. A shared MLP produces $h(x_i)\in\mathbb R^d$ for every point. The same weights are used for all $i$, so point order does not change individual feature computation. Learned transform networks can align inputs or intermediate features.
 
 $$
-f(X)=\gamma\!\left(\max_{x_i\in X} h(x_i)\right),
+H=[h(x_1);\ldots;h(x_N)]\in\mathbb R^{N\times d}.
 $$
 
-where the maximum is taken independently in each feature channel, making the global descriptor invariant to point order. A feature-transform penalty is
+[Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points) is a useful coordinate-frame prerequisite. A learned feature transform is not automatically a physically valid rigid-body transform.
+
+
+**Prerequisite practice:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). These supporting skills do not complete this model stage.
+
+
+**New runnable component:** [Regularize a Learned Feature Transform](/problems/pointnet-transform-regularizer). The exercise implements its stated bounded component with original synthetic fixtures.
+
+**Planned component problems:** Build a Shared Point MLP and Global Feature; Validate Point-Cloud Density and Coordinate Conventions. These are not runnable; titles without reviewed blueprints remain unreviewed ideas.
+
+### Pool the point set
+
+The global representation is
 
 $$
-R(A)=\left\|I-AA^{\mathsf T}\right\|_F^2.
+g_j=\max_{i=1,\ldots,N}H_{ij},\qquad
+f(X)=\gamma(g).
 $$
 
-## Visual teaching plan
+For any permutation matrix $P$ over the point dimension, $f(PX)=f(X)$. The maximum is independently taken per feature channel; pooling over the feature axis instead destroys the intended invariant. A feature-transform matrix $A\in\mathbb R^{d\times d}$ is regularized toward orthogonality with
 
-- **Permutation sandbox:** Shuffle colored point indices while showing unchanged max-pooled features and output prediction.
-- **Critical-point view:** Highlight which point wins each feature channel; deleting a winning point reveals how the global descriptor changes.
-- **Alignment view:** Apply the learned transform to a small 3D cloud with before/after axes and a live orthogonality-error gauge.
+$$
+R(A)=\|I-AA^\top\|_F^2.
+$$
 
-## Data and evaluation
+This discourages degenerate transformations but does not enforce exact orthogonality by itself.
 
-The paper reports object classification on ModelNet40, part segmentation on ShapeNet part data, and semantic segmentation on indoor scenes. Useful teaching metrics are class/instance accuracy, mean IoU for parts, per-class IoU, and robustness under point permutation, dropout, and coordinate noise.
 
-## Limitations and failure modes
+**Implement this component:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling). The symmetric pool operates on already-computed point features. It does not implement the shared MLP or alignment network.
 
-- A single global max discards fine local geometry and density information.
-- Results depend on point sampling and coordinate normalization.
-- Learned alignment matrices add optimization and numerical-stability concerns.
-- The architecture is a foundation for later local-neighborhood methods, not the final word on 3D perception.
+### Classify or segment
 
-## Implementation decomposition
+A classification head consumes $g$. A segmentation head combines each local feature with the same global context:
 
-1. Point sampling, normalization, and augmentation.
-2. Shared point MLP expressed as `1x1` convolutions or linear layers.
-3. Symmetric max aggregation and permutation tests.
-4. Classification head and transform regularizer.
-5. Segmentation head combining local and broadcast global features.
+$$
+\hat y_i=\operatorname{softmax}\bigl(\psi([h(x_i);g])\bigr).
+$$
 
-## Problem blueprints
+Segmentation is permutation equivariant: permuting inputs must permute outputs the same way. It is not invariant like global classification. A clean test checks both properties and includes duplicate points, changed cloud sizes, and the documented empty-cloud policy.
 
-### Verify set invariance
 
-- **Type:** NumPy/PyTorch property test
-- **Difficulty:** Easy
-- **Inputs:** Batched point features and arbitrary per-example permutations
-- **Outputs:** Max-pooled global descriptors plus an invariance verdict
-- **Grading:** Exact agreement after permutation; correct batch/channel axes; empty/invalid set rejection
+**Implement this component:** [Concatenate Local and Global Features for Segmentation](/problems/pointnet-local-global-features). Feature concatenation supplies the segmentation interface, not the segmentation head.
 
-### Build a PointNet encoder
+## Implement the components
 
-- **Type:** PyTorch module
-- **Difficulty:** Medium
-- **Inputs:** Tensor shaped `(batch, points, channels)` and a padding mask
-- **Outputs:** Per-point features and one global feature per sample
-- **Grading:** Shape contract; masked points cannot win max pooling; shared weights; permutation-invariant global output; finite gradients
+- **Runnable component:** [Concatenate Local and Global Features for Segmentation](/problems/pointnet-local-global-features). This is a bounded synthetic component, not a complete trained model.
 
-### Orthogonal transform regularizer
+- **Runnable component:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling). This isolates one reviewed mechanism with synthetic fixtures; it does not reproduce the paper’s complete model or benchmark.
 
-- **Type:** Linear algebra loss
-- **Difficulty:** Medium
-- **Inputs:** Batch of learned `K x K` feature transforms
-- **Outputs:** Mean `||I - A A^T||_F^2`
-- **Grading:** Numerical match; batch averaging; identity and orthogonal cases near zero; differentiability
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-## MLOps and deployment extensions
+**Planned components:**
 
-- Version point-sampling and normalization code alongside the model; these are part of the inference contract.
-- Monitor sensor-specific point count, range distribution, missing sectors, and invalid-coordinate rate.
-- Benchmark variable-length batching and masked reductions on target accelerators.
-- Add robustness gates for point dropout, jitter, coordinate-frame mistakes, and sparse scenes before promotion.
+- Build a Shared Point MLP and Global Feature.
+- Validate Point-Cloud Density and Coordinate Conventions.
 
-## Canonical sources
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- [Primary record](https://arxiv.org/abs/1612.00593)
-- [Open-access PDF](https://arxiv.org/pdf/1612.00593)
+## Why this matters on a robot
 
+Direct point processing avoids a dense 3D grid, but the basic architecture does not explicitly model local neighborhoods. Occlusion, sparse depth, and frame/scale inconsistencies can degrade recognition. Permutation invariance is not rotation invariance; coordinate preprocessing and augmentation remain important.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1612.00593) · [Open-access manuscript](https://arxiv.org/pdf/1612.00593)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

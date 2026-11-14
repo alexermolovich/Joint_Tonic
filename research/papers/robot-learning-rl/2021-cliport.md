@@ -16,102 +16,61 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode semantic instructions","detail":"Use pretrained CLIP representations for visual-language meaning.","column":0,"row":0,"section":"Encode semantic instructions","problem_slugs":[],"planned_problems":["Align Instruction Embeddings with Manipulation Observations"]},{"id":"stage-2","title":"Fuse spatial and semantic streams","detail":"Combine language-aware features with precise scene geometry.","column":1,"row":0,"section":"Fuse spatial and semantic streams","problem_slugs":[],"planned_problems":["Fuse Semantic and Spatial Feature Streams","Condition a Place Map on a Language Goal"]},{"id":"stage-3","title":"Imitate language-conditioned actions","detail":"Train pick and placement classification from demonstrations.","column":2,"row":0,"section":"Imitate language-conditioned actions","problem_slugs":[],"planned_problems":["Compute Language-Conditioned Pick-and-Place Cross-Entropy","Evaluate Compositional Manipulation Slices"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"semantic features"},{"from":"stage-2","to":"stage-3","label":"fused action maps"}]}
 ---
 
-# CLIPort: What and Where Pathways for Robotic Manipulation
+## Core paper explanation
 
-## Agent brief
+CLIPort combines pretrained vision-language semantics with the spatial action structure of Transporter Networks. One pathway supplies what an instruction refers to, while another preserves the spatial detail needed for precise manipulation.
 
-Combine semantic image-language information with spatial manipulation features. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Combine semantic image-language information with spatial manipulation features.
+### Encode semantic instructions
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Language embedding $l=E_{\mathrm{text}}(\ell)$ conditions semantic visual features. These pretrained embeddings are not sufficient by themselves to specify a metric grasp pose. The paper uses CLIP representations rather than retraining CLIP's contrastive loss as its main robot objective.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Align Instruction Embeddings with Manipulation Observations.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Fuse Semantic and Spatial Feature Streams | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Condition a Place Map on a Language Goal | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Evaluate Compositional Manipulation Slices | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Fuse spatial and semantic streams
 
-## Data and evaluation
+Denote the fused pick map by $p(u\mid o,\ell)$ and place map by $p(v\mid o,\ell,u)$. Transporter-style cross-correlation carries a selected pick feature to candidate placements, while the instruction disambiguates desired objects and relations.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Fuse Semantic and Spatial Feature Streams.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Condition a Place Map on a Language Goal.
 
-## Implementation decomposition
 
-1. Fuse Semantic and Spatial Feature Streams.
-2. Condition a Place Map on a Language Goal.
-3. Evaluate Compositional Manipulation Slices.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Imitate language-conditioned actions
 
-## Problem blueprints
+The action loss is
+$$L=-\log p(u^*\mid o,\ell)-\log p(v^*\mid o,\ell,u^*).$$
+Rotation bins and robot execution conventions must be retained. Evaluate compositional language and object variation separately from familiar task repetition.
 
-### Problem: Fuse Semantic and Spatial Feature Streams
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the fuse semantic and spatial feature streams component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Compute Language-Conditioned Pick-and-Place Cross-Entropy.
 
-### Problem: Condition a Place Map on a Language Goal
+**Planned exercise:** Evaluate Compositional Manipulation Slices.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the condition a place map on a language goal component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Compositional Manipulation Slices
+## Implement the components
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate compositional manipulation slices component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-## Visual teaching plan
+- **Encode semantic instructions:** Align Instruction Embeddings with Manipulation Observations (planned).
+- **Fuse spatial and semantic streams:** Fuse Semantic and Spatial Feature Streams (planned); Condition a Place Map on a Language Goal (planned).
+- **Imitate language-conditioned actions:** Compute Language-Conditioned Pick-and-Place Cross-Entropy (planned); Evaluate Compositional Manipulation Slices (planned).
 
-- Show language relevance and spatial pick/place heatmaps side by side.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Semantic priors help interpret instructions such as placing a named object in a specified region. Precise manipulation still depends on geometry, calibration, and controller feasibility; language similarity is not an action-success score.
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2109.12098) · [Open-access manuscript](https://arxiv.org/pdf/2109.12098)
 
-- [Primary arXiv record](https://arxiv.org/abs/2109.12098)
-- [Open-access author manuscript](https://arxiv.org/pdf/2109.12098)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

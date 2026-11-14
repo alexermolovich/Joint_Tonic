@@ -16,102 +16,77 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Dense predictions supply class probabilities, focal weighting changes each example’s contribution, and the detector combines classification with box regression.","nodes":[{"id":"stage-1","title":"Form binary class probabilities","detail":"Use sigmoid probabilities for each dense class target.","column":0,"row":0,"section":"Form binary class probabilities","problem_slugs":[],"planned_problems":["Convert Dense Class Logits to Independent Sigmoid Probabilities"]},{"id":"stage-2","title":"Apply focal weighting","detail":"Downweight confident correct examples while retaining hard-example gradients.","column":1,"row":0,"section":"Apply focal weighting","problem_slugs":[],"planned_problems":["Implement stable sigmoid focal loss","Compare gradient weights across confidence levels"]},{"id":"stage-3","title":"Reduce over valid anchors","detail":"Mask ignored examples and normalize the classification/regression objectives deliberately.","column":2,"row":0,"section":"Reduce over valid anchors","problem_slugs":[],"planned_problems":["Apply valid/ignored anchor masks and reductions"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"class logits"},{"from":"stage-2","to":"stage-3","label":"per-anchor losses"}]}
 ---
 
-# Focal Loss for Dense Object Detection
+## Core paper explanation
 
-## Agent brief
+Focal loss reduces the training weight of easy classification examples so dense detectors are not dominated by large numbers of obvious background locations. RetinaNet combines this objective with a feature pyramid and dense prediction heads. The key idea is a differentiable modulation of cross-entropy, not simply deleting all easy negatives.
 
-Reweight easy and hard classification examples to address foreground-background imbalance in dense detection. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Dense predictions supply class probabilities, focal weighting changes each example’s contribution, and the detector combines classification with box regression.
 
-Reweight easy and hard classification examples to address foreground-background imbalance in dense detection.
+### Form binary class probabilities
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For logit $z$ and target $y\in\{0,1\}$, let $p=\sigma(z)$ and
 
-## Prerequisite concepts
+$$
+p_t=\begin{cases}p,&y=1,\\1-p,&y=0.\end{cases}
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+Thus $p_t$ is the probability assigned to the true label. The stable implementation should work from logits rather than evaluating $\log(\sigma(z))$ naively for extreme inputs.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Compute Sigmoid Focal Loss | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Inspect Positive-Negative Gradient Weights | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Build a Dense Detection Loss Mask | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problem:** Convert Dense Class Logits to Independent Sigmoid Probabilities. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Limitations and failure modes
+### Apply focal weighting
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+With class-balancing factor $\alpha_t$ and focusing exponent $\gamma\ge0$,
 
-## Implementation decomposition
+$$
+\operatorname{FL}(p_t)=-\alpha_t(1-p_t)^\gamma\log p_t.
+$$
 
-1. Compute Sigmoid Focal Loss.
-2. Inspect Positive-Negative Gradient Weights.
-3. Build a Dense Detection Loss Mask.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+At $\gamma=0$, this becomes weighted cross-entropy. For $\gamma=2$, an easy example with $p_t=0.99$ receives modulation $10^{-4}$, while $p_t=0.5$ receives0.25. The modulating factor remains in the computation graph; detaching it changes the gradient.
 
-## Problem blueprints
 
-### Problem: Compute Sigmoid Focal Loss
+**Planned component problems:** Implement stable sigmoid focal loss; Compare gradient weights across confidence levels. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the compute sigmoid focal loss component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+### Reduce over valid anchors
 
-### Problem: Inspect Positive-Negative Gradient Weights
+For validity mask $m_i$ and a declared normalizer $Z$, a batch reduction is
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the inspect positive-negative gradient weights component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+\mathcal L_{\mathrm{cls}}=\frac{\sum_i m_i\operatorname{FL}_i}{Z}.
+$$
 
-### Problem: Build a Dense Detection Loss Mask
+The detector’s positive-anchor normalization and ignored-label semantics must be preserved. An all-background batch needs an explicit nonzero normalization policy. Focal weighting addresses imbalance in supervision; it does not replace box matching or localization loss.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the build a dense detection loss mask component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-## Visual teaching plan
+**Planned component problems:** Apply valid/ignored anchor masks and reductions. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- Plot per-example loss versus confidence for different focusing parameters.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Implement the components
 
-## MLOps and deployment extensions
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+**Planned components:**
 
-## Canonical sources
+- Convert Dense Class Logits to Independent Sigmoid Probabilities.
+- Implement stable sigmoid focal loss.
+- Compare gradient weights across confidence levels.
+- Apply valid/ignored anchor masks and reductions.
 
-- [Primary arXiv record](https://arxiv.org/abs/1708.02002)
-- [Open-access author manuscript](https://arxiv.org/pdf/1708.02002)
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Why this matters on a robot
 
+A dense detector may see mostly background during routine robot operation. Focal loss can make training focus on difficult examples, but rare sensor faults or mislabeled objects can also become hard examples with high influence. Inspect label quality and per-class performance rather than assuming more focusing is always better.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1708.02002) · [Open-access manuscript](https://arxiv.org/pdf/1708.02002)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

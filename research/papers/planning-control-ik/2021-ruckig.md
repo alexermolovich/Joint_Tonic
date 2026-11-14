@@ -16,102 +16,66 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Specify bounded endpoint states","detail":"Provide position, velocity, acceleration, and directional limits.","column":0,"row":0,"section":"Specify bounded endpoint states","problem_slugs":[],"planned_problems":["Validate a Trajectory Against Derivative Limits"]},{"id":"stage-2","title":"Integrate constant-jerk segments","detail":"Construct candidate switching profiles analytically.","column":1,"row":0,"section":"Integrate constant-jerk segments","problem_slugs":[],"planned_problems":["Integrate a Constant-Jerk Motion Segment"]},{"id":"stage-3","title":"Synchronize and sample","detail":"Choose a common feasible duration and evaluate each joint trajectory.","column":2,"row":0,"section":"Synchronize and sample","problem_slugs":[],"planned_problems":["Synchronize Multi-Joint Motion Durations"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"bounded states"},{"from":"stage-2","to":"stage-3","label":"candidate profiles"}]}
 ---
 
-# Jerk-limited Real-time Trajectory Generation with Arbitrary Target States
+## Core paper explanation
 
-## Agent brief
+Ruckig generates time-optimal state-to-state trajectories under velocity, acceleration, and jerk limits. It supports nonzero target velocity and acceleration and synchronizes multiple degrees of freedom.
 
-Generate trajectories with explicit velocity, acceleration, and jerk limits. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Generate trajectories with explicit velocity, acceleration, and jerk limits.
+### Specify bounded endpoint states
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For each joint, define initial and target $(q,\dot q,\ddot q)$ and bounds on velocity, acceleration, and jerk. Rotational units are radians, radians per second, radians per second squared, and radians per second cubed. Feasibility depends on endpoint derivatives, not only target position.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Validate a Trajectory Against Derivative Limits — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Integrate a Constant-Jerk Motion Segment | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Validate a Trajectory Against Derivative Limits | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Synchronize Multi-Joint Motion Durations | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Integrate constant-jerk segments
 
-## Data and evaluation
+Within duration $t$ and constant jerk $j$,
+$$a(t)=a_0+jt,\quad v(t)=v_0+a_0t+\tfrac12jt^2,$$
+$$q(t)=q_0+v_0t+\tfrac12a_0t^2+\tfrac16jt^3.$$
+Ruckig searches valid profile structures and switching times rather than fitting an arbitrary cubic through endpoints.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Integrate a Constant-Jerk Motion Segment — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Synchronize and sample
 
-1. Integrate a Constant-Jerk Motion Segment.
-2. Validate a Trajectory Against Derivative Limits.
-3. Synchronize Multi-Joint Motion Durations.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Independent minimum durations suggest a lower bound $T\ge\max_iT_i^{\min}$, but blocked duration intervals mean simply taking that maximum is not always sufficient. Synchronization selects a duration feasible for every joint. Sample the analytical trajectory using the actual controller period.
 
-## Problem blueprints
 
-### Problem: Integrate a Constant-Jerk Motion Segment
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the integrate a constant-jerk motion segment component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Synchronize Multi-Joint Motion Durations — unreviewed idea; contract and evaluator required.
 
-### Problem: Validate a Trajectory Against Derivative Limits
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate a trajectory against derivative limits component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Synchronize Multi-Joint Motion Durations
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the synchronize multi-joint motion durations component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Trajectory Against Derivative Limits — unreviewed idea; contract and evaluator required.
+- Integrate a Constant-Jerk Motion Segment — unreviewed idea; contract and evaluator required.
+- Synchronize Multi-Joint Motion Durations — unreviewed idea; contract and evaluator required.
 
-- Plot position, velocity, acceleration, and jerk on aligned axes.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Bounded jerk reduces abrupt acceleration changes during online replanning. Kinematic bounds do not automatically enforce actuator torque, contact, or obstacle constraints; those require additional models and checks.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2105.04830)
-- [Open-access author manuscript](https://arxiv.org/pdf/2105.04830)
+[Primary paper](https://arxiv.org/abs/2105.04830) · [Open-access manuscript](https://arxiv.org/pdf/2105.04830)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

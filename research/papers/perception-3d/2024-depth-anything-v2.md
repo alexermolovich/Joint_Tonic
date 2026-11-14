@@ -16,102 +16,77 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Train a teacher with precise synthetic depth, produce real-image pseudo labels, and train/evaluate student depth models with the correct scale convention.","nodes":[{"id":"stage-1","title":"Learn from precise depth labels","detail":"Use reliable synthetic geometry to train sharp depth predictions.","column":0,"row":0,"section":"Learn from precise depth labels","problem_slugs":[],"planned_problems":["Mask invalid depth boundaries"]},{"id":"stage-2","title":"Create real-image supervision","detail":"Use the teacher to connect precise synthetic training to real visual distributions.","column":1,"row":0,"section":"Create real-image supervision","problem_slugs":[],"planned_problems":["Create Teacher Depth Targets with Validity and Preprocessing Metadata"]},{"id":"stage-3","title":"Evaluate depth and boundaries","detail":"Separate relative geometry, edge quality, and metric range accuracy.","column":2,"row":0,"section":"Evaluate depth and boundaries","problem_slugs":[],"planned_problems":["Align relative inverse-depth predictions","Evaluate metric error by distance and surface type"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"trained teacher"},{"from":"stage-2","to":"stage-3","label":"student predictions"}]}
 ---
 
-# Depth Anything V2
+## Core paper explanation
 
-## Agent brief
+Depth Anything V2 improves monocular depth learning through high-quality synthetic supervision, a stronger teacher, and pseudo-labeled real images for student training. Its general relative-depth models predict affine-invariant inverse depth; metric-depth variants require additional metric supervision. The method’s data pipeline is therefore as important as its dense prediction architecture.
 
-Study a practical depth-estimation pipeline and its data and generalization interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Train a teacher with precise synthetic depth, produce real-image pseudo labels, and train/evaluate student depth models with the correct scale convention.
 
-Study a practical depth-estimation pipeline and its data and generalization interfaces.
+### Learn from precise depth labels
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Let $d_i$ denote inverse depth at valid pixel $i$, and $\hat d_i$ a prediction. Affine ambiguity means equivalent relative predictions can differ by
 
-## Prerequisite concepts
+$$
+d'_i=s\hat d_i+t.
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+The paper uses scale/shift-invariant and gradient-matching losses inherited from prior relative-depth work. A simple least-squares alignment used for explanation is $(s,t)=\arg\min\sum_{i\in\Omega}(s\hat d_i+t-d_i)^2$; it is not a claim that every training configuration uses this exact estimator.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Align Predicted Depth by Scale and Shift | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Evaluate Depth Error by Range | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Detect Invalid Depth Boundaries | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
+**Planned component problems:** Mask invalid depth boundaries. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Data and evaluation
+### Create real-image supervision
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+Teacher predictions $\tilde d=f_T(I)$ become supervision for real image $I$. A confidence/validity mask $m_i$ restricts usable pixels:
 
-## Limitations and failure modes
+$$
+\mathcal L_{\mathrm{pseudo}}=\frac{\sum_i m_i\ell(\hat d_i,\tilde d_i)}{\sum_i m_i}.
+$$
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+The paper removes high-loss regions of pseudo-labeled samples and uses feature alignment to preserve useful pretrained semantics. Masking must be tied to the defined criterion; a missing pixel must not become a supervised zero-depth value.
 
-## Implementation decomposition
 
-1. Align Predicted Depth by Scale and Shift.
-2. Evaluate Depth Error by Range.
-3. Detect Invalid Depth Boundaries.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
 
-### Problem: Align Predicted Depth by Scale and Shift
+**Planned component problem:** Create Teacher Depth Targets with Validity and Preprocessing Metadata. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the align predicted depth by scale and shift component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+### Evaluate depth and boundaries
 
-### Problem: Evaluate Depth Error by Range
+A gradient diagnostic on residual $r_i=d'_i-d_i$ is
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate depth error by range component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+\mathcal L_{\mathrm{grad}}=\sum_{i\in\Omega}\left(|\nabla_xr_i|+|\nabla_yr_i|\right),
+$$
 
-### Problem: Detect Invalid Depth Boundaries
+with differences evaluated only where neighboring pixels are valid. Sharp edges and low aligned relative error do not establish metric depth in meters. For metric deployment, use the metric model and report physical range error without per-image scale fitting.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the detect invalid depth boundaries component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-## Visual teaching plan
+**Planned component problems:** Align relative inverse-depth predictions; Evaluate metric error by distance and surface type. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- Render depth maps with a range slider and per-region residuals.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Implement the components
 
-## MLOps and deployment extensions
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+**Planned components:**
 
-## Canonical sources
+- Mask invalid depth boundaries.
+- Create Teacher Depth Targets with Validity and Preprocessing Metadata.
+- Align relative inverse-depth predictions.
+- Evaluate metric error by distance and surface type.
 
-- [Primary arXiv record](https://arxiv.org/abs/2406.09414)
-- [Open-access author manuscript](https://arxiv.org/pdf/2406.09414)
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Why this matters on a robot
 
+Monocular scale ambiguity is critical when a depth map drives stopping distance or grasp reach. Pseudo labels can also preserve teacher failures on transparent or unusual surfaces. Keep relative and metric model variants, preprocessing, and evaluation protocols clearly separated.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2406.09414) · [Open-access manuscript](https://arxiv.org/pdf/2406.09414)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -16,102 +16,66 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Initialize visual-inertial state","detail":"Align visual motion with inertial scale, gravity, and bias.","column":0,"row":0,"section":"Initialize visual-inertial state","problem_slugs":[],"planned_problems":["Detect Unobservable Initialization Motion"]},{"id":"stage-2","title":"Optimize coupled residuals","detail":"Combine visual, inertial, and retained-prior information.","column":1,"row":0,"section":"Optimize coupled residuals","problem_slugs":[],"planned_problems":["Preintegrate a Short IMU Window","Build a Visual-Inertial Residual"]},{"id":"stage-3","title":"Marginalize and correct drift","detail":"Retain old information and use loop constraints.","column":2,"row":0,"section":"Marginalize and correct drift","problem_slugs":[],"planned_problems":["Marginalize a Visual-Inertial Window with a Schur Complement"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"initialized state"},{"from":"stage-2","to":"stage-3","label":"optimized window"}]}
 ---
 
-# VINS-Mono: A Robust and Versatile Monocular Visual-Inertial State Estimator
+## Core paper explanation
 
-## Agent brief
+VINS-Mono tightly couples monocular feature tracks and IMU measurements in a sliding-window estimator. Initialization estimates a physically consistent visual-inertial state before nonlinear optimization, while marginalization keeps the active problem bounded.
 
-Study tightly coupled monocular visual-inertial estimation through calibration and optimization interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study tightly coupled monocular visual-inertial estimation through calibration and optimization interfaces.
+### Initialize visual-inertial state
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Monocular visual positions initially have unknown scale $s$. The physical displacement must satisfy an inertial relation such as
+$$p_j-p_i=v_i\Delta t+\tfrac12g\Delta t^2+R_i\Delta p_{ij}.$$
+Here $p,v,g$ are world-frame metric position, velocity, and gravity; $R_i$ maps body to world. Exciting motion is required to distinguish scale, gravity, and biases.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Planned component problems:** Detect Unobservable Initialization Motion. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Optimize coupled residuals
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Preintegrate a Short IMU Window | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Build a Visual-Inertial Residual | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Detect Unobservable Initialization Motion | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+A schematic objective is
+$$E=\|r_{\mathrm{prior}}\|^2+\sum\|r_{\mathrm{IMU}}\|_{\Sigma^{-1}}^2+\sum\rho(\|r_{\mathrm{vision}}\|^2).$$
+States include poses, velocities, IMU biases, and relevant calibration variables. The residual signs must match the declared gravity and transform conventions.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problems:** Preintegrate a Short IMU Window; Build a Visual-Inertial Residual. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Limitations and failure modes
+### Marginalize and correct drift
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+For linearized normal equations partitioned into retained $a$ and removed $b$, the Schur complement is
+$$H'=H_{aa}-H_{ab}H_{bb}^{-1}H_{ba}.$$
+The corresponding right-hand side is reduced consistently. VINS-Mono also uses loop detection and a four-degree-of-freedom pose graph appropriate to its gravity-aligned setting.
 
-## Implementation decomposition
 
-1. Preintegrate a Short IMU Window.
-2. Build a Visual-Inertial Residual.
-3. Detect Unobservable Initialization Motion.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
 
-### Problem: Preintegrate a Short IMU Window
+**Planned component problem:** Marginalize a Visual-Inertial Window with a Schur Complement. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the preintegrate a short imu window component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Build a Visual-Inertial Residual
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the build a visual-inertial residual component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Detect Unobservable Initialization Motion
+- Detect Unobservable Initialization Motion.
+- Preintegrate a Short IMU Window.
+- Build a Visual-Inertial Residual.
+- Marginalize a Visual-Inertial Window with a Schur Complement.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the detect unobservable initialization motion component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Link IMU signals, image tracks, and estimated state residuals.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Visual-inertial coupling can preserve motion estimates through weak visual intervals. Insufficient initialization motion, time offsets, and stale linearization in marginalized priors can undermine consistency.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/1708.03852) · [Open-access manuscript](https://arxiv.org/pdf/1708.03852)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1708.03852)
-- [Open-access author manuscript](https://arxiv.org/pdf/1708.03852)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

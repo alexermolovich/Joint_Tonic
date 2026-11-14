@@ -1,13 +1,7 @@
-# Progressive hints
+# Hints
 
-## Hint 1
+1. Check the middle frame labels, units and timestamps before multiplying matrices.
 
-Write the destination and source frame on each matrix. The adjacent frame labels must agree.
+2. Rotate the second translation by the first rotation.
 
-## Hint 2
-
-Expand the two point-transform equations before multiplying matrices. Notice the frame of the inner translation.
-
-## Hint 3
-
-For inversion, solve the point equation for the original coordinates. Check both rotation and translation by composing the result with the forward transform.
+3. The inverse translation is -R.T@t, not merely -t.

@@ -1,0 +1,21 @@
+{
+  "slug": "palm-e-project-sensor-features",
+  "title": "Project Continuous Sensor Features into Language Width",
+  "version": "1.0.0",
+  "number": 208,
+  "difficulty": "Easy",
+  "domain": "Robot learning",
+  "topics": [
+    "2023-palm-e",
+    "policy-components"
+  ],
+  "minutes": 35,
+  "framework": "PyTorch",
+  "entrypoint": "project_sensor_features",
+  "paperIds": [
+    "2023-palm-e"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Isolate a supplied affine projection into a language embedding width."
+}

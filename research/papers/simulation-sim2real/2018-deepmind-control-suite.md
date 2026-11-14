@@ -16,102 +16,67 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Configure dynamics and observations","detail":"Declare state, actuators, timestep, and task inputs.","column":0,"row":0,"section":"Configure dynamics and observations","problem_slugs":[],"planned_problems":["Validate a Continuous-Control Time Step","Implement Action Repeat Correctly"]},{"id":"stage-2","title":"Compute interpretable reward","detail":"Map task variables into bounded tolerance-based scores.","column":1,"row":0,"section":"Compute interpretable reward","problem_slugs":[],"planned_problems":["Evaluate a Bounded Continuous-Control Reward"]},{"id":"stage-3","title":"Compare learning runs","detail":"Report returns under fixed evaluation and seed conventions.","column":2,"row":0,"section":"Compare learning runs","problem_slugs":[],"planned_problems":["Aggregate Seeded Benchmark Returns"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"simulated state"},{"from":"stage-2","to":"stage-3","label":"episode rewards"}]}
 ---
 
-# DeepMind Control Suite
+## Core paper explanation
 
-## Agent brief
+The DeepMind Control Suite standardizes continuous-control environments with interpretable rewards and MuJoCo dynamics. It separates physical state, observations, task reward, and episode semantics so learning algorithms can be compared consistently.
 
-Study a standardized continuous-control benchmark through repeatable environment and reward contracts. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study a standardized continuous-control benchmark through repeatable environment and reward contracts.
+### Configure dynamics and observations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Mechanical dynamics follow a form such as
+$$M(q)\ddot q+C(q,\dot q)+g(q)=\tau+J^\top f_c.$$
+$q$ is configuration, $\tau$ actuator torque, and $f_c$ contact force. This is background mechanics; the simulator implements its own numerical solver and actuator models. The policy observation can omit parts of the full physical state.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Validate a Continuous-Control Time Step — unreviewed idea; contract and evaluator required.
+- Implement Action Repeat Correctly — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Continuous-Control Time Step | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Implement Action Repeat Correctly | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Aggregate Seeded Benchmark Returns | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Compute interpretable reward
 
-## Data and evaluation
+A tolerance function is one inside a desired interval and decreases smoothly outside it. A teaching form is $r(x)=1$ for $x\in[l,u]$, otherwise $r(x)=g(d(x,[l,u])/m)$, where $m$ is a margin and $g$ the chosen decay. Different tasks compose these terms differently.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Evaluate a Bounded Continuous-Control Reward — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Compare learning runs
 
-1. Validate a Continuous-Control Time Step.
-2. Implement Action Repeat Correctly.
-3. Aggregate Seeded Benchmark Returns.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Return is $G=\sum_{t=0}^{T-1}\gamma^tr_t$ for declared discount $\gamma$. Evaluation summaries must specify whether they use discounted or undiscounted return. Keep control frequency, horizon, and termination/truncation conventions fixed across algorithms.
 
-## Problem blueprints
 
-### Problem: Validate a Continuous-Control Time Step
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a continuous-control time step component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Aggregate Seeded Benchmark Returns — unreviewed idea; contract and evaluator required.
 
-### Problem: Implement Action Repeat Correctly
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the implement action repeat correctly component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Aggregate Seeded Benchmark Returns
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the aggregate seeded benchmark returns component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Continuous-Control Time Step — unreviewed idea; contract and evaluator required.
+- Implement Action Repeat Correctly — unreviewed idea; contract and evaluator required.
+- Evaluate a Bounded Continuous-Control Reward — unreviewed idea; contract and evaluator required.
+- Aggregate Seeded Benchmark Returns — unreviewed idea; contract and evaluator required.
 
-- Compare action-repeat settings on control trajectories and reward curves.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Standardized tasks help isolate learning behavior. Good simulator return does not prove robustness to real sensor delay, actuator dynamics, or contact uncertainty.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1801.00690)
-- [Open-access author manuscript](https://arxiv.org/pdf/1801.00690)
+[Primary paper](https://arxiv.org/abs/1801.00690) · [Open-access manuscript](https://arxiv.org/pdf/1801.00690)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

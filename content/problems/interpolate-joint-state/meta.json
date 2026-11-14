@@ -1,0 +1,75 @@
+{
+  "slug": "interpolate-joint-state",
+  "title": "Interpolate Joint State at Camera Time",
+  "version": "1.0.0",
+  "number": 11,
+  "difficulty": "Easy",
+  "domain": "Geometry",
+  "topics": [
+    "sensing"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "interpolate_joint_state",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Align unwrapped encoder angles to camera timestamps without crossing sensor dropouts.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "robot-joint-coordinates"
+    ],
+    "units": {
+      "times": "seconds on one synchronized clock",
+      "q": "radians, already unwrapped"
+    },
+    "axes": "Each column is one joint coordinate, not a Cartesian axis.",
+    "timestamp_assumptions": "One synchronized measurement clock; no offset correction.",
+    "batching": "times(T,), q(T,D), queries(M,); T>=2,D>=1,M>=0."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-7,
+    "atol": 1e-9,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "boundary",
+      "validation",
+      "empty-where-supported",
+      "immutability",
+      "scale"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "978b535d4b1aed286e076ab918c81d4097b0deef3d639608a11f00b9a54da89b"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://github.com/ros2/message_filters/blob/rolling/doc/index.rst"
+    ],
+    "implementation_urls": []
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "slug": "vit-patchify-reconstruct",
+  "title": "Patchify and Reconstruct an Image Tensor",
+  "version": "1.0.0",
+  "number": 101,
+  "difficulty": "Easy",
+  "domain": "Perception",
+  "topics": [
+    "vision-transformer",
+    "image-layout",
+    "patch-tokens"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "patchify",
+  "paperIds": [
+    "2021-vision-transformer"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Convert channels-first images into ordered patch vectors and reconstruct every input pixel.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "image pixel lattice"
+    ],
+    "units": {
+      "values": "unchanged input intensity units",
+      "patch_size": "pixels"
+    },
+    "axes": "B,C,H,W input; H increases down, W right; patches row-major; elements channel then local row then local column.",
+    "timestamp_assumptions": "No timestamp input; any temporal or scene alignment is an upstream caller responsibility.",
+    "batching": "0<=B<=1024 independent images; 1<=C,H,W,P<=4096 with divisibility. No temporal dimension, resize, crop, or padding."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "rectangular two-patch image",
+      "multichannel patch order",
+      "P=1 identity layout"
+    ],
+    "hidden_case_families": [
+      "zero batch and rectangular grids",
+      "noncontiguous arrays",
+      "bad divisibility and mismatched image shape",
+      "input and output memory independence"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "afa4bc0571f6805cadc787c41c0e1636fa7e4fe4a634fe863b8f0ab557485428"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching contract and explanations; source mechanisms checked against the paired paper card and primary sources; no paper figures or implementation code copied.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2010.11929"
+    ],
+    "implementation_urls": []
+  }
+}

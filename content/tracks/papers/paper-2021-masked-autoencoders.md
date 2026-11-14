@@ -1,0 +1,135 @@
+---
+{
+  "schema_version": 1,
+  "generated_by": "scripts/generate-paper-tracks.ts",
+  "slug": "paper-2021-masked-autoencoders",
+  "paper_id": "2021-masked-autoencoders",
+  "title": "Masked Autoencoders Are Scalable Vision Learners",
+  "status": "planned",
+  "primary_url": "https://arxiv.org/abs/2111.06377",
+  "source_cards": [
+    "research/papers/perception-3d/2021-masked-autoencoders.md"
+  ],
+  "paper_aliases": [],
+  "category": "perception-3d",
+  "topics": [
+    "masked image modeling",
+    "vision transformer",
+    "self-supervised learning"
+  ],
+  "runnable_problem_slugs": [
+    "vit-patchify-reconstruct",
+    "vit-patch-class-tokens"
+  ],
+  "proposed_component_count": 3,
+  "source_flow_node_count": 3,
+  "source_flow_nodes": [
+    {
+      "card": "2021-masked-autoencoders",
+      "node": "select"
+    },
+    {
+      "card": "2021-masked-autoencoders",
+      "node": "encode"
+    },
+    {
+      "card": "2021-masked-autoencoders",
+      "node": "reconstruct"
+    }
+  ],
+  "integration_status": "proposed",
+  "assessment_status": "proposed"
+}
+---
+
+# Masked Autoencoders Are Scalable Vision Learners — implementation track
+
+## Orientation and scope
+
+A masked autoencoder learns visual structure by predicting missing image content. Its expensive encoder processes only visible patches; mask tokens are introduced for decoding. The reconstruction task is a pretraining signal, not a guarantee of object detection, depth estimation or robust robot control.
+
+The implementation path follows **Select visible patches → Encode visible tokens → Reconstruct masked pixels**. Work through the original explanation and the atomic tasks below before composing the proposed integration. Published exercises are small, independently graded components; this plan is not a completed or full-paper reproduction.
+
+[Primary source](https://arxiv.org/abs/2111.06377) · [Paper explanation and graph](/projects/2021-masked-autoencoders) · [All paper tracks](../../PAPER_TRACKS.md)
+
+Source cards: [2021-masked-autoencoders](../../../research/papers/perception-3d/2021-masked-autoencoders.md).
+
+**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+
+## Prerequisites and diagnostic
+
+Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Select visible patches** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
+
+- **Supporting prerequisite:** [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens). Its own contract remains authoritative; it does not implement the entire paper.
+
+## Ordered mechanisms and component tasks
+
+The sequence below is a learning order. The explicit connections retain branching, conditioning and feedback; adjacent entries are not assumed to have interchangeable tensor interfaces.
+
+### 1. Select visible patches
+
+<!-- source-flow: 2021-masked-autoencoders#select -->
+
+Select visible patches. See the original explanation and component status below.
+
+[Study the mechanism and math](/projects/2021-masked-autoencoders#paper-section-select-visible-patches).
+
+- **Runnable supporting prerequisite:** [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct). Convert channels-first images into ordered patch vectors and reconstruct every input pixel.
+- **Proposed component, not runnable:** Sample and Restore Masked Image Patches.
+
+**Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
+
+### 2. Encode visible tokens
+
+<!-- source-flow: 2021-masked-autoencoders#encode -->
+
+Encode visible tokens. See the original explanation and component status below.
+
+[Study the mechanism and math](/projects/2021-masked-autoencoders#paper-section-encode-visible-tokens).
+
+- **Runnable supporting prerequisite:** [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens). Build Learned Patch and Class Tokens
+- **Proposed component, not runnable:** Gather Visible Patch Tokens with Position Indices.
+
+**Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
+
+### 3. Reconstruct masked pixels
+
+<!-- source-flow: 2021-masked-autoencoders#reconstruct -->
+
+Reconstruct masked pixels. See the original explanation and component status below.
+
+[Study the mechanism and math](/projects/2021-masked-autoencoders#paper-section-reconstruct-masked-pixels).
+
+- **Proposed component, not runnable:** Compute a Masked Patch Reconstruction Loss.
+
+**Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
+
+| From | Signal or dependency | To |
+|---|---|---|
+| Select visible patches | validated component output | Encode visible tokens |
+| Encode visible tokens | validated component output | Reconstruct masked pixels |
+
+## Integration exercise
+
+**Proposed exercise — not runnable yet.** Patchify a tiny original image, provide a fixed random ordering and gather visible patch tokens. Restore the full ordering with mask placeholders, supply a small decoder prediction and compute the proposed masked reconstruction loss. This traces the asymmetric masking interface without training a full MAE encoder.
+
+The integration boundary is selected representation, geometry or rendering operations; large learned backbones can be represented by explicitly supplied synthetic features. Treat any stubbed learned stage as a named fixture, never as measured model capability. Author original synthetic data and record its generation rules; external datasets or assets need a separate provenance and license review.
+
+Deliver an executable fixture generator, the component wiring, a compact expected-output trace and a report of the remaining differences from [the paper](/projects/2021-masked-autoencoders). Proposed pieces must pass blueprint review and isolated evaluation before this integration becomes an available exercise.
+
+## Evaluation and failure analysis
+
+**Proposed assessment — not runnable yet.** Check permutation/restoration consistency and ensure visible patches do not enter a masked-only loss. Compare two masks on the same image and report the reconstruction error only over the declared target normalization.
+
+Use one clean baseline and a separately recorded fault case: remove observations, change point order, or insert an occluded surface; record the geometric or representation error by condition. Identify the affected stage and report its intermediate evidence. Do not average away the failing case.
+
+Before grading, define an independent oracle, exact-versus-tolerant comparisons, allowed dtypes/devices, empty/minimal cases, invalid-input behavior and resource bounds. Compare failure detection and mathematical correctness separately from timing. A synthetic result establishes only the declared component contract; paper benchmark scores and physical safety require their own protocol.
+
+## Reproducibility deliverable
+
+**Proposed final artifact:** an original implementation/model card for **Masked Autoencoders Are Scalable Vision Learners** containing the source revision, exercised and stubbed stages, and an explicit list of omitted paper experiments.
+
+Record scene scale, camera convention, point ordering policy, visibility masks, interpolation rule and feature-generation seed. Pin problem/content versions, code revision, Python/dependency versions, evaluator identity, deterministic seeds and fixture hashes. Include the baseline/fault report and runtime observations. If any component updates parameters, record the update count and trainable state; otherwise state that no model was trained.
+
+Package the fixture and expected trace with a machine-readable manifest. Replaying the same manifest must recover the same evidence within declared tolerances. Record limitations and the next unimplemented mechanism; completion of this proposal must not be labeled full-paper reproduction. Research PDFs remain local reference inputs, with canonical sources linked rather than redistributed.

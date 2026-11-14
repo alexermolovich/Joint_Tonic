@@ -16,102 +16,59 @@ modalities: ["proprioception","contacts","tactile","motion"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Capture contact deformation","detail":"Observe elastomer appearance under contact.","column":0,"row":0,"section":"Capture contact deformation","problem_slugs":[],"planned_problems":["Validate a Tactile Image Capture Contract"]},{"id":"stage-2","title":"Extract tactile state","detail":"Use contact images or learned features for manipulation feedback.","column":1,"row":0,"section":"Extract tactile state","problem_slugs":[],"planned_problems":["Subtract a Tactile Reference Image","Estimate Contact Patch Statistics"]},{"id":"stage-3","title":"Predict and control contact","detail":"Use learned tactile dynamics to choose manipulation actions.","column":2,"row":0,"section":"Predict and control contact","problem_slugs":[],"planned_problems":["Align Tactile Frames with Robot Actions","Score Predicted Tactile Contact Outcomes"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"tactile images"},{"from":"stage-2","to":"stage-3","label":"tactile state"}]}
 ---
 
-# DIGIT: A Novel Design for a Low-Cost Compact High-Resolution Tactile Sensor with Application to In-Hand Manipulation
+## Core paper explanation
 
-## Agent brief
+DIGIT is a compact vision-based tactile sensor: a camera observes an illuminated deformable elastomer as it contacts objects. The paper contributes sensor design and demonstrates tactile model-based manipulation, rather than claiming pixels directly measure calibrated contact force.
 
-Study a compact vision-based tactile sensor through image, contact, and manipulation interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study a compact vision-based tactile sensor through image, contact, and manipulation interfaces.
+### Capture contact deformation
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A tactile image can be modeled conceptually as $I=\mathcal R(\mathrm{deformation},\mathrm{lighting},\mathrm{optics})$. This is a teaching observation model. Material properties, illumination, and camera calibration affect the signal; image brightness is not force in newtons.
 
-## Prerequisite concepts
 
-- Kinematics, contact state, reward decomposition, imitation learning, tactile reference images, and safe rollout metrics.
+**Planned exercise:** Validate a Tactile Image Capture Contract.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Subtract a Tactile Reference Image | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Estimate Contact Patch Statistics | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
-| Align Tactile Frames with Robot Actions | Body/hand states, reference motions, contact or tactile observations, and task goals | Aligned motion features, reward terms, adaptation state, or robustness reports | Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. | One bounded function or validation stage |
+### Extract tactile state
 
-## Data and evaluation
+A simple diagnostic difference is $\Delta I_t=I_t-I_{\mathrm{reference}}$. It can highlight contact but also responds to lighting drift and sensor aging. Any mapping $\hat F=f_\theta(I)$ to physical force requires separate calibration and labels; it is not supplied automatically by the hardware.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Subtract a Tactile Reference Image.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Estimate Contact Patch Statistics.
 
-## Implementation decomposition
 
-1. Subtract a Tactile Reference Image.
-2. Estimate Contact Patch Statistics.
-3. Align Tactile Frames with Robot Actions.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Predict and control contact
 
-## Problem blueprints
+The demonstrated model-based control idea predicts future tactile observations $\hat I_{t+1}=f_\theta(I_t,a_t)$ and scores candidate actions against a desired tactile outcome. This equation expresses the interface, not a full reproduction of the paper's controller. Validate contact-state prediction and task success independently.
 
-### Problem: Subtract a Tactile Reference Image
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the subtract a tactile reference image component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Align Tactile Frames with Robot Actions.
 
-### Problem: Estimate Contact Patch Statistics
+**Planned exercise:** Score Predicted Tactile Contact Outcomes.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the estimate contact patch statistics component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Align Tactile Frames with Robot Actions
+## Implement the components
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the align tactile frames with robot actions component.
-- **Inputs:** Body/hand states, reference motions, contact or tactile observations, and task goals; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned motion features, reward terms, adaptation state, or robustness reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check phase alignment, contact masks, frame/units consistency, missing tactile frames, finite rewards, and per-object/terrain aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-## Visual teaching plan
+- **Capture contact deformation:** Validate a Tactile Image Capture Contract (planned).
+- **Extract tactile state:** Subtract a Tactile Reference Image (planned); Estimate Contact Patch Statistics (planned).
+- **Predict and control contact:** Align Tactile Frames with Robot Actions (planned); Score Predicted Tactile Contact Outcomes (planned).
 
-- Show tactile images beside contact patch changes and action timestamps.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Tactile sensing can reveal contact and slip hidden from external cameras. Elastomer wear, contamination, and changes in illumination alter the measurement process and require ongoing calibration checks.
 
-- Record actuator/sensor limits, morphology, contact settings, calibration, and motion-data provenance; monitor falls, slip, intervention rate, and distribution shifts.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2005.14679) · [Open-access manuscript](https://arxiv.org/pdf/2005.14679)
 
-- [Primary arXiv record](https://arxiv.org/abs/2005.14679)
-- [Open-access author manuscript](https://arxiv.org/pdf/2005.14679)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

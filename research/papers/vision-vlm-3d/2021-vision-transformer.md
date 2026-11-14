@@ -16,112 +16,88 @@ modalities: ["RGB image"]
 track_role: "Backbone prerequisite for transformer-based perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
+execution_flow: {"title":"Core execution flow","description":"The inference path converts image patches to tokens, applies transformer blocks, and reads a classification representation. Training optimizes the chosen supervised head; robotics reuse may retain patch features instead.","nodes":[{"id":"stage-1","title":"Patchify the image","detail":"Flatten fixed image patches and project them into token embeddings.","column":0,"row":0,"section":"Patchify the image","problem_slugs":["vit-patchify-reconstruct","vit-patch-class-tokens","vit-position-interpolation"],"planned_problems":[]},{"id":"stage-2","title":"Mix patch information","detail":"Attention exchanges information globally; an MLP transforms each token.","column":1,"row":0,"section":"Mix patch information","problem_slugs":[],"planned_problems":["Assemble a Pre-Norm Vision Transformer Block","Profile Token Count, Memory, and Latency by Resolution"]},{"id":"stage-3","title":"Read out a representation","detail":"Use the class token for classification or retain spatial tokens for later tasks.","column":2,"row":0,"section":"Read out a representation","problem_slugs":[],"planned_problems":["Read a Normalized Class Token with a Linear Head"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"patch tokens"},{"from":"stage-2","to":"stage-3","label":"encoded tokens"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use ViT as the backbone bridge between image tensors and token-based architectures. The most transferable tasks are patchification, position-embedding resize, pre-norm encoder blocks, attention masks, and representation extraction.
+A Vision Transformer processes an image as a sequence of fixed-size patches. Each patch is projected into an embedding, position information is added, and transformer blocks exchange information between patches. The architecture makes the image-to-token interface explicit: resolution, patch size, token order, and position embeddings determine what the transformer sees. The original work studies image classification; the token representation is also useful inside later VLMs and robot policies.
 
-## Contribution
+## Execution flow
 
-ViT applies a largely standard Transformer encoder to a sequence of non-overlapping image-patch embeddings. With large-scale pretraining, the model transfers effectively without a convolutional feature hierarchy.
+The inference path converts image patches to tokens, applies transformer blocks, and reads a classification representation. Training optimizes the chosen supervised head; robotics reuse may retain patch features instead.
 
-## Prerequisite concepts
+### Patchify the image
 
-- Image tensor layout and convolution/linear equivalence for patch projection
-- Multi-head self-attention and residual connections
-- Layer normalization, MLP blocks, and classification tokens
-- Pretraining, fine-tuning, and resolution changes
-
-## Method map
-
-1. Split an image into fixed-size, non-overlapping patches.
-2. Flatten/project each patch to the model dimension.
-3. Prepend a learned classification token and add learned position embeddings.
-4. Apply repeated pre-normalized attention and feed-forward blocks.
-5. Use the classification-token representation for the task head.
-
-## Essential equations
-
-For image height (H), width (W), and square patch size (P), the patch count is
+For $I\in\mathbb R^{H\times W\times C}$ and patch side $P$ dividing $H,W$, there are $N=HW/P^2$ patches. Each flattened patch $x_i\in\mathbb R^{P^2C}$ is projected by $E\in\mathbb R^{P^2C\times d}$:
 
 $$
-N=\frac{HW}{P^2}.
+Z_0=[x_{\mathrm{cls}};x_1E;\ldots;x_NE]+E_{\mathrm{pos}},
+\qquad Z_0\in\mathbb R^{(N+1)\times d}.
 $$
 
-The initial token sequence can be expressed as
+The class token is learned, and $E_{\mathrm{pos}}$ has the same sequence shape. Patch traversal order must agree with position embedding order; a shape-correct transpose can silently scramble the image.
+
+
+**Implement this component:** [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct) · [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens). Each linked exercise implements its stated bounded subcomponent; completing it is not a full-paper reproduction.
+
+
+
+
+**Runnable component:** [Interpolate 2D Positional Embeddings](/problems/vit-position-interpolation). This resizes learned spatial positions with explicit bicubic settings and preserves the class row.
+
+
+### Mix patch information
+
+The original encoder uses pre-normalized residual blocks:
 
 $$
-z_0=[x_{\mathrm{cls}};\,x_1E;\ldots;x_NE]+E_{\mathrm{pos}}.
+U_\ell=Z_\ell+\operatorname{MSA}(\operatorname{LN}(Z_\ell)),
+\qquad Z_{\ell+1}=U_\ell+\operatorname{MLP}(\operatorname{LN}(U_\ell)).
 $$
 
-A pre-normalized encoder block applies
+Each attention head computes $\operatorname{softmax}(QK^\top/\sqrt{d_k})V$. The attention matrix is $(N+1)\times(N+1)$, so doubling both image dimensions at fixed patch size multiplies its element count by approximately sixteen. That resolution choice can dominate an edge robot’s memory budget.
+
+
+**Planned component problems:** Assemble a Pre-Norm Vision Transformer Block; Profile Token Count, Memory, and Latency by Resolution. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+
+### Read out a representation
+
+For the normalized final class token $h$, a linear classifier gives
 
 $$
-u=z+\operatorname{MSA}(\operatorname{LN}(z)),\qquad
-z'=u+\operatorname{MLP}(\operatorname{LN}(u)).
+p(y=c\mid I)=\frac{\exp(w_c^\top h+b_c)}{\sum_j\exp(w_j^\top h+b_j)}.
 $$
 
-## Visual teaching plan
+Changing image resolution changes the patch grid. When interpolating learned spatial position embeddings, reshape only the patch positions into a 2D grid, interpolate that grid, and keep the class-token embedding separate. A downstream robot policy may use all patch tokens rather than the classifier; that changes the output contract, not the patchification rules.
 
-- **Patch/token map:** Hover over a patch to highlight its token and attention connections; adjust patch size to reveal token-count growth.
-- **Position-resize explorer:** Compare the old/new 2D position grids and interpolated embeddings when resolution changes.
-- **Attention-cost chart:** An interactive resolution/patch-size control plots (N) and an (N^2) attention-cost proxy.
 
-## Data and evaluation
 
-The paper studies large-scale pretraining followed by transfer to ImageNet, CIFAR, VTAB, and related benchmarks. A practical teaching track should compare scratch versus pretrained behavior, resolution transfer, accuracy, throughput, and token-count scaling.
 
-## Limitations and failure modes
+**Planned component problem:** Read a Normalized Class Token with a Linear Head. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-- Strong results rely on substantial pretraining data and compute.
-- Self-attention cost grows quadratically with patch count.
-- Fixed patch size can lose fine detail important for small objects.
-- Learned positions require careful interpolation when input resolution changes.
+## Implement the components
 
-## Implementation decomposition
+- **Runnable component:** [Build Learned Patch and Class Tokens](/problems/vit-patch-class-tokens). This is a bounded synthetic component, not a complete trained model.
 
-1. Patchify/unpatchify operations and shape validation.
-2. Patch projection and classification token insertion.
-3. Learned positions plus 2D interpolation.
-4. Pre-norm attention/MLP encoder block.
-5. Stack, pool/head, checkpoint loading, and resolution-transfer tests.
+- **Runnable component:** [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct). This isolates one reviewed mechanism with synthetic fixtures; it does not reproduce the paper’s complete model or benchmark.
 
-## Problem blueprints
+The component below is runnable. The other ideas remain planned and do not yet have published evaluators.
 
-### Patchify and reconstruct an image
+**Planned components:**
 
-- **Type:** Tensor reshaping
-- **Difficulty:** Easy
-- **Inputs:** Batched images and patch height/width
-- **Outputs:** Ordered patch sequence and exact unpatchified reconstruction
-- **Grading:** Pixel-perfect round trip; row-major ordering; non-divisible dimension validation; channel-layout contract
+- Assemble a Pre-Norm Vision Transformer Block.
+- Profile Token Count, Memory, and Latency by Resolution.
+- Read a Normalized Class Token with a Linear Head.
 
-### Resize learned position embeddings
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- **Type:** Model surgery
-- **Difficulty:** Medium
-- **Inputs:** Class-token position, square/grid patch positions, old/new grid shapes
-- **Outputs:** Position tensor for the new token sequence
-- **Grading:** Class token unchanged; correct 2D interpolation axes; non-square grids; dtype/device preserved
+## Why this matters on a robot
 
-### Implement a pre-norm ViT block
+Patch size trades spatial precision for computation. Fine manipulations can depend on edges smaller than a patch, while higher-resolution attention increases latency. Preserve preprocessing and positional interpolation with the checkpoint, and benchmark the exact image resolution used by the robot.
 
-- **Type:** PyTorch module
-- **Difficulty:** Medium
-- **Inputs:** Token batch and optional padding mask
-- **Outputs:** Same-shaped transformed tokens
-- **Grading:** Norm-before-sublayer order; two residual paths; mask behavior; dropout disabled deterministically in eval; gradient checks
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2010.11929) · [Open-access manuscript](https://arxiv.org/pdf/2010.11929)
 
-- Record input resolution, patch size, token count, interpolation method, and normalization statistics in the model signature.
-- Benchmark latency and memory across resolutions; token growth can dominate deployment cost.
-- Test checkpoint conversions with layer-by-layer numerical comparisons.
-- Monitor downstream camera shifts by embedding distribution and task-specific slice metrics, not classifier confidence alone.
-
-## Canonical sources
-
-- [Primary record](https://arxiv.org/abs/2010.11929)
-- [Open-access PDF](https://arxiv.org/pdf/2010.11929)
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

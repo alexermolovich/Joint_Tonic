@@ -16,102 +16,63 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Warp a depth hypothesis","detail":"Project a reference pixel into another camera.","column":0,"row":0,"section":"Warp a depth hypothesis","problem_slugs":[],"planned_problems":["Warp a Point Between Calibrated Frames"]},{"id":"stage-2","title":"Measure photometric error","detail":"Account for exposure and affine brightness changes.","column":1,"row":0,"section":"Measure photometric error","problem_slugs":[],"planned_problems":["Compute an Exposure-Corrected Photometric Residual"]},{"id":"stage-3","title":"Optimize a sparse window","detail":"Jointly update poses, depths, and brightness parameters.","column":2,"row":0,"section":"Optimize a sparse window","problem_slugs":[],"planned_problems":["Select High-Gradient Image Points"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"warped pixels"},{"from":"stage-2","to":"stage-3","label":"weighted residuals"}]}
 ---
 
-# Direct Sparse Odometry
+## Core paper explanation
 
-## Agent brief
+Direct Sparse Odometry estimates camera motion and sparse inverse depths directly from image intensities. It optimizes photometric consistency with exposure and brightness modeling, instead of relying on descriptor matching for every observation.
 
-Study direct visual odometry through photometric residuals and sparse geometric optimization. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study direct visual odometry through photometric residuals and sparse geometric optimization.
+### Warp a depth hypothesis
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For reference pixel $u$, inverse depth $\rho>0$, and source-to-target transform $T_{ji}$,
+$$u'=\pi\!\left(T_{ji}\,\pi^{-1}(u,\rho)\right).$$
+$\pi^{-1}$ returns a 3D point in meters when $\rho$ is inverse meters. Visibility, positive target depth, and valid sampling bounds are required.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Prerequisite practice:** [Project Camera Points into Pixels](/problems/project-camera-points). These supporting skills do not complete this model stage.
 
-## Method map
+**Planned component problems:** Warp a Point Between Calibrated Frames. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Warp a Point Between Calibrated Frames | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Compute an Exposure-Corrected Photometric Residual | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Select High-Gradient Image Points | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+### Measure photometric error
 
-## Data and evaluation
+A DSO brightness residual has the form
+$$r=I_j(u')-b_j-\frac{t_j e^{a_j}}{t_i e^{a_i}}(I_i(u)-b_i).$$
+$t_i,t_j$ are exposure times, $a$ log-gain parameters, and $b$ brightness offsets. Calibrated image response and vignetting are part of the direct-method assumptions.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned component problems:** Compute an Exposure-Corrected Photometric Residual. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+### Optimize a sparse window
 
-## Implementation decomposition
+The objective sums robust weighted residuals, $E=\sum_p w_p\rho_H(r_p)$, over selected high-gradient pixel neighborhoods. $\rho_H$ denotes the Huber penalty, not inverse depth. Marginalization retains prior information as old states leave the active window.
 
-1. Warp a Point Between Calibrated Frames.
-2. Compute an Exposure-Corrected Photometric Residual.
-3. Select High-Gradient Image Points.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+**Planned component problems:** Select High-Gradient Image Points. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Warp a Point Between Calibrated Frames
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the warp a point between calibrated frames component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Compute an Exposure-Corrected Photometric Residual
+**Planned components:**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute an exposure-corrected photometric residual component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Warp a Point Between Calibrated Frames.
+- Compute an Exposure-Corrected Photometric Residual.
+- Select High-Gradient Image Points.
 
-### Problem: Select High-Gradient Image Points
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the select high-gradient image points component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Direct tracking can use edges and smooth intensity changes where repeatable keypoints are scarce. Rolling shutter, changing illumination, and low texture violate or weaken the photometric model.
 
-- Show reference pixels, projected pixels, and photometric errors.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/1607.02565) · [Open-access manuscript](https://arxiv.org/pdf/1607.02565)
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1607.02565)
-- [Open-access author manuscript](https://arxiv.org/pdf/1607.02565)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

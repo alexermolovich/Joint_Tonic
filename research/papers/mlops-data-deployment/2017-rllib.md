@@ -16,102 +16,70 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Collect policy experience","detail":"Run environment workers with explicit policy snapshots.","column":0,"row":0,"section":"Collect policy experience","problem_slugs":["validate-robot-episodes"],"planned_problems":["Batch Actor Samples into Learner Updates"]},{"id":"stage-2","title":"Aggregate algorithm updates","detail":"Combine samples or gradients according to the chosen RL method.","column":1,"row":0,"section":"Aggregate algorithm updates","problem_slugs":[],"planned_problems":["Aggregate Weighted Learner Gradients"]},{"id":"stage-3","title":"Distribute new parameters","detail":"Update workers and monitor policy lag.","column":2,"row":0,"section":"Distribute new parameters","problem_slugs":[],"planned_problems":["Track Policy Version Staleness","Measure Sampling and Learning Throughput"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"versioned batches"},{"from":"stage-2","to":"stage-3","label":"learner update"}]}
 ---
 
-# RLlib: Abstractions for Distributed Reinforcement Learning
+## Core paper explanation
 
-## Agent brief
+The RLlib paper organizes distributed reinforcement learning around reusable evaluation and optimization components under logically centralized control. Parallel sampling and learning can be composed without every algorithm rebuilding its own distributed execution engine.
 
-Study distributed reinforcement-learning architecture through actor, learner, and data-flow boundaries. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study distributed reinforcement-learning architecture through actor, learner, and data-flow boundaries.
+### Collect policy experience
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Worker $i$ gathers trajectories $\tau_i\sim\pi_{\theta_{v_i}}$, where $v_i$ identifies the policy version. A transition records observation, action, reward, successor observation, and termination semantics. Truncation and true termination must remain distinct for value targets.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Batch Actor Samples into Learner Updates — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Batch Actor Samples into Learner Updates | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Track Policy Version Staleness | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Measure Sampling and Learning Throughput | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
 
-## Data and evaluation
+### Aggregate algorithm updates
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+For synchronized equally weighted worker gradients, $g=P^{-1}\sum_i g_i$. Unequal batch sizes require sample-weighted averaging. This equation illustrates one execution pattern; RLlib also supports algorithms whose update logic is not synchronous gradient averaging.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Component practice**
 
-## Implementation decomposition
+- Aggregate Weighted Learner Gradients — unreviewed idea; contract and evaluator required.
 
-1. Batch Actor Samples into Learner Updates.
-2. Track Policy Version Staleness.
-3. Measure Sampling and Learning Throughput.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+### Distribute new parameters
 
-### Problem: Batch Actor Samples into Learner Updates
+A useful diagnostic is $\Delta v_i=v_{\mathrm{learner}}-v_i$. It counts version lag, not elapsed time or statistical divergence. On-policy algorithms require appropriate restrictions on stale samples; off-policy algorithms have different replay assumptions. The paper describes architecture rather than today's library API.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the batch actor samples into learner updates component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Track Policy Version Staleness
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the track policy version staleness component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Track Policy Version Staleness — unreviewed idea; contract and evaluator required.
+- Measure Sampling and Learning Throughput — unreviewed idea; contract and evaluator required.
 
-### Problem: Measure Sampling and Learning Throughput
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure sampling and learning throughput component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-- Draw a distributed actor-learner timeline with policy versions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 
-## MLOps and deployment extensions
+**Planned component problems:**
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- Batch Actor Samples into Learner Updates — unreviewed idea; contract and evaluator required.
+- Aggregate Weighted Learner Gradients — unreviewed idea; contract and evaluator required.
+- Track Policy Version Staleness — unreviewed idea; contract and evaluator required.
+- Measure Sampling and Learning Throughput — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-- [Primary arXiv record](https://arxiv.org/abs/1712.09381)
-- [Open-access author manuscript](https://arxiv.org/pdf/1712.09381)
+## Why this matters on a robot
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+Reusable sampling and optimization interfaces help scale robot learning experiments. Silent policy-version mismatch, incompatible action spaces, and inconsistent episode-end handling can invalidate an otherwise healthy distributed run.
 
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1712.09381) · [Open-access manuscript](https://arxiv.org/pdf/1712.09381)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

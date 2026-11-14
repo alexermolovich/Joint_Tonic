@@ -1,0 +1,11 @@
+.jt-auth-page { max-width: 720px; }
+.jt-auth-card { margin-top: 24px; }
+.jt-auth-card fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 22px; min-width: 0; }
+.jt-auth-card label { display: grid; gap: 8px; }
+.jt-auth-card input { width: 100%; min-width: 0; }
+.jt-auth-card .button { justify-self: start; }
+.jt-auth-card p { overflow-wrap: anywhere; }
+.jt-auth-actions { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; margin-top: 24px; }
+.jt-auth-actions button.text-link { background: none; border: 0; padding: 6px 0; font: inherit; cursor: pointer; }
+.jt-auth-note { margin: 24px 0 16px; line-height: 1.7; }
+.jt-auth-card :disabled { opacity: .65; cursor: wait; }

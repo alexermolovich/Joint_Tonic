@@ -9,6 +9,7 @@
     "start": "next start apps/web --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
     "validate": "node scripts/validate-content.mjs",
+    "validate:paper-links": "node --experimental-strip-types scripts/audit-paper-links.ts",
     "test:problems": "python apps/worker/check_references.py",
     "test": "npm run test:content && npm run validate && npm run test:problems",
     "worker": "python apps/worker/server.py",

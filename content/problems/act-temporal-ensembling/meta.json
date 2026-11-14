@@ -1,0 +1,22 @@
+{
+  "slug": "act-temporal-ensembling",
+  "title": "Blend Overlapping Action Chunks with Temporal Ensembling",
+  "version": "1.0.0",
+  "number": 204,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "act",
+    "temporal-ensembling",
+    "action-alignment"
+  ],
+  "minutes": 45,
+  "framework": "NumPy",
+  "entrypoint": "temporal_ensemble",
+  "paperIds": [
+    "2023-aloha-act"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Align predictions to one target control tick and combine eligible chunks with ACT’s oldest-first exponential weighting."
+}

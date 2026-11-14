@@ -16,102 +16,67 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Prepare sparse 3D observations","detail":"Crop and sample point clouds in a declared coordinate frame.","column":0,"row":0,"section":"Prepare sparse 3D observations","problem_slugs":["pointnet-symmetric-pooling","se3-transform-points"],"planned_problems":["Sample and Normalize Scene Points"]},{"id":"stage-2","title":"Train conditioned action diffusion","detail":"Predict corruption noise from point features and robot state.","column":1,"row":0,"section":"Train conditioned action diffusion","problem_slugs":["diffusion-action-noising","diffusion-conditional-noise-loss"],"planned_problems":["Condition an Action Denoiser on a Point Feature"]},{"id":"stage-3","title":"Sample and execute a chunk","detail":"Denoise actions and replan from new 3D observations.","column":2,"row":0,"section":"Sample and execute a chunk","problem_slugs":["diffusion-receding-horizon-window"],"planned_problems":["Evaluate Viewpoint and Geometry Shift"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"3D context"},{"from":"stage-2","to":"stage-3","label":"trained denoiser"}]}
 ---
 
-# 3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations
+## Core paper explanation
 
-## Agent brief
+3D Diffusion Policy, or DP3, conditions action diffusion on a compact point-cloud representation and robot state. The central change is spatial observation encoding, not a replacement of the action diffusion principle.
 
-Condition action diffusion on compact point-cloud features for spatial robot learning. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Condition action diffusion on compact point-cloud features for spatial robot learning.
+### Prepare sparse 3D observations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Points $P\in\mathbb R^{N\times3}$ are transformed into the policy frame before encoding. A compact point encoder aggregates per-point features, schematically $z=\max_i\phi(p_i)$. Workspace cropping, sampling, and normalization are part of the input contract, not incidental preprocessing.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Runnable component:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling). Implement the max-aggregation primitive after per-point features; sampling, normalization and encoder training remain separate.
 
-## Method map
+**Runnable component:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Move points into the declared policy frame before feature extraction.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Sample and Normalize Scene Points | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Condition an Action Denoiser on a Point Feature | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Evaluate Viewpoint and Geometry Shift | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+**Planned exercise:** Sample and Normalize Scene Points.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+### Train conditioned action diffusion
 
-## Limitations and failure modes
+For normalized action chunk $A$,
+$$A^k=\sqrt{\bar\alpha_k}A+\sqrt{1-\bar\alpha_k}\epsilon,\quad L=\mathbb E\|\epsilon-\epsilon_\theta(A^k,k,z,q)\|_F^2.$$
+$q$ is robot state. Depth and action channels have different units before normalization.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+**Runnable component:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Construct the forward corrupted action chunk with a supplied schedule and noise.
 
-1. Sample and Normalize Scene Points.
-2. Condition an Action Denoiser on a Point Feature.
-3. Evaluate Viewpoint and Geometry Shift.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Runnable component:** [Compute a Conditional Noise-Prediction Loss](/problems/diffusion-conditional-noise-loss). Evaluate masked epsilon-prediction error; conditioning features and the denoiser are supplied rather than learned here.
 
-## Problem blueprints
+**Planned exercise:** Condition an Action Denoiser on a Point Feature.
 
-### Problem: Sample and Normalize Scene Points
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the sample and normalize scene points component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+### Sample and execute a chunk
 
-### Problem: Condition an Action Denoiser on a Point Feature
+Iterative reverse sampling generates a chunk; execute the configured prefix and refresh observations. Evaluate geometry, viewpoint, and appearance changes separately. The paper's empirical safety observations are not a formal guarantee for arbitrary robots or scenes.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the condition an action denoiser on a point feature component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Viewpoint and Geometry Shift
+**Runnable component:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window). Select a valid action-execution prefix; reverse diffusion and a robot controller are outside this exercise.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate viewpoint and geometry shift component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Evaluate Viewpoint and Geometry Shift.
 
-## Visual teaching plan
 
-- Visualize point selection and action trajectories under changed camera views.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Implement the components
 
-## MLOps and deployment extensions
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- **Prepare sparse 3D observations:** [Prove Permutation Invariance with Symmetric Pooling](/problems/pointnet-symmetric-pooling) (runnable component); [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points) (runnable component); Sample and Normalize Scene Points (planned).
+- **Train conditioned action diffusion:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising) (runnable component); [Compute a Conditional Noise-Prediction Loss](/problems/diffusion-conditional-noise-loss) (runnable component); Condition an Action Denoiser on a Point Feature (planned).
+- **Sample and execute a chunk:** [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window) (runnable component); Evaluate Viewpoint and Geometry Shift (planned).
 
-## Canonical sources
+## Why this matters on a robot
 
-- [Primary arXiv record](https://arxiv.org/abs/2403.03954)
-- [Open-access author manuscript](https://arxiv.org/pdf/2403.03954)
+Point clouds can reduce dependence on background appearance and expose spatial structure. Missing depth, reflective surfaces, and frame calibration errors can still remove or misplace critical geometry.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Sources and scope
 
+[Primary paper](https://arxiv.org/abs/2403.03954) · [Open-access manuscript](https://arxiv.org/pdf/2403.03954)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

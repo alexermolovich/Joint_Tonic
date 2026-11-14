@@ -27,124 +27,81 @@ modalities:
 track_role: "core"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Training encodes a demonstrated action chunk into a latent variable. The policy decodes a future chunk, and inference combines overlapping predictions for the current control time. The demonstration encoder is not required to consume future actions at deployment.","nodes":[{"id":"stage-1","title":"Encode demonstration variation","detail":"During training, infer a latent distribution from the demonstrated chunk.","column":0,"row":0,"section":"Encode demonstration variation","problem_slugs":["act-sliding-action-chunks"],"planned_problems":["Detect Teleoperation Demonstration Quality Failures"]},{"id":"stage-2","title":"Decode an action chunk","detail":"Predict a sequence and train with reconstruction plus latent regularization.","column":1,"row":0,"section":"Decode an action chunk","problem_slugs":["act-cvae-loss"],"planned_problems":[]},{"id":"stage-3","title":"Ensemble overlapping predictions","detail":"Average predictions made for the same physical control time.","column":2,"row":0,"section":"Ensemble overlapping predictions","problem_slugs":["act-temporal-ensembling"],"planned_problems":["Evaluate Chunk Length Against Compounding Error"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"latent and observation"},{"from":"stage-2","to":"stage-3","label":"overlapping chunks"}]}
 ---
+## Core paper explanation
 
-# Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware
+ACT predicts a short future sequence of actions from observations instead of one action at a time. This action chunking helps model temporally correlated demonstrations. A conditional variational autoencoder represents variation in demonstrated action sequences, and temporal ensembling combines overlapping predictions for the same control time. ALOHA provides the low-cost bimanual hardware and demonstration setup used to study this learning method.
 
-## Agent brief
+## Execution flow
 
-Use this paper to teach sequence dataset construction and action chunking. ACT is especially suitable for self-contained exercises because chunk masks, conditional-VAE losses, and temporal ensembling can be tested without robot hardware.
+Training encodes a demonstrated action chunk into a latent variable. The policy decodes a future chunk, and inference combines overlapping predictions for the current control time. The demonstration encoder is not required to consume future actions at deployment.
 
-## Contribution
+### Encode demonstration variation
 
-- **Changed:** The work pairs an affordable bimanual teleoperation platform with Action Chunking with Transformers. Instead of predicting a single command, ACT predicts a future action block, helping reduce effective horizon and smooth non-stationary demonstrations. A conditional latent variable represents different ways a task may be performed.
-- **Evidence:** The reported evaluation is summarized below; the proposed exercises use deterministic small-scale proxies.
-- **Not established:** The paper does not establish universal safety, unsupported-embodiment robustness, or equivalence of an educational reproduction.
-
-## Prerequisite concepts
-
-- Supervised imitation learning
-- Transformer encoder/decoder attention
-- Conditional VAEs, reparameterization, and KL loss
-- Sequence padding and causal execution
-
-## Method map
-
-| Component | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Synchronizer | Timestamped images, state, actions | Aligned trajectory | Skew remains below a declared tolerance | Detect and report misalignment |
-| Chunk builder | Episode and start index | `[K,A]` chunk plus mask | Chunks never cross episode boundaries | Implement padding and masks |
-| Latent encoder | Observation and demonstrated chunk | Latent distribution parameters | Reparameterization remains differentiable | Implement masked CVAE loss |
-| Chunk decoder | Observation, state, latent | Future action chunk | Padded steps do not affect loss | Build a small transformer decoder |
-| Temporal ensemble | Overlapping predictions | Current action | Weights normalize over valid predictions | Implement online cache and decay |
-
-## Essential equations
-
-For a predicted chunk \(\hat A_t=(\hat a_{t,0},\ldots,\hat a_{t,K-1})\), masked reconstruction can be written as
+For demonstration chunk $A\in\mathbb R^{H\times D}$ and conditioning state $o$, let
 
 $$
-\mathcal L_{\text{rec}}=\frac{\sum_{k=0}^{K-1}m_k\lVert a_{t+k}-\hat a_{t,k}\rVert_1}{\sum_k m_k},
-\qquad
-\mathcal L=\mathcal L_{\text{rec}}+\beta D_{\mathrm{KL}}\!\left(q_\phi(z\mid A,o)\,\|\,\mathcal N(0,I)\right).
+q_\phi(z\mid A,o)=\mathcal N(\mu,\operatorname{diag}(\sigma^2)),
+\qquad z=\mu+\sigma\odot\epsilon,\quad\epsilon\sim\mathcal N(0,I).
 $$
 
-Overlapping predictions for the current action can be temporally ensembled as
+The reparameterization makes gradients flow through $\mu$ and $\sigma$. The latent describes variation in the demonstration; it is not an extra measurement available from the robot. The encoder’s training inputs must not leak future target actions into the deployed policy path.
+
+<!-- joint-tonic-component:stage-1 -->
+- **Implement this component:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks).
+- **Planned component:** Detect Teleoperation Demonstration Quality Failures. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
+
+### Decode an action chunk
+
+The decoder produces $\hat A=f_\theta(o,z)$. A reconstruction-plus-KL objective is
 
 $$
-\bar a_t=\frac{\sum_{i\in\mathcal I_t}e^{-\lambda (t-i)}\hat a^{(i)}_t}{\sum_{i\in\mathcal I_t}e^{-\lambda (t-i)}}.
+\mathcal L=\|A-\hat A\|_1+
+\frac{\beta}{2}\sum_j\left(\mu_j^2+\sigma_j^2-1-\log\sigma_j^2\right).
 $$
 
-## Visual teaching plan
+The KL expression compares a diagonal Gaussian with $\mathcal N(0,I)$. A batched implementation must define its reduction and exclude padding according to its contract. The paper uses the latent’s prior mean for deterministic inference. Each action entry retains the robot controller’s joint/pose convention; chunk index is a future control step, not a diffusion step.
 
-- **Chunk timeline:** animate overlapping predicted action blocks and highlight which column contributes to the current command.
-- **Ensemble control:** let learners change \(\lambda\) and observe smoothness versus responsiveness.
-- **Mask inspector:** display valid and padded chunk cells alongside the loss denominator to expose padding bugs.
+<!-- joint-tonic-component:stage-2 -->
+- **Implement this component:** [Compute a Masked CVAE Reconstruction and KL Loss](/problems/act-cvae-loss).
+<!-- /joint-tonic-component -->
 
-## Data and evaluation
+### Ensemble overlapping predictions
 
-- **Reported setting and protocol:** The paper evaluates fine-grained, contact-rich bimanual tasks on the ALOHA hardware and measures task success across repeated trials. A compact reproduction can use recorded or synthetic trajectories, reporting masked reconstruction loss, chunk discontinuity, inference latency, and simulated task completion.
-- **Compute/hardware interpretation:** Reported scale and physical hardware materially affect comparability; do not infer equivalence from a toy run.
-- **Educational boundary:** Use synthetic or licensed fixtures and report mechanism-level metrics separately from closed-loop outcomes.
+Suppose multiple chunks predict the action for time $t$. Index those predictions by $i=0,1,\ldots$ from oldest to newest. The paper’s weighting convention is
 
-## Limitations and failure modes
+$$
+w_i=e^{-mi},\qquad
+\bar a_t=\frac{\sum_iw_i\hat a_t^{(i)}}{\sum_iw_i},\quad m\ge0.
+$$
 
-- Performance depends heavily on demonstration consistency and camera calibration.
-- Open-loop chunks can fail when the environment changes faster than observations arrive.
-- Temporal ensembling adds state and policy-version concerns to serving.
-- A small real-world task suite does not establish broad semantic generalization.
+Here $w_0$ belongs to the oldest prediction. Increasing $m$ therefore increases preference for older predictions; changing the indexing reverses that behavior. This averages estimates for the same target time, not neighboring actions along one trajectory. Averaging neighboring physical times would introduce a different smoothing delay.
 
-## Implementation decomposition
+<!-- joint-tonic-component:stage-3 -->
+- **Implement this component:** [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling).
+- **Planned component:** Evaluate Chunk Length Against Compounding Error. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-1. Align observations and actions by timestamp.
-2. Generate fixed-length future chunks and boolean padding masks.
-3. Implement the latent encoder, reparameterization, and KL term.
-4. Implement masked action reconstruction.
-5. Cache overlapping predictions and compute the current ensembled action.
-6. Evaluate both offline error and closed-loop outcome.
+## Implement the components
 
-## Problem blueprints
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-### Problem: Construct action chunks
+- [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks)
+- [Compute a Masked CVAE Reconstruction and KL Loss](/problems/act-cvae-loss)
+- [Blend Overlapping Action Chunks with Temporal Ensembling](/problems/act-temporal-ensembling)
 
-- **Type:** pipeline
-- **Difficulty:** easy
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** trajectory `[T,A]`, start indices, chunk length
-- **Outputs:** chunks `[N,K,A]` and padding mask `[N,K]`
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** correct end padding, no future leakage across episodes, dtype/shape, deterministic indexing
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+Planned components: Detect Teleoperation Demonstration Quality Failures; Evaluate Chunk Length Against Compounding Error. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-### Problem: Compute masked ACT loss
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** predicted/target chunks, padding mask, latent mean/log variance, KL weight
-- **Outputs:** total, reconstruction, and KL scalar losses
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** masked normalization, correct KL formula, finite gradients, zero-valid-step handling
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+## Why this matters on a robot
 
-### Problem: Ensemble overlapping chunks
+Chunking reduces repeated one-step prediction errors but creates a responsiveness tradeoff. Temporal alignment is essential: mixing predictions for different target times can produce lag even when array shapes agree. Bimanual demonstrations also require synchronized observations and consistent joint ordering.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** timestamped chunk predictions and exponential decay coefficient
-- **Outputs:** current weighted action and diagnostics
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** age alignment, normalized weights, stale-prediction eviction, missing-prediction behavior
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2304.13705) · [Open-access manuscript](https://arxiv.org/pdf/2304.13705)
 
-- Validate camera/joint timestamp skew before accepting a dataset shard. Record chunk length, action schema, normalization statistics, and temporal-ensemble coefficient in model metadata. Monitor disagreement among overlapping predictions: rising variance is a useful warning for distribution shift or control instability.
-
-## Canonical sources
-
-- [Primary landing page](https://arxiv.org/abs/2304.13705)
-- [Open-access PDF](https://arxiv.org/pdf/2304.13705)
-- [Official code or project page](https://tonyzhaozh.github.io/aloha/)
-
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

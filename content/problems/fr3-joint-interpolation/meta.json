@@ -1,0 +1,139 @@
+{
+  "slug": "fr3-joint-interpolation",
+  "title": "Interpolate Franka FR3 Joint Waypoints",
+  "version": "1.0.0",
+  "number": 401,
+  "difficulty": "Easy",
+  "domain": "Geometry",
+  "topics": [
+    "kinematics",
+    "joint-space",
+    "simulation"
+  ],
+  "minutes": 20,
+  "framework": "NumPy",
+  "entrypoint": "interpolate_fr3_joints",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Create evenly spaced joint waypoints and inspect their forward kinematics on a Franka Research 3 in MuJoCo.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "fr3_joint1..fr3_joint7 local joint coordinates",
+      "MuJoCo world/base for displayed attachment pose"
+    ],
+    "units": {
+      "q_start": "radians",
+      "q_goal": "radians",
+      "output": "radians",
+      "displayed_position": "meters"
+    },
+    "axes": "Positive hinge rotation about each model joint local +z, right-hand rule; MuJoCo world is z-up. Output columns are joints, not Cartesian axes.",
+    "timestamp_assumptions": "Uniform dimensionless path samples; no execution duration or velocity guarantee. UI replay speed is display-only.",
+    "batching": "Two unbatched vectors (7,), output (num_steps,7); num_steps includes both endpoints."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "three-waypoint-example",
+      "stationary-arm",
+      "two-endpoints"
+    ],
+    "hidden_case_families": [
+      "model-limit-boundaries",
+      "all-seven-joints",
+      "invalid-shape-dtype-finite-range",
+      "sample-count",
+      "input-preservation",
+      "maximum-waypoints"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "911c5f8c7d0bcfe70e760a208dee21b96b7d04e561903812be14226c6295fba5"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original foundation exercise and synthetic fixtures; official FR3 model is a separate Apache-2.0 asset with retained upstream notices. Kinematic replay, not collision-free planning or physical control.",
+    "primary_urls": [
+      "https://github.com/google-deepmind/mujoco_menagerie/tree/98a70c569c4c1b6da467a20012f766ee1f8dc521/franka_fr3",
+      "https://frankarobotics.github.io/docs/robot_specifications.html",
+      "https://mujoco.readthedocs.io/en/stable/APIreference/APIfunctions.html#mj-forward"
+    ],
+    "implementation_urls": []
+  },
+  "simulator": {
+    "backend": "mujoco",
+    "protocol": "fr3-joint-trajectory-v1",
+    "asset": "franka_fr3",
+    "asset_commit": "98a70c569c4c1b6da467a20012f766ee1f8dc521",
+    "mode": "kinematic-replay",
+    "scene": "scene.xml",
+    "attachment_site": "attachment_site",
+    "sample_limit": 101,
+    "backend_version": "3.3.7",
+    "asset_manifest": "apps/simulator/assets.lock.json",
+    "asset_manifest_sha256": "c5d2f7f786b6dad4b449398fb7c67157b2e7496b7f6ceef246c03cecf21cf23d",
+    "joint_limits_rad": [
+      [
+        -2.9007,
+        2.9007
+      ],
+      [
+        -1.8361,
+        1.8361
+      ],
+      [
+        -2.9007,
+        2.9007
+      ],
+      [
+        -3.077,
+        -0.1169
+      ],
+      [
+        -2.8763,
+        2.8763
+      ],
+      [
+        0.4398,
+        4.6216
+      ],
+      [
+        -3.0508,
+        3.0508
+      ]
+    ],
+    "seed": 0,
+    "timestep_s": 0.002,
+    "integrator": "implicitfast",
+    "solver": "Newton",
+    "solver_iterations": 100,
+    "solver_tolerance": 1e-08,
+    "physics_steps": 0,
+    "capabilities": [
+      "kinematic_pose",
+      "rgb_frame"
+    ]
+  }
+}

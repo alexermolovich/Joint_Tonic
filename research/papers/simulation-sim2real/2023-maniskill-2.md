@@ -16,102 +16,69 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Choose task and controller","detail":"Specify embodiment, object dynamics, and action semantics.","column":0,"row":0,"section":"Choose task and controller","problem_slugs":[],"planned_problems":["Validate a Robot-Controller-Task Configuration"]},{"id":"stage-2","title":"Collect visual experience","detail":"Use RGB-D or point clouds and versioned demonstrations.","column":1,"row":0,"section":"Collect visual experience","problem_slugs":["validate-robot-episodes","se3-transform-points"],"planned_problems":["Build a Vectorized Manipulation Batch"]},{"id":"stage-3","title":"Evaluate object and task generalization","detail":"Keep geometry splits and physical success checks explicit.","column":2,"row":0,"section":"Evaluate object and task generalization","problem_slugs":[],"planned_problems":["Validate Task-Specific Success Predicates","Report Generalization by Object Split"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"environment transitions"},{"from":"stage-2","to":"stage-3","label":"policy rollouts"}]}
 ---
 
-# ManiSkill2: A Unified Benchmark for Generalizable Manipulation Skills
+## Core paper explanation
 
-## Agent brief
+ManiSkill2 expands manipulation benchmarks across rigid and soft objects, mobile and stationary robots, and multiple observation/controller interfaces. A unified interface supports learning and classical planning while retaining task-specific physical contracts.
 
-Study a manipulation benchmark with broader task and object interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study a manipulation benchmark with broader task and object interfaces.
+### Choose task and controller
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+An action $a_t$ can represent joint targets, velocities, or end-effector commands depending on the controller. A conversion $u_t=C(a_t,s_t)$ maps policy output to actuator input. Matching tensor dimensions does not imply matching controllers.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Validate a Robot-Controller-Task Configuration — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Build a Vectorized Manipulation Batch | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Validate Task-Specific Success Predicates | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Report Generalization by Object Split | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Collect visual experience
 
-## Data and evaluation
+A trajectory stores $(o_t,a_t,r_t,\mathrm{terminal}_t)$ with simulator state needed for reproduction. Rendering throughput and physics stepping can have different bottlenecks; record observation resolution, process count, and hardware when comparing sample rates.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Build a Vectorized Manipulation Batch — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Evaluate object and task generalization
 
-1. Build a Vectorized Manipulation Batch.
-2. Validate Task-Specific Success Predicates.
-3. Report Generalization by Object Split.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For held-out object set $\mathcal O$, a teaching object-balanced score is $|\mathcal O|^{-1}\sum_{o\in\mathcal O}\hat p_o$. State whether the actual benchmark uses this or another aggregation. Soft-body tasks need deformation-aware goals; rigid-pose error alone cannot score them correctly.
 
-## Problem blueprints
 
-### Problem: Build a Vectorized Manipulation Batch
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the build a vectorized manipulation batch component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Validate Task-Specific Success Predicates — unreviewed idea; contract and evaluator required.
+- Report Generalization by Object Split — unreviewed idea; contract and evaluator required.
 
-### Problem: Validate Task-Specific Success Predicates
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate task-specific success predicates component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Report Generalization by Object Split
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the report generalization by object split component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Robot-Controller-Task Configuration — unreviewed idea; contract and evaluator required.
+- Build a Vectorized Manipulation Batch — unreviewed idea; contract and evaluator required.
+- Validate Task-Specific Success Predicates — unreviewed idea; contract and evaluator required.
+- Report Generalization by Object Split — unreviewed idea; contract and evaluator required.
 
-- Display task families, object instances, and success criteria.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+A common benchmark interface broadens algorithm comparison. Different controllers, object solvers, and observation privilege can still make nominally similar experiments incomparable unless configurations are recorded.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2302.04659)
-- [Open-access author manuscript](https://arxiv.org/pdf/2302.04659)
+[Primary paper](https://arxiv.org/abs/2302.04659) · [Open-access manuscript](https://arxiv.org/pdf/2302.04659)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

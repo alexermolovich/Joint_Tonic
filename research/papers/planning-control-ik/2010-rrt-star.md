@@ -16,102 +16,67 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample and extend","detail":"Connect a new configuration toward a random sample.","column":0,"row":0,"section":"Sample and extend","problem_slugs":[],"planned_problems":["Find Nearby Planning Tree Vertices"]},{"id":"stage-2","title":"Choose a low-cost parent","detail":"Compare collision-free connections within a shrinking neighborhood.","column":1,"row":0,"section":"Choose a low-cost parent","problem_slugs":[],"planned_problems":["Choose a Collision-Free Minimum-Cost Tree Parent"]},{"id":"stage-3","title":"Rewire and update costs","detail":"Replace more expensive routes through the new vertex.","column":2,"row":0,"section":"Rewire and update costs","problem_slugs":[],"planned_problems":["Rewire a Tree Without Creating Cycles","Compare Path Cost Across Sampling Budgets"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"new configuration"},{"from":"stage-2","to":"stage-3","label":"selected parent"}]}
 ---
 
-# Incremental Sampling-based Algorithms for Optimal Motion Planning
+## Core paper explanation
 
-## Agent brief
+RRT* improves a sampling-based tree by choosing lower-cost parents and rewiring nearby nodes. Under the paper’s assumptions, increasing samples drives solution cost toward the optimum; finite-time runs still need explicit feasibility and quality checks.
 
-Study asymptotically optimal sampling-based planning through neighborhood and rewiring operations. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study asymptotically optimal sampling-based planning through neighborhood and rewiring operations.
+### Sample and extend
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Sample $q_{\mathrm{rand}}$ in configuration space, find a nearby tree vertex, and steer at most a prescribed distance. Collision checking must cover the connecting motion, not only its endpoints. Joint-space distances require explicit treatment of angular wraparound and mixed units.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Find Nearby Planning Tree Vertices — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Find Nearby Planning Tree Vertices | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Rewire a Tree Without Creating Cycles | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Compare Path Cost Across Sampling Budgets | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Choose a low-cost parent
 
-## Data and evaluation
+In $d$ dimensions, a typical radius is
+$$r_n=\min\!\left(\gamma(\log n/n)^{1/d},\eta\right).$$
+Choose $q_p=\arg\min_{q\in\mathcal N}[c(q)+c(q,q_{\mathrm{new}})]$ among feasible connections. $c(q)$ is root-to-node cost; $\gamma$ must satisfy the theorem's domain-dependent conditions for the asymptotic claim.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Choose a Collision-Free Minimum-Cost Tree Parent — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Rewire and update costs
 
-1. Find Nearby Planning Tree Vertices.
-2. Rewire a Tree Without Creating Cycles.
-3. Compare Path Cost Across Sampling Budgets.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Reparent neighbor $q$ when $c(q_{\mathrm{new}})+c(q_{\mathrm{new}},q)<c(q)$ and the edge is valid. Propagate changed costs to descendants and prevent cycles. The original analysis concerns geometric planning assumptions; dynamic feasibility needs an appropriate steering model.
 
-## Problem blueprints
 
-### Problem: Find Nearby Planning Tree Vertices
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the find nearby planning tree vertices component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Rewire a Tree Without Creating Cycles — unreviewed idea; contract and evaluator required.
+- Compare Path Cost Across Sampling Budgets — unreviewed idea; contract and evaluator required.
 
-### Problem: Rewire a Tree Without Creating Cycles
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the rewire a tree without creating cycles component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Compare Path Cost Across Sampling Budgets
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compare path cost across sampling budgets component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Find Nearby Planning Tree Vertices — unreviewed idea; contract and evaluator required.
+- Choose a Collision-Free Minimum-Cost Tree Parent — unreviewed idea; contract and evaluator required.
+- Rewire a Tree Without Creating Cycles — unreviewed idea; contract and evaluator required.
+- Compare Path Cost Across Sampling Budgets — unreviewed idea; contract and evaluator required.
 
-- Animate a sampled planning tree and cost-improving rewiring.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Rewiring can improve paths without discarding prior search effort. Narrow passages, inaccurate collision geometry, and a mismatched steering model remain practical obstacles; asymptotic optimality is not a deadline guarantee.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1005.0416)
-- [Open-access author manuscript](https://arxiv.org/pdf/1005.0416)
+[Primary paper](https://arxiv.org/abs/1005.0416) · [Open-access manuscript](https://arxiv.org/pdf/1005.0416)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

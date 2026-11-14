@@ -2,42 +2,66 @@
 
 ## Intuition
 
-Forward kinematics asks where the tool goes for given joint angles. Inverse kinematics asks which angles could explain a desired tool position. Even a simple two-link arm usually has two answers: the elbow can bend to either side. A useful solver declares its branch instead of relying on whichever angle function happens to be used.
+Forward kinematics maps joint angles to a tool position. Inverse kinematics reverses that question. A two-link planar arm often has two possible elbows, so a useful function must declare which branch it returns.
 
-Let $L_1,L_2>0$ be link lengths in meters, and $(x,y)$ the target in the fixed base frame. The shoulder angle $q_1$ and relative elbow angle $q_2$ are radians about +z.
+Let $L_1,L_2$ be positive lengths in meters, $(x,y)$ the target in the fixed base frame, and $q_1,q_2$ shoulder and relative elbow angles in radians. Both rotate counterclockwise about +z.
 
 ## Reachability before angles
 
-The tool's distance from the shoulder is $r=\sqrt{x^2+y^2}$. A two-link chain can reach an annulus:
+The distance $r=\sqrt{x^2+y^2}$ must lie in an annulus:
 
 $$
 |L_1-L_2|\le r\le L_1+L_2.
 $$
 
-A target beyond the outer boundary requires stretched links; one inside the inner boundary would require the longer link to shrink. Neither is a numerical failure. Return a clear unreachable status.
+Outside it, a link would need to stretch or shrink. The exercise allows a 1e-9 m boundary tolerance; that is numerical policy, not mechanical compliance.
 
-The triangle geometry gives:
+Using the triangle formed by the links and target:
 
 $$
-c_2=\frac{x^2+y^2-L_1^2-L_2^2}{2L_1L_2},\qquad
-q_2=\arccos(c_2).
+c_2=\frac{r^2-L_1^2-L_2^2}{2L_1L_2},\qquad q_2=\arccos(\operatorname{clip}(c_2,-1,1)),
 $$
-
-Choosing arccos selects the declared positive-elbow branch $q_2\in[0,\pi]$. The shoulder must point toward the target minus the bend introduced by the second link:
 
 $$
 q_1=\operatorname{atan2}(y,x)-
 \operatorname{atan2}(L_2\sin q_2,L_1+L_2\cos q_2).
 $$
 
-The cosine may exceed one by tiny floating error at a reachable boundary. Clip only after the physical reachability test, so a genuinely impossible target is not silently projected into the workspace.
+The arccos choice fixes the elbow branch. Clamp only after rejecting truly unreachable targets. Normalize q1 to [-pi,pi) so equivalent angle wraps have one declared representation.
 
-## Worked robot example
+The exercise bounds link lengths to 1 mm through 1000 m and their ratio to 1000. Extreme ratios magnify cancellation in the cosine calculation; accepting them would promise accuracy that this elementary float64 solver cannot reliably deliver.
 
-With unit links and target $(1,1)$, the elbow cosine is zero, giving $q_2=\pi/2$. The target bearing and internal offset are both $\pi/4$, so $q_1=0$. Forward kinematics then reaches $(1,1)$ exactly.
+## Visual: verify the links endpoint by endpoint
 
-## Visual and failure interpretation
+| Point for unit links | x (m) | y (m) | Construction |
+|---|---:|---:|---|
+| Shoulder | 0 | 0 | Base origin |
+| Elbow | 1 | 0 | q1=0 |
+| Tool | 1 | 1 | q1+q2=pi/2 |
 
-The planned sidecar draws the reachable annulus, target, chosen elbow branch, and tool residual. A text table reports target distance, branch, angles, and forward-check error. Full extension and complete folding are singular: an infinitesimal target displacement may require a large angle change or a different branch.
+The table is a static arm diagram and text alternative: move one meter right, then one meter up. For target (1,1), c2=0 and q2=pi/2; both bearing and internal offset are pi/4, so q1=0.
 
-This exercise provides a geometric position solution, not a collision-free motion or safety guarantee. Real deployments also enforce joint limits, choose continuity across successive targets, and consider tool orientation. The equal-length origin case has infinitely many shoulder choices; its explicit convention keeps tests deterministic.
+The independent forward check is
+
+$$
+\begin{bmatrix}x\\y\end{bmatrix}
+=\begin{bmatrix}
+L_1\cos q_1+L_2\cos(q_1+q_2)\\
+L_1\sin q_1+L_2\sin(q_1+q_2)
+\end{bmatrix}.
+$$
+
+## Singular geometry and robot failures
+
+At full extension or folding, sin(q2) is zero: some tiny tool displacements demand large joint changes. The declared singular flag uses abs(sin(q2))<=1e-9. Equal links folded to the origin have infinitely many shoulder choices; choosing zero makes the contract deterministic.
+
+A valid geometric answer can collide with an obstacle or exceed a joint limit. This task is not a motion planner, and a branch chosen independently each frame can jump discontinuously. MuJoCo visualization and constraint-aware IK belong to later components.
+
+## Check your understanding
+
+- Can clipping c2 make every target valid? It can hide impossible targets; check reachability first.
+- Is q2 an absolute orientation? No; link2's absolute orientation is q1+q2.
+
+## Source
+
+See [Modern Robotics, chapter6](https://hades.mech.northwestern.edu/images/7/7e/MR-2up-v2.pdf) for planar IK geometry. These examples, validation limits and deterministic return contract are original.

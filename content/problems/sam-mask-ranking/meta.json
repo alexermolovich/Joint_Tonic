@@ -1,0 +1,81 @@
+{
+  "slug": "sam-mask-ranking",
+  "title": "Rank Candidate Masks with Predicted IoU",
+  "version": "1.0.0",
+  "number": 112,
+  "difficulty": "Easy",
+  "domain": "Perception",
+  "topics": [
+    "segment-anything",
+    "paper-component"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "rank_masks",
+  "paperIds": [
+    "2023-segment-anything"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Rank Candidate Masks with Predicted IoU",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared explicitly in learner contract"
+    ],
+    "units": {
+      "features": "dimensionless; image indices in pixels where applicable"
+    },
+    "axes": "masks(N,H,W), predicted_iou(N,), k; return selected(k,H,W), indices(k,), scores(k,).",
+    "timestamp_assumptions": "Same upstream observation or training snapshot; no timestamp input.",
+    "batching": "masks(N,H,W), predicted_iou(N,), k; return selected(k,H,W), indices(k,), scores(k,)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-7,
+    "atol": 1e-9,
+    "public_case_families": [
+      "worked-examples",
+      "minimal-shape"
+    ],
+    "hidden_case_families": [
+      "validation",
+      "empty-policy",
+      "noncontiguous",
+      "immutability",
+      "deterministic-order",
+      "realistic-batch"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "2efe0afad619bfc6abe68b5e56481429e7f23c034dff832889b48d1089720603"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original teaching contract and synthetic fixtures, no copied paper prose/figures/code.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2304.02643"
+    ],
+    "implementation_urls": []
+  }
+}

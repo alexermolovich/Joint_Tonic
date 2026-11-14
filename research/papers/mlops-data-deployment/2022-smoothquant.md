@@ -16,102 +16,71 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Measure channel ranges","detail":"Collect activation and weight magnitudes on calibration data.","column":0,"row":0,"section":"Measure channel ranges","problem_slugs":[],"planned_problems":["Measure Per-Channel Activation and Weight Ranges"]},{"id":"stage-2","title":"Apply equivalent rescaling","detail":"Divide activation channels and multiply corresponding weight rows.","column":1,"row":0,"section":"Apply equivalent rescaling","problem_slugs":[],"planned_problems":["Apply an Equivalent Channel Rescaling"]},{"id":"stage-3","title":"Quantize and validate","detail":"Use integer kernels and measure end-to-end accuracy and latency.","column":2,"row":0,"section":"Quantize and validate","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Quantize Weights and Activations to Int8","Validate Layer Output Error After Smoothing"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"channel scales"},{"from":"stage-2","to":"stage-3","label":"smoothed layers"}]}
 ---
 
-# SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models
+## Core paper explanation
 
-## Agent brief
+SmoothQuant makes activation quantization easier by moving channel-wise scale into weights through an equivalent linear-layer transformation. Calibration determines the rescaling before low-bit weight-and-activation inference.
 
-Shift quantization difficulty between weights and activations through equivalent rescaling. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Shift quantization difficulty between weights and activations through equivalent rescaling.
+### Measure channel ranges
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For $X\in\mathbb R^{N\times C}$ and $W\in\mathbb R^{C\times D}$, channel maxima are $a_j=\max_i|X_{ij}|$ and $w_j=\max_k|W_{jk}|$. A smoothing scale is
+$$s_j=a_j^\alpha/w_j^{1-\alpha},\qquad 0\le\alpha\le1.$$
+Zero channels require a declared numerical guard. Calibration must represent the deployment activation distribution.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Measure Per-Channel Activation and Weight Ranges — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Apply an Equivalent Channel Rescaling | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Quantize Weights and Activations to Int8 | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Validate Layer Output Error After Smoothing | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Apply equivalent rescaling
 
-## Data and evaluation
+With diagonal $S=\operatorname{diag}(s)$,
+$$XW=(XS^{-1})(SW).$$
+This identity is exact in real arithmetic before quantization. It transfers dynamic range from activations to weights without changing the intended linear function; scales can be fused into neighboring operations where valid.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Apply an Equivalent Channel Rescaling — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Quantize and validate
 
-1. Apply an Equivalent Channel Rescaling.
-2. Quantize Weights and Activations to Int8.
-3. Validate Layer Output Error After Smoothing.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+After quantization, $\hat Y=Q(XS^{-1})Q(SW)$ generally differs from $XW$. Evaluate output error, downstream task quality, memory, and target-hardware latency. A mathematically equivalent preprocessing transform does not imply lossless low-bit inference.
 
-## Problem blueprints
 
-### Problem: Apply an Equivalent Channel Rescaling
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the apply an equivalent channel rescaling component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Quantize Weights and Activations to Int8 — unreviewed idea; contract and evaluator required.
+- Validate Layer Output Error After Smoothing — unreviewed idea; contract and evaluator required.
 
-### Problem: Quantize Weights and Activations to Int8
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the quantize weights and activations to int8 component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Validate Layer Output Error After Smoothing
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate layer output error after smoothing component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Measure Per-Channel Activation and Weight Ranges — unreviewed idea; contract and evaluator required.
+- Apply an Equivalent Channel Rescaling — unreviewed idea; contract and evaluator required.
+- Quantize Weights and Activations to Int8 — unreviewed idea; contract and evaluator required.
+- Validate Layer Output Error After Smoothing — unreviewed idea; contract and evaluator required.
 
-- Visualize activation outliers and the effect of channel rescaling.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Quantization can make a VLM backbone practical on an edge device. Rare visual or language inputs may create activation outliers absent from calibration; task-specific regression tests should include those slices.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2211.10438)
-- [Open-access author manuscript](https://arxiv.org/pdf/2211.10438)
+[Primary paper](https://arxiv.org/abs/2211.10438) · [Open-access manuscript](https://arxiv.org/pdf/2211.10438)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

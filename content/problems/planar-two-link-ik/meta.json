@@ -1,0 +1,79 @@
+{
+  "slug": "planar-two-link-ik",
+  "title": "Solve Closed-Form IK for a Planar Two-Link Arm",
+  "version": "1.0.0",
+  "number": 15,
+  "difficulty": "Medium",
+  "domain": "Geometry",
+  "topics": [
+    "kinematics"
+  ],
+  "minutes": 25,
+  "framework": "NumPy",
+  "entrypoint": "planar_ik",
+  "paperIds": [],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Solve one declared elbow branch, report unreachable targets, and identify singular two-link configurations.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "base",
+      "link1",
+      "link2",
+      "tool"
+    ],
+    "units": {
+      "lengths": "meters",
+      "target": "meters",
+      "angles": "radians"
+    },
+    "axes": "Base x right, y up; positive joint rotations about +z, counterclockwise.",
+    "timestamp_assumptions": "One synchronized measurement clock; no offset correction.",
+    "batching": "Two scalar lengths and one target(2,); one result dict."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261113,
+    "rtol": 1e-7,
+    "atol": 1e-7,
+    "public_case_families": [
+      "worked-examples"
+    ],
+    "hidden_case_families": [
+      "boundary",
+      "validation",
+      "empty-where-supported",
+      "immutability",
+      "scale"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "948435040538c4ea772707c1248f9d488ffa61843ec1228da4dfdd196be28649"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original robotics-foundation exercise; no paper headline result or external dataset.",
+    "primary_urls": [
+      "https://hades.mech.northwestern.edu/images/7/7e/MR-2up-v2.pdf"
+    ],
+    "implementation_urls": []
+  }
+}

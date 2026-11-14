@@ -16,102 +16,66 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode paired data","detail":"Normalize image and text embeddings.","column":0,"row":0,"section":"Encode paired data","problem_slugs":["clip-normalize-embeddings"],"planned_problems":["Deduplicate Image-Text Training Pairs"]},{"id":"stage-2","title":"Train alignment","detail":"Classify the matching partner in both directions.","column":1,"row":0,"section":"Train alignment","problem_slugs":["clip-symmetric-loss"],"planned_problems":["Construct Contrastive Pair Labels"]},{"id":"stage-3","title":"Retrieve or classify","detail":"Compare one embedding against a candidate bank.","column":2,"row":0,"section":"Retrieve or classify","problem_slugs":["clip-retrieval-recall"],"planned_problems":["Compute Retrieval Recall by Slice"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"paired embeddings"},{"from":"stage-2","to":"stage-3","label":"trained encoders"}]}
 ---
 
-# Scaling Up Visual and Vision-Language Representation Learning With Noisy Text Supervision
+## Core paper explanation
 
-## Agent brief
+ALIGN learns a shared image–text space from a large, noisy collection of paired images and captions. Its central choice is a simple dual encoder: retrieval needs one embedding per item rather than cross-attention for every candidate pair.
 
-Learn transferable image-text representations from large noisy paired data. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Learn transferable image-text representations from large noisy paired data.
+### Encode paired data
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For a batch of $B$ paired images and captions, the encoders produce unit vectors $v_i,t_i\in\mathbb R^d$. Similarity is dimensionless:
+$$s_{ij}=v_i^\top t_j/\tau,\qquad \|v_i\|_2=\|t_i\|_2=1,$$
+where $\tau>0$ is the learned temperature. Pair identity must survive shuffling and distributed gathering.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Implement this component:** [Normalize Image and Text Embeddings](/problems/clip-normalize-embeddings). The reusable normalization component requires equal-sized paired batches; it does not build encoders.
 
-## Method map
+**Planned component problems:** Deduplicate Image-Text Training Pairs. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Construct Contrastive Pair Labels | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Compute Retrieval Recall by Slice | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Deduplicate Image-Text Training Pairs | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+### Train alignment
 
-## Data and evaluation
+Each row treats its paired caption as positive; each column treats its paired image as positive:
+$$L=-\frac1{2B}\sum_i\left[\log\frac{e^{s_{ii}}}{\sum_j e^{s_{ij}}}+\log\frac{e^{s_{ii}}}{\sum_j e^{s_{ji}}}\right].$$
+This is the same symmetric contrastive mechanism practiced in the linked CLIP exercise. Other captions in the batch can be false negatives; data scale does not make that assumption exact.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Implement this component:** [Compute Symmetric CLIP Contrastive Loss](/problems/clip-symmetric-loss). The symmetric loss is a reusable paired-batch contrastive component. Large-scale ALIGN training and data cleaning remain outside its contract.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned component problems:** Construct Contrastive Pair Labels. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Implementation decomposition
+### Retrieve or classify
 
-1. Construct Contrastive Pair Labels.
-2. Compute Retrieval Recall by Slice.
-3. Deduplicate Image-Text Training Pairs.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For candidate descriptions $c$, choose $\hat c=\arg\max_c v^\top t_c$. The score ranks candidates; it is not a calibrated probability that a robot can grasp the object. Cache embeddings only with the encoder and preprocessing versions that produced them.
 
-## Problem blueprints
 
-### Problem: Construct Contrastive Pair Labels
+**Implement this component:** [Evaluate Cross-Modal Retrieval Recall at K](/problems/clip-retrieval-recall). The retrieval evaluator assumes one diagonal positive per query and defines deterministic tie handling; richer relevance sets need a different evaluator.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the construct contrastive pair labels component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:** Compute Retrieval Recall by Slice. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Compute Retrieval Recall by Slice
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute retrieval recall by slice component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Compute Symmetric CLIP Contrastive Loss](/problems/clip-symmetric-loss). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Deduplicate Image-Text Training Pairs
+**Planned components:**
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the deduplicate image-text training pairs component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Deduplicate Image-Text Training Pairs.
+- Construct Contrastive Pair Labels.
+- Compute Retrieval Recall by Slice.
 
-## Visual teaching plan
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- Display a retrieval matrix with positive pairs and near duplicates.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Language retrieval can select relevant robot images or observations. Similar appearance and noisy captions can merge distinct objects; evaluate on unseen scenes and instruction paraphrases, not only near-duplicate images.
 
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/2102.05918) · [Open-access manuscript](https://arxiv.org/pdf/2102.05918)
 
-- [Primary arXiv record](https://arxiv.org/abs/2102.05918)
-- [Open-access author manuscript](https://arxiv.org/pdf/2102.05918)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

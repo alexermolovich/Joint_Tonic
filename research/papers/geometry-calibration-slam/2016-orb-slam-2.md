@@ -16,102 +16,63 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Track visual landmarks","detail":"Associate image keypoints with map points.","column":0,"row":0,"section":"Track visual landmarks","problem_slugs":[],"planned_problems":["Associate Map Points with Image Features"]},{"id":"stage-2","title":"Optimize local geometry","detail":"Refine keyframe poses and landmark positions.","column":1,"row":0,"section":"Optimize local geometry","problem_slugs":[],"planned_problems":["Select Geometric Pose Inliers"]},{"id":"stage-3","title":"Close loops and relocalize","detail":"Recognize previously mapped places and correct drift.","column":2,"row":0,"section":"Close loops and relocalize","problem_slugs":[],"planned_problems":["Evaluate a Relocalization Candidate"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"feature correspondences"},{"from":"stage-2","to":"stage-3","label":"keyframe map"}]}
 ---
 
-# ORB-SLAM2: an Open-Source SLAM System for Monocular, Stereo and RGB-D Cameras
+## Core paper explanation
 
-## Agent brief
+ORB-SLAM2 combines ORB feature tracking, local mapping, relocalization, and loop closure for monocular, stereo, and RGB-D cameras. Its map consists of keyframes and 3D landmarks refined through bundle adjustment.
 
-Study feature-based visual SLAM through tracking, mapping, and relocalization interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study feature-based visual SLAM through tracking, mapping, and relocalization interfaces.
+### Track visual landmarks
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For world landmark $P_j$ and world-to-camera pose $T_{CW,i}$, the reprojection residual is
+$$r_{ij}=u_{ij}-\pi(T_{CW,i}P_j).$$
+$u_{ij}$ is a measured pixel. Reject points behind the camera and use the calibrated camera model. ORB descriptor matches supply candidate associations, not guaranteed correspondences.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Prerequisite practice:** [Project Camera Points into Pixels](/problems/project-camera-points). These supporting skills do not complete this model stage.
 
-## Method map
+**Planned component problems:** Associate Map Points with Image Features. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Associate Map Points with Image Features | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Select Geometric Pose Inliers | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Evaluate a Relocalization Candidate | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+### Optimize local geometry
 
-## Data and evaluation
+Bundle adjustment minimizes
+$$\min_{T,P}\sum_{(i,j)}\rho(r_{ij}^\top\Omega_{ij}r_{ij}),$$
+where $\Omega_{ij}$ weights measurement uncertainty. Fix the appropriate gauge. Stereo/RGB-D provides metric scale; monocular geometry alone has an unobservable global scale.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned component problems:** Select Geometric Pose Inliers. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+### Close loops and relocalize
 
-## Implementation decomposition
+Place recognition proposes loop/relocalization candidates; geometric verification rejects inconsistent matches. Loop correction and subsequent map optimization restore consistency. Similar-looking corridors can generate false candidates, so descriptor similarity alone must not authorize a map merge.
 
-1. Associate Map Points with Image Features.
-2. Select Geometric Pose Inliers.
-3. Evaluate a Relocalization Candidate.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+**Planned component problems:** Evaluate a Relocalization Candidate. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Problem: Associate Map Points with Image Features
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the associate map points with image features component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-### Problem: Select Geometric Pose Inliers
+**Planned components:**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the select geometric pose inliers component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Associate Map Points with Image Features.
+- Select Geometric Pose Inliers.
+- Evaluate a Relocalization Candidate.
 
-### Problem: Evaluate a Relocalization Candidate
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate a relocalization candidate component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+A reusable map supports repeated robot operation and recovery after temporary tracking loss. Dynamic scenes, weak texture, and false loop closures are separate failure mechanisms that require distinct diagnostics.
 
-- Show keyframes, map points, and rejected geometric matches.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/1610.06475) · [Open-access manuscript](https://arxiv.org/pdf/1610.06475)
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/1610.06475)
-- [Open-access author manuscript](https://arxiv.org/pdf/1610.06475)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -16,112 +16,86 @@ modalities: ["synchronized multi-camera RGB", "camera calibration", "ego motion"
 track_role: "Multi-view and temporal perception for autonomy"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
+execution_flow: {"title":"Core execution flow","description":"Create ego-frame reference points, gather visible multi-camera features, and fuse aligned temporal state before task-specific prediction.","nodes":[{"id":"stage-1","title":"Project BEV reference points","detail":"Use extrinsics and intrinsics to find where a 3D reference point is visible.","column":0,"row":0,"section":"Project BEV reference points","problem_slugs":["se3-transform-points","project-camera-points"],"planned_problems":["Project BEV Reference Points into Calibrated Cameras","Mask Out-of-View and Behind-Camera Samples","Diagnose Camera Dropout and Calibration Drift in BEV"]},{"id":"stage-2","title":"Gather camera evidence","detail":"Sample features around projected references in the cameras that can see them.","column":1,"row":0,"section":"Gather camera evidence","problem_slugs":["bev-weighted-camera-features"],"planned_problems":["Sample Calibrated Multi-Camera Feature Maps"]},{"id":"stage-3","title":"Fuse temporal BEV state","detail":"Align earlier BEV features to the current ego frame and combine them with current evidence.","column":2,"row":0,"section":"Fuse temporal BEV state","problem_slugs":["bev-ego-motion-warp"],"planned_problems":["Fuse Temporal BEV State"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"visible projections"},{"from":"stage-2","to":"stage-3","label":"camera features"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use BEVFormer as the capstone for calibrated multi-camera perception. Decompose it into reference-point generation, camera projection, visibility masking, deformable feature sampling, temporal BEV alignment, and task heads.
+BEVFormer builds a bird’s-eye-view representation from multiple calibrated cameras and previous BEV features. Each BEV query corresponds to a location in an ego-centered spatial grid. Spatial cross-attention gathers image evidence near projected 3D reference points, while temporal attention incorporates aligned history. The result supports tasks such as 3D detection and map segmentation in a shared spatial representation.
 
-## Contribution
+## Execution flow
 
-BEVFormer maintains learned queries over a bird's-eye-view grid. Spatial cross-attention samples evidence from multiple calibrated cameras, while temporal self-attention aligns and fuses prior BEV state to support 3D detection and map segmentation.
+Create ego-frame reference points, gather visible multi-camera features, and fuse aligned temporal state before task-specific prediction.
 
-## Prerequisite concepts
+### Project BEV reference points
 
-- Homogeneous transforms, camera intrinsics/extrinsics, and perspective projection
-- Multi-scale image features and bilinear sampling
-- Self/cross-attention and deformable attention
-- Ego-motion compensation and 3D detection metrics
-
-## Method map
-
-1. Define BEV queries tied to grid cells and multiple height reference points.
-2. Project 3D reference points into every camera and reject invisible samples.
-3. Sample multi-scale image features and aggregate them with spatial cross-attention.
-4. Warp/shift previous BEV state using ego motion.
-5. Fuse current queries with aligned temporal BEV features.
-6. Decode the representation into 3D boxes or map classes.
-
-## Essential equations
-
-A homogeneous 3D reference point (p_e) in the ego frame projects to camera (c) as
+For homogeneous ego-frame point $\tilde p_e\in\mathbb R^4$, camera transform $T_{c\leftarrow e}\in\mathbb R^{4\times4}$, and intrinsics $K_c\in\mathbb R^{3\times3}$,
 
 $$
-\tilde q_c=K_c\,T_{c\leftarrow e}\,\tilde p_e,
-\qquad
-(u_c,v_c)=\left(\frac{\tilde q_{c,x}}{\tilde q_{c,z}},
-\frac{\tilde q_{c,y}}{\tilde q_{c,z}}\right).
+\tilde q_c=K_c[I_3\;0]T_{c\leftarrow e}\tilde p_e,
+\quad u_c=\tilde q_{c,x}/\tilde q_{c,z},\quad v_c=\tilde q_{c,y}/\tilde q_{c,z}.
 $$
 
-It is visible only when depth is positive and ((u_c,v_c)) lies inside that camera's image. A masked camera aggregation can be written
+The $[I_3\;0]$ factor selects the 3D camera coordinates, making matrix dimensions explicit. Check positive camera depth and image bounds. [SE(3) transforms](/problems/se3-transform-points) and [camera projection](/problems/project-camera-points) implement these prerequisite mechanisms with declared frame conventions.
+
+
+**Implement this component:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points) · [Project Camera Points into Pixels](/problems/project-camera-points). These are the transform and pinhole-projection substeps. They do not implement BEV reference-grid generation or the complete multi-camera projection contract.
+
+**Planned component problems:** Project BEV Reference Points into Calibrated Cameras; Mask Out-of-View and Behind-Camera Samples; Diagnose Camera Dropout and Calibration Drift in BEV. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+
+### Gather camera evidence
+
+A compact description of deformable spatial sampling for query $q$ is
 
 $$
-f_q=\sum_c \frac{m_{qc}e^{a_{qc}}}{\sum_k m_{qk}e^{a_{qk}}}\,f_{qc},
+f_q=\sum_{c\in\mathcal V_q}\sum_k a_{qck}\,\mathcal B(F_c,p_{qc}+\Delta p_{qck}),
 $$
 
-with an explicit fallback when no camera sees query (q).
+where $\mathcal V_q$ is its visible-camera set, $F_c$ is a camera feature map, $\mathcal B$ denotes bilinear sampling, and learned offsets/weights choose nearby evidence. This expression suppresses multi-head and height-anchor indices for clarity. Pixel coordinates must be converted to feature-map coordinates consistently; an incorrect scale can sample a plausible but unrelated location.
 
-## Visual teaching plan
 
-- **Projection rig:** A synchronized 3D/2D view connects each BEV cell and height sample to its pixels in every camera.
-- **Visibility debugger:** Toggle cameras, depth tests, and image bounds while masks and sampled features update.
-- **Temporal warp:** Scrub ego translation/yaw to animate prior BEV cells moving into the current frame and expose interpolation gaps.
 
-## Data and evaluation
+**New runnable component:** [Aggregate Multi-Camera Features with Attention Weights](/problems/bev-weighted-camera-features). This is an explicitly simplified visibility-masked global weighted mean, not the full BEVFormer attention block.
 
-The paper evaluates on nuScenes using 3D detection metrics including mAP and nuScenes Detection Score, with analyses of velocity and low-visibility behavior. Reproductions must pin dataset version, camera calibration, temporal sampling, class mapping, and official evaluation code.
+**Planned component problems:** Sample Calibrated Multi-Camera Feature Maps. These are not runnable; titles without reviewed blueprints remain unreviewed ideas.
 
-## Limitations and failure modes
+### Fuse temporal BEV state
 
-- Projection accuracy depends directly on calibration and timestamp alignment.
-- Multi-camera, multi-scale sampling is computationally demanding.
-- A fixed BEV grid trades spatial coverage against resolution and memory.
-- Automotive benchmarks do not automatically transfer to indoor/mobile manipulation robots.
+A previous grid location must be transformed using ego motion before temporal lookup. For a planar grid transform $T_{t\leftarrow t-1}$,
 
-## Implementation decomposition
+$$
+\tilde p_t=T_{t\leftarrow t-1}\tilde p_{t-1}.
+$$
 
-1. BEV grid and 3D reference-point generation.
-2. Batched world/ego/camera/image projection with masks.
-3. Multi-camera feature sampling.
-4. Ego-motion warp of a prior BEV tensor.
-5. Spatial/temporal attention blocks.
-6. Detection head, decoding, and official-metric packaging.
+The aligned history and current queries then participate in temporal attention. Ego-motion alignment compensates camera/vehicle motion, not independently moving objects; learned temporal processing still has to interpret those changes. Reset history at sequence boundaries and define behavior when a previous frame is missing.
 
-## Problem blueprints
 
-### Project BEV points into multiple cameras
+**Planned component problems:** Fuse Temporal BEV State. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** Batched 3D geometry
-- **Difficulty:** Hard
-- **Inputs:** BEV points, heights, camera matrices, image sizes
-- **Outputs:** Normalized image coordinates and per-camera validity masks
-- **Grading:** Coordinate conventions; positive depth; image bounds; batch/camera axes; analytic projection cases
 
-### Align a previous BEV with ego motion
+**Runnable component:** [Warp a Previous BEV with Ego Motion](/problems/bev-ego-motion-warp). This aligns a planar feature grid with explicit cell centers and zero-padded bilinear sampling; temporal attention and moving-object compensation remain separate.
 
-- **Type:** Spatial warping
-- **Difficulty:** Hard
-- **Inputs:** Prior BEV tensor, planar translation/yaw, grid extent/resolution
-- **Outputs:** Current-frame sampled BEV and validity mask
-- **Grading:** Correct inverse sampling transform; identity/known shifts; interpolation; out-of-bounds handling
 
-### Aggregate visible camera features
+## Implement the components
 
-- **Type:** Attention/masking
-- **Difficulty:** Hard
-- **Inputs:** Per-camera sampled features, visibility mask, attention logits
-- **Outputs:** One feature per BEV query
-- **Grading:** Invisible cameras receive zero mass; all-invisible fallback; normalized weights; permutation behavior and gradients
+The model stages above link the available bounded coding components. Other stages remain planned; these exercises do not reproduce the full model.
 
-## MLOps and deployment extensions
+**Planned components:**
 
-- Treat calibration, camera ordering, time offsets, ego-pose source, and BEV bounds as a signed model interface.
-- Monitor per-camera uptime, projection-validity rate, synchronization lag, and calibration residuals.
-- Benchmark latency by backbone, projection/sampling, temporal fusion, and head; report worst-case camera count.
-- Create fault-injection release tests for missing cameras, stale ego motion, nighttime/rain, and calibration drift.
+- Project BEV Reference Points into Calibrated Cameras.
+- Mask Out-of-View and Behind-Camera Samples.
+- Diagnose Camera Dropout and Calibration Drift in BEV.
+- Sample Calibrated Multi-Camera Feature Maps.
+- Fuse Temporal BEV State.
 
-## Canonical sources
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- [Primary record](https://arxiv.org/abs/2203.17270)
-- [Open-access PDF](https://arxiv.org/pdf/2203.17270)
+## Why this matters on a robot
 
+Calibration and timing errors can look like genuine object motion in BEV space. A model may fuse sharp image features into a geometrically wrong map if frame direction, camera latency, or resize intrinsics are incorrect. Validate projection and temporal alignment before debugging the attention weights.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2203.17270) · [Open-access manuscript](https://arxiv.org/pdf/2203.17270)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

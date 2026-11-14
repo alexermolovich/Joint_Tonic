@@ -1,0 +1,28 @@
+.robot-pane-tabs { display: flex; flex: none; gap: 18px; padding: 0 14px; border-bottom: 1px solid var(--line); background: var(--white); }
+.robot-pane-tabs button { padding: 11px 3px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); font: 600 14px var(--sans); cursor: pointer; }
+.robot-pane-tabs button[aria-selected=true] { color: var(--accent); border-bottom-color: var(--accent); }
+.code-editor[hidden], .robot-simulator[hidden] { display: none; }
+.robot-simulator { flex: 1; min-height: 180px; overflow: auto; padding: 14px; background: var(--white); }
+.robot-simulator-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.robot-simulator-heading strong { display: block; font-size: 16px; }
+.robot-simulator-heading span, .robot-simulator-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.robot-simulator-viewport { position: relative; display: grid; place-items: center; min-height: 200px; margin-top: 10px; cursor: grab; touch-action: none; user-select: none; }
+.robot-simulator-viewport:active { cursor: grabbing; }
+.robot-simulator-viewport:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.robot-camera-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.robot-camera-controls p { flex: 1; min-width: 170px; font-size: 12px; color: var(--muted); margin: 0; }
+.robot-camera-controls>div { display: flex; gap: 6px; }
+.robot-simulator-viewport img { width: 100%; height: auto; max-height: 46vh; object-fit: contain; }
+.robot-render-status { position: absolute; bottom: 8px; left: 8px; display: flex; gap: 8px; align-items: center; padding: 6px; background: var(--white); font-size: 12px; }
+.robot-playback { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.robot-playback label { display: grid; gap: 6px; flex: 1; min-width: 120px; font-size: 12px; }
+.robot-playback input { width: 100%; accent-color: var(--accent); }
+.robot-output { margin: 10px 0; font-size: 12px; }
+.robot-output summary { cursor: pointer; color: var(--muted); }
+.robot-output pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 var(--mono); }
+.robot-tool-position { font: 12px/1.6 var(--mono); overflow-wrap: anywhere; }
+.robot-joint-table { width: 100%; table-layout: fixed; font: 12px var(--mono); text-align: center; border-collapse: collapse; }
+.robot-joint-table caption { text-align: left; padding-bottom: 8px; font: 12px var(--sans); color: var(--muted); }
+.robot-joint-table th, .robot-joint-table td { padding: 6px 1px; border-bottom: 1px solid var(--line); }
+.robot-simulator .error-banner { flex-wrap: wrap; }
+@media(prefers-reduced-motion:reduce) { .robot-render-status .spin { animation: none; } }

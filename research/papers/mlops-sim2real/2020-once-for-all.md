@@ -30,86 +30,80 @@ modalities:
 track_role: "advanced"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Train a shared elastic network, extract legal subnetworks, and select a measured accuracy/latency tradeoff for a target device.","nodes":[{"id":"stage-1","title":"Train elastic weights","detail":"Support several architecture choices through staged shared training.","column":0,"row":0,"section":"Train elastic weights","problem_slugs":[],"planned_problems":["Sample a Progressive-Shrinking Curriculum"]},{"id":"stage-2","title":"Extract a valid subnetwork","detail":"Select coherent depths, widths, kernels, and resolution with appropriate statistics.","column":1,"row":0,"section":"Extract a valid subnetwork","problem_slugs":[],"planned_problems":["Extract a Depth, Width, and Kernel Subnetwork"]},{"id":"stage-3","title":"Specialize for hardware","detail":"Search for a high-quality subnetwork under a measured device constraint.","column":2,"row":0,"section":"Specialize for hardware","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Select a Pareto Model Under Accuracy and Latency Limits","Package and Verify an Edge Model Artifact"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"elastic supernetwork"},{"from":"stage-2","to":"stage-3","label":"candidate subnetworks"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Teach supernet specialization with a small elastic CNN or synthetic architecture table. The key exercises are legal subnetwork extraction and constrained accuracy/latency search, not full ImageNet training.
+Once-for-All trains an elastic network that contains many candidate subnetworks, then specializes a suitable subnetwork for a hardware target. Progressive shrinking introduces smaller depth, width, kernel, and resolution choices after larger configurations have learned useful weights. This separates expensive shared training from cheaper device-specific architecture selection.
 
-## Contribution
+## Execution flow
 
-Once-for-All trains a weight-sharing network supporting many depths, widths, kernel sizes, and resolutions, then selects a specialized subnetwork for a target device without retraining each candidate.
+Train a shared elastic network, extract legal subnetworks, and select a measured accuracy/latency tradeoff for a target device.
 
-## Prerequisite concepts
+### Train elastic weights
 
-- Convolution shapes and channels
-- Weight sharing and knowledge distillation concepts
-- Multi-objective and constrained search
-- Latency lookup tables or predictors
-
-## Essential theory
-
-Given an elastic architecture space \(\mathcal{A}\), predicted accuracy \(A(a)\), and measured or predicted device latency \(L_h(a)\), specialization solves
+Let architecture choice $a$ select a subnetwork from shared parameters $W$. Training can be described as
 
 $$
-a_h^*=\arg\max_{a\in\mathcal{A}} A(a)
-\quad\text{subject to}\quad L_h(a)\le \tau_h.
+\min_W\mathbb E_{a\sim p(a)}\mathcal L(f_{W,a}(x),y),
 $$
 
-The weights are inherited from a shared supernet, so extraction rules must map each architecture choice to a consistent tensor slice.
+with the allowed architecture set expanded progressively toward smaller configurations. Distillation from the largest trained network supplies soft targets. This expectation summarizes shared training; the progressive schedule is an essential implementation detail, not interchangeable with sampling all sizes from the start.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Subnetwork extractor | Supernet weights and architecture tuple | Specialized network tensors | Tensor slices match the requested depth/width/kernel choices | Extract one elastic layer family |
-| Device predictor | Architecture and target hardware | Accuracy and latency estimates | Predictions use the declared device/model version | Query one lookup or predictor interface |
-| Constrained search | Candidate space, predictors, and latency cap | Best feasible architecture | Returned architecture satisfies every hard constraint | Search a small discrete space |
+**Component practice**
 
-- Elastic supernet across depth, width, kernel size, and resolution
-- Progressive shrinking training schedule
-- Weight and channel selection rules
-- Accuracy predictor
-- Device-specific latency model
-- Evolutionary constrained search
+- Sample a Progressive-Shrinking Curriculum — unreviewed idea; contract and evaluator required.
 
-## Data and evaluation
+### Extract a valid subnetwork
 
-For an approachable track, provide pretrained toy weights and a candidate table with measured/synthetic latency. Validate subnetwork equivalence, constraint satisfaction, Pareto quality, and deterministic search.
+An architecture tuple $a=(d,w,k,r)$ must satisfy the model’s legal choices. Channel slicing and kernel transformations must agree across adjacent layers. Batch-normalization statistics may need recalibration for the selected subnetwork; inherited weights alone do not imply that all running statistics are correct.
 
-## Limitations and failure modes
 
-Training the full method is expensive and architecture-specific. Predicted latency may not match deployed latency, and the best image-classification subnetwork may not preserve downstream robot-policy behavior.
+**Component practice**
 
-## Implementation decomposition
+- Extract a Depth, Width, and Kernel Subnetwork — unreviewed idea; contract and evaluator required.
 
-1. Represent elastic layer choices and validity constraints.
-2. Extract weights for a selected subnetwork.
-3. Build latency and accuracy lookup/prediction interfaces.
-4. Search candidates under a target constraint.
-5. Re-measure finalists and emit a deployment record.
+### Specialize for hardware
 
-## Problem blueprints
+A specialization objective is
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Elastic Subnetwork Extraction | Neural-network coding | Medium | Supernet tensors and architecture tuple | Sliced tensors and shapes | Correct center kernels/channels/depth, no mutation |
-| Progressive Shrinking Sampler | Training utility | Medium | Stage, search space, seed | Legal sampled architectures | Stage constraints, reproducibility, boundary coverage |
-| Device-Constrained Search | Optimization | Hard | Candidate space, predictors, latency cap | Best architecture and metrics | Feasibility, score quality, deterministic tie-break |
+$$
+a^*=\arg\max_{a\in\mathcal A}\operatorname{Accuracy}(a)
+\quad\text{subject to}\quad\operatorname{Latency}(a;h)\le L_h.
+$$
 
-## Visual teaching plan
+$h$ identifies the target hardware/runtime. FLOPs are not a substitute for latency. [Edge release gating](/problems/edge-inference-release-gate) is a related component for validating measured candidates; it does not implement the supernetwork training or search.
 
-- Nested-network diagram showing elastic depth, width, kernel, and input resolution.
-- Interactive architecture controls that update parameter count, predicted accuracy, and device latency.
-- Accuracy-latency Pareto frontier with a movable latency cap \(\tau_h\).
-- Progressive-shrinking stage timeline showing which choices become active during training.
 
-## MLOps and deployment extensions
+**Component practice**
 
-Search against end-to-end control latency and peak memory, then re-evaluate task success, rare safety slices, and energy on each robot SKU. Track the selected architecture as a versioned child of the source supernet.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Select a Pareto Model Under Accuracy and Latency Limits — unreviewed idea; contract and evaluator required.
+- Package and Verify an Edge Model Artifact — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+## Implement the components
 
-- [arXiv landing page](https://arxiv.org/abs/1908.09791)
-- [arXiv PDF](https://arxiv.org/pdf/1908.09791)
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+
+**Planned component problems:**
+
+- Sample a Progressive-Shrinking Curriculum — unreviewed idea; contract and evaluator required.
+- Extract a Depth, Width, and Kernel Subnetwork — unreviewed idea; contract and evaluator required.
+- Select a Pareto Model Under Accuracy and Latency Limits — unreviewed idea; contract and evaluator required.
+- Package and Verify an Edge Model Artifact — unreviewed idea; contract and evaluator required.
+
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
+
+## Why this matters on a robot
+
+Different robots can have different accelerators and control deadlines, making device-specific specialization useful. Recalibrate and evaluate each extracted configuration on the actual sensor workload. Shared weights do not remove the need for per-configuration correctness and timing evidence.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/1908.09791) · [Open-access manuscript](https://arxiv.org/pdf/1908.09791)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

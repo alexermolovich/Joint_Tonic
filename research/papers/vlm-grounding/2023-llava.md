@@ -16,102 +16,63 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Project visual tokens","detail":"Align vision features to the language embedding width.","column":0,"row":0,"section":"Project visual tokens","problem_slugs":[],"planned_problems":["Project Visual Tokens into Language Width"]},{"id":"stage-2","title":"Format conversations","detail":"Mark human context and assistant targets.","column":1,"row":0,"section":"Format conversations","problem_slugs":[],"planned_problems":["Mask Visual-Instruction Training Labels","Collate Variable Image-Text Conversations"]},{"id":"stage-3","title":"Tune and answer","detail":"Update the projection and language model on instructions.","column":2,"row":0,"section":"Tune and answer","problem_slugs":[],"planned_problems":["Compute an Assistant-Only Visual-Instruction Loss"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"visual embeddings"},{"from":"stage-2","to":"stage-3","label":"masked targets"}]}
 ---
 
-# Visual Instruction Tuning
+## Core paper explanation
 
-## Agent brief
+The original LLaVA connects a CLIP visual encoder to a language model through a learned projection, then trains on visual instruction-following conversations. Its key learning interface is assistant-response prediction conditioned on image features and conversation history.
 
-Connect a visual encoder to a language model and train on visual instruction-following examples. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Connect a visual encoder to a language model and train on visual instruction-following examples.
+### Project visual tokens
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+With visual features $Z_v\in\mathbb R^{N\times d_v}$, the original paper uses a linear projection:
+$$H_v=Z_vW,\qquad W\in\mathbb R^{d_v\times d_{\mathrm{LM}}}.$$
+Later LLaVA variants use other projectors; this card describes the original paper. Feature alignment first trains the projection with the pretrained backbones frozen.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Planned component problems:** Project Visual Tokens into Language Width. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Format conversations
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Project Visual Tokens into Language Width | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Mask Visual-Instruction Training Labels | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Collate Variable Image-Text Conversations | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+A conversation contains system/context tokens, user instructions, assistant answers, and separators. Let $m_t=1$ only for supervised assistant answer and stop tokens. The objective is
+$$L=-\frac{\sum_t m_t\log p_\theta(y_t\mid y_{<t},H_v)}{\sum_t m_t}.$$
+Masking prevents training the model to regenerate user prompts as if they were answers. Reject examples with no supervised tokens.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problems:** Mask Visual-Instruction Training Labels; Collate Variable Image-Text Conversations. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Limitations and failure modes
+### Tune and answer
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Instruction tuning updates the language model and projection while retaining the visual encoder. At inference, autoregressive generation uses image features plus prior turns; no reference answer is supplied. Evaluate whether claims are supported by the image, not just whether the response is grammatical.
 
-## Implementation decomposition
 
-1. Project Visual Tokens into Language Width.
-2. Mask Visual-Instruction Training Labels.
-3. Collate Variable Image-Text Conversations.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
 
-### Problem: Project Visual Tokens into Language Width
+**Planned component problem:** Compute an Assistant-Only Visual-Instruction Loss. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the project visual tokens into language width component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Mask Visual-Instruction Training Labels
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the mask visual-instruction training labels component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Collate Variable Image-Text Conversations
+- Project Visual Tokens into Language Width.
+- Mask Visual-Instruction Training Labels.
+- Collate Variable Image-Text Conversations.
+- Compute an Assistant-Only Visual-Instruction Loss.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the collate variable image-text conversations component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Trace image tokens through the language sequence with labeled masks.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+A visual assistant can explain observations or help inspect a robot dataset. It is not a motor controller, and hallucinated objects or spatial relations should never be silently converted into physical commands.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2304.08485) · [Open-access manuscript](https://arxiv.org/pdf/2304.08485)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2304.08485)
-- [Open-access author manuscript](https://arxiv.org/pdf/2304.08485)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

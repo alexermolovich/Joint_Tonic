@@ -16,102 +16,71 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Align time and calibration","detail":"Connect multiple camera streams to a common reference.","column":0,"row":0,"section":"Align time and calibration","problem_slugs":[],"planned_problems":["Synchronize Ego and Exo Camera Events","Validate Multi-View Calibration Metadata"]},{"id":"stage-2","title":"Relate views geometrically","detail":"Project common 3D structure into each camera.","column":1,"row":0,"section":"Relate views geometrically","problem_slugs":["project-camera-points","se3-transform-points"],"planned_problems":["Project a Tracked Point Across Views"]},{"id":"stage-3","title":"Evaluate skilled activity tasks","detail":"Use benchmark-specific language, pose, and procedural annotations.","column":2,"row":0,"section":"Evaluate skilled activity tasks","problem_slugs":[],"planned_problems":["Aggregate Evaluation by Activity Slice"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"synchronized frames"},{"from":"stage-2","to":"stage-3","label":"aligned multimodal evidence"}]}
 ---
 
-# Ego-Exo4D: Understanding Skilled Human Activity from First- and Third-Person Perspectives
+## Core paper explanation
 
-## Agent brief
+Ego-Exo4D records skilled human activity with synchronized first-person and third-person views, calibrated geometry, and multimodal annotations. It supports studying how complementary viewpoints explain an activity.
 
-Study synchronized first-person and third-person activity recordings with geometry and time contracts. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study synchronized first-person and third-person activity recordings with geometry and time contracts.
+### Align time and calibration
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A teaching clock model is $t_j=a_jt_{\mathrm{ref}}+b_j$, allowing drift and offset. Use provided synchronization/calibration products rather than assuming identical frame indices imply simultaneity. Camera poses and sensor calibration can vary over a recording.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Synchronize Ego and Exo Camera Events — unreviewed idea; contract and evaluator required.
+- Validate Multi-View Calibration Metadata — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Synchronize Ego and Exo Camera Events | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Validate Multi-View Calibration Metadata | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Project a Tracked Point Across Views | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Relate views geometrically
 
-## Data and evaluation
+For world point $P_W$,
+$$u_j=\pi_j(T_{C_jW}P_W).$$
+$T_{C_jW}$ maps world to camera coordinates; $\pi_j$ includes the appropriate intrinsics and lens model. Pixel reprojection error and timestamp mismatch are different failure sources.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Supporting prerequisite: [Project Camera Points into Pixels](/problems/project-camera-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Project a Tracked Point Across Views — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Evaluate skilled activity tasks
 
-1. Synchronize Ego and Exo Camera Events.
-2. Validate Multi-View Calibration Metadata.
-3. Project a Tracked Point Across Views.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A pose error such as $N^{-1}\sum_i\|\hat P_i-P_i\|_2$ is meaningful only with matching joints, units, alignment, and visibility rules. This is a teaching diagnostic; official benchmark protocols differ by task. Human performance annotations do not directly define robot actions.
 
-## Problem blueprints
 
-### Problem: Synchronize Ego and Exo Camera Events
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the synchronize ego and exo camera events component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Aggregate Evaluation by Activity Slice — unreviewed idea; contract and evaluator required.
 
-### Problem: Validate Multi-View Calibration Metadata
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate multi-view calibration metadata component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Project a Tracked Point Across Views
+- **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points).
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the project a tracked point across views component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Synchronize Ego and Exo Camera Events — unreviewed idea; contract and evaluator required.
+- Validate Multi-View Calibration Metadata — unreviewed idea; contract and evaluator required.
+- Project a Tracked Point Across Views — unreviewed idea; contract and evaluator required.
+- Aggregate Evaluation by Activity Slice — unreviewed idea; contract and evaluator required.
 
-- Link synchronized multi-view frames and geometry residuals.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Multiple viewpoints can clarify occluded hand–object interactions. Camera calibration uncertainty and human-to-robot embodiment differences must remain visible when using such evidence for manipulation learning.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2311.18259)
-- [Open-access author manuscript](https://arxiv.org/pdf/2311.18259)
+[Primary paper](https://arxiv.org/abs/2311.18259) · [Open-access manuscript](https://arxiv.org/pdf/2311.18259)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

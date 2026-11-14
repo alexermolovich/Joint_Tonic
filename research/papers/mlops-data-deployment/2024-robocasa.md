@@ -16,102 +16,65 @@ modalities: ["datasets","model-artifacts","logs","metrics"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Generate a scenario","detail":"Choose scene layout, objects, task, and embodiment.","column":0,"row":0,"section":"Generate a scenario","problem_slugs":[],"planned_problems":["Validate a Kitchen Scenario Configuration","Stratify Tasks by Scene Factors"]},{"id":"stage-2","title":"Produce demonstrations","detail":"Collect or synthesize trajectories under explicit success conditions.","column":1,"row":0,"section":"Produce demonstrations","problem_slugs":[],"planned_problems":["Validate a Teleoperation Demonstration"]},{"id":"stage-3","title":"Evaluate variation and transfer","detail":"Hold out meaningful scene factors and test real-world relevance separately.","column":2,"row":0,"section":"Evaluate variation and transfer","problem_slugs":[],"planned_problems":["Aggregate Generalization Across Scene Families"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"configured scene"},{"from":"stage-2","to":"stage-3","label":"scenario trajectories"}]}
 ---
 
-# RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots
+## Core paper explanation
 
-## Agent brief
+RoboCasa provides diverse simulated everyday manipulation environments, assets, tasks, and generated demonstrations. Its purpose is to scale structured robot learning experience beyond a small collection of repeated tabletop scenes.
 
-Study diverse everyday manipulation environments through scenario definitions and evaluation slices. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study diverse everyday manipulation environments through scenario definitions and evaluation slices.
+### Generate a scenario
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Write a scenario as $z=(\mathrm{layout},\mathrm{objects},\mathrm{task},\mathrm{robot},\mathrm{seed})$. This is a teaching reproducibility record, not a paper-specific model equation. Asset versions, placements, and physics settings are needed to reconstruct the same episode.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Validate a Kitchen Scenario Configuration — unreviewed idea; contract and evaluator required.
+- Stratify Tasks by Scene Factors — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Kitchen Scenario Configuration | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Stratify Tasks by Scene Factors | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Aggregate Generalization Across Scene Families | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Produce demonstrations
 
-## Data and evaluation
+A task predicate $S(s_{0:T})\in\{0,1\}$ should encode the intended completion condition. Checking only a final object location can miss prohibited intermediate contacts or invalid grasp behavior. Preserve failed generation attempts to distinguish filtering from policy capability.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Validate a Teleoperation Demonstration — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Evaluate variation and transfer
 
-1. Validate a Kitchen Scenario Configuration.
-2. Stratify Tasks by Scene Factors.
-3. Aggregate Generalization Across Scene Families.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+For scenario distribution $p(z)$, expected simulated success is $\mathbb E_{z\sim p}\mathbb E[S\mid z]$. This formalizes what a benchmark average measures. Changing the scenario distribution changes the meaning of the score; real-world transfer requires additional physical experiments.
 
-## Problem blueprints
 
-### Problem: Validate a Kitchen Scenario Configuration
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a kitchen scenario configuration component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Aggregate Generalization Across Scene Families — unreviewed idea; contract and evaluator required.
 
-### Problem: Stratify Tasks by Scene Factors
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the stratify tasks by scene factors component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Aggregate Generalization Across Scene Families
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the aggregate generalization across scene families component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Kitchen Scenario Configuration — unreviewed idea; contract and evaluator required.
+- Stratify Tasks by Scene Factors — unreviewed idea; contract and evaluator required.
+- Validate a Teleoperation Demonstration — unreviewed idea; contract and evaluator required.
+- Aggregate Generalization Across Scene Families — unreviewed idea; contract and evaluator required.
 
-- Display a scene-task coverage map with held-out factors.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Diverse kitchens and objects can expand training coverage. Visual realism does not guarantee accurate friction, articulation, or contact dynamics; simulation diversity and physical fidelity solve different problems.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2406.02523)
-- [Open-access author manuscript](https://arxiv.org/pdf/2406.02523)
+[Primary paper](https://arxiv.org/abs/2406.02523) · [Open-access manuscript](https://arxiv.org/pdf/2406.02523)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

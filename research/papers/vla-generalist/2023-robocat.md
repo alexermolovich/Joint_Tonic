@@ -16,102 +16,61 @@ modalities: ["rgb","text","robot-state","actions"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Encode visual goals","detail":"Tokenize observations and a desired future image.","column":0,"row":0,"section":"Encode visual goals","problem_slugs":[],"planned_problems":["Construct Goal-Conditioned Policy Batches"]},{"id":"stage-2","title":"Learn actions and future images","detail":"Jointly predict behavior and future visual tokens.","column":1,"row":0,"section":"Learn actions and future images","problem_slugs":[],"planned_problems":["Balance Robot-Task Training Mixtures"]},{"id":"stage-3","title":"Adapt and collect data","detail":"Fine-tune on a task, collect trajectories, then retrain the generalist.","column":2,"row":0,"section":"Adapt and collect data","problem_slugs":["validate-robot-episodes"],"planned_problems":["Track Adaptation Data Lineage"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"goal and observation tokens"},{"from":"stage-2","to":"stage-3","label":"generalist checkpoint"}]}
 ---
+## Core paper explanation
 
-# RoboCat: A Self-Improving Generalist Agent for Robotic Manipulation
+RoboCat trains a goal-image-conditioned generalist manipulation policy and improves it through repeated adaptation and data collection. A VQ-GAN image tokenizer supports action prediction plus a future-image prediction auxiliary task.
 
-## Agent brief
+## Execution flow
 
-Study generalist visual robot control through task mixtures and iterative policy adaptation. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-## Contribution
+### Encode visual goals
 
-Study generalist visual robot control through task mixtures and iterative policy adaptation.
+A visual codebook maps image features $z$ to discrete entries:
+$$q(z)=\arg\min_j\|z-e_j\|_2^2.$$
+$e_j$ is codebook entry $j$; spatial code indices form an image sequence. A future image from an episode can act as a hindsight goal for earlier states, without requiring a verbal task label.
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Construct Goal-Conditioned Policy Batches. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Prerequisite concepts
+### Learn actions and future images
 
-- Sequence modeling, action units, control frequencies, multimodal batching, and policy evaluation.
+A compact loss decomposition is
+$$L=L_{\mathrm{action}}+L_{\mathrm{future\ image}},$$
+where both terms are token negative log-likelihoods. The paper predicts images five timesteps ahead, avoiding an auxiliary task dominated by nearly unchanged consecutive frames. Context truncation and target masks must follow the training setup.
 
-## Method map
+<!-- joint-tonic-component:stage-2 -->
+- **Planned component:** Balance Robot-Task Training Mixtures. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Balance Robot-Task Training Mixtures | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Construct Goal-Conditioned Policy Batches | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Track Adaptation Data Lineage | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
+### Adapt and collect data
 
-## Data and evaluation
+The data loop can be written as $D_{r+1}=D_r\cup D_{\mathrm{new},r}$, followed by another generalist training stage. This set equation describes collection, not a guarantee of monotonically improving success. Preserve which policy collected each trajectory and how goals were relabeled.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+<!-- joint-tonic-component:stage-3 -->
+- **Related implementation prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Planned component:** Track Adaptation Data Lineage. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Limitations and failure modes
+## Implement the components
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Implementation decomposition
+- [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes)
 
-1. Balance Robot-Task Training Mixtures.
-2. Construct Goal-Conditioned Policy Batches.
-3. Track Adaptation Data Lineage.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Planned components: Construct Goal-Conditioned Policy Batches; Balance Robot-Task Training Mixtures; Track Adaptation Data Lineage. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-## Problem blueprints
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-### Problem: Balance Robot-Task Training Mixtures
+## Why this matters on a robot
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the balance robot-task training mixtures component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Iterative collection can expand manipulation coverage across embodiments. A policy can also collect repetitive failures or exploit incorrect success labels; provenance and held-out task evaluation are essential to assess improvement.
 
-### Problem: Construct Goal-Conditioned Policy Batches
+## Sources and scope
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the construct goal-conditioned policy batches component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Primary paper](https://arxiv.org/abs/2306.11706) · [Open-access manuscript](https://arxiv.org/pdf/2306.11706)
 
-### Problem: Track Adaptation Data Lineage
-
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the track adaptation data lineage component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
-
-## Visual teaching plan
-
-- Show a policy-data collection loop with dataset and model versions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
-
-## MLOps and deployment extensions
-
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2306.11706)
-- [Open-access author manuscript](https://arxiv.org/pdf/2306.11706)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

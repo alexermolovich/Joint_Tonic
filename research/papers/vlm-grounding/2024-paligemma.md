@@ -16,102 +16,64 @@ modalities: ["rgb","text","spatial-tokens"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build multimodal prefix","detail":"Project image tokens and append the task prompt.","column":0,"row":0,"section":"Build multimodal prefix","problem_slugs":[],"planned_problems":["Format Image-Prefix Language Sequences"]},{"id":"stage-2","title":"Apply prefix attention","detail":"Use full prefix visibility and causal suffix visibility.","column":1,"row":0,"section":"Apply prefix attention","problem_slugs":[],"planned_problems":["Build a Bidirectional-Prefix Causal-Suffix Attention Mask"]},{"id":"stage-3","title":"Train task suffixes","detail":"Supervise only the requested output sequence.","column":2,"row":0,"section":"Train task suffixes","problem_slugs":[],"planned_problems":["Encode Spatial Locations as Tokens","Validate Task-Specific Output Grammars"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"prefix and suffix"},{"from":"stage-2","to":"stage-3","label":"masked attention"}]}
 ---
 
-# PaliGemma: A versatile 3B VLM for transfer
+## Core paper explanation
 
-## Agent brief
+PaliGemma combines a SigLIP image encoder with a Gemma decoder-only language model for task-specific vision-language transfer. Its prefix attention and suffix-only training objective distinguish conditioning input from the sequence the model should generate.
 
-Study an open vision-language transfer model through its input formatting and task adaptation contracts. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study an open vision-language transfer model through its input formatting and task adaptation contracts.
+### Build multimodal prefix
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Image tokens are projected into the language width and concatenated with prompt tokens. Let the prefix have length $P$ and the answer suffix length $T$. Image resolution controls the number of visual tokens and therefore the context budget.
 
-## Prerequisite concepts
 
-- Attention masks, embedding normalization, tokenization, cross-entropy, and visual coordinate conventions.
+**Planned component problems:** Format Image-Prefix Language Sequences. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Apply prefix attention
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Format Image-Prefix Language Sequences | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Encode Spatial Locations as Tokens | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
-| Validate Task-Specific Output Grammars | Image features, token IDs, sequence lengths, and validity masks | Aligned features, structured spatial outputs, or an alignment loss | Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. | One bounded function or validation stage |
+Ignoring padding, a teaching attention mask for query $i$ and key $j$ is
+$$M_{ij}=\begin{cases}0&i<P,\ j<P,\\0&i\ge P,\ j\le i,\\-\infty&\text{otherwise}.\end{cases}$$
+Prefix positions can see one another but cannot see answer tokens. Suffix positions can see the prefix and preceding suffix. Verify indexing against the actual implementation before batching.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned component problem:** Build a Bidirectional-Prefix Causal-Suffix Attention Mask. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Implementation decomposition
+### Train task suffixes
 
-1. Format Image-Prefix Language Sequences.
-2. Encode Spatial Locations as Tokens.
-3. Validate Task-Specific Output Grammars.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The loss is
+$$L=-\sum_{t=1}^{T}\log p_\theta(y_t\mid y_{<t},I,x).$$
+PaliGemma uses task-specific output formats, including normalized location tokens for detection and segmentation. Preserve task prompts, tokenizer, image resizing, and coordinate decoding as one versioned interface; transfer training is distinct from zero-shot chat use.
 
-## Problem blueprints
 
-### Problem: Format Image-Prefix Language Sequences
+**Planned component problems:** Encode Spatial Locations as Tokens; Validate Task-Specific Output Grammars. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the format image-prefix language sequences component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Encode Spatial Locations as Tokens
+- **Related implementation skill:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the encode spatial locations as tokens component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Validate Task-Specific Output Grammars
+- Format Image-Prefix Language Sequences.
+- Build a Bidirectional-Prefix Causal-Suffix Attention Mask.
+- Encode Spatial Locations as Tokens.
+- Validate Task-Specific Output Grammars.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate task-specific output grammars component.
-- **Inputs:** Image features, token IDs, sequence lengths, and validity masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Aligned features, structured spatial outputs, or an alignment loss; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check masks, padding, token order, shape compatibility, boundary coordinates, and stable numerical loss. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Link location tokens to boxes and points in the image.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+A compact transferable VLM can specialize in robot-camera inspection. Prefix-mask leakage gives deceptively low training loss, while coordinate-order mistakes produce plausible but misplaced detections; test both interfaces independently.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version tokenizer, image preprocessing, prompt templates, and output grammar together; monitor retrieval/grounding by language, object, and scene slice.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2407.07726) · [Open-access manuscript](https://arxiv.org/pdf/2407.07726)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2407.07726)
-- [Open-access author manuscript](https://arxiv.org/pdf/2407.07726)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

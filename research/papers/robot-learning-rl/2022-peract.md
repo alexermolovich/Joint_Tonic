@@ -16,102 +16,57 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Voxelize calibrated observations","detail":"Fuse RGB-D points into a bounded 3D workspace.","column":0,"row":0,"section":"Voxelize calibrated observations","problem_slugs":[],"planned_problems":["Voxelize a Calibrated RGB-D Scene"]},{"id":"stage-2","title":"Predict language-conditioned actions","detail":"Attend through a latent bottleneck and classify pose components.","column":1,"row":0,"section":"Predict language-conditioned actions","problem_slugs":[],"planned_problems":["Encode a Discrete Six-DoF Action Target"]},{"id":"stage-3","title":"Execute a keyframe target","detail":"Decode the pose and call the motion-planning interface.","column":2,"row":0,"section":"Execute a keyframe target","problem_slugs":[],"planned_problems":["Decode a Voxel Action Heatmap"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"voxel features"},{"from":"stage-2","to":"stage-3","label":"discrete action"}]}
 ---
 
-# Perceiver-Actor: A Multi-Task Transformer for Robotic Manipulation
+## Core paper explanation
 
-## Agent brief
+PerAct represents observations and translation actions in a voxel grid, conditions on language, and uses a Perceiver-style transformer to predict manipulation keyframes. A motion planner executes the resulting discretized pose and gripper commands.
 
-Predict language-conditioned manipulation actions from a voxelized scene representation. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Predict language-conditioned manipulation actions from a voxelized scene representation.
+### Voxelize calibrated observations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For workspace minimum $b$ and voxel width $\Delta$, voxel index is
+$$i=\left\lfloor(p-b)/\Delta\right\rfloor.$$
+$p,b$ are in meters and the same frame. Reject out-of-bounds points rather than silently wrapping indices; voxel centers introduce finite translation precision.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Voxelize a Calibrated RGB-D Scene.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Voxelize a Calibrated RGB-D Scene | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Encode a Discrete Six-DoF Action Target | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Decode a Voxel Action Heatmap | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Predict language-conditioned actions
 
-## Data and evaluation
+The network predicts translation voxel logits plus discretized rotation and gripper outputs. A schematic supervised objective is $L=L_{\mathrm{trans}}+L_{\mathrm{rot}}+L_{\mathrm{grip}}+L_{\mathrm{collision}}$, reflecting the model's action components. Each term has its own labels and output convention.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Encode a Discrete Six-DoF Action Target.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Execute a keyframe target
 
-1. Voxelize a Calibrated RGB-D Scene.
-2. Encode a Discrete Six-DoF Action Target.
-3. Decode a Voxel Action Heatmap.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A voxel-center translation is $\hat p=b+\Delta(i+1/2)$. Rotation bin order and gripper state must follow the action codec. The collision-related output does not certify a collision-free path; the execution backend still checks feasibility.
 
-## Problem blueprints
 
-### Problem: Voxelize a Calibrated RGB-D Scene
+**Planned exercise:** Decode a Voxel Action Heatmap.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the voxelize a calibrated rgb-d scene component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Encode a Discrete Six-DoF Action Target
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the encode a discrete six-dof action target component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-### Problem: Decode a Voxel Action Heatmap
+- **Voxelize calibrated observations:** Voxelize a Calibrated RGB-D Scene (planned).
+- **Predict language-conditioned actions:** Encode a Discrete Six-DoF Action Target (planned).
+- **Execute a keyframe target:** Decode a Voxel Action Heatmap (planned).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the decode a voxel action heatmap component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Voxel structure gives manipulation a useful 3D prior. Discretization, calibration error, and occluded geometry can make the selected keyframe infeasible despite confident classification.
 
-- Display a 3D voxel scene with the selected action position and orientation.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2209.05451) · [Open-access manuscript](https://arxiv.org/pdf/2209.05451)
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2209.05451)
-- [Open-access author manuscript](https://arxiv.org/pdf/2209.05451)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,22 @@
+{
+  "slug": "rt1-compact-visual-tokens",
+  "title": "Select Compact Visual Tokens with Learned Attention",
+  "version": "1.0.0",
+  "number": 201,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "rt1",
+    "visual-token-compression",
+    "masked-attention"
+  ],
+  "minutes": 40,
+  "framework": "PyTorch",
+  "entrypoint": "compact_visual_tokens",
+  "paperIds": [
+    "2022-rt-1"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Turn supplied learned spatial logits into normalized attention maps and compress visual features without mixing examples."
+}

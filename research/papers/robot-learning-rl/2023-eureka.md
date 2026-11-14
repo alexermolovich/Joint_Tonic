@@ -16,102 +16,55 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Generate reward candidates","detail":"Use task description and environment code to propose executable rewards.","column":0,"row":0,"section":"Generate reward candidates","problem_slugs":[],"planned_problems":["Validate a Reward Function Contract"]},{"id":"stage-2","title":"Train and evaluate policies","detail":"Optimize each reward and score behavior with an independent task metric.","column":1,"row":0,"section":"Train and evaluate policies","problem_slugs":[],"planned_problems":["Rank Reward Candidates by Rollout Evidence"]},{"id":"stage-3","title":"Reflect and revise","detail":"Use learning curves and reward-component statistics to improve candidates.","column":2,"row":0,"section":"Reflect and revise","problem_slugs":[],"planned_problems":["Aggregate Reward-Component Diagnostics"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"reward programs"},{"from":"stage-2","to":"stage-3","label":"training diagnostics"}]}
 ---
 
-# Eureka: Human-Level Reward Design via Coding Large Language Models
+## Core paper explanation
 
-## Agent brief
+Eureka uses a language model to generate reward programs, trains policies with those rewards, and feeds performance diagnostics back into reward revision. The language model designs a learning signal; reinforcement learning still produces the motor policy.
 
-Use generated reward programs and iterative feedback to improve reinforcement-learning task specification. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Use generated reward programs and iterative feedback to improve reinforcement-learning task specification.
+### Generate reward candidates
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A candidate reward is a program $r_k(s,a,s')$. It must use available state variables and return finite values with the expected batch shape. Executability and sensible scaling are prerequisites, not evidence that the reward expresses the intended task.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Validate a Reward Function Contract.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Reward Function Contract | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Aggregate Reward-Component Diagnostics | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Rank Reward Candidates by Rollout Evidence | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Train and evaluate policies
 
-## Data and evaluation
+The inner loop learns $\pi_k\approx\arg\max_\pi\mathbb E[\sum_t\gamma^tr_k]$. The outer loop compares $M(\pi_k)$ using a task metric $M$, which should remain independent of reward scale. This bilevel view explains the method without claiming exact optimization.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Rank Reward Candidates by Rollout Evidence.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Reflect and revise
 
-1. Validate a Reward Function Contract.
-2. Aggregate Reward-Component Diagnostics.
-3. Rank Reward Candidates by Rollout Evidence.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Feedback includes which terms activate, saturate, or fail to correlate with success. Keep reward code, prompts, simulator version, seeds, and evaluation outcomes together. A larger shaped reward alone is not proof of a better policy.
 
-## Problem blueprints
 
-### Problem: Validate a Reward Function Contract
+**Planned exercise:** Aggregate Reward-Component Diagnostics.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a reward function contract component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Aggregate Reward-Component Diagnostics
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the aggregate reward-component diagnostics component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-### Problem: Rank Reward Candidates by Rollout Evidence
+- **Generate reward candidates:** Validate a Reward Function Contract (planned).
+- **Train and evaluate policies:** Rank Reward Candidates by Rollout Evidence (planned).
+- **Reflect and revise:** Aggregate Reward-Component Diagnostics (planned).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the rank reward candidates by rollout evidence component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Why this matters on a robot
 
-## Visual teaching plan
+Automated reward design can explore useful shaping faster. Generated rewards may exploit simulator shortcuts or reward unsafe motion; independent task evaluation and physical constraints remain essential.
 
-- Plot reward components and task success across candidate iterations.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2310.12931) · [Open-access manuscript](https://arxiv.org/pdf/2310.12931)
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2310.12931)
-- [Open-access author manuscript](https://arxiv.org/pdf/2310.12931)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

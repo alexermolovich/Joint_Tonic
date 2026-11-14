@@ -1,0 +1,23 @@
+{
+  "slug": "rt2-parse-action-grammar",
+  "title": "Parse and Validate an Action-Token Grammar",
+  "version": "1.0.0",
+  "number": 211,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "2023-rt-2",
+    "policy-interface"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "parse_action_tokens",
+  "paperIds": [
+    "2023-rt-2"
+  ],
+  "prerequisites": [
+    "rt2-serialize-action-tokens"
+  ],
+  "visualization": "markdown",
+  "summary": "Parse and Validate an Action-Token Grammar"
+}

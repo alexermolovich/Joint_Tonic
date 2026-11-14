@@ -1,0 +1,24 @@
+{
+  "slug": "act-sliding-action-chunks",
+  "title": "Build Sliding Action Chunks with Padding Masks",
+  "version": "1.0.0",
+  "number": 203,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "act",
+    "action-chunking",
+    "episode-boundaries"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "sliding_action_chunks",
+  "paperIds": [
+    "2023-aloha-act"
+  ],
+  "prerequisites": [
+    "validate-robot-episodes"
+  ],
+  "visualization": "markdown",
+  "summary": "Extract fixed-horizon action windows from one episode while marking right-padding and preserving requested start order."
+}

@@ -1,120 +1,190 @@
 ---
 schema_version: 1
-paper_id: "2017-tfx-production-ml-platform"
-title: "TFX: A TensorFlow-Based Production-Scale Machine Learning Platform"
+paper_id: 2017-tfx-production-ml-platform
+title: 'TFX: A TensorFlow-Based Production-Scale Machine Learning Platform'
 authors:
-  - "Denis Baylor"
-  - "Eric Breck"
-  - "Heng-Tze Cheng"
-  - "Noah Fiedel"
-  - "Chuan Yu Foo"
-  - "Zakaria Haque"
-  - "Salem Haykal"
-  - "Mustafa Ispir"
-  - "Vihan Jain"
-  - "Levent Koc"
-  - "Chiu Yuen Koo"
-  - "Lukasz Lew"
-  - "Clemens Mewald"
-  - "Akshay Naresh Modi"
-  - "Neoklis Polyzotis"
-  - "Sukriti Ramesh"
-  - "Sudip Roy"
-  - "Steven Euijong Whang"
-  - "Martin Wicke"
-  - "Jarek Wilkiewicz"
-  - "Xin Zhang"
-  - "Martin Zinkevich"
+  - Denis Baylor
+  - Eric Breck
+  - Heng-Tze Cheng
+  - Noah Fiedel
+  - Chuan Yu Foo
+  - Zakaria Haque
+  - Salem Haykal
+  - Mustafa Ispir
+  - Vihan Jain
+  - Levent Koc
+  - Chiu Yuen Koo
+  - Lukasz Lew
+  - Clemens Mewald
+  - Akshay Naresh Modi
+  - Neoklis Polyzotis
+  - Sukriti Ramesh
+  - Sudip Roy
+  - Steven Euijong Whang
+  - Martin Wicke
+  - Jarek Wilkiewicz
+  - Xin Zhang
+  - Martin Zinkevich
 year: 2017
-venue_or_status: "KDD 2017"
-primary_url: "https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/"
-pdf_url: "https://storage.googleapis.com/gweb-research2023-media/pubtools/4795.pdf"
-local_pdf: "./2017-tfx-production-ml-platform.pdf"
-sha256: "05b0236e9871214b0b790c332015e91c05b3542b0a36487b1848912603618ddb"
+venue_or_status: KDD 2017
+primary_url: >-
+  https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/
+pdf_url: 'https://storage.googleapis.com/gweb-research2023-media/pubtools/4795.pdf'
+local_pdf: ./2017-tfx-production-ml-platform.pdf
+sha256: 05b0236e9871214b0b790c332015e91c05b3542b0a36487b1848912603618ddb
 bytes: 826419
 pages: 9
 topics:
-  - "mlops"
-  - "pipelines"
-  - "continuous-training"
-  - "data-validation"
-  - "model-serving"
+  - mlops
+  - pipelines
+  - continuous-training
+  - data-validation
+  - model-serving
 modalities:
-  - "pipeline-artifacts"
-  - "datasets"
-  - "models"
-  - "metrics"
-track_role: "foundation"
-open_access_status: "open-access-proceedings"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+  - pipeline-artifacts
+  - datasets
+  - models
+  - metrics
+track_role: foundation
+open_access_status: open-access-proceedings
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Validate incoming data, apply a shared transform/train pipeline, then
+    promote only evaluated model artifacts to serving.
+  nodes:
+    - id: stage-1
+      title: Validate source artifacts
+      detail: >-
+        Check incoming data against a declared schema and compare relevant
+        statistics.
+      column: 0
+      row: 0
+      section: Validate source artifacts
+      problem_slugs:
+        - validate-robot-episodes
+        - infer-robot-episode-schema
+      planned_problems: []
+    - id: stage-2
+      title: Transform and train reproducibly
+      detail: Use the same learned preprocessing in training and serving.
+      column: 1
+      row: 0
+      section: Transform and train reproducibly
+      problem_slugs:
+        - training-pipeline-topological-order
+        - invalidate-downstream-cache
+        - training-serving-transform-skew
+        - record-artifact-lineage
+        - verify-immutable-run-manifest
+      planned_problems: []
+    - id: stage-3
+      title: Evaluate and promote artifacts
+      detail: >-
+        Compare the candidate with requirements and retain lineage for the
+        served version.
+      column: 2
+      row: 0
+      section: Evaluate and promote artifacts
+      problem_slugs:
+        - edge-inference-release-gate
+        - slice-infrastructure-release-gate
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: validated data
+    - from: stage-2
+      to: stage-3
+      label: model bundle
 ---
 
-## Agent brief
+## Core paper explanation
 
-Build a small framework-neutral pipeline runner inspired by the architectural boundaries in TFX. Focus on reproducible artifacts, shared transforms, validation gates, and serving promotion.
+TFX describes an integrated production ML pipeline spanning data analysis, transformation, training, evaluation, and serving. Its key contribution is coordinating these stages through explicit artifacts and validation boundaries. The pipeline equations below formalize reproducibility and cache behavior for a small educational implementation; they are not a new statistical objective from the paper.
 
-## Contribution
+## Execution flow
 
-TFX presents an integrated production platform whose components cover data analysis, transformation, validation, training, model evaluation, and serving. Its central lesson is that shared configuration and artifact contracts reduce glue code and training-serving skew.
+Validate incoming data, apply a shared transform/train pipeline, then promote only evaluated model artifacts to serving.
 
-## Prerequisite concepts
+### Validate source artifacts
 
-- DAGs and topological sorting
-- Dataset splits and model evaluation
-- Content-addressed artifacts or checksums
-- Serialization and configuration schemas
+For dataset artifact $D$ and schema $S$, let $V(D,S)$ return named violations. A pipeline stage can require
 
-## Method map
+$$
+\mathrm{valid}(D)=\mathbf1[|V(D,S)|=0].
+$$
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Orchestrator | Component DAG and artifact references | Ordered component runs | A component runs only after all dependencies succeed | Topologically schedule one pipeline |
-| Artifact/lineage store | Inputs, code, configuration, outputs | Versioned lineage records | Fingerprints change for every material dependency change | Implement canonical cache keys |
-| Validation and promotion | Data/model/serving evidence | Blocked or promoted model | Failed required validation prevents promotion | Implement one promotion gate |
+Schema validity is necessary but not sufficient for useful learning: data can satisfy a shape/type contract while drifting semantically. Preserve the input artifact identity when generating statistics or exceptions.
 
-- Data analysis, transformation, and validation
-- Trainer and optional tuner
-- Model evaluation and validation
-- Serving validation and model push
-- Pipeline storage, shared configuration, orchestration, and UI metadata
 
-## Data and evaluation
+**Component practice**
 
-Use a toy perception dataset with two versions, one schema-breaking change, and a train/serve transform mismatch. Evaluate execution order, cache reuse, artifact lineage, gate behavior, and repeatability.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Infer a Schema from Robot Episodes](/problems/infer-robot-episode-schema). Uses the bounded contract; no full paper reproduction is claimed.
 
-## Limitations and failure modes
+### Transform and train reproducibly
 
-The reported platform is tied to Google's production context and the historical TensorFlow ecosystem. A teaching implementation should preserve the contracts without copying its scale or vendor choices.
+If preprocessing learns parameters $\eta$ from training data, train on $T_\eta(D)$ and serve with the same $T_\eta$. A teaching cache key is
 
-## Implementation decomposition
+$$
+k=H(\mathrm{code},\mathrm{config},\mathrm{input\ hashes},\mathrm{runtime}).
+$$
 
-1. Define component inputs, outputs, parameters, and artifact fingerprints.
-2. Validate and topologically order a pipeline DAG.
-3. Execute components with cache hits for identical fingerprints.
-4. Record lineage and metrics in a small metadata store.
-5. Block promotion when data, model, or serving checks fail.
+Hashing only the output filename cannot detect a changed transform or dependency. Splits must be made before fitting data-dependent transforms to avoid validation leakage.
 
-## Problem blueprints
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Pipeline Topological Scheduler | Systems coding | Medium | Component DAG | Stable execution order or cycle error | Correct dependencies, deterministic tie-breaking |
-| Artifact Cache Key | MLOps utility | Medium | Code/config/input hashes | Canonical cache fingerprint | Invariance to map order, sensitivity to real changes |
-| Train/Serve Transform Parity | Data validation | Hard | Two transform graphs and samples | Mismatch report with examples | Detects structural and numeric divergence within tolerance |
+**Component practice**
 
-## Visual teaching plan
+- Runnable component: [Topologically Schedule a Training Pipeline DAG](/problems/training-pipeline-topological-order). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Invalidate Cached Artifacts After an Upstream Change](/problems/invalidate-downstream-cache). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Detect Training-Serving Transform Skew](/problems/training-serving-transform-skew). Implements the bounded learning contract linked here, not the complete paper.
+- Runnable component: [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Reproduce a Model from an Immutable Run Manifest](/problems/verify-immutable-run-manifest). Uses the bounded contract; no full paper reproduction is claimed.
 
-- Interactive pipeline DAG with artifact versions on edges and gate status on nodes.
-- Lineage explorer from a deployed robot model back to data, code, configuration, and calibration.
-- Animation of cache hits and invalidations after changing one upstream artifact.
-- Side-by-side training and serving transform graphs with mismatched operations highlighted.
+### Evaluate and promote artifacts
 
-## MLOps and deployment extensions
+A candidate bundle includes weights, transform parameters, input/output schema, and evaluation evidence. Promotion is a state transition conditioned on a gate:
 
-Add calibration artifacts, simulator version, robot URDF, controller firmware, camera intrinsics, and hardware target to lineage. Promotion should require both offline metrics and a staged hardware-in-the-loop validation result.
+$$
+\mathrm{candidate}\xrightarrow{\mathrm{gate}=\mathrm{pass}}\mathrm{serving}.
+$$
 
-## Canonical sources
+Record the transition and preserve the previous serving version for rollback. Serving the new weights with an old transform creates a different model behavior even if both files are individually valid.
 
-- [Google Research publication page](https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/)
-- [Official PDF](https://storage.googleapis.com/gweb-research2023-media/pubtools/4795.pdf)
 
+**Component practice**
+
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Uses the bounded contract; no full paper reproduction is claimed.
+
+## Implement the components
+
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
+
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Runnable component:** [Topologically Schedule a Training Pipeline DAG](/problems/training-pipeline-topological-order).
+- **Runnable component:** [Invalidate Cached Artifacts After an Upstream Change](/problems/invalidate-downstream-cache).
+- **Runnable component:** [Detect Training-Serving Transform Skew](/problems/training-serving-transform-skew).
+- **Runnable component:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage).
+- **Runnable component:** [Reproduce a Model from an Immutable Run Manifest](/problems/verify-immutable-run-manifest).
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+- **Supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate).
+
+**Planned component problems:**
+
+- Supporting prerequisite: [Infer a Schema from Robot Episodes](/problems/infer-robot-episode-schema). Uses the bounded contract; no full paper reproduction is claimed.
+
+These exercises implement their stated contracts, not a complete paper reproduction.
+
+
+## Why this matters on a robot
+
+In robotics, preprocessing includes physical conventions such as calibration and action normalization. Treat those artifacts as part of the model bundle. A reproducible pipeline helps distinguish training mistakes, stale data, and deployment mismatches when field behavior changes.
+
+## Sources and scope
+
+[Primary paper](https://research.google/pubs/tfx-a-tensorflow-based-production-scale-machine-learning-platform/) · [Open-access manuscript](https://storage.googleapis.com/gweb-research2023-media/pubtools/4795.pdf)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

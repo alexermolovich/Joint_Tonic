@@ -16,102 +16,73 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Proposals select continuous regions in a feature map, ROIAlign samples aligned features, and parallel heads predict classes, boxes, and instance masks.","nodes":[{"id":"stage-1","title":"Map regions to features","detail":"Convert image-space proposals into continuous feature-map coordinates.","column":0,"row":0,"section":"Map regions to features","problem_slugs":[],"planned_problems":["Map Proposal Boxes to Feature-Map Coordinates"]},{"id":"stage-2","title":"Sample with ROIAlign","detail":"Use bilinear interpolation at planned points within each pooled bin.","column":1,"row":0,"section":"Sample with ROIAlign","problem_slugs":[],"planned_problems":["Implement bilinear ROI sampling"]},{"id":"stage-3","title":"Predict an instance mask","detail":"Supervise the target class’s mask independently of category competition.","column":2,"row":0,"section":"Predict an instance mask","problem_slugs":[],"planned_problems":["Construct class-specific mask targets","Compare instance-mask IoU and box IoU"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"continuous regions"},{"from":"stage-2","to":"stage-3","label":"aligned region features"}]}
 ---
 
-# Mask R-CNN
+## Core paper explanation
 
-## Agent brief
+Mask R-CNN extends region-based detection with a per-instance mask branch. Its ROIAlign operation preserves spatial correspondence by sampling continuous feature coordinates rather than quantizing region boundaries. Classification, box refinement, and mask prediction share the region features but solve different tasks.
 
-Add an instance-mask branch to region-based detection and preserve feature alignment. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Proposals select continuous regions in a feature map, ROIAlign samples aligned features, and parallel heads predict classes, boxes, and instance masks.
 
-Add an instance-mask branch to region-based detection and preserve feature alignment.
+### Map regions to features
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For image-to-feature scale $s$, map $(x,y)$ to $(sx,sy)$ under the implementation’s declared pixel-center convention. A sample at noninteger feature coordinate $(u,v)$ uses neighboring pixels. Retaining those fractional coordinates avoids the boundary rounding of quantized ROI pooling.
 
-## Prerequisite concepts
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Implement Bilinear ROI Align | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Construct Instance Mask Targets | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Evaluate Per-Instance Mask IoU | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
+**Planned component problem:** Map Proposal Boxes to Feature-Map Coordinates. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Data and evaluation
+### Sample with ROIAlign
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+For feature map $F$ and continuous sample $(u,v)$,
 
-## Limitations and failure modes
+$$
+\mathcal B(F,u,v)=\sum_{i,j}F_{ij}
+\max(0,1-|u-j|)\max(0,1-|v-i|),
+$$
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+where only the four neighboring integer pixels have nonzero weight. Sample points within each region bin are then aggregated. Coordinate offsets, samples-per-bin, border handling, and reduction mode are contract choices; they must match the expected ROIAlign variant.
 
-## Implementation decomposition
 
-1. Implement Bilinear ROI Align.
-2. Construct Instance Mask Targets.
-3. Evaluate Per-Instance Mask IoU.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+**Planned component problems:** Implement bilinear ROI sampling. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Problem blueprints
+### Predict an instance mask
 
-### Problem: Implement Bilinear ROI Align
+For a matched instance of class $c$ and binary target mask $Y$, supervise that class’s mask logits $M_c$ using per-pixel binary cross-entropy:
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the implement bilinear roi align component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+\mathcal L_{\mathrm{mask}}=-\frac1{HW}\sum_{u,v}
+\left[Y_{uv}\log\sigma(M_{c,uv})+(1-Y_{uv})\log(1-\sigma(M_{c,uv}))\right].
+$$
 
-### Problem: Construct Instance Mask Targets
+This is a sigmoid mask objective for the selected class, not a pixel-wise softmax competing across every category. The total training loss adds classification and box regression. [Box IoU](/problems/box-iou-broadcast) is related localization background; mask IoU must compare pixel sets.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the construct instance mask targets component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Per-Instance Mask IoU
+**Planned component problems:** Construct class-specific mask targets; Compare instance-mask IoU and box IoU. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate per-instance mask iou component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+- **Related implementation skill:** [Compute Pairwise Bounding-Box IoU](/problems/box-iou-broadcast). This isolates a supporting mechanism, not this paper's complete method.
 
-- Show the same ROI sampled with aligned and rounded coordinates.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+**Planned components:**
 
-## MLOps and deployment extensions
+- Map Proposal Boxes to Feature-Map Coordinates.
+- Implement bilinear ROI sampling.
+- Construct class-specific mask targets.
+- Compare instance-mask IoU and box IoU.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Canonical sources
+## Why this matters on a robot
 
-- [Primary arXiv record](https://arxiv.org/abs/1703.06870)
-- [Open-access author manuscript](https://arxiv.org/pdf/1703.06870)
+Instance boundaries matter when a grasp must avoid an adjacent object. Small alignment errors can change a mask around thin handles or contact surfaces. Correct mask interpolation does not establish object identity, depth accuracy, or grasp feasibility.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Sources and scope
 
+[Primary paper](https://arxiv.org/abs/1703.06870) · [Open-access manuscript](https://arxiv.org/pdf/1703.06870)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

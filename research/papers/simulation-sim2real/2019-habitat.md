@@ -16,102 +16,67 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Configure agent sensors","detail":"Render observations from a calibrated agent pose.","column":0,"row":0,"section":"Configure agent sensors","problem_slugs":["se3-transform-points"],"planned_problems":["Validate a Navigation Episode"]},{"id":"stage-2","title":"Run a navigation episode","detail":"Follow a task goal using only permitted observations.","column":1,"row":0,"section":"Run a navigation episode","problem_slugs":[],"planned_problems":["Replay a Seeded Navigation Trajectory"]},{"id":"stage-3","title":"Measure success and efficiency","detail":"Use path-length-aware evaluation and held-out scenes.","column":2,"row":0,"section":"Measure success and efficiency","problem_slugs":[],"planned_problems":["Compute Success and SPL"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"sensor observations"},{"from":"stage-2","to":"stage-3","label":"episode paths"}]}
 ---
 
-# Habitat: A Platform for Embodied AI Research
+## Core paper explanation
 
-## Agent brief
+Habitat separates fast configurable 3D simulation from task definitions and embodied-agent evaluation. The original paper emphasizes scalable visual navigation and cross-dataset generalization.
 
-Study embodied navigation simulation through standardized task and observation contracts. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study embodied navigation simulation through standardized task and observation contracts.
+### Configure agent sensors
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A sensor pose composes as $T_{WS}=T_{WA}T_{AS}$, with world $W$, agent $A$, and sensor $S$. Intrinsics, sensor height, action step size, and collision geometry affect navigation difficulty and must be pinned.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Supporting prerequisite: [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Validate a Navigation Episode — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Navigation Episode | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Compute Success and SPL | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Replay a Seeded Navigation Trajectory | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Run a navigation episode
 
-## Data and evaluation
+For start and goal, let $\ell_i$ be shortest feasible path length and $p_i$ the agent's traveled length. Both use the same scene geometry and distance convention. A stop action and success-radius rule determine completion; proximity alone may not satisfy the protocol.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Replay a Seeded Navigation Trajectory — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Measure success and efficiency
 
-1. Validate a Navigation Episode.
-2. Compute Success and SPL.
-3. Replay a Seeded Navigation Trajectory.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Success weighted by path length is
+$$\mathrm{SPL}=\frac1N\sum_i S_i\frac{\ell_i}{\max(p_i,\ell_i)}.$$
+Handle zero-length episodes according to the benchmark specification. SPL combines completion and efficiency but does not measure every safety or exploration property.
 
-## Problem blueprints
 
-### Problem: Validate a Navigation Episode
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a navigation episode component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Compute Success and SPL — unreviewed idea; contract and evaluator required.
 
-### Problem: Compute Success and SPL
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute success and spl component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Replay a Seeded Navigation Trajectory
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the replay a seeded navigation trajectory component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Navigation Episode — unreviewed idea; contract and evaluator required.
+- Replay a Seeded Navigation Trajectory — unreviewed idea; contract and evaluator required.
+- Compute Success and SPL — unreviewed idea; contract and evaluator required.
 
-- Render an agent path over a map with goal and collision indicators.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Fast navigation simulation enables large experience budgets. Sensor idealization, scene reconstruction gaps, and a mismatch between simulated and real collision geometry can limit transfer.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1904.01201)
-- [Open-access author manuscript](https://arxiv.org/pdf/1904.01201)
+[Primary paper](https://arxiv.org/abs/1904.01201) · [Open-access manuscript](https://arxiv.org/pdf/1904.01201)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

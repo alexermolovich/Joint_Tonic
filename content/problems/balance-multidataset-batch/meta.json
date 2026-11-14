@@ -1,0 +1,78 @@
+{
+  "slug": "balance-multidataset-batch",
+  "title": "Balance a Multi-Dataset Training Mixture",
+  "version": "1.0.0",
+  "number": 324,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "dataset-mixtures",
+    "sampling-policy",
+    "reproducibility"
+  ],
+  "minutes": 30,
+  "framework": "Python",
+  "entrypoint": "allocate_dataset_batch",
+  "paperIds": [
+    "2024-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Allocate one bounded batch across datasets according to configured weights with exact deterministic rounding.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; actual local bubblewrap Run and Submit verified",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": []
+  },
+  "physical_contract": "Dataset weights and batch counts are dimensionless. The caller defines whether one item is an episode or transition; this function allocates counts without drawing data, changing frames or estimating durations.",
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "equal weights and deterministic remainder tie",
+      "unequal weights including zero weight",
+      "zero-sized batch"
+    ],
+    "hidden_case_families": [
+      "exact integer remainder arithmetic",
+      "large weights and batch size",
+      "typed bounds and positive-total requirement",
+      "stable source order and preservation"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "0c8d44bcc254b5c7adfe4838ecd163ab97c6da0fe5c4197540e527bbfcf45456"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:0c8d44bcc254b5c7adfe4838ecd163ab97c6da0fe5c4197540e527bbfcf45456",
+    "evaluator_sha256": "0c8d44bcc254b5c7adfe4838ecd163ab97c6da0fe5c4197540e527bbfcf45456",
+    "generated_fixture_hash": "0c8d44bcc254b5c7adfe4838ecd163ab97c6da0fe5c4197540e527bbfcf45456"
+  },
+  "provenance": {
+    "authoring_notes": "Open X-Embodiment motivates deliberate mixture composition. Hamilton largest-remainder allocation is an original deterministic batch-construction exercise, not a claim that RT-X uses this exact sampler.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2310.08864"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2024-open-x-embodiment.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

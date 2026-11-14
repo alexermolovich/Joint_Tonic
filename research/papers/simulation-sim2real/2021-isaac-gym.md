@@ -16,102 +16,63 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Create parallel environments","detail":"Instantiate batched robots with explicit state indexing.","column":0,"row":0,"section":"Create parallel environments","problem_slugs":[],"planned_problems":["Batch Independent Simulator States"]},{"id":"stage-2","title":"Step physics and policy on device","detail":"Keep observations, actions, and rollouts resident on the GPU.","column":1,"row":0,"section":"Step physics and policy on device","problem_slugs":[],"planned_problems":["Measure Simulation and Learning Throughput"]},{"id":"stage-3","title":"Reset and train reproducibly","detail":"Apply per-environment resets and log randomized parameters.","column":2,"row":0,"section":"Reset and train reproducibly","problem_slugs":[],"planned_problems":["Reset Completed Environments Selectively"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"physics tensors"},{"from":"stage-2","to":"stage-3","label":"batched rollouts"}]}
 ---
 
-# Isaac Gym: High Performance GPU-Based Physics Simulation For Robot Learning
+## Core paper explanation
 
-## Agent brief
+Isaac Gym keeps physics simulation and policy learning on the GPU, passing state through tensor interfaces instead of repeatedly moving data through the CPU. Its contribution is throughput-oriented simulation infrastructure, distinct from the later Isaac Sim product interface.
 
-Study GPU-parallel simulation and learning through batched environment and rollout interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study GPU-parallel simulation and learning through batched environment and rollout interfaces.
+### Create parallel environments
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For $B$ environments and $J$ joints, a joint-state view may have shape $B\times J\times2$ for position and velocity. Actual flattened tensor layouts and actor indices must follow the API. Root pose, joint state, and rigid-body state are different buffers.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Batch Independent Simulator States — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Batch Independent Simulator States | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Reset Completed Environments Selectively | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Measure Simulation and Learning Throughput | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Step physics and policy on device
 
-## Data and evaluation
+A useful timing model is $T_{\mathrm{iter}}=T_{\mathrm{physics}}+T_{\mathrm{policy}}+T_{\mathrm{learning}}+T_{\mathrm{sync}}$. This is a teaching profiling decomposition. Eliminating CPU transfers reduces one bottleneck but does not remove synchronization, rendering, or memory limits.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Measure Simulation and Learning Throughput — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Reset and train reproducibly
 
-1. Batch Independent Simulator States.
-2. Reset Completed Environments Selectively.
-3. Measure Simulation and Learning Throughput.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Reset mask $m_b$ selects which states return to initialized values; continuing environments must retain their trajectories. Store randomization distributions, simulator version, solver parameters, and control decimation. High samples per second is not equivalent to high sample efficiency.
 
-## Problem blueprints
 
-### Problem: Batch Independent Simulator States
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the batch independent simulator states component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Reset Completed Environments Selectively — unreviewed idea; contract and evaluator required.
 
-### Problem: Reset Completed Environments Selectively
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the reset completed environments selectively component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Measure Simulation and Learning Throughput
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure simulation and learning throughput component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Batch Independent Simulator States — unreviewed idea; contract and evaluator required.
+- Measure Simulation and Learning Throughput — unreviewed idea; contract and evaluator required.
+- Reset Completed Environments Selectively — unreviewed idea; contract and evaluator required.
 
-- Display many parallel environments with per-environment reset markers.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+GPU rollouts make large-scale policy training accessible. Correlated environments, incorrect reset masks, and unrealistic contact settings can produce many low-value samples quickly.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2108.10470)
-- [Open-access author manuscript](https://arxiv.org/pdf/2108.10470)
+[Primary paper](https://arxiv.org/abs/2108.10470) · [Open-access manuscript](https://arxiv.org/pdf/2108.10470)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

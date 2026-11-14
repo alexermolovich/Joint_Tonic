@@ -1,0 +1,88 @@
+{
+  "slug": "detect-pipeline-feedback-loops",
+  "title": "Detect Feedback Loops in an ML Pipeline",
+  "version": "1.0.0",
+  "number": 307,
+  "difficulty": "Medium",
+  "domain": "MLOps",
+  "topics": [
+    "dependency-management",
+    "feedback-cycles"
+  ],
+  "minutes": 30,
+  "framework": "Python",
+  "entrypoint": "feedback_groups",
+  "paperIds": [
+    "2015-hidden-technical-debt"
+  ],
+  "prerequisites": [
+    "dependency-graph-blast-radius"
+  ],
+  "visualization": "markdown",
+  "summary": "Group declared pipeline components that participate in the same directed feedback cycle.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; actual local bubblewrap Run and Submit verified",
+    "dependencies": {
+      "numpy": "2.2.4",
+      "torch": "2.6.0+cpu"
+    },
+    "platform": "linux-x86_64-cpu",
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "budget_status": "actual shared worker caps; per-process address-space limit",
+    "solution_dependencies": []
+  },
+  "physical_contract": {
+    "frames": [],
+    "units": {
+      "ids": "dimensionless component labels"
+    },
+    "axes": "Directed edge from producer/influencer to consumer.",
+    "timestamp_assumptions": "One dependency snapshot; cycles may span future collection/training runs.",
+    "batching": "One directed graph per call."
+  },
+  "grading": {
+    "mode": "exact",
+    "seed": 20261113,
+    "rtol": 0,
+    "atol": 0,
+    "public_case_families": [
+      "one feedback group",
+      "self-loop and two-node cycle",
+      "empty graph"
+    ],
+    "hidden_case_families": [
+      "acyclic descendants",
+      "overlapping cycles",
+      "duplicate edges",
+      "long iterative traversal",
+      "invalid IDs and bounds"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "583000eedad09ec77981d31fe8e657f4d309c7899545b1204ab42571c807e470"
+  },
+  "fixtures": {
+    "source": "original synthetic examples",
+    "license": "CC0-1.0",
+    "version_or_hash": "sha256:583000eedad09ec77981d31fe8e657f4d309c7899545b1204ab42571c807e470",
+    "evaluator_sha256": "583000eedad09ec77981d31fe8e657f4d309c7899545b1204ab42571c807e470",
+    "generated_fixture_hash": "583000eedad09ec77981d31fe8e657f4d309c7899545b1204ab42571c807e470"
+  },
+  "provenance": {
+    "authoring_notes": "The paper motivates inspecting direct and indirect feedback. Strongly connected components are an original finite-graph teaching tool; declared graph cycles do not prove a harmful statistical feedback effect, and absent edges can hide real loops.",
+    "primary_urls": [
+      "https://proceedings.neurips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html"
+    ],
+    "implementation_urls": [],
+    "paper_card": "research/papers/mlops-sim2real/2015-hidden-technical-debt.md",
+    "manifest": "research/manifests/mlops-sim2real.md"
+  }
+}

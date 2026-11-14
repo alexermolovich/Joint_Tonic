@@ -30,92 +30,76 @@ modalities:
 track_role: "core"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Sample physical parameters, run policy rollouts under those dynamics, and evaluate transfer across parameter and hardware conditions.","nodes":[{"id":"stage-1","title":"Sample a physical model","detail":"Choose valid simulator parameters with declared units and reset semantics.","column":0,"row":0,"section":"Sample a physical model","problem_slugs":["sample-dynamics-distributions"],"planned_problems":["Version a Simulation Scenario Distribution"]},{"id":"stage-2","title":"Optimize expected return","detail":"Train a policy across the parameter distribution rather than one nominal environment.","column":1,"row":0,"section":"Optimize expected return","problem_slugs":[],"planned_problems":["Aggregate Mean and Worst-Case Policy Returns"]},{"id":"stage-3","title":"Evaluate parameter slices","detail":"Separate average success from weak regions of the physical parameter space.","column":2,"row":0,"section":"Evaluate parameter slices","problem_slugs":[],"planned_problems":["Quantify Calibration Sensitivity","Choose Randomization Bounds from Safety Constraints","Gate Sim-to-Real Release with Robustness Evidence"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"randomized dynamics"},{"from":"stage-2","to":"stage-3","label":"trained controller"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use a simple control environment to teach training and evaluation across distributions of mass, friction, damping, delay, and calibration error. Make worst-slice behavior visible alongside average return.
+Dynamics randomization trains a policy across simulated physical models rather than one nominal model. Randomized masses, friction, damping, actuation, and other parameters expose the policy to uncertainty that can resemble the sim-to-real gap. The distribution and control interface determine what robustness is actually being trained; a robust policy under one parameter family can still fail outside it.
 
-## Contribution
+## Execution flow
 
-The method trains a policy under randomized simulator dynamics so the policy adapts to parameters that differ from any single calibrated simulator, improving transfer to a physical robot without real-world policy training.
+Sample physical parameters, run policy rollouts under those dynamics, and evaluate transfer across parameter and hardware conditions.
 
-## Prerequisite concepts
+### Sample a physical model
 
-- Markov decision processes and discounted return
-- Basic feedback control or reinforcement learning
-- Rigid-body parameters and actuator delay
-- Robust statistics and seeded simulation
+Let $\xi$ specify dynamics and let $P_\xi(s_{t+1}\mid s_t,a_t)$ be the corresponding transition model. Sample $\xi\sim p(\xi)$ at the declared reset boundary. Mass must remain positive, inertia physically valid, and latency expressed in the same time unit as the simulator.
 
-## Essential theory
 
-Let \(\phi\) be dynamics parameters and \(\tau\) a trajectory induced by policy \(\pi_\theta\). The randomized objective is
+**Component practice**
+
+- Runnable component: [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Implements the bounded learning contract linked here, not the complete paper.
+- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
+
+### Optimize expected return
+
+The objective can be expressed as
 
 $$
-J(\theta)=\mathbb{E}_{\phi\sim p(\phi),\;\tau\sim p(\tau\mid\pi_\theta,\phi)}
+J(\theta)=\mathbb E_{\xi\sim p,\,\tau\sim\pi_\theta,P_\xi}
 \left[\sum_{t=0}^{T-1}\gamma^t r(s_t,a_t)\right].
 $$
 
-For deployment, also track a tail or worst-slice metric, for example
+The policy may not directly observe $\xi$, so history can help infer its effects. Resampling every physics step is a different problem from keeping parameters fixed for an episode; the choice changes what the policy must learn.
 
-$$
-J_{\mathrm{robust}}=\min_{b\in\mathcal{B}}\;\mathbb{E}[R(\tau)\mid \phi\in b],
-$$
 
-where \(\mathcal{B}\) partitions the allowed dynamics range.
+**Component practice**
 
-## Method map
+- Aggregate Mean and Worst-Case Policy Returns — unreviewed idea; contract and evaluator required.
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Dynamics sampler | Parameter distributions and seed | Episode dynamics record | Samples are reproducible and physically valid | Implement bounded mass/friction/delay sampling |
-| Environment wrapper | Base simulator and dynamics record | Parameterized transitions | The episode uses one traceable parameter realization | Implement delayed actuation or one randomized property |
-| Robust evaluator | Returns and parameter bins | Mean, tail, and worst-bin metrics | Aggregate results retain parameter-slice provenance | Compute robust return summaries |
+### Evaluate parameter slices
 
-- Simulator with parameterized dynamics
-- Training distribution over physical parameters and delays
-- Policy optimization loop
-- Nominal, randomized, and held-out evaluation suites
-- Calibration-error and real-robot transfer tests
+For parameter bucket $b$, estimate $\hat J_b=N_b^{-1}\sum_nR_n$. Report $N_b$, uncertainty, and failure categories. A useful extension is a lower-tail return statistic, but it should be labeled separately from the paper’s own evaluation. Replay exact physics parameters and seeds when investigating failures.
 
-## Data and evaluation
 
-Use a 1D/2D pushing or reaching environment. Evaluate mean return, success rate, tail performance, parameter-slice curves, and sensitivity outside the training range over fixed seed sets.
+**Component practice**
 
-## Limitations and failure modes
+- Quantify Calibration Sensitivity — unreviewed idea; contract and evaluator required.
+- Choose Randomization Bounds from Safety Constraints — unreviewed idea; contract and evaluator required.
+- Gate Sim-to-Real Release with Robustness Evidence — unreviewed idea; contract and evaluator required.
 
-Poorly chosen ranges can produce unstable or unrealistic simulations, and broad training can reduce nominal performance. Simulation still omits unmodeled effects, wear, contact complexity, and observation failures.
+## Implement the components
 
-## Implementation decomposition
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-1. Parameterize mass, friction, gain, delay, and observation noise.
-2. Sample dynamics from a versioned distribution per episode.
-3. Train or evaluate a policy over fixed seed/parameter suites.
-4. Aggregate mean, quantile, and worst-bin performance.
-5. Select deployment ranges with explicit safety constraints.
+- **Runnable component:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions).
 
-## Problem blueprints
+**Planned component problems:**
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Dynamics Parameter Sampler | Simulation utility | Easy | Distribution spec and seed | Parameter sets plus provenance | Bounds, determinism, invalid-parameter rejection |
-| Delayed Actuator Wrapper | Control simulation | Medium | Action sequence and delay model | Applied actions by time step | Queue semantics, variable delay, reset behavior |
-| Robust Return Aggregator | Evaluation | Medium | Returns and parameter bins | Mean, quantiles, worst-bin score | Correct grouping, empty bins, deterministic summaries |
-| Safe Randomization Bounds | Optimization | Hard | Evaluation grid and constraints | Feasible bounds maximizing coverage | Constraint satisfaction, tie-breaking, held-out score |
+- Version a Simulation Scenario Distribution — unreviewed idea; contract and evaluator required.
+- Aggregate Mean and Worst-Case Policy Returns — unreviewed idea; contract and evaluator required.
+- Quantify Calibration Sensitivity — unreviewed idea; contract and evaluator required.
+- Choose Randomization Bounds from Safety Constraints — unreviewed idea; contract and evaluator required.
+- Gate Sim-to-Real Release with Robustness Evidence — unreviewed idea; contract and evaluator required.
 
-## Visual teaching plan
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-- Interactive mass/friction/delay sliders with a live trajectory overlay.
-- Heatmap of success across two dynamics parameters, showing train range and held-out region.
-- Distribution plot comparing nominal-only and randomized policy returns.
-- Timeline animation of commanded versus delayed/applied actions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Randomization can make a policy less brittle to physical mismatch, but unmodeled backlash, contacts, wear, and sensor delay can remain. Ensure the randomized simulator itself is stable; otherwise the policy may learn around numerical artifacts instead of real uncertainty.
 
-Treat the dynamics distribution as a versioned artifact linked to simulator and controller versions. Validate sampled parameters for physical plausibility, maintain fixed robustness suites in CI, and require staged hardware tests before fleet rollout.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/1710.06537) · [Open-access manuscript](https://arxiv.org/pdf/1710.06537)
 
-- [arXiv landing page](https://arxiv.org/abs/1710.06537)
-- [arXiv PDF](https://arxiv.org/pdf/1710.06537)
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

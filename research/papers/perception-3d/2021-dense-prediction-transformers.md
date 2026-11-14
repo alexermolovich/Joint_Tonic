@@ -16,102 +16,78 @@ modalities: ["rgb","depth","point-clouds"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Extract intermediate image tokens, reassemble spatial maps, and fuse them into a dense prediction.","nodes":[{"id":"stage-1","title":"Extract intermediate tokens","detail":"Retain several backbone depths rather than only a final classifier token.","column":0,"row":0,"section":"Extract intermediate tokens","problem_slugs":[],"planned_problems":["Collect Intermediate Transformer Tokens with Patch-Grid Metadata"]},{"id":"stage-2","title":"Reassemble and fuse maps","detail":"Project token channels, reshape the patch grid, and create multiple spatial scales.","column":1,"row":0,"section":"Reassemble and fuse maps","problem_slugs":[],"planned_problems":["Reassemble tokens into feature maps","Fuse multi-resolution dense features"]},{"id":"stage-3","title":"Evaluate dense outputs","detail":"Choose metrics that match the output semantics, especially relative versus metric depth.","column":2,"row":0,"section":"Evaluate dense outputs","problem_slugs":[],"planned_problems":["Compare aligned and metric depth errors"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"intermediate tokens"},{"from":"stage-2","to":"stage-3","label":"fused features"}]}
 ---
 
-# Vision Transformers for Dense Prediction
+## Core paper explanation
 
-## Agent brief
+Dense Prediction Transformers adapt transformer image features to pixel-wise tasks such as depth and segmentation. Intermediate transformer tokens are reassembled into spatial feature maps at several resolutions, then fused by a dense decoder. This bridges global-context token processing with outputs that must remain aligned to individual image locations.
 
-Reassemble transformer features into a dense spatial representation for prediction tasks. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Extract intermediate image tokens, reassemble spatial maps, and fuse them into a dense prediction.
 
-Reassemble transformer features into a dense spatial representation for prediction tasks.
+### Extract intermediate tokens
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For patch grid $h\times w$ and feature width $d$, an intermediate token sequence has $hw$ spatial entries plus any readout token. A readout-processing operator combines or removes the global token before spatial reconstruction:
 
-## Prerequisite concepts
+$$
+Z_\ell=\operatorname{Readout}(T_\ell)\in\mathbb R^{hw\times d_\ell}.
+$$
 
-- Array broadcasting, coordinate conventions, supervised losses, and detection/reconstruction metrics.
+Patch order must be preserved. Treating the readout token as one extra image patch shifts every subsequent location.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Reassemble Tokens into Feature Maps | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Fuse Multi-Resolution Dense Features | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
-| Compute Scale-Invariant Depth Error | Synthetic images, point sets, or feature tensors with documented spatial dimensions | Spatial features, geometric predictions, or per-example metrics | Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. | One bounded function or validation stage |
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+**Planned component problem:** Collect Intermediate Transformer Tokens with Patch-Grid Metadata. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Limitations and failure modes
+### Reassemble and fuse maps
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+A reassembly operator can be written
 
-## Implementation decomposition
+$$
+F_\ell=\operatorname{Resample}_\ell
+\left(\operatorname{Reshape}_{h,w}(Z_\ell W_\ell)\right).
+$$
 
-1. Reassemble Tokens into Feature Maps.
-2. Fuse Multi-Resolution Dense Features.
-3. Compute Scale-Invariant Depth Error.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The decoder progressively fuses these maps through residual convolutional processing and resampling. Target shapes, interpolation conventions, and padding must be consistent across levels. Global context does not remove the need for correct pixel alignment.
 
-## Problem blueprints
 
-### Problem: Reassemble Tokens into Feature Maps
+**Planned component problems:** Reassemble tokens into feature maps; Fuse multi-resolution dense features. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the reassemble tokens into feature maps component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+### Evaluate dense outputs
 
-### Problem: Fuse Multi-Resolution Dense Features
+For a relative-depth predictor, scale/shift ambiguity can be analyzed with a teaching alignment objective
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the fuse multi-resolution dense features component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+$$
+(s^*,t^*)=\arg\min_{s,t}\sum_{i\in\Omega}(s\hat d_i+t-d_i)^2.
+$$
 
-### Problem: Compute Scale-Invariant Depth Error
+$\Omega$ is the valid-pixel set; $d$ must use the same depth or inverse-depth convention as $\hat d$. This least-squares alignment is a diagnostic, not a substitute for the exact training loss of every DPT configuration. A metric-depth application must evaluate unaligned physical accuracy as well.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compute scale-invariant depth error component.
-- **Inputs:** Synthetic images, point sets, or feature tensors with documented spatial dimensions; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Spatial features, geometric predictions, or per-example metrics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check tensor dimensions, empty/minimal inputs, permutation or coordinate invariants, and numerical agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-## Visual teaching plan
+**Planned component problems:** Compare aligned and metric depth errors. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- Link token positions to reconstructed dense depth maps.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Implement the components
 
-## MLOps and deployment extensions
+The stage-specific implementation ideas above are not runnable yet. A reviewed blueprint and evaluator are required before publication.
 
-- Version camera preprocessing and calibration with the model; profile latency, memory, and errors by object scale, lighting, and viewpoint.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+**Planned components:**
 
-## Canonical sources
+- Collect Intermediate Transformer Tokens with Patch-Grid Metadata.
+- Reassemble tokens into feature maps.
+- Fuse multi-resolution dense features.
+- Compare aligned and metric depth errors.
 
-- [Primary arXiv record](https://arxiv.org/abs/2103.13413)
-- [Open-access author manuscript](https://arxiv.org/pdf/2103.13413)
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+## Why this matters on a robot
 
+A visually sharp relative-depth map can still have the wrong metric scale for navigation or grasping. Preserve camera preprocessing and output interpretation, and distinguish edge quality from absolute range accuracy. Missing depth targets require masks, not zero-valued supervision.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2103.13413) · [Open-access manuscript](https://arxiv.org/pdf/2103.13413)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

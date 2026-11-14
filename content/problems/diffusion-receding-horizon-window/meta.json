@@ -1,0 +1,23 @@
+{
+  "slug": "diffusion-receding-horizon-window",
+  "title": "Execute a Receding-Horizon Action Window",
+  "version": "1.0.0",
+  "number": 209,
+  "difficulty": "Easy",
+  "domain": "Robot learning",
+  "topics": [
+    "2023-diffusion-policy",
+    "policy-components"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "receding_horizon_window",
+  "paperIds": [
+    "2023-diffusion-policy"
+  ],
+  "prerequisites": [
+    "act-sliding-action-chunks"
+  ],
+  "visualization": "markdown",
+  "summary": "Extract the controller-supported prefix of a predicted future trajectory after a specified alignment offset."
+}

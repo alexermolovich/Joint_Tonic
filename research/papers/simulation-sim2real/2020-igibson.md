@@ -16,102 +16,65 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build an interactive scene","detail":"Load rigid and articulated assets with physical properties.","column":0,"row":0,"section":"Build an interactive scene","problem_slugs":[],"planned_problems":["Validate a Scene Interaction Graph"]},{"id":"stage-2","title":"Randomize and observe","detail":"Vary visual and physical conditions while generating sensor data.","column":1,"row":0,"section":"Randomize and observe","problem_slugs":["validate-robot-episodes"],"planned_problems":["Replay Sensor Streams from a Fixed Seed"]},{"id":"stage-3","title":"Interact and evaluate transfer","detail":"Test tasks on declared scene and parameter holdouts.","column":2,"row":0,"section":"Interact and evaluate transfer","problem_slugs":[],"planned_problems":["Measure Domain Shift Between Simulated Scenes"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"scene state"},{"from":"stage-2","to":"stage-3","label":"policy actions"}]}
 ---
 
-# iGibson 1.0: a Simulation Environment for Interactive Tasks in Large Realistic Scenes
+## Core paper explanation
 
-## Agent brief
+iGibson 1.0 combines interactive indoor scenes, articulated objects, virtual sensors, domain randomization, and planning interfaces. It supports studying navigation and manipulation in environments whose objects can physically change state.
 
-Study interactive indoor robot simulation through scene, object, and sensor contracts. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study interactive indoor robot simulation through scene, object, and sensor contracts.
+### Build an interactive scene
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+An articulated object state contains joint coordinates $q_o$ in addition to its base pose. A door hinge angle and a drawer displacement have different units. Collision geometry, mass, friction, and joint limits are part of the scene contract.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Validate a Scene Interaction Graph — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Scene Interaction Graph | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Replay Sensor Streams from a Fixed Seed | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Measure Domain Shift Between Simulated Scenes | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
+### Randomize and observe
 
-## Data and evaluation
+Training samples parameters $\theta\sim p(\theta)$ and observations from the resulting environment. A teaching objective is $\mathbb E_{\theta,\tau\sim\pi,P_\theta}[R(\tau)]$. Appearance randomization and dynamics randomization alter different parts of the agent's problem.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Replay Sensor Streams from a Fixed Seed — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Interact and evaluate transfer
 
-1. Validate a Scene Interaction Graph.
-2. Replay Sensor Streams from a Fixed Seed.
-3. Measure Domain Shift Between Simulated Scenes.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Evaluate success by scene and interaction type, not only pooled episode count. Keep randomization seeds and distributions attached to trajectories. Motion-planning demonstrations and learned policies can share task interfaces while using different information during generation.
 
-## Problem blueprints
 
-### Problem: Validate a Scene Interaction Graph
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a scene interaction graph component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Measure Domain Shift Between Simulated Scenes — unreviewed idea; contract and evaluator required.
 
-### Problem: Replay Sensor Streams from a Fixed Seed
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the replay sensor streams from a fixed seed component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Measure Domain Shift Between Simulated Scenes
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure domain shift between simulated scenes component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Scene Interaction Graph — unreviewed idea; contract and evaluator required.
+- Replay Sensor Streams from a Fixed Seed — unreviewed idea; contract and evaluator required.
+- Measure Domain Shift Between Simulated Scenes — unreviewed idea; contract and evaluator required.
 
-- Inspect interactive scene objects and their physical parameters.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Interactive homes expose dependencies such as opening a door before passing through it. Asset realism does not ensure correct hinge friction, contact forces, or real sensor noise.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2012.02924)
-- [Open-access author manuscript](https://arxiv.org/pdf/2012.02924)
+[Primary paper](https://arxiv.org/abs/2012.02924) · [Open-access manuscript](https://arxiv.org/pdf/2012.02924)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

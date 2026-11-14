@@ -16,102 +16,61 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Augment visual observations","detail":"Apply transformations intended to preserve action value.","column":0,"row":0,"section":"Augment visual observations","problem_slugs":[],"planned_problems":["Apply a Seeded Random-Shift Augmentation"]},{"id":"stage-2","title":"Average augmented targets","detail":"Reduce target variability across transformed successor views.","column":1,"row":0,"section":"Average augmented targets","problem_slugs":[],"planned_problems":["Average Augmented Bellman Targets"]},{"id":"stage-3","title":"Fit multiple current views","detail":"Train the critic to agree across augmentations.","column":2,"row":0,"section":"Fit multiple current views","problem_slugs":[],"planned_problems":["Compute a Multi-View Critic Regression Loss","Evaluate Policy Robustness to Visual Shifts"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"augmented next observations"},{"from":"stage-2","to":"stage-3","label":"shared targets"}]}
 ---
 
-# Image Augmentation Is All You Need: Regularizing Deep Reinforcement Learning from Pixels
+## Core paper explanation
 
-## Agent brief
+DrQ regularizes pixel-based reinforcement learning with image augmentations that should preserve task state. Averaging value targets and fitting multiple augmented views improves visual learning without a separate representation-pretraining objective.
 
-Regularize visual reinforcement learning through simple image augmentations and value learning. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Regularize visual reinforcement learning through simple image augmentations and value learning.
+### Augment visual observations
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Let $f(o,\nu)$ be an image transform with sampled parameter $\nu$. The intended invariance is $Q(f(o,\nu),a)\approx Q(o,a)$. Random shifts can satisfy this approximately; transformations that remove the manipulated object or change geometry may violate it.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Apply a Seeded Random-Shift Augmentation.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Apply a Seeded Random-Shift Augmentation | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Average Augmented Bellman Targets | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Evaluate Policy Robustness to Visual Shifts | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Average augmented targets
 
-## Data and evaluation
+The core target construction is
+$$y=r+\gamma(1-d)\frac1K\sum_{k=1}^K V_{\mathrm{target}}(f(o',\nu'_k)).$$
+Here $V_{\mathrm{target}}$ denotes the selected base algorithm's action/value target, including entropy terms when using SAC. The same physical transition supplies every view.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Average Augmented Bellman Targets.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Fit multiple current views
 
-1. Apply a Seeded Random-Shift Augmentation.
-2. Average Augmented Bellman Targets.
-3. Evaluate Policy Robustness to Visual Shifts.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Use
+$$L_Q=\frac1M\sum_{m=1}^M(Q(f(o,\nu_m),a)-y)^2.$$
+Keep image histories temporally consistent when applying transforms. Augmentation is a hypothesis about invariance, not a guarantee that every visual perturbation preserves the control problem.
 
-## Problem blueprints
 
-### Problem: Apply a Seeded Random-Shift Augmentation
+**Planned exercise:** Compute a Multi-View Critic Regression Loss.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the apply a seeded random-shift augmentation component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Evaluate Policy Robustness to Visual Shifts.
 
-### Problem: Average Augmented Bellman Targets
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the average augmented bellman targets component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Evaluate Policy Robustness to Visual Shifts
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate policy robustness to visual shifts component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Augment visual observations:** Apply a Seeded Random-Shift Augmentation (planned).
+- **Average augmented targets:** Average Augmented Bellman Targets (planned).
+- **Fit multiple current views:** Compute a Multi-View Critic Regression Loss (planned); Evaluate Policy Robustness to Visual Shifts (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Compare observation crops and the stability of their action/value predictions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Visual regularization can reduce camera-background overfitting. Cropping away a contact point or independently shifting stacked frames can create false motion and harm control.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2004.13649) · [Open-access manuscript](https://arxiv.org/pdf/2004.13649)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2004.13649)
-- [Open-access author manuscript](https://arxiv.org/pdf/2004.13649)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

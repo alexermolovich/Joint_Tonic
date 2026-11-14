@@ -1,128 +1,182 @@
 ---
 schema_version: 1
-paper_id: "2021-robomimic"
-title: "What Matters in Learning from Offline Human Demonstrations for Robot Manipulation"
+paper_id: 2021-robomimic
+title: >-
+  What Matters in Learning from Offline Human Demonstrations for Robot
+  Manipulation
 authors:
-  - "Ajay Mandlekar"
-  - "Danfei Xu"
-  - "Josiah Wong"
-  - "Soroush Nasiriany"
-  - "Chen Wang"
-  - "Rohun Kulkarni"
-  - "Li Fei-Fei"
-  - "Silvio Savarese"
-  - "Yuke Zhu"
-  - "Roberto Martin-Martin"
+  - Ajay Mandlekar
+  - Danfei Xu
+  - Josiah Wong
+  - Soroush Nasiriany
+  - Chen Wang
+  - Rohun Kulkarni
+  - Li Fei-Fei
+  - Silvio Savarese
+  - Yuke Zhu
+  - Roberto Martin-Martin
 year: 2021
-venue_or_status: "CoRL 2021 (PMLR proceedings 2022)"
-primary_url: "https://arxiv.org/abs/2108.03298"
-pdf_url: "https://arxiv.org/pdf/2108.03298"
-local_pdf: "./2021-robomimic.pdf"
-sha256: "18283ff9cbb9645de4ccf32ca2de472f452e89761287e7ed578e3a1066bea5f1"
+venue_or_status: CoRL 2021 (PMLR proceedings 2022)
+primary_url: 'https://arxiv.org/abs/2108.03298'
+pdf_url: 'https://arxiv.org/pdf/2108.03298'
+local_pdf: ./2021-robomimic.pdf
+sha256: 18283ff9cbb9645de4ccf32ca2de472f452e89761287e7ed578e3a1066bea5f1
 bytes: 10782355
 pages: 36
 topics:
-  - "imitation-learning"
-  - "offline-rl"
-  - "robot-demonstrations"
-  - "reproducibility"
-  - "evaluation"
+  - imitation-learning
+  - offline-rl
+  - robot-demonstrations
+  - reproducibility
+  - evaluation
 modalities:
-  - "rgb"
-  - "wrist-camera"
-  - "proprioception"
-  - "actions"
-  - "trajectories"
-track_role: "foundation"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+  - rgb
+  - wrist-camera
+  - proprioception
+  - actions
+  - trajectories
+track_role: foundation
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Construct valid demonstration windows, train an offline policy, then
+    evaluate closed-loop behavior across tasks and data-quality conditions.
+  nodes:
+    - id: stage-1
+      title: Construct episode windows
+      detail: >-
+        Batch temporal data without crossing episode boundaries or leaking
+        evaluation episodes.
+      column: 0
+      row: 0
+      section: Construct episode windows
+      problem_slugs:
+        - act-sliding-action-chunks
+        - validate-robot-episodes
+        - scene-safe-trajectory-split
+        - batch-variable-robot-episodes
+      planned_problems: []
+    - id: stage-2
+      title: Fit an offline policy
+      detail: >-
+        Optimize a chosen imitation or offline-learning objective on fixed
+        demonstrations.
+      column: 1
+      row: 0
+      section: Fit an offline policy
+      problem_slugs: []
+      planned_problems:
+        - Compute a Masked Behavior-Cloning Log-Likelihood
+    - id: stage-3
+      title: Select with rollout evidence
+      detail: >-
+        Measure actual task success and uncertainty on held-out evaluation
+        conditions.
+      column: 2
+      row: 0
+      section: Select with rollout evidence
+      problem_slugs:
+        - demonstration-quality-performance
+        - validation-loss-rollout-ranking
+        - offline-rollout-checkpoint-gate
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: demonstration batches
+    - from: stage-2
+      to: stage-3
+      label: candidate policies
 ---
 
-## Agent brief
+## Core paper explanation
 
-Build reliable dataset and evaluation utilities for imitation learning from variable-quality human demonstrations. The best first problems cover trajectories, batching, policy selection, and success metrics rather than reproducing every algorithm.
+robomimic studies offline robot learning from human demonstrations of different quality and provides reproducible data and learning tools. Its experiments show that dataset composition, observation/action interfaces, temporal modeling, and policy selection materially affect success. A low supervised loss does not necessarily identify the policy that performs best when its own actions change future observations.
 
-## Contribution
+## Execution flow
 
-The work compares offline learning choices across simulated and real manipulation tasks, demonstration qualities, observation types, and algorithms. It shows that temporal models, data quality, observation design, and checkpoint selection materially affect results.
+Construct valid demonstration windows, train an offline policy, then evaluate closed-loop behavior across tasks and data-quality conditions.
 
-## Prerequisite concepts
+### Construct episode windows
 
-- Supervised learning and recurrent networks
-- Markov decision processes and behavior cloning
-- Variable-length sequence batching
-- Train/validation splits and rollout evaluation
-
-## Essential theory
-
-For a trajectory dataset \(D\) containing observation-action pairs, a basic behavior-cloning objective is
+For episode length $T$ and window horizon $H$, a valid unpadded start satisfies $0\le t\le T-H$. A padded window uses mask
 
 $$
-\mathcal{L}_{\mathrm{BC}}(\theta)=\frac{1}{|D|}\sum_{(o_t,a_t)\in D}\lVert \pi_\theta(o_{\le t})-a_t\rVert_2^2.
+M_k=\mathbf1[t+k<T],\qquad k=0,\ldots,H-1.
 $$
 
-The history \(o_{\le t}\) matters when demonstrations are non-Markovian. Rollout success is estimated separately from training loss:
+Keep observation/action alignment and source episode identity. [Robot episode validation](/problems/validate-robot-episodes) checks related shape, value, and timing contracts before windowing.
+
+
+**Component practice**
+
+- Supporting prerequisite: [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Runnable component: [Split Robot Trajectories Without Scene Leakage](/problems/scene-safe-trajectory-split). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Batch Variable-Length Episodes with Masks](/problems/batch-variable-robot-episodes). Uses the bounded contract; no full paper reproduction is claimed.
+
+
+### Fit an offline policy
+
+For behavior cloning with policy density $\pi_\theta(a\mid o)$,
 
 $$
-\widehat{S}=\frac{1}{N}\sum_{i=1}^{N}\mathbf{1}[\text{task }i\text{ succeeds}].
+\mathcal L_{\mathrm{BC}}=-\mathbb E_{(o,a)\sim D}\log\pi_\theta(a\mid o).
 $$
 
-The two metrics need not rank checkpoints the same way.
+The paper evaluates several algorithms; this is one important baseline, not a formula for all of them. A recurrent policy conditions on history and must reset hidden state at episode boundaries. Demonstration quality and coverage change the meaning of the offline objective.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Episode indexer | Demonstration trajectories and metadata | Leakage-safe dataset splits | No episode appears in more than one split | Implement deterministic stratified splitting |
-| Sequence loader | Variable-length episodes | Padded tensors, masks, and lengths | Padding never contributes to the learning loss | Batch one observation/action modality |
-| Policy evaluator | Checkpoints and rollout outcomes | Success metrics with uncertainty | Evaluation preserves task, seed, and quality slices | Compare checkpoints under one declared rule |
+**Component practice**
 
-- Standardized demonstration datasets and task metadata
-- Low-dimensional and image observation pipelines
-- Behavior cloning, recurrent, hierarchical, and offline-RL baselines
-- Dataset-quality and size ablations
-- Fixed-seed training plus rollout evaluation
-- Checkpoint selection analysis
+- Compute a Masked Behavior-Cloning Log-Likelihood — unreviewed idea; contract and evaluator required.
 
-## Data and evaluation
 
-Use complete trajectories and split by episode, never by individual time step. Preserve operator and quality labels for slices. Evaluate mean success across seeds and tasks, variance, checkpoint sensitivity, and results by data quality.
+### Select with rollout evidence
 
-## Limitations and failure modes
+For $N$ evaluation episodes with success indicators $s_i$,
 
-Benchmark tasks and robot setups do not cover open-world deployment. Online rollout evaluation can be expensive and unsafe, while offline validation loss is an imperfect substitute. Results depend on observation and action conventions.
+$$
+\hat p=\frac1N\sum_i s_i.
+$$
 
-## Implementation decomposition
+Report episode count and uncertainty, and compare across seeds and task slices. Checkpoint selection using training loss alone may favor a policy with worse closed-loop behavior. Reusing the evaluation set repeatedly for tuning also changes the interpretation of held-out results.
 
-1. Validate and index episodes without cross-split leakage.
-2. Build padded sequence batches and masks.
-3. Train a feed-forward or recurrent behavior-cloning baseline.
-4. Evaluate checkpoints by loss and recorded rollout outcomes.
-5. Report quality, operator, task, and seed slices.
 
-## Problem blueprints
+**Component practice**
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Episode-Safe Split | Data engineering | Easy | Trajectory IDs, operator/task labels, seed | Train/validation/test episode sets | No leakage, requested ratios, deterministic stratification |
-| Pad Demonstration Sequences | Tensor coding | Medium | Variable-length observations/actions | Padded tensors, mask, lengths | Shape, mask accuracy, empty/maximum-length handling |
-| Select a Policy Checkpoint | Evaluation | Hard | Loss curves and rollout success samples | Selected checkpoint and evidence | Correct aggregation, uncertainty handling, declared rule |
-| Mixed-Quality Sampler | Data loader | Medium | Episode quality labels and target weights | Seeded epoch indices | Exact weights within tolerance, reproducibility, full validity |
+- Runnable component: [Report Performance by Demonstration Quality](/problems/demonstration-quality-performance). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Compare Validation Loss with Rollout Success](/problems/validation-loss-rollout-ranking). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Uses the bounded contract; no full paper reproduction is claimed.
 
-## Visual teaching plan
 
-- Interactive episode timeline showing observation, action, padding mask, and split membership.
-- Scatter plot of validation loss versus rollout success with a checkpoint selector slider.
-- Small-multiples success chart by task, data quality, and random seed.
-- Toggle between feed-forward context \(o_t\) and recurrent context \(o_{\le t}\) to illustrate ambiguity.
+## Implement the components
 
-## MLOps and deployment extensions
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
 
-Version demonstrations with robot, sensor, calibration, operator, site, and intervention metadata. Add automatic leakage checks, dataset cards, checkpoint lineage, offline-policy-evaluation warnings, and staged rollout approvals.
+- **Supporting prerequisite:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks).
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Runnable component:** [Split Robot Trajectories Without Scene Leakage](/problems/scene-safe-trajectory-split).
 
-## Canonical sources
+**Planned component problems:**
 
-- [arXiv landing page](https://arxiv.org/abs/2108.03298)
-- [arXiv PDF](https://arxiv.org/pdf/2108.03298)
-- [robomimic project](https://robomimic.github.io/)
+- Runnable component: [Batch Variable-Length Episodes with Masks](/problems/batch-variable-robot-episodes). Uses the bounded contract; no full paper reproduction is claimed.
+- Compute a Masked Behavior-Cloning Log-Likelihood — unreviewed idea; contract and evaluator required.
+- Runnable component: [Report Performance by Demonstration Quality](/problems/demonstration-quality-performance). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Compare Validation Loss with Rollout Success](/problems/validation-loss-rollout-ranking). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Select a Checkpoint with Offline and Rollout Gates](/problems/offline-rollout-checkpoint-gate). Uses the bounded contract; no full paper reproduction is claimed.
 
+These exercises implement their stated contracts, not a complete paper reproduction.
+
+
+## Why this matters on a robot
+
+Human demonstrations contain pauses, corrections, varied skill, and incomplete coverage. A learned policy will visit states not present in the dataset. Preserve dataset provenance and evaluate recovery from deviations, not only reproduction of successful demonstration actions.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2108.03298) · [Open-access manuscript](https://arxiv.org/pdf/2108.03298)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

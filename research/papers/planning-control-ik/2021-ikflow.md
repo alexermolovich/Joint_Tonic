@@ -16,102 +16,69 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Condition an invertible model","detail":"Learn joint configurations associated with target poses.","column":0,"row":0,"section":"Condition an invertible model","problem_slugs":[],"planned_problems":["Encode a Target Pose for Conditional IK"]},{"id":"stage-2","title":"Train by change of variables","detail":"Account for the flow Jacobian in likelihood.","column":1,"row":0,"section":"Train by change of variables","problem_slugs":[],"planned_problems":["Compute a Conditional Flow Log-Likelihood"]},{"id":"stage-3","title":"Sample and verify IK","detail":"Generate multiple candidates, refine, and reject invalid ones.","column":2,"row":0,"section":"Sample and verify IK","problem_slugs":[],"planned_problems":["Measure End-Effector Pose Error","Filter Sampled IK Configurations by Joint Limits","Cluster Diverse IK Solutions"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"pose-conditioned samples"},{"from":"stage-2","to":"stage-3","label":"latent samples"}]}
 ---
 
-# IKFlow: Generating Diverse Inverse Kinematics Solutions
+## Core paper explanation
 
-## Agent brief
+IKFlow learns a conditional distribution of inverse-kinematics solutions rather than returning only one configuration. A normalizing flow produces diverse approximate solutions for a desired end-effector pose, which can then be refined and checked.
 
-Model inverse-kinematics solutions as a distribution so redundant robot configurations can be sampled. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Model inverse-kinematics solutions as a distribution so redundant robot configurations can be sampled.
+### Condition an invertible model
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For pose condition $y$ and appropriately dimensioned latent $z$, a conditional invertible map gives $q=f_\theta(z;y)$. Training uses joint samples with targets computed by forward kinematics. The actual model uses its specified augmentation/noise scheme to make the density-learning problem tractable.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Encode a Target Pose for Conditional IK — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Measure End-Effector Pose Error | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Filter Sampled IK Configurations by Joint Limits | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Cluster Diverse IK Solutions | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Train by change of variables
 
-## Data and evaluation
+In matching dimensions, the density relation is
+$$\log p(q\mid y)=\log p(z)-\log\left|\det\frac{\partial f_\theta(z;y)}{\partial z}\right|.$$
+This explains the normalizing-flow mechanism; padding and augmentation must follow the actual architecture. A deterministic one-to-one pose-to-joint regressor cannot represent all redundant solutions.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Compute a Conditional Flow Log-Likelihood — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Sample and verify IK
 
-1. Measure End-Effector Pose Error.
-2. Filter Sampled IK Configurations by Joint Limits.
-3. Cluster Diverse IK Solutions.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Check position error $e_p=\|p(q)-p^*\|_2$ in meters and orientation error $e_R=\|\operatorname{Log}(R^{*\top}R(q))\|_2$ in radians. Apply joint limits and collision checks separately. Low pose error does not imply collision-free reachability from the current configuration.
 
-## Problem blueprints
 
-### Problem: Measure End-Effector Pose Error
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the measure end-effector pose error component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Measure End-Effector Pose Error — unreviewed idea; contract and evaluator required.
+- Filter Sampled IK Configurations by Joint Limits — unreviewed idea; contract and evaluator required.
+- Cluster Diverse IK Solutions — unreviewed idea; contract and evaluator required.
 
-### Problem: Filter Sampled IK Configurations by Joint Limits
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the filter sampled ik configurations by joint limits component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Cluster Diverse IK Solutions
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the cluster diverse ik solutions component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Encode a Target Pose for Conditional IK — unreviewed idea; contract and evaluator required.
+- Compute a Conditional Flow Log-Likelihood — unreviewed idea; contract and evaluator required.
+- Measure End-Effector Pose Error — unreviewed idea; contract and evaluator required.
+- Filter Sampled IK Configurations by Joint Limits — unreviewed idea; contract and evaluator required.
+- Cluster Diverse IK Solutions — unreviewed idea; contract and evaluator required.
 
-- Display several arm configurations reaching the same target pose.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+Diverse IK candidates help choose configurations with useful clearance or manipulability. Learned samples are approximate; calibration errors and unseen poses require explicit residual checks and fallback behavior.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/2111.08933)
-- [Open-access author manuscript](https://arxiv.org/pdf/2111.08933)
+[Primary paper](https://arxiv.org/abs/2111.08933) · [Open-access manuscript](https://arxiv.org/pdf/2111.08933)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

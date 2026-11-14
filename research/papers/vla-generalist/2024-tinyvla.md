@@ -16,102 +16,61 @@ modalities: ["rgb","text","robot-state","actions"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Build compact conditioning","detail":"Pool multimodal features and combine proprioception.","column":0,"row":0,"section":"Build compact conditioning","problem_slugs":[],"planned_problems":["Project Compact Visual-Language Features"]},{"id":"stage-2","title":"Train action denoising","detail":"Predict the noise added to demonstration chunks.","column":1,"row":0,"section":"Train action denoising","problem_slugs":["diffusion-action-noising"],"planned_problems":["Build a Small Action Decoder"]},{"id":"stage-3","title":"Sample continuous actions","detail":"Iteratively denoise, restore physical units, and execute a prefix.","column":2,"row":0,"section":"Sample continuous actions","problem_slugs":[],"planned_problems":["Estimate End-to-End Policy Memory"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"conditioning vector"},{"from":"stage-2","to":"stage-3","label":"trained denoiser"}]}
 ---
+## Core paper explanation
 
-# TinyVLA: Towards Fast, Data-Efficient Vision-Language-Action Models for Robotic Manipulation
+TinyVLA combines a compact pretrained vision-language backbone with a diffusion policy decoder. It focuses on efficient adaptation from relatively small robot datasets while retaining continuous, multimodal action prediction.
 
-## Agent brief
+## Execution flow
 
-Study an efficient vision-language-action system with compact policy and adaptation interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-## Contribution
+### Build compact conditioning
 
-Study an efficient vision-language-action system with compact policy and adaptation interfaces.
+The VLM produces variable-length features $H$. Adaptive pooling and normalization create a fixed representation, then a multilayer perceptron combines it with robot state $q$:
+$$c=\operatorname{MLP}([\operatorname{LN}(\operatorname{Pool}(H));q]).$$
+The state vector must retain joint ordering, units, and normalization metadata.
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Project Compact Visual-Language Features. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Prerequisite concepts
+### Train action denoising
 
-- Sequence modeling, action units, control frequencies, multimodal batching, and policy evaluation.
+For normalized chunk $A^0\in\mathbb R^{H_a\times d_a}$ and Gaussian noise $\epsilon$,
+$$A^k=\sqrt{\bar\alpha_k}A^0+\sqrt{1-\bar\alpha_k}\epsilon,\qquad L=\mathbb E\|\epsilon-\epsilon_\theta(A^k,k,c)\|_2^2.$$
+$\bar\alpha_k$ is the cumulative diffusion schedule. The linked exercise implements the forward-noising tensor contract, not TinyVLA's trained decoder.
 
-## Method map
+<!-- joint-tonic-component:stage-2 -->
+- **Related implementation prerequisite:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising).
+- **Planned component:** Build a Small Action Decoder. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Project Compact Visual-Language Features | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Build a Small Action Decoder | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
-| Estimate End-to-End Policy Memory | Timestamped observations, instruction tokens, action chunks, and embodiment metadata | Policy-ready token sequences, bounded actions, or rollout diagnostics | Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. | One bounded function or validation stage |
+### Sample continuous actions
 
-## Data and evaluation
+Inference starts from noise and applies the configured reverse diffusion updates. Generated normalized actions must be transformed back into the embodiment's units before execution. End-to-end latency includes images, feature encoding, all denoising steps, and the controller interface.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+<!-- joint-tonic-component:stage-3 -->
+- **Planned component:** Estimate End-to-End Policy Memory. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Limitations and failure modes
+## Implement the components
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-## Implementation decomposition
+- [Add Noise to an Action Sequence](/problems/diffusion-action-noising)
 
-1. Project Compact Visual-Language Features.
-2. Build a Small Action Decoder.
-3. Estimate End-to-End Policy Memory.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Planned components: Project Compact Visual-Language Features; Build a Small Action Decoder; Estimate End-to-End Policy Memory. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-## Problem blueprints
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-### Problem: Project Compact Visual-Language Features
+## Why this matters on a robot
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the project compact visual-language features component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Compact models can fit tighter robot compute budgets. Lower parameter count alone does not guarantee lower control delay, and action normalization errors can overwhelm improvements in visual understanding.
 
-### Problem: Build a Small Action Decoder
+## Sources and scope
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the build a small action decoder component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Primary paper](https://arxiv.org/abs/2409.12514) · [Open-access manuscript](https://arxiv.org/pdf/2409.12514)
 
-### Problem: Estimate End-to-End Policy Memory
-
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the estimate end-to-end policy memory component.
-- **Inputs:** Timestamped observations, instruction tokens, action chunks, and embodiment metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Policy-ready token sequences, bounded actions, or rollout diagnostics; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check episode boundaries, action limits, reserved tokens, missing modalities, timestamp ordering, and deterministic replay. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
-
-## Visual teaching plan
-
-- Display encoder, adapter, and action-head compute budgets.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
-
-## MLOps and deployment extensions
-
-- Package the action codec and observation schema with checkpoints; measure stale observations, control latency, invalid actions, and task success by embodiment.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
-
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2409.12514)
-- [Open-access author manuscript](https://arxiv.org/pdf/2409.12514)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

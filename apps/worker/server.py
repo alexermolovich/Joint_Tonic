@@ -2,6 +2,7 @@
 import concurrent.futures
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -24,6 +25,19 @@ EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 LOCK = threading.Lock()
 ACTIVE = set()
 RUNTIME = 'python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2'
+FR3_LIMITS = ((-2.9007, 2.9007), (-1.8361, 1.8361), (-2.9007, 2.9007),
+              (-3.0770, -0.1169), (-2.8763, 2.8763), (0.4398, 4.6216), (-3.0508, 3.0508))
+
+
+def validated_preview(preview):
+    """Treat sandbox output as untrusted; only bounded numeric poses leave it."""
+    rows = preview.get('q') if isinstance(preview, dict) else None
+    valid = (isinstance(preview, dict) and preview.get('kind') == 'fr3-joint-trajectory-v1'
+             and isinstance(rows, list) and 2 <= len(rows) <= 101
+             and all(isinstance(row, list) and len(row) == 7
+                     and all(type(q) in (int, float) and low <= q <= high and math.isfinite(q)
+                             for q, (low, high) in zip(row, FR3_LIMITS)) for row in rows))
+    return {'kind': 'fr3-joint-trajectory-v1', 'q': rows} if valid else None
 
 def validate_report(report, expected_tests):
     """Validate transport structure; this is not a Python anti-cheating boundary."""
@@ -65,6 +79,8 @@ def sandbox(code, slug, mode):
         (work/'solution.py').write_text(code, encoding='utf-8')
         shutil.copyfile(problem/'cases.py', work/'cases.py')
         shutil.copyfile(ROOT/'apps/worker/harness.py', work/'harness.py')
+        if slug == 'fr3-joint-interpolation' and (problem/'preview.py').is_file():
+            shutil.copyfile(problem/'preview.py', work/'preview.py')
         for file in work.iterdir(): file.chmod(0o444)
         command = ['bwrap','--unshare-all','--new-session','--die-with-parent','--cap-drop','ALL',
                    '--ro-bind','/usr','/usr','--symlink','usr/lib','/lib','--symlink','usr/lib64','/lib64',
@@ -102,7 +118,20 @@ def sandbox(code, slug, mode):
             resource_exits = {-signal.SIGKILL, -signal.SIGXCPU, 128+signal.SIGKILL, 128+signal.SIGXCPU}
             category = 'learner-resource-limit' if process.returncode in resource_exits else 'learner-execution'
             return {'tests': [], 'passed': False, 'error': raw[-2000:] or 'Process reached a CPU/memory limit or exited without a result.', 'failure_category': category, 'exit_code': process.returncode}
-        try: return validate_report(json.loads(raw.strip().splitlines()[-1]), expected_tests)
+        try:
+            report = validate_report(json.loads(raw.strip().splitlines()[-1]), expected_tests)
+            preview = report.pop('preview', None)
+            preview_error = report.pop('preview_error', None)
+            if slug == 'fr3-joint-interpolation':
+                if preview is not None:
+                    validated = validated_preview(preview)
+                    if validated is not None:
+                        report['preview'] = validated
+                    else:
+                        report['preview_error'] = 'The public demonstration returned an invalid trajectory.'
+                elif preview_error:
+                    report['preview_error'] = 'The public demonstration did not return a valid bounded joint trajectory.'
+            return report
         except (ValueError,IndexError,TypeError):
             return {'tests':[], 'passed':False, 'error':raw[-2000:] or 'Process reached a CPU/memory limit or exited without a result.', 'failure_category':'learner-execution'}
 
@@ -150,6 +179,9 @@ class Handler(BaseHTTPRequestHandler):
             digest=hashlib.sha256((ROOT/'content/problems'/slug/'cases.py').read_bytes()).hexdigest()
             job={'id':job_id,'slug':slug,'mode':mode,'owner':owner,'code':code,'status':'queued','created_at':datetime.now(timezone.utc).isoformat(),
                  'lineage':{'problem_version':meta['version'],'evaluator_sha256':digest,'runtime':RUNTIME,'fixture_version':'synthetic-1','seed':20261113,'source_sha256':hashlib.sha256(code.encode()).hexdigest()}}
+            job['lineage']['harness_sha256'] = hashlib.sha256((ROOT/'apps/worker/harness.py').read_bytes()).hexdigest()
+            if slug == 'fr3-joint-interpolation':
+                job['lineage']['preview_sha256'] = hashlib.sha256((ROOT/'content/problems'/slug/'preview.py').read_bytes()).hexdigest()
             save(job);EXECUTOR.submit(evaluate,job)
             self.send(202,{'id':job_id,'status':'queued'})
         except (ValueError,KeyError,TypeError): self.send(400,{'error':'Malformed request'})

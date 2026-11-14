@@ -6,7 +6,11 @@
 
 This is the single navigational tree for topics, tracks, and named problems. It describes practical components to implement; it does not imply full reproduction of every paper. Each future problem begins as a Markdown file based on `research/templates/problem-blueprint.md`.
 
-Current inventory: **189 named problems** across **38 topic/track groups**, plus four ordered cross-paper capstone sequences. The immediate implementation subset is defined in `MVP_10.md`.
+Current inventory: **190 named problems** across **38 topic/track groups**, plus four ordered cross-paper capstone sequences. The immediate implementation subset is defined in `MVP_10.md`.
+
+The ten runnable problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
+
+The learner-facing **Projects** catalog presents the paper corpus in nine topic sheets: Computer vision & perception; Vision-language-action models; Robotics MLOps & datasets; Geometry, calibration & SLAM; Planning, control & kinematics; Robot learning & reinforcement learning; Vision-language grounding; Manipulation, humanoids & touch; and Simulation & sim-to-real. These are navigation groups over the existing paper folders, not additional implemented tracks. Each project retains its source paper ID and links to the available component problems. Cards without a reviewed model explanation remain marked in preparation.
 
 ## 1. Shared physical-AI foundations
 
@@ -36,6 +40,7 @@ Current inventory: **189 named problems** across **38 topic/track groups**, plus
 
 Simulator problems in this group use the Robot View contract in `SPEC.md`, with MuJoCo as the local baseline and Isaac Sim as an optional higher-fidelity backend.
 
+- `[foundation]` Interpolate Franka FR3 Joint Waypoints
 - `[foundation]` Compute Forward Kinematics for a Serial Chain
 - `[foundation]` Solve Closed-Form IK for a Planar Two-Link Arm
 - `[foundation]` Compute a Geometric Jacobian from Joint Axes
@@ -402,7 +407,15 @@ Paper card: `research/papers/mlops-sim2real/2018-dynamics-randomization.md`
 4. `[systems]` Compare simulator, replay, shadow, and real-robot slices.
 5. `[systems]` Produce a release evidence report with known gaps.
 
-## 6. Maintenance rules
+## 6. Paper-specific implementation tracks
+
+The Tracks catalog now includes a track plan for every canonical paper in the research library, alongside the three introductory paths. The complete topic-grouped tree is maintained in [Paper tracks](content/PAPER_TRACKS.md); each entry links to its original Markdown plan in `content/tracks/papers/` and its local website route `/tracks/paper-{paper-id}`.
+
+Tracks follow the paper's explained execution stages. Runnable exercises link to versioned coding problems; proposed components remain visibly pending until their contracts and evaluators are reviewed. Every plan identifies prerequisites, an ordered component sequence, a small proposed integration, evaluation/failure analysis, and a reproducibility/MLOps deliverable. Completing available components does not imply completing the planned integration or reproducing headline paper results.
+
+Coverage spans perception, vision-language grounding, VLA, geometry/SLAM, planning/control, robot learning, manipulation/tactile sensing, MLOps/data, and simulation. The component inventory and associations are in [the full paper-to-code map](research/FLOW_PROBLEM_MAP.md). These track plans organize the existing research backlog; proposed ideas do not silently become additions to the 190 approved roadmap candidates above.
+
+## 7. Maintenance rules
 
 - Add a named problem here when its paper card contains enough evidence to define a practical contract.
 - A name becomes an implementation commitment only after a problem-blueprint Markdown file is reviewed.

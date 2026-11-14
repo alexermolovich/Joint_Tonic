@@ -1,3 +1,17 @@
-# Next step
+# Current preview and next step
 
-Review the [Tensor Tonic problems page](https://www.tensortonic.com/problems) and reshape Joint Tonic's `/problems` page around a similar browsing and problem-discovery flow. Keep Joint Tonic's branding, copy, visual identity, and original problem content. This is a planned follow-up; do not implement it as part of the current baseline.
+The Tracks catalog now keeps the three introductory paths and adds one paper track per canonical source. Search papers or component names, filter by topic/availability, and open `/tracks/paper-{paper-id}` for prerequisites, runnable exercises, proposed steps and a planned integration/evaluation/reproducibility assessment. The left tree groups paper tracks by topic. Full Markdown plans and the grouped inventory live in `content/tracks/papers/` and `content/PAPER_TRACKS.md`; available exercise progress never counts unfinished assessments as complete.
+
+Implemented locally: Gruvbox Dark, Slate Dark, Warm Light, and optional Graphite themes; a shared left navigation tree; project and paper views; and Theory inside the left problem pane with the editor visible on the right. The runnable catalog is expanding beyond the original ten; current counts and file links are generated in `content/AUTHORING_STATUS.md`. Learning paths show solved/difficulty counts and the user's robot-arm image on the VLM/VLA card. Progress uses actual local learning statistics. Joint Tonic retains its own branding, copy, diagrams, and problem content.
+
+All 157 paper cards now have original explanations, component mathematics, execution graphs, and source/problem links (156 distinct papers). Every explained flow stage has a runnable exercise or an explicitly planned component idea. The graph exposes direct implementation links and stage exercise lists; planned work never opens a nonexistent problem. See `research/FLOW_PROBLEM_MAP.md` for the complete generated mapping and `research/EXPLANATION_STATUS.md` for verification and limitations.
+
+Current work: three implementation agents own perception, VLA, and robotics MLOps, while the main agent implements robotics foundations and integrates the catalog. Each batch receives independent cross-review and focused isolated Run/Submit checks. The complete 189-item scope and file links are in `content/AUTHORING_STATUS.md`; remaining foundations and capstones stay visible in that queue. Every runnable package includes original math-rich theory, a visual trace/table, worked examples, starter/reference code, and public/hidden tests. Drafts remain distinct from runnable content.
+
+Refresh the board with `node scripts/update-authoring-status.mjs`; validate draft structure and math with `node scripts/validate-drafts.mjs`. Those checks do not replace source fidelity, numerical-example, or pedagogy review.
+
+Validate all flow sections, runnable links, planned titles and stage coverage with `npm run validate:paper-links`. Add `-- --write` to regenerate the complete Markdown map. The six new PDFs in the balanced expansion remain local authoring references; their source and integrity records are in `research/manifests/balanced-expansion-156.md`.
+
+Issue workflow: scouts coordinate findings; a dedicated worker fixes one issue on an isolated branch, prepares a PR, and the main agent reviews focused checks and merges ready fixes under the user's authorization. The content-validator fix in PR #3 has been reviewed and merged into `main` at `63f77ef`.
+
+GitHub issue/PR posting currently has no available authenticated interface. An earlier credential-access request was rejected by automatic approval review; that method is not retried. Concrete local issue drafts are in `docs/issues/`. The GR00T loss-objective correction is pushed on `codex/gr00t-flow-objective` at `12fb5c3`, with PR text in its isolated worktree. A pushed branch is not an opened or merged PR.

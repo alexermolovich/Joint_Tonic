@@ -1,0 +1,24 @@
+{
+  "slug": "pi0-flow-action-interpolants",
+  "title": "Sample Flow-Matching Action Interpolants and Targets",
+  "version": "1.0.0",
+  "number": 206,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "pi0",
+    "flow-matching",
+    "continuous-actions"
+  ],
+  "minutes": 35,
+  "framework": "PyTorch",
+  "entrypoint": "flow_action_interpolants",
+  "paperIds": [
+    "2024-pi0"
+  ],
+  "prerequisites": [
+    "diffusion-action-noising"
+  ],
+  "visualization": "markdown",
+  "summary": "Construct pi0-style noise-to-action linear interpolants and constant velocity targets from supplied noise, times, and validity masks."
+}

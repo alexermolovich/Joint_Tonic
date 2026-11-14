@@ -16,111 +16,84 @@ modalities: ["RGB image", "point prompts", "box prompts", "mask prompts"]
 track_role: "Promptable pixel-level perception"
 open_access_status: "Open-access arXiv manuscript"
 redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace. The SA-1B dataset has separate access terms and is not included here."
+execution_flow: {"title":"Core execution flow","description":"Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.","nodes":[{"id":"stage-1","title":"Encode and cache the image","detail":"Compute reusable spatial image features with a fixed preprocessing transform.","column":0,"row":0,"section":"Encode and cache the image","problem_slugs":[],"planned_problems":["Reuse Image Embeddings Without Stale-Cache Errors"]},{"id":"stage-2","title":"Encode prompts and ambiguity","detail":"Represent positive/negative points, boxes, or masks for the decoder.","column":1,"row":0,"section":"Encode prompts and ambiguity","problem_slugs":[],"planned_problems":["Encode Positive and Negative Point Prompts","Encode a Box Prompt with Positional Features","Transform Prompt Coordinates Through Image Preprocessing"]},{"id":"stage-3","title":"Rank and filter masks","detail":"Use predicted quality and stability while keeping mask geometry explicit.","column":2,"row":0,"section":"Rank and filter masks","problem_slugs":["sam-mask-ranking","sam-stability-overlap-filter"],"planned_problems":["Build a Grounded Segmentation Pipeline and Trace Failures"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"cached features"},{"from":"stage-2","to":"stage-3","label":"candidate masks"}]}
 ---
 
-## Agent brief
+## Core paper explanation
 
-Use SAM to teach a split inference architecture: compute an expensive image embedding once, encode many lightweight prompts, decode several candidate masks, and rank/filter them. Distinguish the paper PDF, model weights, and SA-1B dataset licenses.
+Segment Anything separates expensive image encoding from lightweight prompt-conditioned mask prediction. A single cached image embedding supports repeated point, box, or mask prompts. The decoder can return several plausible masks for an ambiguous prompt and predicts quality scores to rank them. This makes interaction and prompt interpretation central to the system, rather than treating segmentation as one fixed-label classification pass.
 
-## Contribution
+## Execution flow
 
-SAM defines a promptable segmentation task and couples a large image encoder with prompt encoders and a small mask decoder. A data engine uses the evolving model to scale mask annotation, producing a broad zero-shot segmentation system.
+Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.
 
-## Prerequisite concepts
+### Encode and cache the image
 
-- Vision Transformer features and 2D positional encodings
-- Point, box, and dense-mask representations
-- Cross-attention and dynamic mask prediction
-- IoU, mask stability, NMS, and segmentation metrics
-
-## Method map
-
-1. Resize/pad an image and compute a reusable image embedding.
-2. Encode sparse prompts with type and position embeddings; encode masks densely.
-3. Use two-way attention between prompt tokens and image features.
-4. Upscale features and predict multiple masks from mask tokens.
-5. Predict mask quality so ambiguous outputs can be ranked.
-6. For automatic generation, sample point grids, filter, crop, and suppress duplicate masks.
-
-## Essential equations
-
-SAM's dynamic mask prediction can be summarized as a dot product between an upscaled image feature (F(x,y)) and a mask-token-derived vector (w_k):
+For image $I$, let $F=f_{\mathrm{image}}(I)\in\mathbb R^{h\times w\times d}$. A prompt coordinate $(u,v)$ in original pixels must be mapped through the image resize/pad transform $R$:
 
 $$
-M_k(x,y)=w_k^{\mathsf T}F(x,y).
+\tilde p'=R\,[u,v,1]^\top.
 $$
 
-A useful automatic-mask stability measure compares two nearby logit thresholds:
+The stored feature grid and prompt coordinates must refer to the same transformed image. Caching by filename alone is unsafe if cropping, resizing, or image contents change.
+
+
+**Planned component problems:** Reuse Image Embeddings Without Stale-Cache Errors. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+
+### Encode prompts and ambiguity
+
+Sparse prompts become token embeddings; dense mask prompts become spatial features. The decoder combines image and prompt information and produces mask-token vectors $w_k$. A compact dynamic-mask interpretation is
 
 $$
-\operatorname{stab}(M)=
-\frac{|\{M>\theta+\delta\}|}{|\{M>\theta-\delta\}|},
+M_k(x,y)=w_k^\top F_{\mathrm{up}}(x,y),
 $$
 
-with a defined zero-denominator policy.
+where $F_{\mathrm{up}}$ is the upscaled image feature map and $M_k$ is a mask logit. Multiple $k$ values can represent different valid interpretations of one prompt; they should not be averaged into an arbitrary blended object.
 
-## Visual teaching plan
 
-- **Prompt-to-mask path:** Toggle point, box, and mask prompts and show their embeddings entering the lightweight decoder beside a cached image embedding.
-- **Multimask explorer:** Display candidate masks, predicted IoU, true IoU when labels exist, and the selected result.
-- **Automatic generator:** Animate point grids, crop pyramids, stability filtering, and mask NMS as successive layers of a funnel.
+**Planned component problems:** Encode Positive and Negative Point Prompts; Encode a Box Prompt with Positional Features; Transform Prompt Coordinates Through Image Preprocessing. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Data and evaluation
+### Rank and filter masks
 
-The paper describes a three-stage data engine and the SA-1B dataset, then evaluates zero-shot transfer on many segmentation tasks. An educational implementation can focus on prompt transforms, decoder post-processing, IoU/stability scores, boundary metrics, and latency split between image encoding and prompt decoding.
+For logit threshold $\theta$ and perturbation $\delta>0$, a threshold-stability measure is
 
-## Limitations and failure modes
+$$
+\mathrm{stab}(M)=\frac{|\{M>\theta+\delta\}|}{|\{M>\theta-\delta\}|}.
+$$
 
-- The system segments regions but does not inherently assign semantic class labels.
-- Fine structures, ambiguous boundaries, and unfamiliar imaging domains can fail.
-- Automatic generation can produce duplicates and requires several thresholds.
-- The dataset/model scale is impractical to reproduce in a small course environment.
+Define the empty-denominator policy. This measures sensitivity to a small threshold change; it is not ground-truth IoU. A separate learned quality head predicts mask quality. Map masks back through the original image transform before computing object geometry or associating depth pixels.
 
-## Implementation decomposition
 
-1. Long-side resize, padding, and coordinate transforms.
-2. Point/label and box prompt encoding.
-3. Candidate mask upscaling and thresholding.
-4. Predicted-IoU ranking and stability scoring.
-5. Crop-grid generation, uncropping, and mask NMS.
-6. Cached-embedding API with latency and memory instrumentation.
+**Implement this component:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). Each linked exercise implements its stated bounded subcomponent; completing it is not a full-paper reproduction.
 
-## Problem blueprints
+**Planned component problems:** Build a Grounded Segmentation Pipeline and Trace Failures. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-### Transform prompts through resize and padding
 
-- **Type:** Geometry/preprocessing
-- **Difficulty:** Medium
-- **Inputs:** Original image shape, target long side, points/labels and boxes
-- **Outputs:** Model-space prompt coordinates and padding metadata
-- **Grading:** Aspect ratio; half-open box convention; round-trip tolerance; empty prompts; batched shapes
+**Runnable component:** [Filter Automatic Masks by Stability and Overlap](/problems/sam-stability-overlap-filter). This uses an explicit binary-mask IoU suppression variant, not the original automatic generator’s box-based NMS.
 
-### Rank multimask predictions
 
-- **Type:** Mask post-processing
-- **Difficulty:** Medium
-- **Inputs:** Low-resolution mask logits, predicted IoU, original/resized shapes, thresholds
-- **Outputs:** Restored binary masks, scores, selected mask index
-- **Grading:** Crop-before-resize order; threshold in logit space; deterministic ranking; exact output dimensions
+## Implement the components
 
-### Compute mask stability and suppress duplicates
+- **Runnable component:** [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking). This is a bounded synthetic component, not a complete trained model.
 
-- **Type:** Segmentation filtering
-- **Difficulty:** Hard
-- **Inputs:** Mask logits, two close thresholds, mask boxes, quality scores
-- **Outputs:** Stability scores and kept mask indices
-- **Grading:** Intersection/union definition; zero-union handling; box NMS order; stable ties; vectorization
+The component below is runnable. Other component ideas remain planned.
 
-## MLOps and deployment extensions
+**Planned components:**
 
-- Cache image embeddings under a key containing model, preprocessing, and image-content hashes.
-- Measure encoder latency separately from prompt-to-mask latency and track prompts per image.
-- Monitor mask-count, area, stability, boundary complexity, and human-correction rates by domain.
-- Establish dataset/model license gates and privacy review before using automatic masks in retraining loops.
+- Reuse Image Embeddings Without Stale-Cache Errors.
+- Encode Positive and Negative Point Prompts.
+- Encode a Box Prompt with Positional Features.
+- Transform Prompt Coordinates Through Image Preprocessing.
+- Build a Grounded Segmentation Pipeline and Trace Failures.
 
-## Canonical sources
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-- [Primary record](https://arxiv.org/abs/2304.02643)
-- [Open-access PDF](https://arxiv.org/pdf/2304.02643)
-- [Official project](https://segment-anything.com/)
+## Why this matters on a robot
 
+Promptable masks can support interactive labeling and object extraction, but a stable mask can still select the wrong object. Fine boundaries, transparent objects, and unfamiliar sensors may require additional checks. Treat mask quality, semantic identity, and physical affordance as different quantities.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2304.02643) · [Open-access manuscript](https://arxiv.org/pdf/2304.02643)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

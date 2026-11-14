@@ -1,117 +1,140 @@
 ---
 schema_version: 1
-paper_id: "2018-model-cards"
-title: "Model Cards for Model Reporting"
-authors: ["Mitchell, Margaret","Wu, Simone","Zaldivar, Andrew","Barnes, Parker","Vasserman, Lucy","Hutchinson, Ben","Spitzer, Elena","Raji, Inioluwa Deborah","Gebru, Timnit"]
+paper_id: 2018-model-cards
+title: Model Cards for Model Reporting
+authors:
+  - 'Mitchell, Margaret'
+  - 'Wu, Simone'
+  - 'Zaldivar, Andrew'
+  - 'Barnes, Parker'
+  - 'Vasserman, Lucy'
+  - 'Hutchinson, Ben'
+  - 'Spitzer, Elena'
+  - 'Raji, Inioluwa Deborah'
+  - 'Gebru, Timnit'
 year: 2018
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1810.03993"
-pdf_url: "https://arxiv.org/pdf/1810.03993"
-local_pdf: "./2018-model-cards.pdf"
-sha256: "a4049cdc78c3d635bdfb5165e495b0672d85690d66ccd6f149079d6e11e64aa1"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1810.03993'
+pdf_url: 'https://arxiv.org/pdf/1810.03993'
+local_pdf: ./2018-model-cards.pdf
+sha256: a4049cdc78c3d635bdfb5165e495b0672d85690d66ccd6f149079d6e11e64aa1
 bytes: 995470
 pages: 10
-topics: ["mlops-data-deployment","model-cards"]
-modalities: ["datasets","model-artifacts","logs","metrics"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+topics:
+  - mlops-data-deployment
+  - model-cards
+modalities:
+  - datasets
+  - model-artifacts
+  - logs
+  - metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Identify the model and use
+      detail: 'Record version, training context, and supported deployment conditions.'
+      column: 0
+      row: 0
+      section: Identify the model and use
+      problem_slugs: []
+      planned_problems:
+        - Validate a Model Card Schema
+    - id: stage-2
+      title: Evaluate meaningful slices
+      detail: Report metrics by conditions relevant to intended use.
+      column: 1
+      row: 0
+      section: Evaluate meaningful slices
+      problem_slugs: []
+      planned_problems:
+        - Aggregate Metrics by Operational Slice
+    - id: stage-3
+      title: Document release limitations
+      detail: Connect results to intended and unsupported uses.
+      column: 2
+      row: 0
+      section: Document release limitations
+      problem_slugs:
+        - edge-inference-release-gate
+        - slice-infrastructure-release-gate
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: versioned model
+    - from: stage-2
+      to: stage-3
+      label: slice evidence
 ---
 
-# Model Cards for Model Reporting
+## Core paper explanation
 
-## Agent brief
+Model Cards proposes concise documentation of model identity, intended use, evaluation conditions, limitations, and relevant performance slices. It makes a release understandable beyond one aggregate benchmark number.
 
-Document intended uses and evaluation slices so model releases carry interpretable evidence. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Document intended uses and evaluation slices so model releases carry interpretable evidence.
+### Identify the model and use
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+A robotics release should identify weights, preprocessing, action decoder, training data versions, and hardware assumptions. Treat the model artifact as a tuple $(W,P,D,R)$ of weights, preprocessing, decoder, and runtime. This is a teaching release contract, not the paper's mathematical notation.
 
-## Prerequisite concepts
 
-- Versioned artifacts, data schemas, deterministic splits, latency percentiles, and release gates.
+**Component practice**
 
-## Method map
+- Validate a Model Card Schema — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Model Card Schema | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Aggregate Metrics by Operational Slice | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
-| Block a Release with Missing Evidence | Versioned dataset records, artifact metadata, calibration records, or benchmark samples | Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports | Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. | One bounded function or validation stage |
+### Evaluate meaningful slices
 
-## Data and evaluation
+For slice $s$ with $n_s$ trials, success rate is
+$$\hat p_s=\frac1{n_s}\sum_{i\in s}\mathbf1[\mathrm{success}_i].$$
+Report denominators and uncertainty, especially for small or intersectional slices. Robotics slices might include lighting, object category, camera, and embodiment; human-facing applications also require appropriate demographic analysis.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Aggregate Metrics by Operational Slice — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Document release limitations
 
-1. Validate a Model Card Schema.
-2. Aggregate Metrics by Operational Slice.
-3. Block a Release with Missing Evidence.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+A teaching release gate can require $\bigwedge_k[m_k\in\mathcal A_k]$, with declared acceptable regions $\mathcal A_k$. This gate is our implementation extension, not a universal model-card standard. Keep unresolved failures and out-of-scope uses visible alongside successful metrics.
 
-## Problem blueprints
 
-### Problem: Validate a Model Card Schema
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a model card schema component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Supporting prerequisite: [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate). Uses the bounded contract; no full paper reproduction is claimed.
 
-### Problem: Aggregate Metrics by Operational Slice
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the aggregate metrics by operational slice component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
 
-### Problem: Block a Release with Missing Evidence
+- **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+- **Supporting prerequisite:** [Gate a Release on Slice and Infrastructure Tests](/problems/slice-infrastructure-release-gate).
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the block a release with missing evidence component.
-- **Inputs:** Versioned dataset records, artifact metadata, calibration records, or benchmark samples; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated records, dependency decisions, compressed tensors, or reproducible evaluation reports; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check deterministic ordering, duplicate handling, missing metadata, leakage boundaries, threshold equality, and invalid measurement windows. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Validate a Model Card Schema — unreviewed idea; contract and evaluator required.
+- Aggregate Metrics by Operational Slice — unreviewed idea; contract and evaluator required.
 
-- Display slice metrics beside deployment conditions and known gaps.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These exercises implement their stated contracts, not a complete paper reproduction.
 
-## MLOps and deployment extensions
 
-- Make every report reproducible from code, data, preprocessing, runtime, and hardware identifiers; separate data/model regressions from platform failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Why this matters on a robot
 
-## Canonical sources
+A model card helps determine whether a policy evaluated on one robot and camera is suitable elsewhere. Aggregate success can conceal critical weak slices; documentation should preserve those limitations rather than imply universal reliability.
 
-- [Primary arXiv record](https://arxiv.org/abs/1810.03993)
-- [Open-access author manuscript](https://arxiv.org/pdf/1810.03993)
+## Sources and scope
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+[Primary paper](https://arxiv.org/abs/1810.03993) · [Open-access manuscript](https://arxiv.org/pdf/1810.03993)
 
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

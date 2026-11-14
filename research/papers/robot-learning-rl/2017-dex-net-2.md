@@ -16,102 +16,61 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Generate robust grasp labels","detail":"Evaluate analytic grasp quality under uncertainty.","column":0,"row":0,"section":"Generate robust grasp labels","problem_slugs":[],"planned_problems":["Aggregate Analytic Grasp Quality Under Pose Perturbations"]},{"id":"stage-2","title":"Train a quality predictor","detail":"Map a grasp-aligned depth crop to success likelihood.","column":1,"row":0,"section":"Train a quality predictor","problem_slugs":[],"planned_problems":["Extract a Grasp-Aligned Depth Patch","Compute a Binary Grasp-Quality Loss"]},{"id":"stage-3","title":"Rank feasible candidates","detail":"Choose a high-quality grasp from sampled antipodal hypotheses.","column":2,"row":0,"section":"Rank feasible candidates","problem_slugs":[],"planned_problems":["Rank Grasp Candidates by Predicted Quality","Evaluate Grasp Precision Under a Safety Threshold"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"synthetic depth crops"},{"from":"stage-2","to":"stage-3","label":"quality scores"}]}
 ---
 
-# Dex-Net 2.0: Deep Learning to Plan Robust Grasps with Synthetic Point Clouds and Analytic Grasp Metrics
+## Core paper explanation
 
-## Agent brief
+Dex-Net 2.0 trains a grasp-quality CNN using synthetic depth observations and analytic robustness labels. At deployment, it samples parallel-jaw grasp candidates and ranks them from the observed depth image.
 
-Learn grasp quality from synthetic depth observations and analytic grasp labels. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Learn grasp quality from synthetic depth observations and analytic grasp labels.
+### Generate robust grasp labels
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For grasp $g$ and uncertain object/contact parameters $\xi$, expected quality is $Q(g)=\mathbb E_\xi[\epsilon(g,\xi)]$. Here $\epsilon$ is the analytic grasp metric, not diffusion noise. Sampling approximates robustness to pose, friction, and sensing uncertainty under the chosen model.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Aggregate Analytic Grasp Quality Under Pose Perturbations.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Extract a Grasp-Aligned Depth Patch | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Rank Grasp Candidates by Predicted Quality | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Evaluate Grasp Precision Under a Safety Threshold | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Train a quality predictor
 
-## Data and evaluation
+For binary robust-grasp label $y$ and prediction $p_\theta$, training uses cross-entropy:
+$$L=-y\log p_\theta-(1-y)\log(1-p_\theta).$$
+The crop is aligned to the candidate grasp and conditioned on grasp depth. Camera geometry and gripper dimensions determine what the input means.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Extract a Grasp-Aligned Depth Patch.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned exercise:** Compute a Binary Grasp-Quality Loss.
 
-## Implementation decomposition
 
-1. Extract a Grasp-Aligned Depth Patch.
-2. Rank Grasp Candidates by Predicted Quality.
-3. Evaluate Grasp Precision Under a Safety Threshold.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+### Rank feasible candidates
 
-## Problem blueprints
+Select $g^*=\arg\max_{g\in\mathcal G}p_\theta(g\mid D)$ among candidates passing reachability and collision checks. A high analytic-quality prediction does not include every real contact or object-model error.
 
-### Problem: Extract a Grasp-Aligned Depth Patch
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the extract a grasp-aligned depth patch component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Rank Grasp Candidates by Predicted Quality.
 
-### Problem: Rank Grasp Candidates by Predicted Quality
+**Planned exercise:** Evaluate Grasp Precision Under a Safety Threshold.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the rank grasp candidates by predicted quality component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Evaluate Grasp Precision Under a Safety Threshold
+## Implement the components
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the evaluate grasp precision under a safety threshold component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-## Visual teaching plan
+- **Generate robust grasp labels:** Aggregate Analytic Grasp Quality Under Pose Perturbations (planned).
+- **Train a quality predictor:** Extract a Grasp-Aligned Depth Patch (planned); Compute a Binary Grasp-Quality Loss (planned).
+- **Rank feasible candidates:** Rank Grasp Candidates by Predicted Quality (planned); Evaluate Grasp Precision Under a Safety Threshold (planned).
 
-- Display candidate gripper poses over a depth crop with quality scores.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+## Why this matters on a robot
 
-## MLOps and deployment extensions
+Synthetic labels reduce physical data collection, but friction uncertainty, missing depth, and gripper calibration can change real grasp success. Prediction confidence should be evaluated on physical trials.
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+## Sources and scope
 
-## Canonical sources
+[Primary paper](https://arxiv.org/abs/1703.09312) · [Open-access manuscript](https://arxiv.org/pdf/1703.09312)
 
-- [Primary arXiv record](https://arxiv.org/abs/1703.09312)
-- [Open-access author manuscript](https://arxiv.org/pdf/1703.09312)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

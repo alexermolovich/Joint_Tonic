@@ -1,114 +1,163 @@
 ---
 schema_version: 1
-paper_id: "2024-open-x-embodiment"
-title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models"
+paper_id: 2024-open-x-embodiment
+title: 'Open X-Embodiment: Robotic Learning Datasets and RT-X Models'
 authors:
-  - "Open X-Embodiment Collaboration (Abby O'Neill et al.)"
+  - Open X-Embodiment Collaboration (Abby O'Neill et al.)
 year: 2024
-venue_or_status: "IEEE ICRA 2024"
-primary_url: "https://arxiv.org/abs/2310.08864"
-pdf_url: "https://arxiv.org/pdf/2310.08864"
-local_pdf: "./2024-open-x-embodiment.pdf"
-sha256: "13f16aff5afdee583dc25b3c570e9bb0cf6baefb59b539928d919588cd8d9246"
+venue_or_status: IEEE ICRA 2024
+primary_url: 'https://arxiv.org/abs/2310.08864'
+pdf_url: 'https://arxiv.org/pdf/2310.08864'
+local_pdf: ./2024-open-x-embodiment.pdf
+sha256: 13f16aff5afdee583dc25b3c570e9bb0cf6baefb59b539928d919588cd8d9246
 bytes: 4011306
 pages: 12
 topics:
-  - "robot-data"
-  - "cross-embodiment"
-  - "dataset-mixtures"
-  - "generalist-policies"
-  - "transfer"
+  - robot-data
+  - cross-embodiment
+  - dataset-mixtures
+  - generalist-policies
+  - transfer
 modalities:
-  - "rgb"
-  - "language"
-  - "proprioception"
-  - "actions"
-  - "multi-robot-trajectories"
-track_role: "core"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
+  - rgb
+  - language
+  - proprioception
+  - actions
+  - multi-robot-trajectories
+track_role: core
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    The operational flow validates source episodes, constructs a weighted
+    training mixture, and evaluates transfer on identified embodiments. These
+    are data and evaluation stages, not a new universal action decoder.
+  nodes:
+    - id: stage-1
+      title: Preserve episode semantics
+      detail: >-
+        Map observations and actions into explicit schema fields without
+        dropping provenance.
+      column: 0
+      row: 0
+      section: Preserve episode semantics
+      problem_slugs:
+        - validate-robot-episodes
+        - map-shared-robot-episode
+      planned_problems:
+        - Detect Dataset-Version and Schema Drift
+    - id: stage-2
+      title: Sample a training mixture
+      detail: >-
+        Choose source datasets deliberately rather than letting file counts
+        determine training.
+      column: 1
+      row: 0
+      section: Sample a training mixture
+      problem_slugs:
+        - balance-multidataset-batch
+      planned_problems: []
+    - id: stage-3
+      title: Mask and evaluate transfer
+      detail: >-
+        Score supported action dimensions and report performance by embodiment
+        and task.
+      column: 2
+      row: 0
+      section: Mask and evaluate transfer
+      problem_slugs: []
+      planned_problems:
+        - Mask Unavailable Action Dimensions
+        - Build a Per-Embodiment Transfer Matrix
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: validated episodes
+    - from: stage-2
+      to: stage-3
+      label: mixture batches
 ---
 
-## Agent brief
+## Core paper explanation
 
-Teach the data-engineering problem behind cross-robot learning: heterogeneous observation keys, action spaces, control rates, task labels, and dataset sizes must be mapped into a common interface without erasing provenance.
+Open X-Embodiment brings robot datasets into a shared interface so policies can learn across embodiments, tasks, and collection sites. The difficult part is preserving meaning while standardizing representation: an action vector is incomplete without its units, coordinate frame, control mode, and timing. The RT-X experiments study transfer from such mixtures. A common schema helps make those experiments possible; it does not make different robots physically identical.
 
-## Contribution
+## Execution flow
 
-Open X-Embodiment standardizes datasets from many robot embodiments and demonstrates that training across them can yield transfer to multiple robots and tasks. The operational contribution is a shared data format plus mixture-scale experimentation.
+The operational flow validates source episodes, constructs a weighted training mixture, and evaluates transfer on identified embodiments. These are data and evaluation stages, not a new universal action decoder.
 
-## Prerequisite concepts
+### Preserve episode semantics
 
-- Robot poses, actions, and coordinate frames
-- Sequence datasets and data loaders
-- Multitask learning and sampling distributions
-- Per-dataset and macro/micro evaluation
-
-## Essential theory
-
-Let \(D_k\) be dataset \(k\), \(w_k\) its sampling weight, and \(\ell\) a policy loss. A generic mixture objective is
+For episode $e$, represent time-aligned data as $\{(o_t,a_t,\tau_t)\}_{t=0}^{T_e-1}$ plus metadata $m_e$. Here $\tau_t$ is a timestamp in a declared clock and unit; $a_t\in\mathbb R^{D_e}$ has embodiment-specific channel meaning. A simple alignment diagnostic is
 
 $$
-\mathcal{L}(\theta)=\sum_{k=1}^{K} w_k\;\mathbb{E}_{(o,a)\sim D_k}[\ell(\pi_\theta(o),a)],
-\qquad w_k\ge 0,\quad \sum_k w_k=1.
+\delta_t=|\tau_t^{\mathrm{camera}}-\tau_t^{\mathrm{state}}|.
 $$
 
-Uniform-over-examples weights large datasets heavily; uniform-over-datasets gives each embodiment equal mass. The choice changes what the model learns.
+The acceptance tolerance is a dataset/control requirement, not a universal number from the paper. [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes) implements a bounded example of shape, value, frame, and timestamp checks. Reshaping an action array alone does not convert end-effector deltas into joint targets.
 
-## Method map
 
-| Component | Input | Output | Core invariant | Good exercise boundary |
-| --- | --- | --- | --- | --- |
-| Source adapter | Source episode and schema mapping | Canonical episode with provenance | Unit, frame, mask, and source identity are never implicit | Adapt one source dataset |
-| Mixture sampler | Dataset sizes, weights, and seed | Dataset/example indices | Observed sampling follows declared weights reproducibly | Sample one finite epoch |
-| Transfer evaluator | Per-task and per-robot outcomes | Macro, micro, and transfer metrics | Every aggregate exposes its denominator and embodiment slices | Compute one transfer matrix |
+**Component practice**
 
-- Source-dataset adapters and provenance
-- Shared episode/step representation
-- Observation and action standardization
-- Language/task normalization
-- Multi-dataset sampling mixture
-- Per-embodiment and transfer evaluation
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Runnable component: [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode). Uses the bounded contract; no full paper reproduction is claimed.
+- Detect Dataset-Version and Schema Drift — unreviewed idea; contract and evaluator required.
 
-## Data and evaluation
+### Sample a training mixture
 
-Use a synthetic set of robot datasets with different action dimensions, control rates, camera keys, and sizes. Verify round-trip adapters, mixture frequencies, masked dimensions, and both micro-averaged and macro-averaged metrics.
+Let dataset $D_i$ have nonnegative configured weight $w_i$, with at least one positive weight. A transparent mixture model is
 
-## Limitations and failure modes
+$$
+p(i)=\frac{w_i}{\sum_jw_j},\qquad x\sim D_i.
+$$
 
-Nominally shared fields can have different semantics, frames, units, and collection biases. Aggregate gains can hide regressions on smaller embodiments. Standardization does not eliminate licensing or consent constraints.
+These equations formalize a loader contract; they are not a claim that every RT-X run used one identical mixture. Sampling by episode versus transition changes the influence of long demonstrations. Record source identity, split, and sampling policy with every example. Train/test splits must respect shared scenes, operators, or episodes when those create leakage.
 
-## Implementation decomposition
 
-1. Define canonical episode, observation, action, task, and provenance schemas.
-2. Write source adapters with unit/frame declarations.
-3. Normalize or mask heterogeneous action spaces.
-4. Implement configurable mixture sampling.
-5. Report per-dataset, per-robot, and aggregate transfer metrics.
+**Component practice**
 
-## Problem blueprints
+- Runnable component: [Balance a Multi-Dataset Training Mixture](/problems/balance-multidataset-batch). Uses the bounded contract; no full paper reproduction is claimed.
 
-| Title | Type | Difficulty | Inputs | Outputs | Grading |
-| --- | --- | --- | --- | --- | --- |
-| Canonical Episode Adapter | Data engineering | Hard | Source episode and adapter spec | Canonical episode plus provenance | Units/keys/timestamps, no information loss, schema validity |
-| Normalize Action Spaces | Robotics data | Hard | Actions, bounds, masks, frame metadata | Canonical actions and validity mask | Correct scaling, masked dimensions, invalid-bound errors |
-| Balanced Dataset Mixture | Sampling | Medium | Dataset sizes, weights, seed, sample count | Dataset/example indices | Reproducibility, observed frequencies, no out-of-range indices |
-| Macro vs Micro Transfer Metrics | Evaluation | Medium | Per-task successes and counts | Both aggregates and gap report | Correct weighting, missing task handling, transparent denominators |
+### Mask and evaluate transfer
 
-## Visual teaching plan
+For a teaching batch with action availability mask $M_{bd}$, predicted action $\hat A$, and a chosen per-channel error $\ell$, use
 
-- Sankey diagram from heterogeneous source schemas into one canonical episode format.
-- Interactive simplex or sliders for \(w_k\), updating expected samples per dataset.
-- Heatmap of train-embodiment to test-embodiment transfer scores.
-- Action-vector view showing active, normalized, and masked dimensions for each robot.
+$$
+\mathcal L=\frac{\sum_{b,d}M_{bd}\,\ell(A_{bd},\hat A_{bd})}{\sum_{b,d}M_{bd}}.
+$$
 
-## MLOps and deployment extensions
+Require a nonzero denominator. Masking an unavailable channel excludes it from supervision; it does not establish that the remaining channels share units or control semantics. Report success per embodiment/task and compare with the relevant single-dataset baseline. An aggregate gain can hide a negative-transfer slice.
 
-Store source license, consent, robot model, frame convention, calibration, control rate, and transformation version with every episode. Make dataset-mixture weights and adapter hashes first-class training artifacts.
 
-## Canonical sources
+**Component practice**
 
-- [arXiv landing page](https://arxiv.org/abs/2310.08864)
-- [arXiv PDF](https://arxiv.org/pdf/2310.08864)
-- [Project page](https://robotics-transformer-x.github.io/)
+- Mask Unavailable Action Dimensions — unreviewed idea; contract and evaluator required.
+- Build a Per-Embodiment Transfer Matrix — unreviewed idea; contract and evaluator required.
 
+## Implement the components
+
+Runnable components and supporting prerequisites are attached to their matching execution-flow stages. Remaining titles are planned ideas requiring implementation and review.
+
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
+- **Runnable component:** [Map Robot-Specific Data into a Shared Episode Schema](/problems/map-shared-robot-episode).
+- **Runnable component:** [Balance a Multi-Dataset Training Mixture](/problems/balance-multidataset-batch).
+
+**Planned component problems:**
+
+- Detect Dataset-Version and Schema Drift — unreviewed idea; contract and evaluator required.
+- Mask Unavailable Action Dimensions — unreviewed idea; contract and evaluator required.
+- Build a Per-Embodiment Transfer Matrix — unreviewed idea; contract and evaluator required.
+
+These exercises implement their stated contracts, not a complete paper reproduction.
+
+
+## Why this matters on a robot
+
+Dataset diversity can improve transfer, but a common field name such as action can conceal incompatible physical contracts. Timing drift, duplicated episodes, gripper convention changes, and hidden source imbalance can all undermine generalization. Validate semantics before increasing dataset size.
+
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2310.08864) · [Open-access manuscript](https://arxiv.org/pdf/2310.08864)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

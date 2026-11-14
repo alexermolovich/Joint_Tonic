@@ -16,102 +16,64 @@ modalities: ["camera","imu","lidar","poses"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Interpolate hierarchical features","detail":"Query local grids at multiple spatial resolutions.","column":0,"row":0,"section":"Interpolate hierarchical features","problem_slugs":[],"planned_problems":["Query Multi-Resolution Scene Features"]},{"id":"stage-2","title":"Decode occupancy and color","detail":"Combine coarse structure with local geometric detail.","column":1,"row":0,"section":"Decode occupancy and color","problem_slugs":[],"planned_problems":["Decode Occupancy and Color from Hierarchical Scene Features"]},{"id":"stage-3","title":"Optimize tracking and mapping","detail":"Use rendered depth and color against RGB-D measurements.","column":2,"row":0,"section":"Optimize tracking and mapping","problem_slugs":[],"planned_problems":["Sample Rays for Online Mapping","Measure Pose and Reconstruction Error"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"interpolated features"},{"from":"stage-2","to":"stage-3","label":"rendered rays"}]}
 ---
 
-# NICE-SLAM: Neural Implicit Scalable Encoding for SLAM
+## Core paper explanation
 
-## Agent brief
+NICE-SLAM uses hierarchical local feature grids and pretrained geometric decoders for neural RGB-D mapping. Local features improve scalability compared with storing an entire scene only in one global network.
 
-Study neural implicit mapping with hierarchical scene representations. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study neural implicit mapping with hierarchical scene representations.
+### Interpolate hierarchical features
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For world point $x$, trilinear interpolation gives
+$$f_\ell(x)=\sum_{v\in\mathcal N_\ell(x)}w_v(x)F_{\ell,v},\qquad\sum_vw_v(x)=1.$$
+$\ell$ identifies a grid level, $F_{\ell,v}$ a learned feature vector, and $\mathcal N_\ell(x)$ the eight neighboring grid vertices. Grid coordinates must be derived from metric world bounds.
 
-## Prerequisite concepts
 
-- SE(3)/SO(3), camera projection, least-squares residuals, covariance, timestamp alignment, and geometric matching.
+**Planned component problems:** Query Multi-Resolution Scene Features. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-## Method map
+### Decode occupancy and color
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Query Multi-Resolution Scene Features | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Sample Rays for Online Mapping | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
-| Measure Pose and Reconstruction Error | Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models | Residuals, correspondences, pose constraints, maps, or trajectory errors | Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. | One bounded function or validation stage |
+Pretrained decoders turn hierarchical features into occupancy estimates, with finer levels refining geometry. Color uses its own representation. For occupancy probabilities $o_k$ along a ray, rendering weights follow
+$$w_k=o_k\prod_{j<k}(1-o_j).$$
+This occupancy formulation differs from treating the decoder output as unbounded NeRF volume density.
 
-## Data and evaluation
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Planned component problem:** Decode Occupancy and Color from Hierarchical Scene Features. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
 
-## Implementation decomposition
+### Optimize tracking and mapping
 
-1. Query Multi-Resolution Scene Features.
-2. Sample Rays for Online Mapping.
-3. Measure Pose and Reconstruction Error.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+Predicted depth is $\hat D=\sum_k w_kt_k$, with ray depths $t_k$ in meters. Tracking updates camera pose; mapping updates relevant grid features and selected keyframe poses using geometric and photometric residuals. Coarse geometry provides support before fine detail is fully observed.
 
-## Problem blueprints
 
-### Problem: Query Multi-Resolution Scene Features
+**Planned component problems:** Sample Rays for Online Mapping; Measure Pose and Reconstruction Error. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the query multi-resolution scene features component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Sample Rays for Online Mapping
+- **Related implementation skill:** [Project Camera Points into Pixels](/problems/project-camera-points). This isolates a supporting mechanism, not this paper's complete method.
+- **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the sample rays for online mapping component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned components:**
 
-### Problem: Measure Pose and Reconstruction Error
+- Query Multi-Resolution Scene Features.
+- Decode Occupancy and Color from Hierarchical Scene Features.
+- Sample Rays for Online Mapping.
+- Measure Pose and Reconstruction Error.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the measure pose and reconstruction error component.
-- **Inputs:** Calibrated measurements, feature matches, sensor timestamps, poses, and uncertainty models; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Residuals, correspondences, pose constraints, maps, or trajectory errors; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check frame direction, meters/radians, degenerate geometry, invalid depth, covariance symmetry, and numerical residual/Jacobian agreement. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+[Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Inspect coarse and fine scene features along camera rays.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Hierarchical mapping can preserve detail over larger interiors. Occlusions, dynamic objects, and unsupported occupancy predictions still matter; a smooth reconstructed surface is not automatically a reliable contact surface.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Version calibration and sensor timing with logs; monitor residuals, inlier ratio, drift, relocalization, and compute latency across scene/motion conditions.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2112.12130) · [Open-access manuscript](https://arxiv.org/pdf/2112.12130)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2112.12130)
-- [Open-access author manuscript](https://arxiv.org/pdf/2112.12130)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

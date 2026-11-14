@@ -16,102 +16,72 @@ modalities: ["simulator-state","robot-actions","sensor-observations"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Compose the manipulation system","detail":"Select robot, objects, task, and sensor configuration.","column":0,"row":0,"section":"Compose the manipulation system","problem_slugs":[],"planned_problems":["Validate a Robot-Controller-Task Configuration","Normalize a Simulation Observation Dictionary"]},{"id":"stage-2","title":"Translate actions through a controller","detail":"Convert policy outputs into physical actuator commands.","column":1,"row":0,"section":"Translate actions through a controller","problem_slugs":[],"planned_problems":["Compute Joint PD Control Effort"]},{"id":"stage-3","title":"Record and replay experiments","detail":"Preserve simulator state and configuration with trajectories.","column":2,"row":0,"section":"Record and replay experiments","problem_slugs":["validate-robot-episodes"],"planned_problems":["Record a Deterministic Rollout Manifest"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"policy action"},{"from":"stage-2","to":"stage-3","label":"environment transitions"}]}
 ---
 
-# robosuite: A Modular Simulation Framework and Benchmark for Robot Learning
+## Core paper explanation
 
-## Agent brief
+robosuite composes robots, grippers, controllers, arenas, objects, and tasks on MuJoCo. Its modular interfaces make manipulation experiments reusable, while each configuration still defines a specific physical control problem.
 
-Study reusable robot manipulation simulation through composable robot, controller, and task interfaces. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study reusable robot manipulation simulation through composable robot, controller, and task interfaces.
+### Compose the manipulation system
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Treat a run as configuration $c=(\mathrm{robot},\mathrm{gripper},\mathrm{controller},\mathrm{task},\mathrm{sensors})$. This is a teaching reproducibility record. Changing a gripper or controller changes the action semantics even if the action array has the same length.
 
-## Prerequisite concepts
 
-- Rigid-body state, episode reset/termination, simulation timesteps, observation schemas, and reproducible benchmarking.
+**Component practice**
 
-## Method map
+- Validate a Robot-Controller-Task Configuration — unreviewed idea; contract and evaluator required.
+- Normalize a Simulation Observation Dictionary — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Validate a Robot-Controller-Task Configuration | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Normalize a Simulation Observation Dictionary | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
-| Record a Deterministic Rollout Manifest | Seeded scene/task configurations, batched states, actions, and backend capability metadata | Validated transitions, observations, rewards, or simulator benchmark summaries | Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. | One bounded function or validation stage |
 
-## Data and evaluation
+### Translate actions through a controller
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
+A joint PD illustration is
+$$\tau=K_p(q^*-q)+K_d(\dot q^*-\dot q).$$
+This explains one controller mechanism, not every robosuite controller. Operational-space and direct actuator modes have different frames, gains, clipping, and units. Name the selected mode in the problem contract.
 
-## Limitations and failure modes
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+**Component practice**
 
-## Implementation decomposition
+- Compute Joint PD Control Effort — unreviewed idea; contract and evaluator required.
 
-1. Validate a Robot-Controller-Task Configuration.
-2. Normalize a Simulation Observation Dictionary.
-3. Record a Deterministic Rollout Manifest.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
 
-## Problem blueprints
+### Record and replay experiments
 
-### Problem: Validate a Robot-Controller-Task Configuration
+Exact replay requires more than a random seed: simulator/asset versions, initial state, control frequency, and solver settings matter. Compare task success and physical constraint violations separately from reward. The checked-in manuscript may describe a later release than the stable card's initial year.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the validate a robot-controller-task configuration component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
 
-### Problem: Normalize a Simulation Observation Dictionary
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the normalize a simulation observation dictionary component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Supporting prerequisite: [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
+- Record a Deterministic Rollout Manifest — unreviewed idea; contract and evaluator required.
 
-### Problem: Record a Deterministic Rollout Manifest
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the record a deterministic rollout manifest component.
-- **Inputs:** Seeded scene/task configurations, batched states, actions, and backend capability metadata; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Validated transitions, observations, rewards, or simulator benchmark summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check reset determinism, frame/units consistency, batched termination, fixed-step replay, and explicit unsupported capabilities. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-## Visual teaching plan
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-- Draw composable task components and inspect their observation fields.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+- **Supporting prerequisite:** [Validate a Multimodal Robot Episode Schema](/problems/validate-robot-episodes).
 
-## MLOps and deployment extensions
+**Planned component problems:**
 
-- Pin engine version, assets, physics settings, controller rates, and task success predicates; record simulator crashes separately from policy failures.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+- Validate a Robot-Controller-Task Configuration — unreviewed idea; contract and evaluator required.
+- Normalize a Simulation Observation Dictionary — unreviewed idea; contract and evaluator required.
+- Compute Joint PD Control Effort — unreviewed idea; contract and evaluator required.
+- Record a Deterministic Rollout Manifest — unreviewed idea; contract and evaluator required.
 
-## Canonical sources
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-- [Primary arXiv record](https://arxiv.org/abs/2009.12293)
-- [Open-access author manuscript](https://arxiv.org/pdf/2009.12293)
+## Why this matters on a robot
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
+Modularity reduces setup effort but can conceal controller changes behind identical policy code. A demonstration collected with one action mode should not be replayed through another without an explicit conversion.
 
+## Sources and scope
+
+[Primary paper](https://arxiv.org/abs/2009.12293) · [Open-access manuscript](https://arxiv.org/pdf/2009.12293)
+
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -16,102 +16,67 @@ modalities: ["joint-state","poses","obstacles","trajectories"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample control rollouts","detail":"Perturb a nominal sequence and simulate dynamics.","column":0,"row":0,"section":"Sample control rollouts","problem_slugs":[],"planned_problems":["Roll Out Perturbed Control Sequences"]},{"id":"stage-2","title":"Weight corrected costs","detail":"Use exponential weights with the required sampling correction.","column":1,"row":0,"section":"Weight corrected costs","problem_slugs":[],"planned_problems":["Normalize Exponential Trajectory Cost Weights"]},{"id":"stage-3","title":"Update and recede","detail":"Average useful perturbations and shift the horizon.","column":2,"row":0,"section":"Update and recede","problem_slugs":[],"planned_problems":["Update a Receding-Horizon Control Sequence"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"rollout costs"},{"from":"stage-2","to":"stage-3","label":"normalized weights"}]}
 ---
 
-# Model Predictive Path Integral Control using Covariance Variable Importance Sampling
+## Core paper explanation
 
-## Agent brief
+Model Predictive Path Integral control improves a nominal control sequence by evaluating many stochastic rollouts in parallel. Low-cost perturbations receive greater weight, and the controller executes only the first action before replanning.
 
-Study information-theoretic sampling-based model-predictive control through weighted trajectory updates. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study information-theoretic sampling-based model-predictive control through weighted trajectory updates.
+### Sample control rollouts
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+For nominal controls $u_{0:H-1}$, sample noise $\epsilon_{k,t}$ and roll out $x_{t+1}=f(x_t,u_t+\epsilon_{k,t})$. Noise covariance, timestep, and control units must match the model. The paper's generalized importance sampling allows altered sampling drift and diffusion.
 
-## Prerequisite concepts
 
-- Forward kinematics, Jacobians, joint limits, collision geometry, optimization, and derivative constraints.
+**Component practice**
 
-## Method map
+- Roll Out Perturbed Control Sequences — unreviewed idea; contract and evaluator required.
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Roll Out Perturbed Control Sequences | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Normalize Exponential Trajectory Cost Weights | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
-| Update a Receding-Horizon Control Sequence | Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon | Joint configurations, feasible paths, trajectory costs, or control updates | Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. | One bounded function or validation stage |
+### Weight corrected costs
 
-## Data and evaluation
+For corrected rollout cost $S_k$ and temperature $\lambda>0$,
+$$w_k=\frac{\exp(-(S_k-S_{\min})/\lambda)}{\sum_j\exp(-(S_j-S_{\min})/\lambda)}.$$
+$S_k$ includes the path-integral control/importance terms, not only arbitrary state reward. Subtracting $S_{\min}$ stabilizes the exponential without changing normalized weights.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Component practice**
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
+- Normalize Exponential Trajectory Cost Weights — unreviewed idea; contract and evaluator required.
 
-## Implementation decomposition
+### Update and recede
 
-1. Roll Out Perturbed Control Sequences.
-2. Normalize Exponential Trajectory Cost Weights.
-3. Update a Receding-Horizon Control Sequence.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The core update is
+$$u_t\leftarrow u_t+\sum_k w_k\epsilon_{k,t}.$$
+Execute the first control, observe the new state, and shift the plan. Clipping or changing the sampling distribution requires attention to the derivation; arbitrary modifications do not preserve every path-integral guarantee.
 
-## Problem blueprints
 
-### Problem: Roll Out Perturbed Control Sequences
+**Component practice**
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the roll out perturbed control sequences component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- Update a Receding-Horizon Control Sequence — unreviewed idea; contract and evaluator required.
 
-### Problem: Normalize Exponential Trajectory Cost Weights
+## Implement the components
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the normalize exponential trajectory cost weights component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
-### Problem: Update a Receding-Horizon Control Sequence
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the update a receding-horizon control sequence component.
-- **Inputs:** Joint states, robot kinematic parameters, target poses, obstacle geometry, and a time horizon; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Joint configurations, feasible paths, trajectory costs, or control updates; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check forward-kinematics residuals, collisions, joint/velocity limits, singular or unreachable goals, and seeded search behavior. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned component problems:**
 
-## Visual teaching plan
+- Roll Out Perturbed Control Sequences — unreviewed idea; contract and evaluator required.
+- Normalize Exponential Trajectory Cost Weights — unreviewed idea; contract and evaluator required.
+- Update a Receding-Horizon Control Sequence — unreviewed idea; contract and evaluator required.
 
-- Plot sampled rollouts with cost-weighted opacity and the selected first action.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
-## MLOps and deployment extensions
+## Why this matters on a robot
 
-- Pin robot/scene assets, collision margins, solver tolerances, timestep, and seed; report feasibility and tail latency with replay evidence. Integrate through the MuJoCo/Isaac sidecar adapter.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+MPPI handles nonlinear rollout models and parallel hardware well. Bad dynamics, weight collapse onto one sample, and delayed observations can yield poor control even with many rollouts.
 
-## Canonical sources
+## Sources and scope
 
-- [Primary arXiv record](https://arxiv.org/abs/1509.01149)
-- [Open-access author manuscript](https://arxiv.org/pdf/1509.01149)
+[Primary paper](https://arxiv.org/abs/1509.01149) · [Open-access manuscript](https://arxiv.org/pdf/1509.01149)
 
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

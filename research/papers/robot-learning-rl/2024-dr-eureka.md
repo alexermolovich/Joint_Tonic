@@ -16,102 +16,57 @@ modalities: ["robot-state","rgb","actions","rewards"]
 track_role: "supporting"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Design a transfer-oriented reward","detail":"Generate and evaluate rewards with explicit physical behavior requirements.","column":0,"row":0,"section":"Design a transfer-oriented reward","problem_slugs":[],"planned_problems":["Validate a Generated Reward Program"]},{"id":"stage-2","title":"Probe physics sensitivity","detail":"Evaluate the initial policy under perturbed simulator parameters.","column":1,"row":0,"section":"Probe physics sensitivity","problem_slugs":[],"planned_problems":["Compare Robustness Across Randomization Settings"]},{"id":"stage-3","title":"Train with generated randomization","detail":"Sample varied dynamics and validate physical transfer.","column":2,"row":0,"section":"Train with generated randomization","problem_slugs":["sample-dynamics-distributions"],"planned_problems":["Sample a Bounded Dynamics Randomization Config"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"selected policy"},{"from":"stage-2","to":"stage-3","label":"randomization configuration"}]}
 ---
 
-# DrEureka: Language Model Guided Sim-To-Real Transfer
+## Core paper explanation
 
-## Agent brief
+DrEureka extends automated reward design with domain-randomization configuration for sim-to-real transfer. A learned policy is tested under perturbed physics to form reward-aware parameter priors before language-model-generated randomization distributions are used for training.
 
-Study automated reward and domain-randomization design for robot sim-to-real transfer. This acquisition card verifies the primary paper identity and local PDF, and proposes components that can become independently testable Joint Tonic problems. Full-text technical review is required before promoting an idea into a reviewed problem blueprint.
+## Execution flow
 
-## Contribution
+Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.
 
-Study automated reward and domain-randomization design for robot sim-to-real transfer.
+### Design a transfer-oriented reward
 
-The proposed exercises below are original teaching decompositions. They do not assert a full reproduction of the paper or any published performance number.
+Candidate policies optimize $J(\pi;r)=\mathbb E[\sum_t\gamma^tr(s_t,a_t)]$. Reward instructions can discourage undesirable behavior, but a penalty is not a hard physical constraint. Preserve the independent success metric used to select candidates.
 
-## Prerequisite concepts
 
-- Behavior cloning, Bellman targets, stochastic optimization, episode termination, and rollout evaluation.
+**Planned exercise:** Validate a Generated Reward Program.
 
-## Method map
 
-| Component candidate | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Sample a Bounded Dynamics Randomization Config | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Validate a Generated Reward Program | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
-| Compare Robustness Across Randomization Settings | Batched transitions or trajectories with observations, actions, rewards, and termination masks | Training targets, loss components, action candidates, or evaluation summaries | Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. | One bounded function or validation stage |
+### Probe physics sensitivity
 
-## Data and evaluation
+For parameter setting $\theta$, estimate $S(\theta)=\mathbb E[\mathrm{success}\mid\pi,\theta]$. The resulting reward-aware physics priors inform plausible randomization ranges. A policy failing at a parameter value does not prove that value is physically impossible.
 
-A small teaching implementation should use synthetic or separately licensed fixtures. Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Dataset names, exact protocol details, published metrics, and hardware requirements must be checked in the source PDF during full-text review; they are not inferred from an awesome-list entry. Keep educational component tests distinct from the paper's end-to-end evaluation.
 
-## Limitations and failure modes
+**Planned exercise:** Compare Robustness Across Randomization Settings.
 
-- This is a concise acquisition card, not a full-text technical review. Confirm equations, architecture details, and paper-stated limitations in the PDF before authoring theory.
-- Passing synthetic component tests does not establish real-robot performance, robustness, or safe deployment.
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- The paper, linked code, datasets, assets, and weights may carry different license conditions.
 
-## Implementation decomposition
+### Train with generated randomization
 
-1. Sample a Bounded Dynamics Randomization Config.
-2. Validate a Generated Reward Program.
-3. Compare Robustness Across Randomization Settings.
-4. Integrate the components on a small fixed fixture and record all deviations from the paper.
-5. Add failure slices and a reproducible artifact report.
+The robust-training objective is $\mathbb E_{\theta\sim p_\psi(\theta),\tau\sim\pi,P_\theta}[R(\tau)]$. Distribution $p_\psi$ must preserve units, valid ranges, and parameter dependencies. Simulation evaluation selects configurations; real robot tests determine whether the chosen uncertainty model covers reality.
 
-## Problem blueprints
 
-### Problem: Sample a Bounded Dynamics Randomization Config
+**Runnable component:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Apply provided bounded parameter distributions; language-generated priors and real-robot transfer are separate tasks.
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and explain the sample a bounded dynamics randomization config component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+**Planned exercise:** Sample a Bounded Dynamics Randomization Config.
 
-### Problem: Validate a Generated Reward Program
 
-- **Type:** component
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the validate a generated reward program component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+## Implement the components
 
-### Problem: Compare Robustness Across Randomization Settings
+Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Type:** pipeline
-- **Difficulty:** hard
-- **Learning objective:** Implement and explain the compare robustness across randomization settings component.
-- **Inputs:** Batched transitions or trajectories with observations, actions, rewards, and termination masks; finalize exact shapes, dtypes, units, frames, masks, and valid ranges during blueprint review.
-- **Outputs:** Training targets, loss components, action candidates, or evaluation summaries; specify order and mutation semantics in the reviewed blueprint.
-- **Fixture:** Original synthetic examples; any paper dataset requires separate license and split review.
-- **Grading:** Check terminal-versus-truncated semantics, tensor broadcasting, seeded sampling, finite gradients, and per-episode aggregation. Add at least two public cases plus hidden tests for documented edge families.
-- **Paper deviation:** Isolate one mechanism with bounded arrays or recorded trajectories; no claim of full-scale paper reproduction.
+- **Design a transfer-oriented reward:** Validate a Generated Reward Program (planned).
+- **Probe physics sensitivity:** Compare Robustness Across Randomization Settings (planned).
+- **Train with generated randomization:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions) (runnable component); Sample a Bounded Dynamics Randomization Config (planned).
 
-## Visual teaching plan
+## Why this matters on a robot
 
-- Show parameter distributions and performance across simulated conditions.
-- Provide labeled axes, units, coordinate frames, and an equivalent table/text view. Use discrete steps when reduced motion is requested.
-- Author diagrams independently; do not copy paper figures or captions.
+Automated randomization can reduce manual sim-to-real tuning. Independent parameter sampling can create implausible robots, while overly narrow ranges leave real dynamics uncovered.
 
-## MLOps and deployment extensions
+## Sources and scope
 
-- Keep replay/data versions, training seeds, policy versions, interventions, and simulator/robot configuration in one lineage record; compare offline losses with rollout outcomes.
-- Store paper ID, fixture hash, evaluator version, dependency lock, runtime digest, seed, and resource class with every result.
-- Use structured failure reasons and per-slice metrics to distinguish implementation mistakes, distribution shifts, and infrastructure failures.
+[Primary paper](https://arxiv.org/abs/2406.01967) · [Open-access manuscript](https://arxiv.org/pdf/2406.01967)
 
-## Canonical sources
-
-- [Primary arXiv record](https://arxiv.org/abs/2406.01967)
-- [Open-access author manuscript](https://arxiv.org/pdf/2406.01967)
-
-Identity metadata was read from the primary arXiv record. Local file signature, byte count, page parsing, and SHA-256 were verified on acquisition.
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.

@@ -1,0 +1,24 @@
+{
+  "slug": "diffusion-conditional-noise-loss",
+  "title": "Compute a Conditional Noise-Prediction Loss",
+  "version": "1.0.0",
+  "number": 205,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "diffusion-policy",
+    "noise-prediction",
+    "masked-loss"
+  ],
+  "minutes": 30,
+  "framework": "PyTorch",
+  "entrypoint": "conditional_noise_loss",
+  "paperIds": [
+    "2023-diffusion-policy"
+  ],
+  "prerequisites": [
+    "diffusion-action-noising"
+  ],
+  "visualization": "markdown",
+  "summary": "Reduce predicted-versus-supplied diffusion noise errors over exactly the valid action scalars while preserving training gradients."
+}

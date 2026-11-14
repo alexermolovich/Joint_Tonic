@@ -24,126 +24,85 @@ modalities:
 track_role: "advanced"
 open_access_status: "open-access-preprint"
 redistribution_note: "Research copy only; verify the source license before redistribution."
+execution_flow: {"title":"Core execution flow","description":"Aligned visual feature streams are fused into language-model context, action-token predictions are decoded using training-set normalization, and adaptation/serving preserve that interface.","nodes":[{"id":"stage-1","title":"Fuse visual representations","detail":"Align complementary visual feature streams and project them into language context.","column":0,"row":0,"section":"Fuse visual representations","problem_slugs":[],"planned_problems":["Fuse Two Visual Feature Streams Safely"]},{"id":"stage-2","title":"Quantize and predict actions","detail":"Use uniform bins within robust per-channel action bounds.","column":1,"row":0,"section":"Quantize and predict actions","problem_slugs":["rt1-action-codec"],"planned_problems":["Quantize Actions from Training-Set Quantiles","Build a VLA Action-Token Training Batch"]},{"id":"stage-3","title":"Adapt and serve consistently","detail":"Preserve visual preprocessing, tokenizer mapping, action statistics, and compute constraints.","column":2,"row":0,"section":"Adapt and serve consistently","problem_slugs":["edge-inference-release-gate"],"planned_problems":["Add Low-Rank Adaptation to a Policy Layer","Estimate Memory, Latency, and Quantized Serving Budgets"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"visual-language context"},{"from":"stage-2","to":"stage-3","label":"trained policy"}]}
 ---
+## Core paper explanation
 
-# OpenVLA: An Open-Source Vision-Language-Action Model
+OpenVLA joins pretrained visual representations with a language model and fine-tunes it to predict discretized robot actions. It combines visual features from complementary encoders and exposes practical fine-tuning and serving tradeoffs for a large VLA. Its action representation uses uniform bins inside robust, dataset-derived bounds. Those bounds are percentile-based; the bins themselves are not equal-probability quantile bins.
 
-## Agent brief
+## Execution flow
 
-OpenVLA is the best card for connecting model architecture to practical fine-tuning and serving. Teach feature fusion, dataset-derived action quantization, LoRA, quantization, and checkpoint/interface metadata. Avoid asking learners to train a 7B model from scratch.
+Aligned visual feature streams are fused into language-model context, action-token predictions are decoded using training-set normalization, and adaptation/serving preserve that interface.
 
-## Contribution
+### Fuse visual representations
 
-- **Changed:** OpenVLA releases a large open vision-language-action model trained on diverse real-robot demonstrations. It combines complementary pretrained visual features with a language backbone, predicts tokenized actions, and studies memory-efficient fine-tuning and quantized deployment.
-- **Evidence:** The reported evaluation is summarized below; the proposed exercises use deterministic small-scale proxies.
-- **Not established:** The paper does not establish universal safety, unsupported-embodiment robustness, or equivalence of an educational reproduction.
-
-## Prerequisite concepts
-
-- Vision encoders and feature projection/fusion
-- Decoder-only language models
-- Quantile-based discretization
-- LoRA, low-precision weights, and GPU memory accounting
-
-## Method map
-
-| Component | Input | Output | Core invariant | Good exercise boundary |
-|---|---|---|---|---|
-| Visual backbones | Preprocessed RGB image | Complementary feature grids | Preprocessing version matches each backbone | Validate frozen feature extraction |
-| Feature fusion | Two feature streams | LM-width visual tokens | Spatial/token alignment is explicit | Implement shape-safe fusion |
-| VLM context builder | Visual and instruction tokens | Decoder context | Token order and masks are reproducible | Build multimodal collation |
-| Quantile action codec | Training actions and new values | Bin edges, tokens, decoded actions | Edges fit training data only | Implement serializable quantile bins |
-| Efficient tuner/serving | Base model and adapter/quantization config | Deployable checkpoint | Memory and tokenizer/schema versions are reported | Measure LoRA and quantized builds |
-
-## Essential equations
-
-For action component \(j\), training-set quantiles define edges
+Suppose the two encoders produce spatially aligned features $F_1\in\mathbb R^{N\times d_1}$ and $F_2\in\mathbb R^{N\times d_2}$. Feature concatenation and projection can be written
 
 $$
-b_{j,k}=Q_{A_j}\!\left(\frac{k}{B}\right),\quad k=1,\ldots,B-1,
-\qquad
-q_j(a)=\sum_{k=1}^{B-1}\mathbf 1[a>b_{j,k}].
+Z=P([F_1;F_2]_{\mathrm{feature}})\in\mathbb R^{N\times d_{\mathrm{LM}}}.
 $$
 
-The action-token loss is categorical cross-entropy over the serialized target sequence:
+The concatenation is along feature width, not the token axis. Equal token counts are insufficient if the two preprocessing pipelines associate those tokens with different image patches. The projected visual sequence then conditions the language backbone alongside the instruction.
+
+<!-- joint-tonic-component:stage-1 -->
+- **Planned component:** Fuse Two Visual Feature Streams Safely. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
+
+### Quantize and predict actions
+
+For action channel $j$, let $l_j=Q_{0.01}(A_j)$ and $u_j=Q_{0.99}(A_j)$ be training-set percentile bounds. With $K=256$ bins,
 
 $$
-\mathcal L_{\text{token}}=-\sum_{t\in\mathcal T_{\text{action}}}\log p_\theta(\tau_t\mid I,c,\tau_{<t}),
+q_j=\operatorname{clip}\left(\left\lfloor K\frac{a_j-l_j}{u_j-l_j}\right\rfloor,0,K-1\right),
+\qquad \Delta_j=\frac{u_j-l_j}{K}.
 $$
 
-where \(I\) is the image input and \(c\) the instruction.
+Every bin has the same width $\Delta_j$ within a channel. Outliers are clipped instead of expanding the interval. [Quantize and Decode Robot Actions](/problems/rt1-action-codec) implements the uniform-codec mechanism with supplied bounds; deriving robust bounds and binding IDs to OpenVLA’s tokenizer are additional steps. Training predicts serialized action tokens with cross-entropy:
 
-## Visual teaching plan
+$$
+\mathcal L=-\sum_i\log p_\theta(\tau_i\mid I,c,\tau_{<i}).
+$$
 
-- **Feature-fusion diagram:** show two visual grids being aligned, concatenated/projected, and inserted before language tokens.
-- **Quantile-bin explorer:** compare uniform and quantile bins on a skewed action histogram and inspect decode error.
-- **Memory sandbox:** toggle dtype, LoRA rank, optimizer, and sequence length to update a component-wise GPU budget.
+<!-- joint-tonic-component:stage-2 -->
+- **Related implementation prerequisite:** [Quantize and Decode Robot Actions](/problems/rt1-action-codec).
+- **Planned component:** Quantize Actions from Training-Set Quantiles. This is an idea or blueprint, not a runnable exercise yet.
+- **Planned component:** Build a VLA Action-Token Training Batch. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-## Data and evaluation
+### Adapt and serve consistently
 
-- **Reported setting and protocol:** The model trains on a broad real-robot mixture and evaluates generalist manipulation, language grounding, multi-task adaptation, and efficient fine-tuning/serving choices. A scaled-down reproduction should measure quantization error, action-token accuracy, trainable memory, latency, and task success by environment.
-- **Compute/hardware interpretation:** Reported scale and physical hardware materially affect comparability; do not infer equivalence from a toy run.
-- **Educational boundary:** Use synthetic or licensed fixtures and report mechanism-level metrics separately from closed-loop outcomes.
+A low-rank adaptation of a weight matrix $W\in\mathbb R^{d_o\times d_i}$ can use
 
-## Limitations and failure modes
+$$
+W'=W+\frac{\alpha}{r}BA,
+\qquad A\in\mathbb R^{r\times d_i},\quad B\in\mathbb R^{d_o\times r}.
+$$
 
-- A 7B model remains expensive for many edge-control targets.
-- Quantile bins and action schemas are coupled to the training distribution.
-- Visual feature fusion increases preprocessing and versioning complexity.
-- Open weights do not remove upstream license or safety obligations.
+This adds $r(d_i+d_o)$ trainable entries rather than updating all $d_od_i$ entries. It is a parameterization of fine-tuning, not an automatic latency reduction: merged weights and serving kernels determine inference cost. [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate) is a related component for evaluating a candidate configuration against measured constraints.
 
-## Implementation decomposition
+<!-- joint-tonic-component:stage-3 -->
+- **Related implementation prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate).
+- **Planned component:** Add Low-Rank Adaptation to a Policy Layer. This is an idea or blueprint, not a runnable exercise yet.
+- **Planned component:** Estimate Memory, Latency, and Quantized Serving Budgets. This is an idea or blueprint, not a runnable exercise yet.
+<!-- /joint-tonic-component -->
 
-1. Align two feature tensors by spatial/token layout.
-2. Fuse and project them with explicit shape checks.
-3. Fit action quantiles on training data only and serialize the codec.
-4. Map action bins into a reserved token region.
-5. Add LoRA to selected modules and report trainable memory.
-6. Export a serving bundle with codec, preprocessing, and schema versions.
+## Implement the components
 
-## Problem blueprints
+Runnable exercises are attached beside the relevant equations above and in the execution graph. Supporting prerequisites are labeled separately; a completed component does not reproduce the whole paper.
 
-### Problem: Fuse visual feature streams
+- [Quantize and Decode Robot Actions](/problems/rt1-action-codec)
+- [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate)
 
-- **Type:** component
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** two feature grids with documented shapes and projection weights
-- **Outputs:** fused visual tokens at the language-model width
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** alignment, batch preservation, informative shape errors, gradient flow, deterministic output
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+Planned components: Fuse Two Visual Feature Streams Safely; Quantize Actions from Training-Set Quantiles; Build a VLA Action-Token Training Batch; Add Low-Rank Adaptation to a Policy Layer; Estimate Memory, Latency, and Quantized Serving Budgets. Exact approved curriculum titles are reused where available; additional named ideas require a reviewed blueprint before implementation.
 
-### Problem: Fit and apply quantile action bins
+[Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 
-- **Type:** pipeline
-- **Difficulty:** medium
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** training actions, bin count, new action batch
-- **Outputs:** monotonic bin edges, tokens, decoded centers
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** training-only fit, repeated quantile handling, clipping, serialization round trip, error bounds
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+## Why this matters on a robot
 
-### Problem: Estimate VLA deployment memory
+A change to action normalization changes the meaning of generated tokens even if model weights stay fixed. New camera views, gripper conventions, or control rates can also break transfer. Fine-tuning and quantized serving should be evaluated on closed-loop tasks as well as memory, latency, and offline action error.
 
-- **Type:** optimization
-- **Difficulty:** hard
-- **Learning objective:** Implement and test this mechanism as an independent, observable skill.
-- **Inputs:** parameter counts/dtypes, LoRA configuration, KV-cache shape, optimizer choice
-- **Outputs:** component-wise train and inference memory budget
-- **Fixture:** Deterministic synthetic or openly licensed data matching the declared interface.
-- **Grading:** byte-accurate formulas, shared/frozen parameters, optimizer states, clear GiB units, ceiling comparison
-- **Paper deviation:** Isolates one mechanism; omits the paper-scale model, data, and physical-robot experiment.
+## Sources and scope
 
-## MLOps and deployment extensions
+[Primary paper](https://arxiv.org/abs/2406.09246) · [Open-access manuscript](https://arxiv.org/pdf/2406.09246)
 
-- Treat visual preprocessors, backbone revisions, token mapping, bin edges, and action schema as one atomic model version. Record peak device memory and p95 latency on the deployment GPU. Add canary replays that compare action tokens and decoded commands across quantized and unquantized builds before promotion.
-
-## Canonical sources
-
-- [Primary landing page](https://arxiv.org/abs/2406.09246)
-- [Open-access PDF](https://arxiv.org/pdf/2406.09246)
-- [Official code or project page](https://openvla.github.io/)
-
-
+This is an original explanation of selected mechanisms. Equations use the notation defined here; simplified teaching models are identified explicitly. Small component exercises do not reproduce the paper's full experiments. The local PDF is a research reference; its redistribution terms remain those recorded in the metadata.
