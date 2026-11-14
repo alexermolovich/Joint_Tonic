@@ -10,10 +10,11 @@
     "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
     "validate": "node scripts/validate-content.mjs",
     "test:problems": "python apps/worker/check_references.py",
-    "test": "npm run validate && npm run test:problems",
+    "test": "npm run test:content && npm run validate && npm run test:problems",
     "worker": "python apps/worker/server.py",
     "supabase:start": "supabase start",
-    "supabase:stop": "supabase stop"
+    "supabase:stop": "supabase stop",
+    "test:content": "node --test tests/validate-content.test.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "4.7.0",
