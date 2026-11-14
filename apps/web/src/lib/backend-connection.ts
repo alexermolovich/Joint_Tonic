@@ -3,6 +3,14 @@ import { authenticateRequest, WorkspaceAuthError } from "./supabase-server";
 export { WorkspaceAuthError };
 const loopback = new Set(["127.0.0.1", "localhost", "[::1]"]);
 
+export class BackendUnavailableError extends WorkspaceAuthError {
+  constructor(kind: "worker" | "simulator") {
+    super(kind === "simulator"
+      ? "Online simulation is not deployed. Use the local Franka demo on the computer running MuJoCo; signing in will not enable this simulator."
+      : "Online code execution is not deployed. Use the local workspace to run your code.", 503);
+  }
+}
+
 /** Destinations and service credentials come only from server configuration. */
 export async function backendConnection(request: Request, kind: "worker" | "simulator") {
   const endpoint = new URL((kind === "worker" ? process.env.WORKER_URL : process.env.SIMULATOR_URL)
@@ -11,6 +19,10 @@ export async function backendConnection(request: Request, kind: "worker" | "simu
   if (endpoint.username || endpoint.password || endpoint.search || endpoint.hash || endpoint.pathname !== "/"
     || (!local && endpoint.protocol !== "https:")) throw new WorkspaceAuthError("Backend URL is not configured correctly.", 503);
   const hosted = !!process.env.VERCEL || !local;
+  const token = (kind === "worker" ? process.env.WORKER_SERVICE_TOKEN : process.env.SIMULATOR_SERVICE_TOKEN)?.trim();
+  // A missing service cannot be fixed by signing in. Check readiness first while
+  // retaining verified account identity for every configured hosted backend.
+  if (hosted && (local || !token || token.length < 32)) throw new BackendUnavailableError(kind);
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (hosted || request.headers.has("authorization")) {
     const { user } = await authenticateRequest(request);
@@ -18,8 +30,6 @@ export async function backendConnection(request: Request, kind: "worker" | "simu
     headers["X-Account-Id"] = user.id;
   } else headers["X-Workspace-Id"] = request.headers.get("x-workspace-id") || "";
   if (hosted) {
-    const token = (kind === "worker" ? process.env.WORKER_SERVICE_TOKEN : process.env.SIMULATOR_SERVICE_TOKEN)?.trim();
-    if (local || !token || token.length < 32) throw new WorkspaceAuthError("This backend has not been deployed yet.", 503);
     headers.Authorization = `Bearer ${token}`;
   }
   return { endpoint, headers, hosted };

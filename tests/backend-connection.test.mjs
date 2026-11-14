@@ -53,6 +53,21 @@ test("hosted configuration never falls back to loopback development worker", asy
     headers: { authorization: "Bearer valid-session" },
   }), "worker"), e => e.status === 503);
 });
+test("missing hosted backends report deployment readiness before asking guests to sign in", async () => {
+  for (const kind of ["worker", "simulator"]) {
+    const api = load({ VERCEL: "1" });
+    await assert.rejects(api.backendConnection(new Request("https://web.example"), kind), e => e.status === 503 && e instanceof api.BackendUnavailableError);
+  }
+  const missingToken = load({ VERCEL: "1", SIMULATOR_URL: "https://simulator.example" });
+  await assert.rejects(missingToken.backendConnection(new Request("https://web.example"), "simulator"), e => e.status === 503);
+});
+test("configured hosted simulation still verifies identity and local guests need no login", async () => {
+  const hosted = load({ VERCEL: "1", SIMULATOR_URL: "https://simulator.example", SIMULATOR_SERVICE_TOKEN: "s".repeat(32) });
+  await assert.rejects(hosted.backendConnection(new Request("https://web.example"), "simulator"), e => e.status === 401);
+  const local = await load().backendConnection(new Request("http://localhost:3000"), "simulator");
+  assert.equal(local.endpoint.href, "http://127.0.0.1:8766/");
+  assert.equal(local.headers.Authorization, undefined);
+});
 test("credential-bearing and insecure backend URLs are rejected", async () => {
   for (const endpoint of ["http://remote.example", "https://user:pass@remote.example", "https://remote.example/path", "https://remote.example?token=x"]) {
     await assert.rejects(load({ WORKER_URL: endpoint }).backendConnection(new Request("https://web.example"), "worker"), e => e.status === 503);
