@@ -65,7 +65,7 @@
       "gradients-where-required",
       "realistic-scale"
     ],
-    "evaluator_sha256": "a57ea7135b94b29ff633cdd87768d408e3e549986f99e2acf07b9671c6570e20"
+    "evaluator_sha256": "cc4e56d655e1420c8f00338e370072cd1f8870c72466c5c21ae0484bca20bd17"
   },
   "fixtures": {
     "source": "Original synthetic inputs",

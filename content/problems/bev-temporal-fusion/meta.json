@@ -64,7 +64,7 @@
       "Input preservation"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "7dff0b1febafbe94884e865a18e85aba650a1e8506a5d293d96f7d4767d23a90"
+    "evaluator_sha256": "e3a6e5614b79f3fd5c807700bb08739f5d6f5fbe9cc05a173cdc1529c05efb6d"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

@@ -68,7 +68,7 @@
       "Noncontiguous realistic scale and preservation"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "f1458ad17c7335ced9384c32f13766d8cd2551f4ee90c5fd39183304bb1b9e2f"
+    "evaluator_sha256": "9fa188497576094f9386f176e02dd6d6b6347a3f4137afdb0f48c63404419aab"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

@@ -60,7 +60,7 @@
       "sorted results and preservation at scale"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "c668ad34727715bc14fc6368ae9a613250011634f48f7715b8c14d467108c339"
+    "evaluator_sha256": "8a85681cccf4f40888ffdaac122cd40ecdb67dece7ae3e77818cd4e26f1b6f98"
   },
   "fixtures": {
     "source": "original synthetic examples",

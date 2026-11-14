@@ -60,7 +60,7 @@
       "empty snapshots and preserved inputs"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "275fa864621b4f6e1241a0b2f84acfd7a0dd4a2612a26819cd53a7a36207d937"
+    "evaluator_sha256": "96200ea05177c14b2a729e379a1bf2a86d9043fdcd1d4a98d5ada1e6d2d4fea9"
   },
   "fixtures": {
     "source": "original synthetic examples",

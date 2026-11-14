@@ -61,7 +61,7 @@
       "bounded scale and independent arrays"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "f71237498f4d43d07e7210c40adb0a3455a0164224a0327a84637ec9b675e802"
+    "evaluator_sha256": "2434a27f22b97b2479d47cd3cb98300a1c77148b53efad92245b487692b371af"
   },
   "fixtures": {
     "source": "original synthetic examples",

@@ -59,7 +59,7 @@
       "independent-invariants"
     ],
     "performance_class": "cpu",
-    "evaluator_sha256": "f6e58df303e6dae70d6e0e225d5aac363dc5a20e04c282d03a242c02a8e3f046"
+    "evaluator_sha256": "f962e41eede79d08a73a9eb1fb303c7210c315aec648dc3be44b7d8cf4f60a2c"
   },
   "fixtures": {
     "source": "original-synthetic",

@@ -66,7 +66,7 @@
       "maximum-waypoints"
     ],
     "performance_class": "cpu",
-    "evaluator_sha256": "911c5f8c7d0bcfe70e760a208dee21b96b7d04e561903812be14226c6295fba5"
+    "evaluator_sha256": "3eba5e9b9f888ce55136d515c269da1ae4d12b5eef2bc91d3a2a0dd0ea441ee0"
   },
   "fixtures": {
     "source": "original-synthetic",
