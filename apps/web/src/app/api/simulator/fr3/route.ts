@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendConnection, WorkspaceAuthError } from "@/lib/backend-connection";
+import { backendConnection, BackendUnavailableError, WorkspaceAuthError } from "@/lib/backend-connection";
 
 export const runtime = "nodejs";
 
@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     console.info(JSON.stringify({ event: "simulator.frame", correlation_id: correlationId, status: response.status }));
     return respond(data, response.status);
   } catch (error) {
+    if (error instanceof BackendUnavailableError) return respond({ error: error.message, code: "simulator_not_deployed" }, error.status);
     if (error instanceof WorkspaceAuthError) return respond({ error: error.message }, error.status);
     if (error instanceof SyntaxError) return respond({ error: "Invalid pose JSON" }, 400);
     console.warn(JSON.stringify({ event: "simulator.unavailable", correlation_id: correlationId }));

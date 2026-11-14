@@ -14,6 +14,7 @@ type Frame = { protocol: string; backend: string; model: string; q: number[]; to
 export function RobotSimulator({ visible, result, draft, evaluating, playJobId, onRunAndPlay }: { visible: boolean; result: Job | null; draft: string; evaluating: boolean; playJobId: string | null; onRunAndPlay: () => Promise<void> }) {
   const [frame, setFrame] = useState<Frame | null>(null);
   const [error, setError] = useState("");
+  const [localDemoAvailable, setLocalDemoAvailable] = useState(false);
   const [busy, setBusy] = useState(false);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -53,7 +54,7 @@ export function RobotSimulator({ visible, result, draft, evaluating, playJobId, 
           await new Promise(resolve => setTimeout(resolve, 100)); continue;
         }
         dirty.current = false;
-        setBusy(true); setError("");
+        setBusy(true); setError(""); setLocalDemoAvailable(false);
         try {
           const response = await fetch("/api/simulator/fr3", {
             method: "POST", headers: { "Content-Type": "application/json", ...await workspaceRequestHeaders() },
@@ -61,6 +62,7 @@ export function RobotSimulator({ visible, result, draft, evaluating, playJobId, 
             signal: AbortSignal.any([controller.signal, AbortSignal.timeout(35000)]),
           });
           const next = await response.json();
+          if (active) setLocalDemoAvailable(!response.ok && next.code === "simulator_not_deployed");
           if (!response.ok) throw new Error(next.error || "Could not render this pose");
           if (next.protocol !== "joint-tonic.simulator.v1" || !Array.isArray(next.q) || next.q.length !== 7 || typeof next.image_png_base64 !== "string") throw new Error("Invalid simulator response");
           if (active) setFrame(next);
@@ -107,6 +109,7 @@ export function RobotSimulator({ visible, result, draft, evaluating, playJobId, 
   return <div id="robot-simulation-panel" role="tabpanel" aria-labelledby="robot-simulation-tab" hidden={!visible} className="robot-simulator">
     <div className="robot-simulator-heading"><div><strong>Franka Research 3</strong><span>Live MuJoCo view · joint-space kinematics</span></div><button className="icon-button" type="button" aria-label="Reset robot to home" disabled={!frame && busy} onClick={() => { setPlaying(false); setIndex(0); void render(); }}><RotateCcw size={16} /></button></div>
     {error && <div className="error-banner" role="alert"><span>{error}</span><button className="button secondary small" onClick={() => void render(trajectory?.[index])}>Retry simulator</button></div>}
+    {localDemoAvailable && <p className="robot-simulator-note"><a href="http://localhost:3000/problems/fr3-joint-interpolation">Open the local Franka demo</a> on the computer running Joint Tonic. No login is required for local practice.</p>}
     <div ref={viewport} className="robot-simulator-viewport" role="group" tabIndex={0} aria-label="Interactive MuJoCo camera" aria-describedby="robot-camera-help"
       onPointerDown={event => { if (!event.isPrimary || event.button !== 0) return; event.preventDefault(); event.currentTarget.focus(); event.currentTarget.setPointerCapture(event.pointerId); drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY }; }}
       onPointerMove={event => { const previous = drag.current; if (!previous || previous.id !== event.pointerId) return; changeCamera({ ...camera.current, azimuth: camera.current.azimuth - (event.clientX - previous.x) * .5, elevation: camera.current.elevation - (event.clientY - previous.y) * .4 }); drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY }; }}
