@@ -23,9 +23,10 @@
     "vit-patch-class-tokens",
     "vit-position-interpolation",
     "vit-pre-norm-block",
-    "vit-resolution-profile"
+    "vit-resolution-profile",
+    "vit-class-token-linear-head"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +59,7 @@ The implementation path follows **Patchify the image â†’ Mix patch information â
 
 Source cards: [2021-vision-transformer](../../../research/papers/vision-vlm-3d/2021-vision-transformer.md).
 
-**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 6 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -106,7 +107,7 @@ Use the class token for classification or retain spatial tokens for later tasks.
 
 [Study the mechanism and math](/projects/2021-vision-transformer#paper-section-read-out-a-representation).
 
-- **Proposed component, not runnable:** Read a Normalized Class Token with a Linear Head.
+- **Runnable paper-associated component:** [Read a Normalized Class Token with a Linear Head](/problems/vit-class-token-linear-head). The class token summarizes a transformer sequence.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

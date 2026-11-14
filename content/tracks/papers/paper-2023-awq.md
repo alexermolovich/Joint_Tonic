@@ -17,9 +17,12 @@
     "awq"
   ],
   "runnable_problem_slugs": [
-    "edge-inference-release-gate"
+    "awq-activation-weighted-error",
+    "awq-groupwise-quantization",
+    "edge-inference-release-gate",
+    "openvla-quantized-serving-budget"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,13 +55,14 @@ The implementation path follows **Inspect activation importance → Search equiv
 
 Source cards: [2023-awq](../../../research/papers/mlops-data-deployment/2023-awq.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Inspect activation importance** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Estimate Memory, Latency, and Quantized Serving Budgets](/problems/openvla-quantized-serving-budget). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -72,7 +76,7 @@ Use calibration activations to identify sensitive weight channels.
 
 [Study the mechanism and math](/projects/2023-awq#paper-section-inspect-activation-importance).
 
-- **Proposed component, not runnable:** Compare Activation-Weighted Quantization Error.
+- **Runnable paper-associated component:** [Compare Activation-Weighted Quantization Error](/problems/awq-activation-weighted-error). Compare Activation-Weighted Quantization Error
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -84,7 +88,7 @@ Protect salient channels before quantizing weights.
 
 [Study the mechanism and math](/projects/2023-awq#paper-section-search-equivalent-channel-scales).
 
-- **Proposed component, not runnable:** Compute Group-Wise Quantization Parameters.
+- **Runnable paper-associated component:** [Compute Group-Wise Quantization Parameters](/problems/awq-groupwise-quantization). Compute Group-Wise Quantization Parameters
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,7 +101,7 @@ Pack weights and benchmark kernels under realistic workloads.
 [Study the mechanism and math](/projects/2023-awq#paper-section-serve-low-bit-weights).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Estimate Quantized VLA Backbone Memory.
+- **Runnable supporting prerequisite:** [Estimate Memory, Latency, and Quantized Serving Budgets](/problems/openvla-quantized-serving-budget). Four-bit weights occupy fewer bytes, but packed storage and kernel speed are separate questions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

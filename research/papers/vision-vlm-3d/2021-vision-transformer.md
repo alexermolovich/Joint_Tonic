@@ -1,22 +1,86 @@
 ---
 schema_version: 1
-paper_id: "2021-vision-transformer"
-title: "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"
-authors: ["Alexey Dosovitskiy", "Lucas Beyer", "Alexander Kolesnikov", "Dirk Weissenborn", "Xiaohua Zhai", "Thomas Unterthiner", "Mostafa Dehghani", "Matthias Minderer", "Georg Heigold", "Sylvain Gelly", "Jakob Uszkoreit", "Neil Houlsby"]
+paper_id: 2021-vision-transformer
+title: 'An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale'
+authors:
+  - Alexey Dosovitskiy
+  - Lucas Beyer
+  - Alexander Kolesnikov
+  - Dirk Weissenborn
+  - Xiaohua Zhai
+  - Thomas Unterthiner
+  - Mostafa Dehghani
+  - Matthias Minderer
+  - Georg Heigold
+  - Sylvain Gelly
+  - Jakob Uszkoreit
+  - Neil Houlsby
 year: 2021
-venue_or_status: "ICLR 2021"
-primary_url: "https://arxiv.org/abs/2010.11929"
-pdf_url: "https://arxiv.org/pdf/2010.11929"
-local_pdf: "./2021-vision-transformer.pdf"
-sha256: "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+venue_or_status: ICLR 2021
+primary_url: 'https://arxiv.org/abs/2010.11929'
+pdf_url: 'https://arxiv.org/pdf/2010.11929'
+local_pdf: ./2021-vision-transformer.pdf
+sha256: 8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6
 bytes: 3743814
 pages: 22
-topics: ["vision transformers", "image classification", "patch embeddings", "transfer learning"]
-modalities: ["RGB image"]
-track_role: "Backbone prerequisite for transformer-based perception"
-open_access_status: "Open-access arXiv manuscript"
-redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
-execution_flow: {"title":"Core execution flow","description":"The inference path converts image patches to tokens, applies transformer blocks, and reads a classification representation. Training optimizes the chosen supervised head; robotics reuse may retain patch features instead.","nodes":[{"id":"stage-1","title":"Patchify the image","detail":"Flatten fixed image patches and project them into token embeddings.","column":0,"row":0,"section":"Patchify the image","problem_slugs":["vit-patchify-reconstruct","vit-patch-class-tokens","vit-position-interpolation"],"planned_problems":[]},{"id":"stage-2","title":"Mix patch information","detail":"Attention exchanges information globally; an MLP transforms each token.","column":1,"row":0,"section":"Mix patch information","problem_slugs":["vit-pre-norm-block","vit-resolution-profile"],"planned_problems":[]},{"id":"stage-3","title":"Read out a representation","detail":"Use the class token for classification or retain spatial tokens for later tasks.","column":2,"row":0,"section":"Read out a representation","problem_slugs":[],"planned_problems":["Read a Normalized Class Token with a Linear Head"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"patch tokens"},{"from":"stage-2","to":"stage-3","label":"encoded tokens"}]}
+topics:
+  - vision transformers
+  - image classification
+  - patch embeddings
+  - transfer learning
+modalities:
+  - RGB image
+track_role: Backbone prerequisite for transformer-based perception
+open_access_status: Open-access arXiv manuscript
+redistribution_note: >-
+  Retain the original attribution and license metadata; verify source terms
+  before redistributing outside this research workspace.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    The inference path converts image patches to tokens, applies transformer
+    blocks, and reads a classification representation. Training optimizes the
+    chosen supervised head; robotics reuse may retain patch features instead.
+  nodes:
+    - id: stage-1
+      title: Patchify the image
+      detail: Flatten fixed image patches and project them into token embeddings.
+      column: 0
+      row: 0
+      section: Patchify the image
+      problem_slugs:
+        - vit-patchify-reconstruct
+        - vit-patch-class-tokens
+        - vit-position-interpolation
+      planned_problems: []
+    - id: stage-2
+      title: Mix patch information
+      detail: Attention exchanges information globally; an MLP transforms each token.
+      column: 1
+      row: 0
+      section: Mix patch information
+      problem_slugs:
+        - vit-pre-norm-block
+        - vit-resolution-profile
+      planned_problems: []
+    - id: stage-3
+      title: Read out a representation
+      detail: >-
+        Use the class token for classification or retain spatial tokens for
+        later tasks.
+      column: 2
+      row: 0
+      section: Read out a representation
+      problem_slugs:
+        - vit-class-token-linear-head
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: patch tokens
+    - from: stage-2
+      to: stage-3
+      label: encoded tokens
 ---
 
 ## Core paper explanation
@@ -72,6 +136,8 @@ $L$ includes the class token; $M$ counts bytes in one image/layer's explicit att
 
 ### Read out a representation
 
+**Implement this component:** [Read a Normalized Class Token with a Linear Head](/problems/vit-class-token-linear-head). Apply population layer normalization to token zero, then a supplied linear head; this does not train ViT.
+
 For the normalized final class token $h$, a linear classifier gives
 
 $$
@@ -87,6 +153,8 @@ Changing image resolution changes the patch grid. When interpolating learned spa
 
 ## Implement the components
 
+- [Read a Normalized Class Token with a Linear Head](/problems/vit-class-token-linear-head) — Medium.
+
 The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
 - [Patchify and Reconstruct an Image Tensor](/problems/vit-patchify-reconstruct) — Easy.
@@ -94,10 +162,6 @@ The following bounded exercises are runnable. They use original synthetic fixtur
 - [Interpolate 2D Positional Embeddings](/problems/vit-position-interpolation) — Medium.
 - [Profile Token Count, Memory, and Latency by Resolution](/problems/vit-resolution-profile) — Medium.
 - [Assemble a Pre-Norm Vision Transformer Block](/problems/vit-pre-norm-block) — Hard.
-
-**Further ideas outside the approved runnable scope:**
-
-- Read a Normalized Class Token with a Linear Head.
 
 ## Why this matters on a robot
 

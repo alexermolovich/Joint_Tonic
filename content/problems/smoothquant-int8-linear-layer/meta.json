@@ -1,0 +1,80 @@
+{
+  "slug": "smoothquant-int8-linear-layer",
+  "title": "Quantize Weights and Activations to Int8",
+  "version": "1.0.0",
+  "number": 902,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "model-compression",
+    "2022-smoothquant"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "quantize_int8_layer",
+  "paperIds": [
+    "2022-smoothquant"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Quantize Weights and Activations to Int8",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Neural feature channels; no spatial frame transform"
+    ],
+    "units": {
+      "scales/output": "dimensionless calibrated feature values"
+    },
+    "axes": "X(N,C),W(C,D),qx(N,C),qw(C,D),sx(N,1),sw(1,D),output(N,D).",
+    "timestamp_assumptions": "Offline fixed calibration batch; no timestamps",
+    "batching": "X(N,C),W(C,D),qx(N,C),qw(C,D),sx(N,1),sw(1,D),output(N,D)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "cb5feb74cd23da52f92aab4fe812e60622baf7820a9475d88a3d8ec04deeb811"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full paper reproduction or hardware speed guarantee. Backlog PB-317",
+    "primary_urls": [
+      "https://arxiv.org/abs/2211.10438"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2022-smoothquant.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

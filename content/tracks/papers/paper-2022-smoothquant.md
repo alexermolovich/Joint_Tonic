@@ -5,7 +5,7 @@
   "slug": "paper-2022-smoothquant",
   "paper_id": "2022-smoothquant",
   "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
-  "status": "planned",
+  "status": "bounded-integration-available",
   "primary_url": "https://arxiv.org/abs/2211.10438",
   "source_cards": [
     "research/papers/mlops-data-deployment/2022-smoothquant.md"
@@ -17,9 +17,14 @@
     "smoothquant"
   ],
   "runnable_problem_slugs": [
-    "edge-inference-release-gate"
+    "smoothquant-channel-ranges",
+    "smoothquant-equivalent-rescaling",
+    "edge-inference-release-gate",
+    "smoothquant-int8-linear-layer",
+    "smoothquant-layer-error-report",
+    "smoothquant-calibrated-layer-integration"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -35,8 +40,9 @@
       "node": "stage-3"
     }
   ],
-  "integration_status": "proposed",
-  "assessment_status": "proposed"
+  "integration_status": "runnable",
+  "assessment_status": "runnable",
+  "integration_problem_slug": "smoothquant-calibrated-layer-integration"
 }
 ---
 
@@ -52,13 +58,17 @@ The implementation path follows **Measure channel ranges → Apply equivalent re
 
 Source cards: [2022-smoothquant](../../../research/papers/mlops-data-deployment/2022-smoothquant.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Measure channel ranges** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
 - **Supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Measure Per-Channel Activation and Weight Ranges](/problems/smoothquant-channel-ranges). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply an Equivalent Channel Rescaling](/problems/smoothquant-equivalent-rescaling). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Quantize Weights and Activations to Int8](/problems/smoothquant-int8-linear-layer). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Validate Layer Output Error After Smoothing](/problems/smoothquant-layer-error-report). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -72,7 +82,7 @@ Collect activation and weight magnitudes on calibration data.
 
 [Study the mechanism and math](/projects/2022-smoothquant#paper-section-measure-channel-ranges).
 
-- **Proposed component, not runnable:** Measure Per-Channel Activation and Weight Ranges.
+- **Runnable paper-associated component:** [Measure Per-Channel Activation and Weight Ranges](/problems/smoothquant-channel-ranges). Measure Per-Channel Activation and Weight Ranges
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -84,7 +94,7 @@ Divide activation channels and multiply corresponding weight rows.
 
 [Study the mechanism and math](/projects/2022-smoothquant#paper-section-apply-equivalent-rescaling).
 
-- **Proposed component, not runnable:** Apply an Equivalent Channel Rescaling.
+- **Runnable paper-associated component:** [Apply an Equivalent Channel Rescaling](/problems/smoothquant-equivalent-rescaling). Apply an Equivalent Channel Rescaling
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,8 +107,9 @@ Use integer kernels and measure end-to-end accuracy and latency.
 [Study the mechanism and math](/projects/2022-smoothquant#paper-section-quantize-and-validate).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Quantize Weights and Activations to Int8.
-- **Proposed component, not runnable:** Validate Layer Output Error After Smoothing.
+- **Runnable paper-associated component:** [Quantize Weights and Activations to Int8](/problems/smoothquant-int8-linear-layer). Quantize Weights and Activations to Int8
+- **Runnable paper-associated component:** [Validate Layer Output Error After Smoothing](/problems/smoothquant-layer-error-report). Validate Layer Output Error After Smoothing
+- **Runnable paper-associated component:** [Calibrate and Evaluate a Smoothed Int8 Layer](/problems/smoothquant-calibrated-layer-integration). Compose held-out layer evaluation with calibration-only channel statistics, equivalent smoothing and int8 simulation.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -109,24 +120,43 @@ Use integer kernels and measure end-to-end accuracy and latency.
 
 ## Integration exercise
 
-**Proposed exercise — not runnable yet.** Construct a compact original set of artifact records, episode metadata, metrics and resource traces matched to the selected system; include one known inconsistent record. Compose the selected mechanisms in the declared flow, beginning with **Measure channel ranges** and ending with **Quantize and validate**. Save each intermediate artifact so a learner can locate a mismatch at its originating stage.
+**Runnable bounded integration:** [Calibrate and Evaluate a Smoothed Int8 Layer](/problems/smoothquant-calibrated-layer-integration). This exercises its declared synthetic contract, not the full paper benchmark.
 
-The integration boundary is the named data/evaluation/deployment logic over synthetic records; no distributed cluster, hosted deployment or production-performance claim is required. Treat any stubbed learned stage as a named fixture, never as measured model capability. Author original synthetic data and record its generation rules; external datasets or assets need a separate provenance and license review.
+Start with the atomic channel-range, equivalent-scaling, integer-simulation and error-reporting exercises. Then implement one function that consumes calibration observations, separate validation observations, linear weights, candidate exponents and an explicit absolute tolerance.
 
-Deliver an executable fixture generator, the component wiring, a compact expected-output trace and a report of the remaining differences from [the paper](/projects/2022-smoothquant). Proposed pieces must pass blueprint review and isolated evaluation before this integration becomes an available exercise.
+```text
+calibration + original weights -> per-channel maxima
+  + candidate smoothing exponents -> guarded equivalent scales
+validation features -> scaled layer -> simulated int8 output
+  -> fixed float64 reference comparison -> MSE choice + per-row gate
+```
+
+Each arrow is a data dependency; this textual pipeline is also the accessible diagram alternative. For $X\in\mathbb R^{N\times C}$, $W\in\mathbb R^{C\times D}$ and positive diagonal $S$, the starting identity is
+$$XW=(XS^{-1})(SW).$$
+Rounding makes the quantized output different. This project measures that difference using a precisely declared per-token/per-output symmetric recipe. It is original executable numerical work inspired by [SmoothQuant](https://arxiv.org/abs/2211.10438), with synthetic arrays and no pretrained checkpoint.
+
+Out of scope: full transformer conversion, production packing and integer kernels, model training, task-accuracy reproduction, device latency, closed-loop robot safety and headline paper speedups. Calibration-derived scales and validation-based configuration selection are implemented; an untouched final test set is still needed after selecting a configuration.
 
 ## Evaluation and failure analysis
 
-**Proposed assessment — not runnable yet.** For the **Measure channel ranges → Quantize and validate** fixture, compare lineage, selected records, aggregate statistics or release decisions with a hand-audited expected report; count false acceptance and false rejection separately.
+**Runnable assessment:** public/hidden cases for the linked integration.
 
-Use one clean baseline and a separately recorded fault case: change an artifact version, omit required evidence, or skew one scenario slice; make the failed invariant and affected artifact explicit. Identify the affected stage and report its intermediate evidence. Do not average away the failing case.
+[Open the integration problem](/problems/smoothquant-calibrated-layer-integration). Run exposes the two documented scalar/zero-channel examples. Submit also checks an independent scalar pipeline oracle, calibration-only range statistics, float32 promotion, zero guards, nonzero-subnormal quantizer underflow, repeated-alpha tie behavior, preservation, invalid contracts and a case where minimum MSE disagrees with the absolute-error gate.
 
-Before grading, define an independent oracle, exact-versus-tolerant comparisons, allowed dtypes/devices, empty/minimal cases, invalid-input behavior and resource bounds. Compare failure detection and mathematical correctness separately from timing. A synthetic result establishes only the declared component contract; paper benchmark scores and physical safety require their own protocol.
+The outputs answer distinct questions: output_mse ranks supplied configurations; row_max_abs locates token regressions; accepted applies the explicit tolerance; selected_output preserves the actual quantized prediction. The selected index minimizes MSE across all candidates, even when another candidate alone passes the gate. A failed gate is evidence to inspect, not a reason to silently change the selection policy.
+
+Failure-analysis exercise: introduce a large validation-only activation channel and explain why calibration scales must remain unchanged. Then compare two candidates whose average errors and worst-token errors rank differently. A layer-level pass cannot establish downstream VLM accuracy or safe robot actions.
+
+The reference is tested in the local isolated worker. Starter code, a calibration-leak mutant and a gate-filter mutant are rejected. These tests establish the documented synthetic contract, not performance on the paper's model/data suite.
 
 ## Reproducibility deliverable
 
-**Proposed final artifact:** an original implementation/model card for **SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models** containing the source revision, exercised and stubbed stages, and an explicit list of omitted paper experiments.
+**Runnable project deliverable:** save the following report in the integration exercise’s Notes. The report is learner-authored, not automatically certified.
 
-Record schema version, artifact hashes, split/grouping policy, units, metric aggregation rule and decision thresholds. Pin problem/content versions, code revision, Python/dependency versions, evaluator identity, deterministic seeds and fixture hashes. Include the baseline/fault report and runtime observations. If any component updates parameters, record the update count and trainable state; otherwise state that no model was trained.
+Source: [SmoothQuant primary manuscript](https://arxiv.org/abs/2211.10438); library card `research/papers/mlops-data-deployment/2022-smoothquant.md`. All problem prose, code and synthetic fixtures are original; fixtures use CC0-1.0. No paper figures, model weights or research PDFs are product assets.
 
-Package the fixture and expected trace with a machine-readable manifest. Replaying the same manifest must recover the same evidence within declared tolerances. Record limitations and the next unimplemented mechanism; completion of this proposal must not be labeled full-paper reproduction. Research PDFs remain local reference inputs, with canonical sources linked rather than redistributed.
+Runtime: Python3.12.3, NumPy2.2.4, CPU float64 arithmetic with explicit int8 logical codes and int64 accumulation. The local evaluator uses bubblewrap, no network,18s wall,10s CPU,4096MiB address space and64KiB output. Its OCI image digest is pending; do not claim this native-local exercise is qualified for the production data-only protocol.
+
+Inputs define every numerical value; the learner function consumes no random stream. Independent synthetic validation fixtures use PCG64 seeds909 and6. Semantic problem version1.0.0 pins guards1e-6, clamps[1e-6,1e6], signed range[-127,127], ties-to-even rounding and computed-zero quantizer scale fallback1. The latter explicitly includes underflow from nonzero subnormal ranges. Per-problem metadata records the evaluator-source hash.
+
+Calibration rows determine activation ranges; validation rows select the smoothing exponent. Since selection uses validation error, these metrics are not independent final-test estimates. This pipeline omits full-model calibration, layer fusion, packing, hardware benchmarking and downstream robotics evaluation. Document those deviations and any new data, runtime, guard or kernel choices before extending the project.

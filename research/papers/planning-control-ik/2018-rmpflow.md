@@ -1,22 +1,76 @@
 ---
 schema_version: 1
-paper_id: "2018-rmpflow"
-title: "RMPflow: A Computational Graph for Automatic Motion Policy Generation"
-authors: ["Cheng, Ching-An","Mukadam, Mustafa","Issac, Jan","Birchfield, Stan","Fox, Dieter","Boots, Byron","Ratliff, Nathan"]
+paper_id: 2018-rmpflow
+title: 'RMPflow: A Computational Graph for Automatic Motion Policy Generation'
+authors:
+  - 'Cheng, Ching-An'
+  - 'Mukadam, Mustafa'
+  - 'Issac, Jan'
+  - 'Birchfield, Stan'
+  - 'Fox, Dieter'
+  - 'Boots, Byron'
+  - 'Ratliff, Nathan'
 year: 2018
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1811.07049"
-pdf_url: "https://arxiv.org/pdf/1811.07049"
-local_pdf: "./2018-rmpflow.pdf"
-sha256: "069d06920ffdffd1e9ec3d4b562a1c016f81a9f9f803c59d271d25a6251f550c"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1811.07049'
+pdf_url: 'https://arxiv.org/pdf/1811.07049'
+local_pdf: ./2018-rmpflow.pdf
+sha256: 069d06920ffdffd1e9ec3d4b562a1c016f81a9f9f803c59d271d25a6251f550c
 bytes: 3396334
 pages: 45
-topics: ["planning-control-ik","rmpflow"]
-modalities: ["joint-state","poses","obstacles","trajectories"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Push task states forward","detail":"Map configuration and velocity into each task space.","column":0,"row":0,"section":"Push task states forward","problem_slugs":[],"planned_problems":["Push Robot State into a Task Space"]},{"id":"stage-2","title":"Pull policies back","detail":"Combine natural-form forces and metrics in joint space.","column":1,"row":0,"section":"Pull policies back","problem_slugs":[],"planned_problems":["Pull Back a Local Motion Metric"]},{"id":"stage-3","title":"Resolve the acceleration","detail":"Recover a joint acceleration from the combined natural form.","column":2,"row":0,"section":"Resolve the acceleration","problem_slugs":[],"planned_problems":["Combine Competing Task-Space Accelerations"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"task policies"},{"from":"stage-2","to":"stage-3","label":"root force and metric"}]}
+topics:
+  - planning-control-ik
+  - rmpflow
+modalities:
+  - joint-state
+  - poses
+  - obstacles
+  - trajectories
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Push task states forward
+      detail: Map configuration and velocity into each task space.
+      column: 0
+      row: 0
+      section: Push task states forward
+      problem_slugs:
+        - push-task-state
+      planned_problems: []
+    - id: stage-2
+      title: Pull policies back
+      detail: Combine natural-form forces and metrics in joint space.
+      column: 1
+      row: 0
+      section: Pull policies back
+      problem_slugs:
+        - pullback-motion-metric
+      planned_problems: []
+    - id: stage-3
+      title: Resolve the acceleration
+      detail: Recover a joint acceleration from the combined natural form.
+      column: 2
+      row: 0
+      section: Resolve the acceleration
+      problem_slugs:
+        - combine-motion-policies
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: task policies
+    - from: stage-2
+      to: stage-3
+      label: root force and metric
 ---
 
 ## Core paper explanation
@@ -36,7 +90,7 @@ $q$ contains joint coordinates; task coordinates may be positions, distances, or
 
 **Component practice**
 
-- Push Robot State into a Task Space — unreviewed idea; contract and evaluator required.
+- [Push Robot State into a Task Space](/problems/push-task-state) — runnable bounded component; see its documented scope.
 
 ### Pull policies back
 
@@ -47,7 +101,7 @@ The curvature term matters when task maps vary with configuration. Leaf forces t
 
 **Component practice**
 
-- Pull Back a Local Motion Metric — unreviewed idea; contract and evaluator required.
+- [Pull Back a Local Motion Metric](/problems/pullback-motion-metric) — runnable bounded component; see its documented scope.
 
 ### Resolve the acceleration
 
@@ -56,18 +110,18 @@ The resolved policy is $\ddot q=M^\dagger f$, with pseudoinverse when necessary.
 
 **Component practice**
 
-- Combine Competing Task-Space Accelerations — unreviewed idea; contract and evaluator required.
+- [Combine Competing Task-Space Accelerations](/problems/combine-motion-policies) — runnable bounded component; see its documented scope.
 
 ## Implement the components
 
 Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
 
-**Planned component problems:**
+**Runnable components and remaining ideas:**
 
-- Push Robot State into a Task Space — unreviewed idea; contract and evaluator required.
-- Pull Back a Local Motion Metric — unreviewed idea; contract and evaluator required.
-- Combine Competing Task-Space Accelerations — unreviewed idea; contract and evaluator required.
+- [Push Robot State into a Task Space](/problems/push-task-state) — runnable bounded component; see its documented scope.
+- [Pull Back a Local Motion Metric](/problems/pullback-motion-metric) — runnable bounded component; see its documented scope.
+- [Combine Competing Task-Space Accelerations](/problems/combine-motion-policies) — runnable bounded component; see its documented scope.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 

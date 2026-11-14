@@ -26,10 +26,11 @@
     "bev-visibility-mask",
     "bev-camera-health-diagnostics",
     "bev-weighted-camera-features",
+    "bev-bilinear-camera-sampling",
     "bev-ego-motion-warp",
     "bev-temporal-fusion"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -62,7 +63,7 @@ The implementation path follows **Project BEV reference points → Gather camera
 
 Source cards: [2022-bevformer](../../../research/papers/vision-vlm-3d/2022-bevformer.md).
 
-**Available now:** 6 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 7 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -102,7 +103,7 @@ Sample features around projected references in the cameras that can see them.
 [Study the mechanism and math](/projects/2022-bevformer#paper-section-gather-camera-evidence).
 
 - **Runnable paper-associated component:** [Aggregate Multi-Camera Features with Attention Weights](/problems/bev-weighted-camera-features). Aggregate Multi-Camera Features with Attention Weights
-- **Proposed component, not runnable:** Sample Calibrated Multi-Camera Feature Maps.
+- **Runnable paper-associated component:** [Sample Calibrated Multi-Camera Feature Maps](/problems/bev-bilinear-camera-sampling). A projected location usually lies between feature-map cells.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

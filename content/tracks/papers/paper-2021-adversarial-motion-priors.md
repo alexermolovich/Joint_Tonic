@@ -16,8 +16,12 @@
     "humanoid-dexterity-tactile",
     "adversarial-motion-priors"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "amp-motion-discriminator-features",
+    "amp-adversarial-style-reward",
+    "motion-task-reward-blend"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Compare motion transitions → Convert discrim
 
 Source cards: [2021-adversarial-motion-priors](../../../research/papers/humanoid-dexterity-tactile/2021-adversarial-motion-priors.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Train a discriminator on reference and policy-generated motion features.
 
 [Study the mechanism and math](/projects/2021-adversarial-motion-priors#paper-section-compare-motion-transitions).
 
-- **Proposed component, not runnable:** Construct Motion Discriminator Features.
+- **Runnable paper-associated component:** [Construct Motion Discriminator Features](/problems/amp-motion-discriminator-features). A motion discriminator should recognize coordinated movement regardless of where the character stands or which way it faces.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Reward transitions resembling reference motion.
 
 [Study the mechanism and math](/projects/2021-adversarial-motion-priors#paper-section-convert-discrimination-into-style-reward).
 
-- **Proposed component, not runnable:** Compute an Adversarial Style Reward.
+- **Runnable paper-associated component:** [Compute an Adversarial Style Reward](/problems/amp-adversarial-style-reward). AMP uses a least-squares discriminator score, not a probability.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Combine style and goal rewards through reinforcement learning.
 
 [Study the mechanism and math](/projects/2021-adversarial-motion-priors#paper-section-learn-task-directed-behavior).
 
-- **Proposed component, not runnable:** Balance Task and Style Objectives.
+- **Runnable paper-associated component:** [Combine Motion and Task Rewards](/problems/motion-task-reward-blend). A task score and a motion-quality score measure different properties.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

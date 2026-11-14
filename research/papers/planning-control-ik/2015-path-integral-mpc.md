@@ -1,22 +1,74 @@
 ---
 schema_version: 1
-paper_id: "2015-path-integral-mpc"
-title: "Model Predictive Path Integral Control using Covariance Variable Importance Sampling"
-authors: ["Williams, Grady","Aldrich, Andrew","Theodorou, Evangelos"]
+paper_id: 2015-path-integral-mpc
+title: >-
+  Model Predictive Path Integral Control using Covariance Variable Importance
+  Sampling
+authors:
+  - 'Williams, Grady'
+  - 'Aldrich, Andrew'
+  - 'Theodorou, Evangelos'
 year: 2015
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1509.01149"
-pdf_url: "https://arxiv.org/pdf/1509.01149"
-local_pdf: "./2015-path-integral-mpc.pdf"
-sha256: "f1e62491294b671689e908e2d1d4a9b738ea228ef5c545bd393f17f0b6636b6d"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1509.01149'
+pdf_url: 'https://arxiv.org/pdf/1509.01149'
+local_pdf: ./2015-path-integral-mpc.pdf
+sha256: f1e62491294b671689e908e2d1d4a9b738ea228ef5c545bd393f17f0b6636b6d
 bytes: 1023682
 pages: 9
-topics: ["planning-control-ik","path-integral-mpc"]
-modalities: ["joint-state","poses","obstacles","trajectories"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample control rollouts","detail":"Perturb a nominal sequence and simulate dynamics.","column":0,"row":0,"section":"Sample control rollouts","problem_slugs":[],"planned_problems":["Roll Out Perturbed Control Sequences"]},{"id":"stage-2","title":"Weight corrected costs","detail":"Use exponential weights with the required sampling correction.","column":1,"row":0,"section":"Weight corrected costs","problem_slugs":[],"planned_problems":["Normalize Exponential Trajectory Cost Weights"]},{"id":"stage-3","title":"Update and recede","detail":"Average useful perturbations and shift the horizon.","column":2,"row":0,"section":"Update and recede","problem_slugs":[],"planned_problems":["Update a Receding-Horizon Control Sequence"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"rollout costs"},{"from":"stage-2","to":"stage-3","label":"normalized weights"}]}
+topics:
+  - planning-control-ik
+  - path-integral-mpc
+modalities:
+  - joint-state
+  - poses
+  - obstacles
+  - trajectories
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Sample control rollouts
+      detail: Perturb a nominal sequence and simulate dynamics.
+      column: 0
+      row: 0
+      section: Sample control rollouts
+      problem_slugs:
+        - perturbed-linear-rollouts
+      planned_problems: []
+    - id: stage-2
+      title: Weight corrected costs
+      detail: Use exponential weights with the required sampling correction.
+      column: 1
+      row: 0
+      section: Weight corrected costs
+      problem_slugs:
+        - exponential-trajectory-weights
+      planned_problems: []
+    - id: stage-3
+      title: Update and recede
+      detail: Average useful perturbations and shift the horizon.
+      column: 2
+      row: 0
+      section: Update and recede
+      problem_slugs:
+        - receding-horizon-control-update
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: rollout costs
+    - from: stage-2
+      to: stage-3
+      label: normalized weights
 ---
 
 ## Core paper explanation
@@ -34,7 +86,7 @@ For nominal controls $u_{0:H-1}$, sample noise $\epsilon_{k,t}$ and roll out $x_
 
 **Component practice**
 
-- Roll Out Perturbed Control Sequences — unreviewed idea; contract and evaluator required.
+- [Roll Out Perturbed Control Sequences](/problems/perturbed-linear-rollouts) — runnable bounded component; see its documented scope.
 
 ### Weight corrected costs
 
@@ -45,7 +97,7 @@ $S_k$ includes the path-integral control/importance terms, not only arbitrary st
 
 **Component practice**
 
-- Normalize Exponential Trajectory Cost Weights — unreviewed idea; contract and evaluator required.
+- [Normalize Exponential Trajectory Cost Weights](/problems/exponential-trajectory-weights) — runnable bounded component; see its documented scope.
 
 ### Update and recede
 
@@ -56,18 +108,18 @@ Execute the first control, observe the new state, and shift the plan. Clipping o
 
 **Component practice**
 
-- Update a Receding-Horizon Control Sequence — unreviewed idea; contract and evaluator required.
+- [Update a Receding-Horizon Control Sequence](/problems/receding-horizon-control-update) — runnable bounded component; see its documented scope.
 
 ## Implement the components
 
 Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
 
-**Planned component problems:**
+**Runnable components and remaining ideas:**
 
-- Roll Out Perturbed Control Sequences — unreviewed idea; contract and evaluator required.
-- Normalize Exponential Trajectory Cost Weights — unreviewed idea; contract and evaluator required.
-- Update a Receding-Horizon Control Sequence — unreviewed idea; contract and evaluator required.
+- [Roll Out Perturbed Control Sequences](/problems/perturbed-linear-rollouts) — runnable bounded component; see its documented scope.
+- [Normalize Exponential Trajectory Cost Weights](/problems/exponential-trajectory-weights) — runnable bounded component; see its documented scope.
+- [Update a Receding-Horizon Control Sequence](/problems/receding-horizon-control-update) — runnable bounded component; see its documented scope.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 

@@ -43,33 +43,33 @@ Runnable exercises already have published problem packages. Supporting prerequis
 
 | Paper track | Runnable components | Supporting prerequisites | Proposed components | Source stages |
 |---|---:|---:|---:|---:|
-| [Continuous-Time Gaussian Process Motion Planning via Probabilistic Inference](tracks/papers/paper-2017-gaussian-process-motion-planning.md) | 0 | 0 | 3 | 3 |
-| [cuRobo: Parallelized Collision-Free Minimum-Jerk Robot Motion Generation](tracks/papers/paper-2023-curobo.md) | 0 | 2 | 3 | 3 |
+| [Continuous-Time Gaussian Process Motion Planning via Probabilistic Inference](tracks/papers/paper-2017-gaussian-process-motion-planning.md) | 3 | 0 | 0 | 3 |
+| [cuRobo: Parallelized Collision-Free Minimum-Jerk Robot Motion Generation](tracks/papers/paper-2023-curobo.md) | 2 | 2 | 1 | 3 |
 | [Diffusion-ES: Gradient-free Planning with Diffusion for Autonomous Driving and Zero-Shot Instruction Following](tracks/papers/paper-2024-diffusion-es.md) | 0 | 0 | 4 | 3 |
 | [IK-Geo: Unified Robot Inverse Kinematics Using Subproblem Decomposition](tracks/papers/paper-2022-ik-geo.md) | 0 | 3 | 4 | 3 |
 | [IKFlow: Generating Diverse Inverse Kinematics Solutions](tracks/papers/paper-2021-ikflow.md) | 0 | 0 | 5 | 3 |
-| [Incremental Sampling-based Algorithms for Optimal Motion Planning](tracks/papers/paper-2010-rrt-star.md) | 0 | 0 | 4 | 3 |
-| [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](tracks/papers/paper-2021-ruckig.md) | 0 | 2 | 3 | 3 |
-| [Model Predictive Path Integral Control using Covariance Variable Importance Sampling](tracks/papers/paper-2015-path-integral-mpc.md) | 0 | 0 | 3 | 3 |
-| [Motion Planning Diffusion: Learning and Planning of Robot Motions with Diffusion Models](tracks/papers/paper-2023-motion-planning-diffusion.md) | 0 | 1 | 3 | 3 |
+| [Incremental Sampling-based Algorithms for Optimal Motion Planning](tracks/papers/paper-2010-rrt-star.md) | 4 | 0 | 0 | 3 |
+| [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](tracks/papers/paper-2021-ruckig.md) | 2 | 2 | 1 | 3 |
+| [Model Predictive Path Integral Control using Covariance Variable Importance Sampling](tracks/papers/paper-2015-path-integral-mpc.md) | 3 | 0 | 0 | 3 |
+| [Motion Planning Diffusion: Learning and Planning of Robot Motions with Diffusion Models](tracks/papers/paper-2023-motion-planning-diffusion.md) | 0 | 1 | 2 | 3 |
 | [Motion Planning Networks](tracks/papers/paper-2018-motion-planning-networks.md) | 0 | 0 | 3 | 3 |
-| [Motion Planning with Sequential Convex Optimization and Convex Collision Checking](tracks/papers/paper-2014-trajopt.md) | 0 | 2 | 3 | 3 |
+| [Motion Planning with Sequential Convex Optimization and Convex Collision Checking](tracks/papers/paper-2014-trajopt.md) | 3 | 2 | 0 | 3 |
 | [Planning with Diffusion for Flexible Behavior Synthesis](tracks/papers/paper-2022-diffuser.md) | 0 | 3 | 3 | 3 |
-| [RMPflow: A Computational Graph for Automatic Motion Policy Generation](tracks/papers/paper-2018-rmpflow.md) | 0 | 0 | 3 | 3 |
+| [RMPflow: A Computational Graph for Automatic Motion Policy Generation](tracks/papers/paper-2018-rmpflow.md) | 3 | 0 | 0 | 3 |
 
 ### Vision, VLM and 3D foundations — 10
 
 | Paper track | Runnable components | Supporting prerequisites | Proposed components | Source stages |
 |---|---:|---:|---:|---:|
-| [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](tracks/papers/paper-2021-vision-transformer.md) | 5 | 0 | 1 | 3 |
-| [BEVFormer: Learning Bird's-Eye-View Representation from Multi-Camera Images via Spatiotemporal Transformers](tracks/papers/paper-2022-bevformer.md) | 6 | 2 | 1 | 3 |
-| [DINOv2: Learning Robust Visual Features without Supervision](tracks/papers/paper-2023-dinov2.md) | 5 | 0 | 1 | 3 |
-| [End-to-End Object Detection with Transformers](tracks/papers/paper-2020-detr.md) | 5 | 0 | 2 | 3 |
-| [Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection](tracks/papers/paper-2023-grounding-dino.md) | 4 | 0 | 2 | 3 |
+| [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](tracks/papers/paper-2021-vision-transformer.md) | 6 | 0 | 0 | 3 |
+| [BEVFormer: Learning Bird's-Eye-View Representation from Multi-Camera Images via Spatiotemporal Transformers](tracks/papers/paper-2022-bevformer.md) | 7 | 2 | 0 | 3 |
+| [DINOv2: Learning Robust Visual Features without Supervision](tracks/papers/paper-2023-dinov2.md) | 6 | 0 | 0 | 3 |
+| [End-to-End Object Detection with Transformers](tracks/papers/paper-2020-detr.md) | 7 | 0 | 0 | 3 |
+| [Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection](tracks/papers/paper-2023-grounding-dino.md) | 6 | 0 | 0 | 3 |
 | [Learning Transferable Visual Models From Natural Language Supervision](tracks/papers/paper-2021-clip.md) | 5 | 0 | 0 | 3 |
-| [NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis](tracks/papers/paper-2020-nerf.md) | 6 | 0 | 2 | 3 |
+| [NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis](tracks/papers/paper-2020-nerf.md) | 8 | 0 | 0 | 3 |
 | [PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation](tracks/papers/paper-2017-pointnet.md) | 5 | 0 | 0 | 3 |
-| [Segment Anything](tracks/papers/paper-2023-segment-anything.md) | 5 | 0 | 2 | 3 |
+| [Segment Anything](tracks/papers/paper-2023-segment-anything.md) | 7 | 0 | 0 | 3 |
 | [You Only Look Once: Unified, Real-Time Object Detection](tracks/papers/paper-2016-yolo-v1.md) | 7 | 0 | 0 | 3 |
 
 ### Perception and 3D representations — 13
@@ -113,7 +113,7 @@ Runnable exercises already have published problem packages. Supporting prerequis
 | Paper track | Runnable components | Supporting prerequisites | Proposed components | Source stages |
 |---|---:|---:|---:|---:|
 | [$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control](tracks/papers/paper-2024-pi0.md) | 5 | 0 | 0 | 3 |
-| [Diffusion Policy: Visuomotor Policy Learning via Action Diffusion](tracks/papers/paper-2023-diffusion-policy.md) | 5 | 0 | 2 | 6 |
+| [Diffusion Policy: Visuomotor Policy Learning via Action Diffusion](tracks/papers/paper-2023-diffusion-policy.md) | 7 | 0 | 0 | 6 |
 | [GR00T N1: An Open Foundation Model for Generalist Humanoid Robots](tracks/papers/paper-2025-gr00t-n1.md) | 5 | 1 | 0 | 3 |
 | [Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware](tracks/papers/paper-2023-aloha-act.md) | 5 | 0 | 0 | 3 |
 | [Octo: An Open-Source Generalist Robot Policy](tracks/papers/paper-2024-octo.md) | 5 | 2 | 0 | 3 |
@@ -144,11 +144,11 @@ Runnable exercises already have published problem packages. Supporting prerequis
 |---|---:|---:|---:|---:|
 | [3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations](tracks/papers/paper-2024-3d-diffusion-policy.md) | 0 | 5 | 3 | 3 |
 | [CLIPort: What and Where Pathways for Robotic Manipulation](tracks/papers/paper-2021-cliport.md) | 0 | 0 | 5 | 3 |
-| [Conservative Q-Learning for Offline Reinforcement Learning](tracks/papers/paper-2020-conservative-q-learning.md) | 0 | 0 | 4 | 3 |
+| [Conservative Q-Learning for Offline Reinforcement Learning](tracks/papers/paper-2020-conservative-q-learning.md) | 3 | 1 | 0 | 3 |
 | [Dex-Net 2.0: Deep Learning to Plan Robust Grasps with Synthetic Point Clouds and Analytic Grasp Metrics](tracks/papers/paper-2017-dex-net-2.md) | 0 | 0 | 5 | 3 |
 | [DrEureka: Language Model Guided Sim-To-Real Transfer](tracks/papers/paper-2024-dr-eureka.md) | 0 | 3 | 3 | 3 |
 | [Eureka: Human-Level Reward Design via Coding Large Language Models](tracks/papers/paper-2023-eureka.md) | 0 | 1 | 3 | 3 |
-| [Image Augmentation Is All You Need: Regularizing Deep Reinforcement Learning from Pixels](tracks/papers/paper-2020-data-regularized-q.md) | 0 | 0 | 4 | 3 |
+| [Image Augmentation Is All You Need: Regularizing Deep Reinforcement Learning from Pixels](tracks/papers/paper-2020-data-regularized-q.md) | 3 | 1 | 0 | 3 |
 | [Mastering Diverse Domains through World Models](tracks/papers/paper-2023-dreamerv3.md) | 0 | 0 | 4 | 3 |
 | [Mobile ALOHA: Learning Bimanual Mobile Manipulation with Low-Cost Whole-Body Teleoperation](tracks/papers/paper-2024-mobile-aloha.md) | 0 | 8 | 1 | 3 |
 | [Offline Reinforcement Learning with Implicit Q-Learning](tracks/papers/paper-2021-implicit-q-learning.md) | 4 | 0 | 0 | 3 |
@@ -166,25 +166,25 @@ Runnable exercises already have published problem packages. Supporting prerequis
 
 | Paper track | Runnable components | Supporting prerequisites | Proposed components | Source stages |
 |---|---:|---:|---:|---:|
-| [AMP: Adversarial Motion Priors for Stylized Physics-Based Character Control](tracks/papers/paper-2021-adversarial-motion-priors.md) | 0 | 0 | 3 | 3 |
-| [DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills](tracks/papers/paper-2018-deepmimic.md) | 0 | 0 | 4 | 3 |
+| [AMP: Adversarial Motion Priors for Stylized Physics-Based Character Control](tracks/papers/paper-2021-adversarial-motion-priors.md) | 3 | 0 | 0 | 3 |
+| [DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills](tracks/papers/paper-2018-deepmimic.md) | 4 | 0 | 0 | 3 |
 | [DexMV: Imitation Learning for Dexterous Manipulation from Human Videos](tracks/papers/paper-2021-dexmv.md) | 0 | 0 | 5 | 3 |
 | [DexPoint: Generalizable Point Cloud Reinforcement Learning for Sim-to-Real Dexterous Manipulation](tracks/papers/paper-2022-dexpoint.md) | 0 | 2 | 3 | 3 |
-| [DIGIT: A Novel Design for a Low-Cost Compact High-Resolution Tactile Sensor with Application to In-Hand Manipulation](tracks/papers/paper-2020-digit-tactile-sensor.md) | 0 | 2 | 5 | 3 |
+| [DIGIT: A Novel Design for a Low-Cost Compact High-Resolution Tactile Sensor with Application to In-Hand Manipulation](tracks/papers/paper-2020-digit-tactile-sensor.md) | 5 | 2 | 0 | 3 |
 | [Learning Dexterous In-Hand Manipulation](tracks/papers/paper-2018-learning-dexterous-manipulation.md) | 0 | 1 | 3 | 3 |
 | [Learning robust perceptive locomotion for quadrupedal robots in the wild](tracks/papers/paper-2022-perceptive-locomotion.md) | 0 | 0 | 5 | 3 |
 | [Learning to Walk in Minutes Using Massively Parallel Deep Reinforcement Learning](tracks/papers/paper-2021-learning-to-walk-in-minutes.md) | 0 | 3 | 3 | 3 |
-| [RMA: Rapid Motor Adaptation for Legged Robots](tracks/papers/paper-2021-rapid-motor-adaptation.md) | 0 | 0 | 5 | 3 |
+| [RMA: Rapid Motor Adaptation for Legged Robots](tracks/papers/paper-2021-rapid-motor-adaptation.md) | 5 | 0 | 0 | 3 |
 
 ### Data, deployment and evaluation systems — 18
 
 | Paper track | Runnable components | Supporting prerequisites | Proposed components | Source stages |
 |---|---:|---:|---:|---:|
-| [AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration](tracks/papers/paper-2023-awq.md) | 0 | 1 | 3 | 3 |
+| [AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration](tracks/papers/paper-2023-awq.md) | 2 | 2 | 0 | 3 |
 | [BridgeData V2: A Dataset for Robot Learning at Scale](tracks/papers/paper-2023-bridgedata-v2.md) | 0 | 2 | 2 | 3 |
 | [CALVIN: A Benchmark for Language-Conditioned Policy Learning for Long-Horizon Robot Manipulation Tasks](tracks/papers/paper-2021-calvin.md) | 0 | 1 | 3 | 3 |
 | [Datasheets for Datasets](tracks/papers/paper-2018-datasheets-for-datasets.md) | 0 | 3 | 4 | 3 |
-| [Deep Compression: Compressing Deep Neural Networks with Pruning, Trained Quantization and Huffman Coding](tracks/papers/paper-2015-deep-compression.md) | 0 | 1 | 3 | 3 |
+| [Deep Compression: Compressing Deep Neural Networks with Pruning, Trained Quantization and Huffman Coding](tracks/papers/paper-2015-deep-compression.md) | 3 | 1 | 0 | 3 |
 | [Deep Reinforcement Learning at the Edge of the Statistical Precipice](tracks/papers/paper-2021-rliable-statistical-precipice.md) | 0 | 3 | 2 | 3 |
 | [DROID: A Large-Scale In-The-Wild Robot Manipulation Dataset](tracks/papers/paper-2024-droid.md) | 0 | 1 | 3 | 3 |
 | [Ego-Exo4D: Understanding Skilled Human Activity from First- and Third-Person Perspectives](tracks/papers/paper-2023-ego-exo4d.md) | 0 | 2 | 4 | 3 |
@@ -197,7 +197,7 @@ Runnable exercises already have published problem packages. Supporting prerequis
 | [RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots](tracks/papers/paper-2024-robocasa.md) | 0 | 2 | 4 | 3 |
 | [RoboNet: Large-Scale Multi-Robot Learning](tracks/papers/paper-2019-robonet.md) | 0 | 5 | 3 | 3 |
 | [RoboTurk: A Crowdsourcing Platform for Robotic Skill Learning through Imitation](tracks/papers/paper-2018-roboturk.md) | 0 | 6 | 4 | 3 |
-| [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](tracks/papers/paper-2022-smoothquant.md) | 0 | 1 | 4 | 3 |
+| [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](tracks/papers/paper-2022-smoothquant.md) | 5 | 1 | 0 | 3 |
 
 ### Robotics MLOps and sim-to-real foundations — 12
 

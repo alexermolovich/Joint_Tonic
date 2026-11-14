@@ -1,0 +1,76 @@
+{
+  "slug": "amp-adversarial-style-reward",
+  "title": "Compute an Adversarial Style Reward",
+  "version": "1.0.0",
+  "number": 523,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2021-adversarial-motion-priors",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "adversarial_style_reward",
+  "paperIds": [
+    "2021-adversarial-motion-priors"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "AMP uses a least-squares discriminator score, not a probability.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Positions use meters, time seconds, angular quantities radians and rad/s; phase and reward are dimensionless. Exact per-input units appear in the contract."
+    },
+    "axes": "Batch, transition, joint and quaternion axes specified in the contract",
+    "timestamp_assumptions": "Synchronized motion states or phases are supplied. World coordinates are right-handed with +y up where used; local joint frames are relative to parents.",
+    "batching": "Batch, transition, joint and quaternion axes specified in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "dc17676bbcd1f7e9f1c8f2efbad13433a436599363500e9fca33e2e5d02e0ea3"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component using synthetic motion. No retargeting, discriminator or feedback policy is trained; no physical safety or full-paper reproduction claim.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2104.02180"
+    ],
+    "paper_card": "research/papers/humanoid-dexterity-tactile/2021-adversarial-motion-priors.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

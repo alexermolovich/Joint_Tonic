@@ -16,8 +16,14 @@
     "humanoid-dexterity-tactile",
     "rapid-motor-adaptation"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 5,
+  "runnable_problem_slugs": [
+    "rma-privileged-latent-supervision",
+    "rma-latent-context-estimator",
+    "rma-proprioceptive-history-window",
+    "rma-asynchronous-latent-age",
+    "rma-parameter-change-recovery"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +56,7 @@ The implementation path follows **Train with privileged extrinsics → Infer ext
 
 Source cards: [2021-rapid-motor-adaptation](../../../research/papers/humanoid-dexterity-tactile/2021-rapid-motor-adaptation.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +76,7 @@ Encode simulated environment factors for the base policy.
 
 [Study the mechanism and math](/projects/2021-rapid-motor-adaptation#paper-section-train-with-privileged-extrinsics).
 
-- **Proposed component, not runnable:** Build Privileged Dynamics-Latent Supervision.
+- **Runnable paper-associated component:** [Build Privileged Dynamics-Latent Supervision](/problems/rma-privileged-latent-supervision). Privileged simulator factors provide supervision that is unavailable on the deployed robot.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +88,8 @@ Train an adaptation module against the privileged latent.
 
 [Study the mechanism and math](/projects/2021-rapid-motor-adaptation#paper-section-infer-extrinsics-from-history).
 
-- **Proposed component, not runnable:** Window Proprioceptive History.
-- **Proposed component, not runnable:** Estimate a Latent Dynamics Context.
+- **Runnable paper-associated component:** [Estimate a Latent Dynamics Context](/problems/rma-latent-context-estimator). A temporal adaptation module turns normalized sensor/action history into policy context.
+- **Runnable paper-associated component:** [Window Proprioceptive History](/problems/rma-proprioceptive-history-window). Adaptation history records what the robot observed and did before the current decision.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,8 +101,8 @@ Use the latest inferred latent for high-rate control.
 
 [Study the mechanism and math](/projects/2021-rapid-motor-adaptation#paper-section-run-asynchronous-adaptation).
 
-- **Proposed component, not runnable:** Track the Age of an Asynchronous Adaptation Latent.
-- **Proposed component, not runnable:** Evaluate Policy Recovery After a Parameter Change.
+- **Runnable paper-associated component:** [Track the Age of an Asynchronous Adaptation Latent](/problems/rma-asynchronous-latent-age). A newly completed adaptation job can still describe old observations.
+- **Runnable paper-associated component:** [Evaluate Policy Recovery After a Parameter Change](/problems/rma-parameter-change-recovery). Recovery requires a sustained window of measured good tracking after the environment changes.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -6,7 +6,7 @@
 
 This is the single navigational tree for topics, tracks, and named problems. It describes practical components to implement; it does not imply full reproduction of every paper. Each future problem begins as a Markdown file based on `research/templates/problem-blueprint.md`.
 
-Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **209 runnable packages** at this release checkpoint: 12 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
+Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **274 runnable packages** at this release checkpoint: 77 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
 
 The original ten launch problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
 
@@ -445,6 +445,86 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Build Advantage-Weighted Action Weights
 - `[paper]` Validate an Offline Dataset Split
 - `[paper]` Train and Evaluate a Tiny PPO Joint Controller
+- `[paper]` Compute a Conservative Q Penalty
+- `[paper]` Compare Logged and Sampled Action Values
+- `[paper]` Evaluate Offline Policy Support
+- `[paper]` Apply a Seeded Random-Shift Augmentation
+- `[paper]` Average Augmented Bellman Targets
+- `[paper]` Compute a Multi-View Critic Regression Loss
+- `[paper]` Interpolate a Reference Motion Pose
+- `[paper]` Detect Phase Misalignment in a Motion Clip
+- `[paper]` Compute Pose and Velocity Imitation Rewards
+- `[paper]` Combine Motion and Task Rewards
+- `[paper]` Construct Motion Discriminator Features
+- `[paper]` Compute an Adversarial Style Reward
+- `[paper]` Build Privileged Dynamics-Latent Supervision
+- `[paper]` Window Proprioceptive History
+- `[paper]` Estimate a Latent Dynamics Context
+- `[paper]` Track the Age of an Asynchronous Adaptation Latent
+- `[paper]` Evaluate Policy Recovery After a Parameter Change
+
+### 7.2 Tactile Manipulation
+
+- `[paper]` Validate a Tactile Image Capture Contract
+- `[paper]` Subtract a Tactile Reference Image
+- `[paper]` Estimate Contact Patch Statistics
+- `[paper]` Align Tactile Frames with Robot Actions
+- `[paper]` Score Predicted Tactile Contact Outcomes
+
+### 7.3 Planning, control and geometry
+
+- `[paper]` Integrate a Constant-Jerk Motion Segment
+- `[paper]` Validate a Trajectory Against Derivative Limits
+- `[paper]` Build a Joint-Space Smoothness Cost
+- `[paper]` Compute a Signed-Distance Collision Cost
+- `[paper]` Linearize a Signed-Distance Collision Penalty
+- `[paper]` Bound a Sequential Convex Trust-Region Step
+- `[paper]` Normalize Exponential Trajectory Cost Weights
+- `[paper]` Update a Receding-Horizon Control Sequence
+- `[paper]` Find Nearby Planning Tree Vertices
+- `[paper]` Choose a Collision-Free Minimum-Cost Tree Parent
+- `[paper]` Roll Out Perturbed Control Sequences
+- `[paper]` Rewire a Tree Without Creating Cycles
+- `[paper]` Compare Path Cost Across Sampling Budgets
+- `[paper]` Build a Gaussian-Process Smoothness Factor
+- `[paper]` Assemble Obstacle and Prior Residuals
+- `[paper]` Interpolate a Trajectory Between Support States
+- `[paper]` Push Robot State into a Task Space
+- `[paper]` Pull Back a Local Motion Metric
+- `[paper]` Combine Competing Task-Space Accelerations
+- `[paper]` Rank Multi-Seed Motion Trajectories
+
+### 7.4 Robotics MLOps
+
+- `[paper]` Measure Per-Channel Activation and Weight Ranges
+- `[paper]` Apply an Equivalent Channel Rescaling
+- `[paper]` Quantize Weights and Activations to Int8
+- `[paper]` Validate Layer Output Error After Smoothing
+- `[paper]` Apply a Weight-Pruning Mask
+- `[paper]` Quantize Shared Weight Centroids
+- `[paper]` Compute a Compressed Model Storage Budget
+- `[paper]` Compare Activation-Weighted Quantization Error
+- `[paper]` Compute Group-Wise Quantization Parameters
+- `[paper]` Calibrate and Evaluate a Smoothed Int8 Layer
+
+### 7.5 Perception
+
+- `[paper]` Decode Normalized Boxes and Classes from Object Queries
+- `[paper]` Flatten Spatial Features with Position and Padding Metadata
+- `[paper]` Read a Normalized Class Token with a Linear Head
+- `[paper]` Transform Prompt Coordinates Through Image Preprocessing
+- `[paper]` Reuse Image Embeddings Without Stale-Cache Errors
+- `[paper]` Sample Calibrated Multi-Camera Feature Maps
+- `[paper]` Sample Hierarchical Depth Intervals
+- `[paper]` Differentiate Rendered Color on a Small Synthetic Field
+- `[paper]` Implement Nearest-Neighbor Feature-Spreading Regularization
+
+### 7.6 VLM & VLA
+
+- `[paper]` Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention
+- `[paper]` Evaluate Localization and Phrase Grounding Separately
+- `[paper]` Encode Synchronized Observations for an Action Denoiser
+- `[paper]` Build a Conditional Action Denoiser
 
 <!-- reviewed-expansion:end -->
 

@@ -21,12 +21,14 @@
   "runnable_problem_slugs": [
     "nerf-stratified-samples",
     "nerf-calibrated-camera-rays",
+    "nerf-hierarchical-depth-sampling",
     "nerf-fourier-features",
     "nerf-alpha-compositing",
     "nerf-render-color-depth",
-    "nerf-pose-residual-diagnostics"
+    "nerf-pose-residual-diagnostics",
+    "nerf-rendered-color-gradients"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -59,7 +61,7 @@ The implementation path follows **Construct camera rays → Query the radiance f
 
 Source cards: [2020-nerf](../../../research/papers/vision-vlm-3d/2020-nerf.md).
 
-**Available now:** 6 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 8 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -67,6 +69,7 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Compute Transmittance and Alpha Compositing Weights](/problems/nerf-alpha-compositing). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Sample Hierarchical Depth Intervals](/problems/nerf-hierarchical-depth-sampling). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,7 +85,7 @@ Use intrinsics and camera pose to express a pixel ray in the scene frame.
 
 - **Runnable paper-associated component:** [Stratify Samples Along Near and Far Bounds](/problems/nerf-stratified-samples). Stratify Samples Along Near and Far Bounds
 - **Runnable paper-associated component:** [Generate Calibrated Camera Rays](/problems/nerf-calibrated-camera-rays). Turn supplied continuous pixel coordinates into world-space unit rays.
-- **Proposed component, not runnable:** Sample Hierarchical Depth Intervals.
+- **Runnable paper-associated component:** [Sample Hierarchical Depth Intervals](/problems/nerf-hierarchical-depth-sampling). Coarse rendering weights tell a fine sampler where useful mass lies along a ray.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -109,7 +112,7 @@ Accumulate visible colors in depth order and compare rendered pixels.
 - **Runnable paper-associated component:** [Compute Transmittance and Alpha Compositing Weights](/problems/nerf-alpha-compositing). Turn ordered ray densities and metric interval lengths into sample visibility weights and remaining background mass.
 - **Runnable paper-associated component:** [Render Color and Expected Depth Along a Ray](/problems/nerf-render-color-depth). Render Color and Expected Depth Along a Ray
 - **Runnable paper-associated component:** [Detect Bad Poses with Reprojection and Render Residuals](/problems/nerf-pose-residual-diagnostics). Compute separate per-view geometric and photometric residual summaries with explicit missing-data flags.
-- **Proposed component, not runnable:** Differentiate Rendered Color on a Small Synthetic Field.
+- **Runnable paper-associated component:** [Differentiate Rendered Color on a Small Synthetic Field](/problems/nerf-rendered-color-gradients). Increasing one sample's density makes its own color more visible and hides everything behind it.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

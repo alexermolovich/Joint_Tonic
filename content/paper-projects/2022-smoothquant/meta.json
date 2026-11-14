@@ -1,0 +1,41 @@
+{
+  "slug": "2022-smoothquant",
+  "title": "Calibrate and Evaluate a Smoothed Int8 Layer",
+  "summary": "Measure calibration channels, transform a linear layer, simulate int8 arithmetic and inspect validation regressions.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "smoothquant-calibrated-layer-integration",
+  "paperIds": [
+    "2022-smoothquant"
+  ],
+  "stages": [
+    {
+      "title": "Measure the calibration distribution",
+      "description": "Keep activation and weight channel axes explicit; zero channels remain visible.",
+      "problemSlugs": [
+        "smoothquant-channel-ranges"
+      ]
+    },
+    {
+      "title": "Move channel range without changing the linear function",
+      "description": "Divide activation channels and multiply matching weight rows using positive scales.",
+      "problemSlugs": [
+        "smoothquant-equivalent-rescaling"
+      ]
+    },
+    {
+      "title": "Quantize and localize output error",
+      "description": "Simulate a declared int8 recipe and compare per-token failures to an unquantized reference.",
+      "problemSlugs": [
+        "smoothquant-int8-linear-layer",
+        "smoothquant-layer-error-report"
+      ]
+    },
+    {
+      "title": "Compose calibration and validation",
+      "description": "Sweep supplied smoothing exponents, retain all-candidate MSE selection, and report the independent release gate.",
+      "problemSlugs": [
+        "smoothquant-calibrated-layer-integration"
+      ]
+    }
+  ]
+}

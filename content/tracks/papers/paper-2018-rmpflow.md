@@ -16,8 +16,12 @@
     "planning-control-ik",
     "rmpflow"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "push-task-state",
+    "pullback-motion-metric",
+    "combine-motion-policies"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Push task states forward → Pull policies bac
 
 Source cards: [2018-rmpflow](../../../research/papers/planning-control-ik/2018-rmpflow.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Map configuration and velocity into each task space.
 
 [Study the mechanism and math](/projects/2018-rmpflow#paper-section-push-task-states-forward).
 
-- **Proposed component, not runnable:** Push Robot State into a Task Space.
+- **Runnable paper-associated component:** [Push Robot State into a Task Space](/problems/push-task-state). Push a synchronized joint velocity through a supplied task Jacobian.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Combine natural-form forces and metrics in joint space.
 
 [Study the mechanism and math](/projects/2018-rmpflow#paper-section-pull-policies-back).
 
-- **Proposed component, not runnable:** Pull Back a Local Motion Metric.
+- **Runnable paper-associated component:** [Pull Back a Local Motion Metric](/problems/pullback-motion-metric). Pull one supplied natural-form task policy into normalized joint coordinates.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Recover a joint acceleration from the combined natural form.
 
 [Study the mechanism and math](/projects/2018-rmpflow#paper-section-resolve-the-acceleration).
 
-- **Proposed component, not runnable:** Combine Competing Task-Space Accelerations.
+- **Runnable paper-associated component:** [Combine Competing Task-Space Accelerations](/problems/combine-motion-policies). Combine supplied acceleration policies that already share one normalized coordinate space.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

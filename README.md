@@ -2,7 +2,7 @@
 
 Implement robotics and physical-AI components through coding problems, mathematical explanations and research-paper tracks.
 
-- **209 runnable problems** at the current release checkpoint, including all 190 original curriculum entries, four capstones and a PPO integration. Further paper batches are tracked in the [implementation backlog](research/IMPLEMENTATION_BACKLOG.md).
+- **274 runnable problems** at the current release checkpoint, including all 190 original curriculum entries, four capstones, plus PPO and SmoothQuant integrations. Further paper batches are tracked in the [implementation backlog](research/IMPLEMENTATION_BACKLOG.md).
 - **156 paper tracks**, backed by 157 original Markdown cards and locally retained reference PDFs.
 - Python/NumPy/PyTorch evaluation in a separate local worker; an optional live MuJoCo FR3 workspace.
 

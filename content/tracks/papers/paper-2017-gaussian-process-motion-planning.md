@@ -16,8 +16,12 @@
     "planning-control-ik",
     "gaussian-process-motion-planning"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "gp-constant-velocity-factor",
+    "assemble-motion-residuals",
+    "gp-support-interpolation"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Build a trajectory prior → Add obstacle fact
 
 Source cards: [2017-gaussian-process-motion-planning](../../../research/papers/planning-control-ik/2017-gaussian-process-motion-planning.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Represent smooth state evolution with a sparse Gaussian process.
 
 [Study the mechanism and math](/projects/2017-gaussian-process-motion-planning#paper-section-build-a-trajectory-prior).
 
-- **Proposed component, not runnable:** Build a Gaussian-Process Smoothness Factor.
+- **Runnable paper-associated component:** [Build a Gaussian-Process Smoothness Factor](/problems/gp-constant-velocity-factor). Build one independent-joint constant-velocity Gaussian-process prior factor.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Penalize insufficient clearance along the robot body.
 
 [Study the mechanism and math](/projects/2017-gaussian-process-motion-planning#paper-section-add-obstacle-factors).
 
-- **Proposed component, not runnable:** Assemble Obstacle and Prior Residuals.
+- **Runnable paper-associated component:** [Assemble Obstacle and Prior Residuals](/problems/assemble-motion-residuals). Assemble a least-squares vector from an already whitened motion prior and obstacle clearance samples.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Check intermediate states without introducing every one as a variable.
 
 [Study the mechanism and math](/projects/2017-gaussian-process-motion-planning#paper-section-interpolate-and-optimize).
 
-- **Proposed component, not runnable:** Interpolate a Trajectory Between Support States.
+- **Runnable paper-associated component:** [Interpolate a Trajectory Between Support States](/problems/gp-support-interpolation). Interpolate one constant-velocity GP support interval with fixed endpoint positions and velocities.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

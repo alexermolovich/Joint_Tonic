@@ -1,22 +1,76 @@
 ---
 schema_version: 1
-paper_id: "2023-motion-planning-diffusion"
-title: "Motion Planning Diffusion: Learning and Planning of Robot Motions with Diffusion Models"
-authors: ["Carvalho, Joao","Le, An T.","Baierl, Mark","Koert, Dorothea","Peters, Jan"]
+paper_id: 2023-motion-planning-diffusion
+title: >-
+  Motion Planning Diffusion: Learning and Planning of Robot Motions with
+  Diffusion Models
+authors:
+  - 'Carvalho, Joao'
+  - 'Le, An T.'
+  - 'Baierl, Mark'
+  - 'Koert, Dorothea'
+  - 'Peters, Jan'
 year: 2023
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/2308.01557"
-pdf_url: "https://arxiv.org/pdf/2308.01557"
-local_pdf: "./2023-motion-planning-diffusion.pdf"
-sha256: "5045a1eef8b1e29e7007877083ddf26932fa6561717242e7a0b988cda751db95"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/2308.01557'
+pdf_url: 'https://arxiv.org/pdf/2308.01557'
+local_pdf: ./2023-motion-planning-diffusion.pdf
+sha256: 5045a1eef8b1e29e7007877083ddf26932fa6561717242e7a0b988cda751db95
 bytes: 2727520
 pages: 9
-topics: ["planning-control-ik","motion-planning-diffusion"]
-modalities: ["joint-state","poses","obstacles","trajectories"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Train a trajectory prior","detail":"Learn denoising from feasible motion examples.","column":0,"row":0,"section":"Train a trajectory prior","problem_slugs":["diffusion-action-noising"],"planned_problems":["Add Noise to a Joint-Space Path"]},{"id":"stage-2","title":"Guide toward low cost","detail":"Modify reverse sampling with differentiable planning objectives.","column":1,"row":0,"section":"Guide toward low cost","problem_slugs":[],"planned_problems":["Apply Collision-Cost Guidance During Denoising"]},{"id":"stage-3","title":"Check physical feasibility","detail":"Evaluate the generated motion independently of its likelihood.","column":2,"row":0,"section":"Check physical feasibility","problem_slugs":[],"planned_problems":["Check Endpoint and Smoothness Constraints"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"learned prior"},{"from":"stage-2","to":"stage-3","label":"guided trajectories"}]}
+topics:
+  - planning-control-ik
+  - motion-planning-diffusion
+modalities:
+  - joint-state
+  - poses
+  - obstacles
+  - trajectories
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Train a trajectory prior
+      detail: Learn denoising from feasible motion examples.
+      column: 0
+      row: 0
+      section: Train a trajectory prior
+      problem_slugs:
+        - diffusion-action-noising
+      planned_problems: []
+    - id: stage-2
+      title: Guide toward low cost
+      detail: Modify reverse sampling with differentiable planning objectives.
+      column: 1
+      row: 0
+      section: Guide toward low cost
+      problem_slugs: []
+      planned_problems:
+        - Apply Collision-Cost Guidance During Denoising
+    - id: stage-3
+      title: Check physical feasibility
+      detail: Evaluate the generated motion independently of its likelihood.
+      column: 2
+      row: 0
+      section: Check physical feasibility
+      problem_slugs: []
+      planned_problems:
+        - Check Endpoint and Smoothness Constraints
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: learned prior
+    - from: stage-2
+      to: stage-3
+      label: guided trajectories
 ---
 
 ## Core paper explanation
@@ -37,7 +91,7 @@ The training objective teaches recovery from noise. Joint order, timestep, endpo
 **Component practice**
 
 - Supporting prerequisite: [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Practices the stated data or mathematical operation; it does not implement this paper-specific stage in full.
-- Add Noise to a Joint-Space Path — unreviewed idea; contract and evaluator required.
+- [Add Noise to a Joint-Space Path](/problems/diffusion-action-noising) — reviewed shared forward-process component for normalized (B,H,D) joint paths with supplied noise/timesteps and zero padding. Endpoint conditioning, denoiser training and reverse planning remain outside this exercise.
 
 ### Guide toward low cost
 
@@ -67,7 +121,7 @@ Each execution-flow node links the matching runnable component or names its plan
 
 **Planned component problems:**
 
-- Add Noise to a Joint-Space Path — unreviewed idea; contract and evaluator required.
+- [Add Noise to a Joint-Space Path](/problems/diffusion-action-noising) — reviewed shared forward-process component for normalized (B,H,D) joint paths with supplied noise/timesteps and zero padding. Endpoint conditioning, denoiser training and reverse planning remain outside this exercise.
 - Apply Collision-Cost Guidance During Denoising — unreviewed idea; contract and evaluator required.
 - Check Endpoint and Smoothness Constraints — unreviewed idea; contract and evaluator required.
 

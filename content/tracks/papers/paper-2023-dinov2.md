@@ -23,9 +23,10 @@
     "dinov2-center-sharpen",
     "dinov2-knn-evaluation",
     "dinov2-class-patch-objectives",
-    "dinov2-camera-feature-drift"
+    "dinov2-camera-feature-drift",
+    "dinov2-neighbor-feature-spreading"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +59,7 @@ The implementation path follows **Build teacher and student views → Stabilize 
 
 Source cards: [2023-dinov2](../../../research/papers/vision-vlm-3d/2023-dinov2.md).
 
-**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 6 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -105,7 +106,7 @@ Combine cross-view supervision, masked patch targets, and feature spreading.
 - **Runnable paper-associated component:** [Evaluate Frozen Features with k-NN](/problems/dinov2-knn-evaluation). Evaluate Frozen Features with k-NN
 - **Runnable paper-associated component:** [Combine Class-Token and Masked-Patch Objectives](/problems/dinov2-class-patch-objectives). Combine Class-Token and Masked-Patch Objectives
 - **Runnable paper-associated component:** [Monitor Frozen-Feature Drift Across Camera Domains](/problems/dinov2-camera-feature-drift). Compare frozen-feature channel means using a reference-domain scale.
-- **Proposed component, not runnable:** Implement Nearest-Neighbor Feature-Spreading Regularization.
+- **Runnable paper-associated component:** [Implement Nearest-Neighbor Feature-Spreading Regularization](/problems/dinov2-neighbor-feature-spreading). A representation can collapse when many images receive nearly identical features.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

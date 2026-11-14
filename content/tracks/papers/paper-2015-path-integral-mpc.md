@@ -16,8 +16,12 @@
     "planning-control-ik",
     "path-integral-mpc"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 3,
+  "runnable_problem_slugs": [
+    "perturbed-linear-rollouts",
+    "exponential-trajectory-weights",
+    "receding-horizon-control-update"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +54,7 @@ The implementation path follows **Sample control rollouts → Weight corrected c
 
 Source cards: [2015-path-integral-mpc](../../../research/papers/planning-control-ik/2015-path-integral-mpc.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +74,7 @@ Perturb a nominal sequence and simulate dynamics.
 
 [Study the mechanism and math](/projects/2015-path-integral-mpc#paper-section-sample-control-rollouts).
 
-- **Proposed component, not runnable:** Roll Out Perturbed Control Sequences.
+- **Runnable paper-associated component:** [Roll Out Perturbed Control Sequences](/problems/perturbed-linear-rollouts). Roll out a batch of supplied control perturbations through a bounded discrete linear robot model.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +86,7 @@ Use exponential weights with the required sampling correction.
 
 [Study the mechanism and math](/projects/2015-path-integral-mpc#paper-section-weight-corrected-costs).
 
-- **Proposed component, not runnable:** Normalize Exponential Trajectory Cost Weights.
+- **Runnable paper-associated component:** [Normalize Exponential Trajectory Cost Weights](/problems/exponential-trajectory-weights). Convert supplied corrected rollout costs into stable normalized weights.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +98,7 @@ Average useful perturbations and shift the horizon.
 
 [Study the mechanism and math](/projects/2015-path-integral-mpc#paper-section-update-and-recede).
 
-- **Proposed component, not runnable:** Update a Receding-Horizon Control Sequence.
+- **Runnable paper-associated component:** [Update a Receding-Horizon Control Sequence](/problems/receding-horizon-control-update). Apply a weighted rollout perturbation, bound the control sequence, and recede by one step.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

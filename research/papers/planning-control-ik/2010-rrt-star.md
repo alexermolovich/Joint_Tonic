@@ -1,22 +1,72 @@
 ---
 schema_version: 1
-paper_id: "2010-rrt-star"
-title: "Incremental Sampling-based Algorithms for Optimal Motion Planning"
-authors: ["Karaman, Sertac","Frazzoli, Emilio"]
+paper_id: 2010-rrt-star
+title: Incremental Sampling-based Algorithms for Optimal Motion Planning
+authors:
+  - 'Karaman, Sertac'
+  - 'Frazzoli, Emilio'
 year: 2010
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1005.0416"
-pdf_url: "https://arxiv.org/pdf/1005.0416"
-local_pdf: "./2010-rrt-star.pdf"
-sha256: "30310e5d83a6f9a76dcb81f310785456a72453dba5794cba1cd4005690818ac6"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1005.0416'
+pdf_url: 'https://arxiv.org/pdf/1005.0416'
+local_pdf: ./2010-rrt-star.pdf
+sha256: 30310e5d83a6f9a76dcb81f310785456a72453dba5794cba1cd4005690818ac6
 bytes: 9436806
 pages: 20
-topics: ["planning-control-ik","rrt-star"]
-modalities: ["joint-state","poses","obstacles","trajectories"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Sample and extend","detail":"Connect a new configuration toward a random sample.","column":0,"row":0,"section":"Sample and extend","problem_slugs":[],"planned_problems":["Find Nearby Planning Tree Vertices"]},{"id":"stage-2","title":"Choose a low-cost parent","detail":"Compare collision-free connections within a shrinking neighborhood.","column":1,"row":0,"section":"Choose a low-cost parent","problem_slugs":[],"planned_problems":["Choose a Collision-Free Minimum-Cost Tree Parent"]},{"id":"stage-3","title":"Rewire and update costs","detail":"Replace more expensive routes through the new vertex.","column":2,"row":0,"section":"Rewire and update costs","problem_slugs":[],"planned_problems":["Rewire a Tree Without Creating Cycles","Compare Path Cost Across Sampling Budgets"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"new configuration"},{"from":"stage-2","to":"stage-3","label":"selected parent"}]}
+topics:
+  - planning-control-ik
+  - rrt-star
+modalities:
+  - joint-state
+  - poses
+  - obstacles
+  - trajectories
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Sample and extend
+      detail: Connect a new configuration toward a random sample.
+      column: 0
+      row: 0
+      section: Sample and extend
+      problem_slugs:
+        - nearby-planning-tree-vertices
+      planned_problems: []
+    - id: stage-2
+      title: Choose a low-cost parent
+      detail: Compare collision-free connections within a shrinking neighborhood.
+      column: 1
+      row: 0
+      section: Choose a low-cost parent
+      problem_slugs:
+        - minimum-cost-tree-parent
+      planned_problems: []
+    - id: stage-3
+      title: Rewire and update costs
+      detail: Replace more expensive routes through the new vertex.
+      column: 2
+      row: 0
+      section: Rewire and update costs
+      problem_slugs:
+        - rewire-planning-tree
+        - planning-budget-comparison
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: new configuration
+    - from: stage-2
+      to: stage-3
+      label: selected parent
 ---
 
 ## Core paper explanation
@@ -34,7 +84,7 @@ Sample $q_{\mathrm{rand}}$ in configuration space, find a nearby tree vertex, an
 
 **Component practice**
 
-- Find Nearby Planning Tree Vertices — unreviewed idea; contract and evaluator required.
+- [Find Nearby Planning Tree Vertices](/problems/nearby-planning-tree-vertices) — runnable bounded component; see its documented scope.
 
 ### Choose a low-cost parent
 
@@ -45,7 +95,7 @@ Choose $q_p=\arg\min_{q\in\mathcal N}[c(q)+c(q,q_{\mathrm{new}})]$ among feasibl
 
 **Component practice**
 
-- Choose a Collision-Free Minimum-Cost Tree Parent — unreviewed idea; contract and evaluator required.
+- [Choose a Collision-Free Minimum-Cost Tree Parent](/problems/minimum-cost-tree-parent) — runnable bounded component; see its documented scope.
 
 ### Rewire and update costs
 
@@ -54,20 +104,20 @@ Reparent neighbor $q$ when $c(q_{\mathrm{new}})+c(q_{\mathrm{new}},q)<c(q)$ and 
 
 **Component practice**
 
-- Rewire a Tree Without Creating Cycles — unreviewed idea; contract and evaluator required.
-- Compare Path Cost Across Sampling Budgets — unreviewed idea; contract and evaluator required.
+- [Rewire a Tree Without Creating Cycles](/problems/rewire-planning-tree) — runnable bounded component; see its documented scope.
+- [Compare Path Cost Across Sampling Budgets](/problems/planning-budget-comparison) — runnable bounded component; see its documented scope.
 
 ## Implement the components
 
 Each execution-flow node links the matching runnable component or names its planned problem. Planned titles are not runnable; labels distinguish reviewed drafts from unreviewed ideas.
 
 
-**Planned component problems:**
+**Runnable components and remaining ideas:**
 
-- Find Nearby Planning Tree Vertices — unreviewed idea; contract and evaluator required.
-- Choose a Collision-Free Minimum-Cost Tree Parent — unreviewed idea; contract and evaluator required.
-- Rewire a Tree Without Creating Cycles — unreviewed idea; contract and evaluator required.
-- Compare Path Cost Across Sampling Budgets — unreviewed idea; contract and evaluator required.
+- [Find Nearby Planning Tree Vertices](/problems/nearby-planning-tree-vertices) — runnable bounded component; see its documented scope.
+- [Choose a Collision-Free Minimum-Cost Tree Parent](/problems/minimum-cost-tree-parent) — runnable bounded component; see its documented scope.
+- [Rewire a Tree Without Creating Cycles](/problems/rewire-planning-tree) — runnable bounded component; see its documented scope.
+- [Compare Path Cost Across Sampling Budgets](/problems/planning-budget-comparison) — runnable bounded component; see its documented scope.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 

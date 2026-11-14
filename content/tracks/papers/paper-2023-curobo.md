@@ -18,9 +18,11 @@
   ],
   "runnable_problem_slugs": [
     "se3-transform-points",
-    "edge-inference-release-gate"
+    "sphere-signed-distance-cost",
+    "edge-inference-release-gate",
+    "rank-motion-candidates"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +55,7 @@ The implementation path follows **Generate goal configurations → Optimize para
 
 Source cards: [2023-curobo](../../../research/papers/planning-control-ik/2023-curobo.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -87,7 +89,7 @@ Combine endpoint, collision, and smoothness costs.
 
 [Study the mechanism and math](/projects/2023-curobo#paper-section-optimize-parallel-trajectories).
 
-- **Proposed component, not runnable:** Compute a Signed-Distance Collision Cost.
+- **Runnable paper-associated component:** [Compute a Signed-Distance Collision Cost](/problems/sphere-signed-distance-cost). Score a batch of robot sphere approximations against spherical obstacles in one world frame.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,7 +102,7 @@ Check refined trajectories and produce executable samples.
 [Study the mechanism and math](/projects/2023-curobo#paper-section-validate-and-time-the-motion).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Rank Multi-Seed Motion Trajectories.
+- **Runnable paper-associated component:** [Rank Multi-Seed Motion Trajectories](/problems/rank-motion-candidates). Rank supplied motion candidates after explicit feasibility gates.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

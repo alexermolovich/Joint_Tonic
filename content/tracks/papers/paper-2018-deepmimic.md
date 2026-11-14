@@ -16,8 +16,13 @@
     "humanoid-dexterity-tactile",
     "deepmimic"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "deepmimic-reference-pose",
+    "deepmimic-phase-alignment",
+    "deepmimic-pose-velocity-rewards",
+    "motion-task-reward-blend"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Condition on reference phase → Measure imita
 
 Source cards: [2018-deepmimic](../../../research/papers/humanoid-dexterity-tactile/2018-deepmimic.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,8 +75,8 @@ Provide physical state and the current reference-motion phase.
 
 [Study the mechanism and math](/projects/2018-deepmimic#paper-section-condition-on-reference-phase).
 
-- **Proposed component, not runnable:** Interpolate a Reference Motion Pose.
-- **Proposed component, not runnable:** Detect Phase Misalignment in a Motion Clip.
+- **Runnable paper-associated component:** [Interpolate a Reference Motion Pose](/problems/deepmimic-reference-pose). A reference motion is sampled at discrete times, while a controller may request an intermediate pose.
+- **Runnable paper-associated component:** [Detect Phase Misalignment in a Motion Clip](/problems/deepmimic-phase-alignment). Two phases close to opposite ends of a cyclic clip can still describe nearly the same point in the motion.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -83,7 +88,7 @@ Compare joint rotations, velocities, endpoints, and center of mass.
 
 [Study the mechanism and math](/projects/2018-deepmimic#paper-section-measure-imitation-quality).
 
-- **Proposed component, not runnable:** Compute Pose and Velocity Imitation Rewards.
+- **Runnable paper-associated component:** [Compute Pose and Velocity Imitation Rewards](/problems/deepmimic-pose-velocity-rewards). Motion imitation should compare physical orientations, not quaternion storage signs.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Balance imitation with the requested task.
 
 [Study the mechanism and math](/projects/2018-deepmimic#paper-section-optimize-feedback-control).
 
-- **Proposed component, not runnable:** Combine Imitation and Task Rewards for Motion Control.
+- **Runnable paper-associated component:** [Combine Motion and Task Rewards](/problems/motion-task-reward-blend). A task score and a motion-quality score measure different properties.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -1,0 +1,80 @@
+{
+  "slug": "sam-image-embedding-cache-key",
+  "title": "Reuse Image Embeddings Without Stale-Cache Errors",
+  "version": "1.0.0",
+  "number": 1004,
+  "difficulty": "Easy",
+  "domain": "Perception",
+  "topics": [
+    "2023-segment-anything",
+    "sam-image-embedding-cache-key"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "embedding_cache_key",
+  "paperIds": [
+    "2023-segment-anything"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An image embedding can be reused only when the image, encoder and preprocessing recipe agree.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Artifact identity; no spatial transform"
+    ],
+    "units": {
+      "resized_shape": "pixel counts",
+      "hashes": "lowercase hexadecimal SHA-256"
+    },
+    "axes": "Exactly two shape entries height,width; no batch",
+    "timestamp_assumptions": "Fixed supplied batch; cameras/observations are aligned by caller. No clock inference, state history or real-time guarantee.",
+    "batching": "Only explicitly declared dimensions; masks preserve original ordering."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-mechanism-oracle",
+      "boundary-and-invalid-input",
+      "maximum-advertised-dimensions",
+      "input-preservation-and-output-aliasing"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "12772eec9a0a5e9b06b93d6ebf34884a7e5c61100c9113bf4639bd5f146ea6bc"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2304.02643"
+    ],
+    "implementation_urls": []
+  }
+}

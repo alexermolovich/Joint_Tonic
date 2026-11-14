@@ -1,22 +1,90 @@
 ---
 schema_version: 1
-paper_id: "2023-grounding-dino"
-title: "Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection"
-authors: ["Shilong Liu", "Zhaoyang Zeng", "Tianhe Ren", "Feng Li", "Hao Zhang", "Jie Yang", "Qing Jiang", "Chunyuan Li", "Jianwei Yang", "Hang Su", "Jun Zhu", "Lei Zhang"]
+paper_id: 2023-grounding-dino
+title: >-
+  Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object
+  Detection
+authors:
+  - Shilong Liu
+  - Zhaoyang Zeng
+  - Tianhe Ren
+  - Feng Li
+  - Hao Zhang
+  - Jie Yang
+  - Qing Jiang
+  - Chunyuan Li
+  - Jianwei Yang
+  - Hang Su
+  - Jun Zhu
+  - Lei Zhang
 year: 2023
-venue_or_status: "ECCV 2024"
-primary_url: "https://arxiv.org/abs/2303.05499"
-pdf_url: "https://arxiv.org/pdf/2303.05499"
-local_pdf: "./2023-grounding-dino.pdf"
-sha256: "ba1c64ec2ac4fedeb50b269eadc994456a8428dbe64a8dba2673f22df0fa20b3"
+venue_or_status: ECCV 2024
+primary_url: 'https://arxiv.org/abs/2303.05499'
+pdf_url: 'https://arxiv.org/pdf/2303.05499'
+local_pdf: ./2023-grounding-dino.pdf
+sha256: ba1c64ec2ac4fedeb50b269eadc994456a8428dbe64a8dba2673f22df0fa20b3
 bytes: 4329735
 pages: 33
-topics: ["open-set detection", "phrase grounding", "vision-language fusion", "object detection"]
-modalities: ["RGB image", "text prompt"]
-track_role: "Language-grounded open-world detection"
-open_access_status: "Open-access arXiv manuscript"
-redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
-execution_flow: {"title":"Core execution flow","description":"Encode images and text, select language-relevant queries, then decode boxes and resolve token scores into the requested phrases.","nodes":[{"id":"stage-1","title":"Encode image and text features","detail":"Represent spatial image tokens and valid language tokens for fusion.","column":0,"row":0,"section":"Encode image and text features","problem_slugs":[],"planned_problems":["Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention"]},{"id":"stage-2","title":"Select language-guided queries","detail":"Use compatibility with valid text tokens to prioritize candidate image locations.","column":1,"row":0,"section":"Select language-guided queries","problem_slugs":["grounding-language-query-selection"],"planned_problems":[]},{"id":"stage-3","title":"Resolve boxes to phrases","detail":"Decode spatial predictions and aggregate scores over the requested phrase spans.","column":2,"row":0,"section":"Resolve boxes to phrases","problem_slugs":["grounding-token-phrase-map","grounding-phrase-box-decoding","grounded-segmentation-failure-trace"],"planned_problems":["Evaluate Localization and Phrase Grounding Separately"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"cross-modal features"},{"from":"stage-2","to":"stage-3","label":"selected queries"}]}
+topics:
+  - open-set detection
+  - phrase grounding
+  - vision-language fusion
+  - object detection
+modalities:
+  - RGB image
+  - text prompt
+track_role: Language-grounded open-world detection
+open_access_status: Open-access arXiv manuscript
+redistribution_note: >-
+  Retain the original attribution and license metadata; verify source terms
+  before redistributing outside this research workspace.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Encode images and text, select language-relevant queries, then decode boxes
+    and resolve token scores into the requested phrases.
+  nodes:
+    - id: stage-1
+      title: Encode image and text features
+      detail: Represent spatial image tokens and valid language tokens for fusion.
+      column: 0
+      row: 0
+      section: Encode image and text features
+      problem_slugs:
+        - grounding-bidirectional-cross-attention
+      planned_problems: []
+    - id: stage-2
+      title: Select language-guided queries
+      detail: >-
+        Use compatibility with valid text tokens to prioritize candidate image
+        locations.
+      column: 1
+      row: 0
+      section: Select language-guided queries
+      problem_slugs:
+        - grounding-language-query-selection
+      planned_problems: []
+    - id: stage-3
+      title: Resolve boxes to phrases
+      detail: >-
+        Decode spatial predictions and aggregate scores over the requested
+        phrase spans.
+      column: 2
+      row: 0
+      section: Resolve boxes to phrases
+      problem_slugs:
+        - grounding-token-phrase-map
+        - grounding-phrase-box-decoding
+        - grounded-segmentation-failure-trace
+        - grounding-localization-phrase-metrics
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: cross-modal features
+    - from: stage-2
+      to: stage-3
+      label: selected queries
 ---
 
 ## Core paper explanation
@@ -28,6 +96,8 @@ Grounding DINO makes object detection conditional on text. It combines image and
 Encode images and text, select language-relevant queries, then decode boxes and resolve token scores into the requested phrases.
 
 ### Encode image and text features
+
+**Implement this component:** [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](/problems/grounding-bidirectional-cross-attention). The two directions share scores but normalize independently; this bounded single-head component omits learned projections and residual gates.
 
 Let visual features be $V\in\mathbb R^{N\times d}$ and text features $T\in\mathbb R^{L\times d}$. Their compatibility matrix has shape $N\times L$:
 
@@ -59,6 +129,8 @@ Here $m_j$ indicates usable text tokens. The paper’s full model includes featu
 
 ### Resolve boxes to phrases
 
+**Implement this component:** [Evaluate Localization and Phrase Grounding Separately](/problems/grounding-localization-phrase-metrics). Report paired localization and phrase agreement separately; this is not dataset mAP.
+
 If phrase $g$ occupies token set $J_g$, one explicit teaching aggregation is
 
 $$
@@ -85,17 +157,15 @@ Empty/special-token intervals never overlap. This original alignment rule suppli
 
 ## Implement the components
 
+- [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](/problems/grounding-bidirectional-cross-attention) — Hard.
+- [Evaluate Localization and Phrase Grounding Separately](/problems/grounding-localization-phrase-metrics) — Easy.
+
 The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
 - [Map Text Tokens to Grounded Phrases](/problems/grounding-token-phrase-map) — Easy.
 - [Select Language-Guided Object Queries](/problems/grounding-language-query-selection) — Medium.
 - [Decode Phrase-Labeled Boxes](/problems/grounding-phrase-box-decoding) — Medium.
 - [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace) — Medium.
-
-**Further ideas outside the approved runnable scope:**
-
-- Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention.
-- Evaluate Localization and Phrase Grounding Separately.
 
 ## Why this matters on a robot
 

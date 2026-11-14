@@ -1,0 +1,76 @@
+{
+  "slug": "drq-multiview-critic-loss",
+  "title": "Compute a Multi-View Critic Regression Loss",
+  "version": "1.0.0",
+  "number": 517,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2020-data-regularized-q",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "multiview_critic_loss",
+  "paperIds": [
+    "2020-data-regularized-q"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Each observed state should contribute equally even when some states have fewer usable augmented views.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Actions and image intensities are normalized and dimensionless. Q values and rewards use a fixed reward scale; squared losses use squared reward units."
+    },
+    "axes": "Batch, action, view and image axes are specified explicitly below",
+    "timestamp_assumptions": "All views in a row describe the same transition. No physical simulation or implicit coordinate conversion runs.",
+    "batching": "Batch, action, view and image axes are specified explicitly below"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "e17de850a4bddd9cbf061a44e17cfd00177446bc1926881fe70bf230aa24b958"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component using supplied arrays; not a reproduction of trained policy performance or the full paper.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2004.13649"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2020-data-regularized-q.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

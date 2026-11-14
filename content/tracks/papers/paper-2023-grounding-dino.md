@@ -19,12 +19,14 @@
     "object detection"
   ],
   "runnable_problem_slugs": [
+    "grounding-bidirectional-cross-attention",
     "grounding-language-query-selection",
     "grounding-token-phrase-map",
     "grounding-phrase-box-decoding",
-    "grounded-segmentation-failure-trace"
+    "grounded-segmentation-failure-trace",
+    "grounding-localization-phrase-metrics"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,7 +59,7 @@ The implementation path follows **Encode image and text features → Select lang
 
 Source cards: [2023-grounding-dino](../../../research/papers/vision-vlm-3d/2023-grounding-dino.md).
 
-**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 6 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -79,7 +81,7 @@ Represent spatial image tokens and valid language tokens for fusion.
 
 [Study the mechanism and math](/projects/2023-grounding-dino#paper-section-encode-image-and-text-features).
 
-- **Proposed component, not runnable:** Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention.
+- **Runnable paper-associated component:** [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](/problems/grounding-bidirectional-cross-attention). Image-to-text and text-to-image attention answer different questions.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -106,7 +108,7 @@ Decode spatial predictions and aggregate scores over the requested phrase spans.
 - **Runnable paper-associated component:** [Map Text Tokens to Grounded Phrases](/problems/grounding-token-phrase-map). Map character spans to tokens with an explicit half-open overlap rule.
 - **Runnable paper-associated component:** [Decode Phrase-Labeled Boxes](/problems/grounding-phrase-box-decoding). Associate each normalized box with its strongest phrase, then return thresholded pixel boxes.
 - **Runnable paper-associated component:** [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace). Compose supplied grounding and segmentation outputs while preserving failure reasons per query.
-- **Proposed component, not runnable:** Evaluate Localization and Phrase Grounding Separately.
+- **Runnable paper-associated component:** [Evaluate Localization and Phrase Grounding Separately](/problems/grounding-localization-phrase-metrics). A box can be geometrically correct while naming the wrong object, or name the right phrase while pointing elsewhere.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

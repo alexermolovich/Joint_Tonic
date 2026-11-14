@@ -1,22 +1,93 @@
 ---
 schema_version: 1
-paper_id: "2022-bevformer"
-title: "BEVFormer: Learning Bird's-Eye-View Representation from Multi-Camera Images via Spatiotemporal Transformers"
-authors: ["Zhiqi Li", "Wenhai Wang", "Hongyang Li", "Enze Xie", "Chonghao Sima", "Tong Lu", "Qiao Yu", "Jifeng Dai"]
+paper_id: 2022-bevformer
+title: >-
+  BEVFormer: Learning Bird's-Eye-View Representation from Multi-Camera Images
+  via Spatiotemporal Transformers
+authors:
+  - Zhiqi Li
+  - Wenhai Wang
+  - Hongyang Li
+  - Enze Xie
+  - Chonghao Sima
+  - Tong Lu
+  - Qiao Yu
+  - Jifeng Dai
 year: 2022
-venue_or_status: "ECCV 2022"
-primary_url: "https://arxiv.org/abs/2203.17270"
-pdf_url: "https://arxiv.org/pdf/2203.17270"
-local_pdf: "./2022-bevformer.pdf"
-sha256: "641561d0e4c1d46d6883a3d38c68b475030de5bbbcdf747af268366f47f97a6b"
+venue_or_status: ECCV 2022
+primary_url: 'https://arxiv.org/abs/2203.17270'
+pdf_url: 'https://arxiv.org/pdf/2203.17270'
+local_pdf: ./2022-bevformer.pdf
+sha256: 641561d0e4c1d46d6883a3d38c68b475030de5bbbcdf747af268366f47f97a6b
 bytes: 4739748
 pages: 20
-topics: ["bird's-eye view", "multi-camera perception", "3D detection", "temporal fusion", "autonomous driving"]
-modalities: ["synchronized multi-camera RGB", "camera calibration", "ego motion"]
-track_role: "Multi-view and temporal perception for autonomy"
-open_access_status: "Open-access arXiv manuscript"
-redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace."
-execution_flow: {"title":"Core execution flow","description":"Create ego-frame reference points, gather visible multi-camera features, and fuse aligned temporal state before task-specific prediction.","nodes":[{"id":"stage-1","title":"Project BEV reference points","detail":"Use extrinsics and intrinsics to find where a 3D reference point is visible.","column":0,"row":0,"section":"Project BEV reference points","problem_slugs":["se3-transform-points","project-camera-points","bev-project-reference-points","bev-visibility-mask","bev-camera-health-diagnostics"],"planned_problems":[]},{"id":"stage-2","title":"Gather camera evidence","detail":"Sample features around projected references in the cameras that can see them.","column":1,"row":0,"section":"Gather camera evidence","problem_slugs":["bev-weighted-camera-features"],"planned_problems":["Sample Calibrated Multi-Camera Feature Maps"]},{"id":"stage-3","title":"Fuse temporal BEV state","detail":"Align earlier BEV features to the current ego frame and combine them with current evidence.","column":2,"row":0,"section":"Fuse temporal BEV state","problem_slugs":["bev-ego-motion-warp","bev-temporal-fusion"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"visible projections"},{"from":"stage-2","to":"stage-3","label":"camera features"}]}
+topics:
+  - bird's-eye view
+  - multi-camera perception
+  - 3D detection
+  - temporal fusion
+  - autonomous driving
+modalities:
+  - synchronized multi-camera RGB
+  - camera calibration
+  - ego motion
+track_role: Multi-view and temporal perception for autonomy
+open_access_status: Open-access arXiv manuscript
+redistribution_note: >-
+  Retain the original attribution and license metadata; verify source terms
+  before redistributing outside this research workspace.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Create ego-frame reference points, gather visible multi-camera features, and
+    fuse aligned temporal state before task-specific prediction.
+  nodes:
+    - id: stage-1
+      title: Project BEV reference points
+      detail: >-
+        Use extrinsics and intrinsics to find where a 3D reference point is
+        visible.
+      column: 0
+      row: 0
+      section: Project BEV reference points
+      problem_slugs:
+        - se3-transform-points
+        - project-camera-points
+        - bev-project-reference-points
+        - bev-visibility-mask
+        - bev-camera-health-diagnostics
+      planned_problems: []
+    - id: stage-2
+      title: Gather camera evidence
+      detail: >-
+        Sample features around projected references in the cameras that can see
+        them.
+      column: 1
+      row: 0
+      section: Gather camera evidence
+      problem_slugs:
+        - bev-weighted-camera-features
+        - bev-bilinear-camera-sampling
+      planned_problems: []
+    - id: stage-3
+      title: Fuse temporal BEV state
+      detail: >-
+        Align earlier BEV features to the current ego frame and combine them
+        with current evidence.
+      column: 2
+      row: 0
+      section: Fuse temporal BEV state
+      problem_slugs:
+        - bev-ego-motion-warp
+        - bev-temporal-fusion
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: visible projections
+    - from: stage-2
+      to: stage-3
+      label: camera features
 ---
 
 ## Core paper explanation
@@ -44,6 +115,8 @@ The $[I_3\;0]$ factor selects the 3D camera coordinates, making matrix dimension
 **Implement these components:** [Project BEV Reference Points into Calibrated Cameras](/problems/bev-project-reference-points) · [Mask Out-of-View and Behind-Camera Samples](/problems/bev-visibility-mask) · [Diagnose Camera Dropout and Calibration Drift in BEV](/problems/bev-camera-health-diagnostics). Each exercise specifies its bounded scope; diagnostic and simplified variants do not reproduce the full model.
 
 ### Gather camera evidence
+
+**Implement this component:** [Sample Calibrated Multi-Camera Feature Maps](/problems/bev-bilinear-camera-sampling). Sample supplied calibrated feature coordinates using bilinear interpolation and explicit out-of-view masks.
 
 A compact description of deformable spatial sampling for query $q$ is
 
@@ -86,6 +159,8 @@ Features and weights are dimensionless. Invalid history or reset forces $a=0$, p
 
 ## Implement the components
 
+- [Sample Calibrated Multi-Camera Feature Maps](/problems/bev-bilinear-camera-sampling) — Medium.
+
 The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
 - [Aggregate Multi-Camera Features with Attention Weights](/problems/bev-weighted-camera-features) — Easy.
@@ -94,10 +169,6 @@ The following bounded exercises are runnable. They use original synthetic fixtur
 - [Mask Out-of-View and Behind-Camera Samples](/problems/bev-visibility-mask) — Easy.
 - [Fuse Temporal BEV State](/problems/bev-temporal-fusion) — Medium.
 - [Diagnose Camera Dropout and Calibration Drift in BEV](/problems/bev-camera-health-diagnostics) — Medium.
-
-**Further ideas outside the approved runnable scope:**
-
-- Sample Calibrated Multi-Camera Feature Maps.
 
 ## Why this matters on a robot
 

@@ -1,0 +1,80 @@
+{
+  "slug": "awq-groupwise-quantization",
+  "title": "Compute Group-Wise Quantization Parameters",
+  "version": "1.0.0",
+  "number": 908,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "model-compression",
+    "2023-awq"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "groupwise_quantize_weights",
+  "paperIds": [
+    "2023-awq"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compute Group-Wise Quantization Parameters",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Neural feature channels; no spatial frame transform"
+    ],
+    "units": {
+      "weights/scales": "dimensionless model coordinates; codes logical unsigned b-bit values"
+    },
+    "axes": "weights(R,C),groups(R,G,g),scales/zeros(R,G),quantized/reconstructed(R,C).",
+    "timestamp_assumptions": "Offline fixed calibration batch; no timestamps",
+    "batching": "weights(R,C),groups(R,G,g),scales/zeros(R,G),quantized/reconstructed(R,C)."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "cf8d945cf720e91e2bfc9daa51bf1446a10dfb1d80aadb14c1a6a6b29a4797de"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full paper reproduction or hardware speed guarantee. Backlog PB-134",
+    "primary_urls": [
+      "https://arxiv.org/abs/2306.00978"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2023-awq.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

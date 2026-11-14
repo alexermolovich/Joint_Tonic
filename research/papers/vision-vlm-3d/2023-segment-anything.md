@@ -1,22 +1,93 @@
 ---
 schema_version: 1
-paper_id: "2023-segment-anything"
-title: "Segment Anything"
-authors: ["Alexander Kirillov", "Eric Mintun", "Nikhila Ravi", "Hanzi Mao", "Chloe Rolland", "Laura Gustafson", "Tete Xiao", "Spencer Whitehead", "Alexander C. Berg", "Wan-Yen Lo", "Piotr Dollar", "Ross Girshick"]
+paper_id: 2023-segment-anything
+title: Segment Anything
+authors:
+  - Alexander Kirillov
+  - Eric Mintun
+  - Nikhila Ravi
+  - Hanzi Mao
+  - Chloe Rolland
+  - Laura Gustafson
+  - Tete Xiao
+  - Spencer Whitehead
+  - Alexander C. Berg
+  - Wan-Yen Lo
+  - Piotr Dollar
+  - Ross Girshick
 year: 2023
-venue_or_status: "ICCV 2023"
-primary_url: "https://arxiv.org/abs/2304.02643"
-pdf_url: "https://arxiv.org/pdf/2304.02643"
-local_pdf: "./2023-segment-anything.pdf"
-sha256: "c6ca524e47200c3e542587ca76ac1dbc89cc67340f948c819250d16fdbd90cfb"
+venue_or_status: ICCV 2023
+primary_url: 'https://arxiv.org/abs/2304.02643'
+pdf_url: 'https://arxiv.org/pdf/2304.02643'
+local_pdf: ./2023-segment-anything.pdf
+sha256: c6ca524e47200c3e542587ca76ac1dbc89cc67340f948c819250d16fdbd90cfb
 bytes: 15644599
 pages: 30
-topics: ["image segmentation", "promptable models", "foundation models", "data engine"]
-modalities: ["RGB image", "point prompts", "box prompts", "mask prompts"]
-track_role: "Promptable pixel-level perception"
-open_access_status: "Open-access arXiv manuscript"
-redistribution_note: "Retain the original attribution and license metadata; verify source terms before redistributing outside this research workspace. The SA-1B dataset has separate access terms and is not included here."
-execution_flow: {"title":"Core execution flow","description":"Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.","nodes":[{"id":"stage-1","title":"Encode and cache the image","detail":"Compute reusable spatial image features with a fixed preprocessing transform.","column":0,"row":0,"section":"Encode and cache the image","problem_slugs":[],"planned_problems":["Reuse Image Embeddings Without Stale-Cache Errors"]},{"id":"stage-2","title":"Encode prompts and ambiguity","detail":"Represent positive/negative points, boxes, or masks for the decoder.","column":1,"row":0,"section":"Encode prompts and ambiguity","problem_slugs":["sam-point-prompt-encoding","sam-box-prompt-encoding"],"planned_problems":["Transform Prompt Coordinates Through Image Preprocessing"]},{"id":"stage-3","title":"Rank and filter masks","detail":"Use predicted quality and stability while keeping mask geometry explicit.","column":2,"row":0,"section":"Rank and filter masks","problem_slugs":["sam-mask-ranking","sam-stability-overlap-filter","grounded-segmentation-failure-trace"],"planned_problems":[]}],"edges":[{"from":"stage-1","to":"stage-2","label":"cached features"},{"from":"stage-2","to":"stage-3","label":"candidate masks"}]}
+topics:
+  - image segmentation
+  - promptable models
+  - foundation models
+  - data engine
+modalities:
+  - RGB image
+  - point prompts
+  - box prompts
+  - mask prompts
+track_role: Promptable pixel-level perception
+open_access_status: Open-access arXiv manuscript
+redistribution_note: >-
+  Retain the original attribution and license metadata; verify source terms
+  before redistributing outside this research workspace. The SA-1B dataset has
+  separate access terms and is not included here.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Cache an image embedding, encode the prompt, and decode/rank candidate
+    masks. Reusing an embedding is valid only while the underlying preprocessed
+    image stays unchanged.
+  nodes:
+    - id: stage-1
+      title: Encode and cache the image
+      detail: >-
+        Compute reusable spatial image features with a fixed preprocessing
+        transform.
+      column: 0
+      row: 0
+      section: Encode and cache the image
+      problem_slugs:
+        - sam-image-embedding-cache-key
+      planned_problems: []
+    - id: stage-2
+      title: Encode prompts and ambiguity
+      detail: 'Represent positive/negative points, boxes, or masks for the decoder.'
+      column: 1
+      row: 0
+      section: Encode prompts and ambiguity
+      problem_slugs:
+        - sam-point-prompt-encoding
+        - sam-box-prompt-encoding
+        - sam-transform-prompt-coordinates
+      planned_problems: []
+    - id: stage-3
+      title: Rank and filter masks
+      detail: >-
+        Use predicted quality and stability while keeping mask geometry
+        explicit.
+      column: 2
+      row: 0
+      section: Rank and filter masks
+      problem_slugs:
+        - sam-mask-ranking
+        - sam-stability-overlap-filter
+        - grounded-segmentation-failure-trace
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: cached features
+    - from: stage-2
+      to: stage-3
+      label: candidate masks
 ---
 
 ## Core paper explanation
@@ -28,6 +99,8 @@ Segment Anything separates expensive image encoding from lightweight prompt-cond
 Cache an image embedding, encode the prompt, and decode/rank candidate masks. Reusing an embedding is valid only while the underlying preprocessed image stays unchanged.
 
 ### Encode and cache the image
+
+**Implement this component:** [Reuse Image Embeddings Without Stale-Cache Errors](/problems/sam-image-embedding-cache-key). Bind the cache key to image, encoder, preprocessing and resized shape; storage integrity is separate.
 
 For image $I$, let $F=f_{\mathrm{image}}(I)\in\mathbb R^{h\times w\times d}$. A prompt coordinate $(u,v)$ in original pixels must be mapped through the image resize/pad transform $R$:
 
@@ -41,6 +114,8 @@ The stored feature grid and prompt coordinates must refer to the same transforme
 **Planned components:** Reuse Image Embeddings Without Stale-Cache Errors. These remain unreviewed ideas without runnable exercises.
 
 ### Encode prompts and ambiguity
+
+**Implement this component:** [Transform Prompt Coordinates Through Image Preprocessing](/problems/sam-transform-prompt-coordinates). Use the actual rounded height/width to transform prompt coordinates independently on each axis.
 
 Sparse prompts become token embeddings; dense mask prompts become spatial features. The decoder combines image and prompt information and produces mask-token vectors $w_k$. A compact dynamic-mask interpretation is
 
@@ -85,6 +160,9 @@ Define the empty-denominator policy. This measures sensitivity to a small thresh
 
 ## Implement the components
 
+- [Transform Prompt Coordinates Through Image Preprocessing](/problems/sam-transform-prompt-coordinates) — Easy.
+- [Reuse Image Embeddings Without Stale-Cache Errors](/problems/sam-image-embedding-cache-key) — Easy.
+
 The following bounded exercises are runnable. They use original synthetic fixtures; completing them does not reproduce the paper's training scale or headline benchmark. Systems diagnostics are explicitly identified as teaching contracts.
 
 - [Rank Candidate Masks with Predicted IoU](/problems/sam-mask-ranking) — Easy.
@@ -92,11 +170,6 @@ The following bounded exercises are runnable. They use original synthetic fixtur
 - [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding) — Medium.
 - [Encode a Box Prompt with Positional Features](/problems/sam-box-prompt-encoding) — Medium.
 - [Build a Grounded Segmentation Pipeline and Trace Failures](/problems/grounded-segmentation-failure-trace) — Medium.
-
-**Further ideas outside the approved runnable scope:**
-
-- Reuse Image Embeddings Without Stale-Cache Errors.
-- Transform Prompt Coordinates Through Image Preprocessing.
 
 ## Why this matters on a robot
 

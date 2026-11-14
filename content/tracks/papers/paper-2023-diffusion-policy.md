@@ -19,13 +19,15 @@
     "multimodal actions"
   ],
   "runnable_problem_slugs": [
+    "diffusion-observation-window-encoder",
     "diffusion-action-noising",
+    "diffusion-conditional-temporal-denoiser",
     "diffusion-conditional-noise-loss",
     "diffusion-ddpm-action-sampler",
     "diffusion-receding-horizon-window",
     "diffusion-denoising-budget"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 6,
   "source_flow_nodes": [
     {
@@ -72,12 +74,13 @@ The implementation path follows **Encode observations → Noise a demonstration 
 
 Source cards: [2023-diffusion-policy](../../../research/papers/vla-embodied/2023-diffusion-policy.md).
 
-**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 7 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Encode observations** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
+- **Supporting prerequisite:** [Encode Synchronized Observations for an Action Denoiser](/problems/diffusion-observation-window-encoder). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Build Sliding Action Chunks with Padding Masks](/problems/act-sliding-action-chunks). Its own contract remains authoritative; it does not implement the entire paper.
 
@@ -93,7 +96,7 @@ Images and robot state become conditioning features shared across the denoising 
 
 [Study the mechanism and math](/projects/2023-diffusion-policy#paper-section-observation-conditioning).
 
-- **Proposed component, not runnable:** Encode Synchronized Observations for an Action Denoiser.
+- **Runnable paper-associated component:** [Encode Synchronized Observations for an Action Denoiser](/problems/diffusion-observation-window-encoder). A policy needs an observation context with a fixed temporal layout.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -117,7 +120,7 @@ A conditional network receives a noisy action chunk, diffusion index, and observ
 
 [Study the mechanism and math](/projects/2023-diffusion-policy#paper-section-conditional-denoiser).
 
-- **Proposed component, not runnable:** Build a Conditional Action Denoiser.
+- **Runnable paper-associated component:** [Build a Conditional Action Denoiser](/problems/diffusion-conditional-temporal-denoiser). An action denoiser uses both a noisy action window and observation context.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

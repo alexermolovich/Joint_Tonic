@@ -17,9 +17,12 @@
     "deep-compression"
   ],
   "runnable_problem_slugs": [
-    "edge-inference-release-gate"
+    "deep-compression-pruning-mask",
+    "deep-compression-centroid-assignment",
+    "edge-inference-release-gate",
+    "deep-compression-storage-budget"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +55,7 @@ The implementation path follows **Prune and retrain → Share quantized weights 
 
 Source cards: [2015-deep-compression](../../../research/papers/mlops-data-deployment/2015-deep-compression.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -72,7 +75,7 @@ Remove weak connections and recover task quality.
 
 [Study the mechanism and math](/projects/2015-deep-compression#paper-section-prune-and-retrain).
 
-- **Proposed component, not runnable:** Apply a Weight-Pruning Mask.
+- **Runnable paper-associated component:** [Apply a Weight-Pruning Mask](/problems/deep-compression-pruning-mask). Apply a Weight-Pruning Mask
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -84,7 +87,7 @@ Assign remaining weights to learned centroids.
 
 [Study the mechanism and math](/projects/2015-deep-compression#paper-section-share-quantized-weights).
 
-- **Proposed component, not runnable:** Quantize Shared Weight Centroids.
+- **Runnable paper-associated component:** [Quantize Shared Weight Centroids](/problems/deep-compression-centroid-assignment). Quantize Shared Weight Centroids
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,7 +100,7 @@ Huffman-code repeated symbols and measure actual deployment.
 [Study the mechanism and math](/projects/2015-deep-compression#paper-section-encode-and-benchmark).
 
 - **Runnable supporting prerequisite:** [Gate an Edge Model with Accuracy and Latency](/problems/edge-inference-release-gate). Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop.
-- **Proposed component, not runnable:** Compute a Compressed Model Storage Budget.
+- **Runnable paper-associated component:** [Compute a Compressed Model Storage Budget](/problems/deep-compression-storage-budget). Compute a Compressed Model Storage Budget
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

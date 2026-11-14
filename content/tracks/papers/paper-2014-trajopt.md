@@ -19,9 +19,12 @@
   ],
   "runnable_problem_slugs": [
     "planar-two-link-ik",
+    "joint-space-smoothness-cost",
+    "linearized-collision-penalty",
+    "bound-convex-trust-step",
     "segment-occupancy-cell-check"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +57,7 @@ The implementation path follows **Score a trajectory → Linearize signed-distan
 
 Source cards: [2014-trajopt](../../../research/papers/planning-control-ik/2014-trajopt.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,7 +79,7 @@ Score a trajectory. See the original explanation and component status below.
 [Study the mechanism and math](/projects/2014-trajopt#paper-section-score-a-trajectory).
 
 - **Runnable supporting prerequisite:** [Solve Closed-Form IK for a Planar Two-Link Arm](/problems/planar-two-link-ik). Solve one declared elbow branch, report unreachable targets, and identify singular two-link configurations.
-- **Proposed component, not runnable:** Build a Joint-Space Smoothness Cost.
+- **Runnable paper-associated component:** [Build a Joint-Space Smoothness Cost](/problems/joint-space-smoothness-cost). Compute a discrete weighted joint-step cost and its exact gradient.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,8 +91,8 @@ Linearize signed-distance penalties. See the original explanation and component 
 
 [Study the mechanism and math](/projects/2014-trajopt#paper-section-linearize-signed-distance-penalties).
 
-- **Proposed component, not runnable:** Linearize a Signed-Distance Collision Penalty.
-- **Proposed component, not runnable:** Bound a Sequential Convex Trust-Region Step.
+- **Runnable paper-associated component:** [Linearize a Signed-Distance Collision Penalty](/problems/linearized-collision-penalty). Evaluate a local first-order clearance model, hinge penalties, and one chosen subgradient.
+- **Runnable paper-associated component:** [Bound a Sequential Convex Trust-Region Step](/problems/bound-convex-trust-step). Project a proposed joint increment into a box trust region and position limits.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

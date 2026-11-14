@@ -7,7 +7,7 @@
     {
       "title": "Add Noise to a Joint-Space Path",
       "normalized": "add noise to a joint space path",
-      "existing_slug": null,
+      "existing_slug": "diffusion-action-noising",
       "papers": [
         "2023-motion-planning-diffusion"
       ],
@@ -21,7 +21,9 @@
         }
       ],
       "backlog_id": "PB-001",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Reuse the deterministic forward process for normalized joint paths of shape (B,H,D), with supplied diffusion indices/noise and optional zero padding. This does not preserve conditioned endpoints, train a denoiser or implement reverse planning.",
+      "independent_review": "perception_completion and research_curator reviewed exact forward-process contract"
     },
     {
       "title": "Aggregate Analytic Grasp Quality Under Pose Perturbations",
@@ -314,7 +316,10 @@
         }
       ],
       "backlog_id": "PB-016",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "digit-align-actions",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Align Terrain Samples to the Robot Frame",
@@ -371,7 +376,10 @@
         }
       ],
       "backlog_id": "PB-019",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "drq-seeded-random-shift",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Apply a Weight-Pruning Mask",
@@ -390,7 +398,10 @@
         }
       ],
       "backlog_id": "PB-020",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deep-compression-pruning-mask",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Apply an Equivalent Channel Rescaling",
@@ -409,7 +420,10 @@
         }
       ],
       "backlog_id": "PB-021",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "smoothquant-equivalent-rescaling",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Apply Bidirectional Region-Token Feature Fusion",
@@ -622,7 +636,10 @@
         }
       ],
       "backlog_id": "PB-032",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "assemble-motion-residuals",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Assemble Sensor-Specific Pose Factors",
@@ -774,7 +791,10 @@
         }
       ],
       "backlog_id": "PB-040",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "drq-augmented-bellman-targets",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Average Per-Scenario Perception Losses",
@@ -831,7 +851,10 @@
         }
       ],
       "backlog_id": "PB-043",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "motion-task-reward-blend",
+      "review_note": "The supplied motion term is the AMP style reward; sharing the weighted combination does not equate imitation and adversarial objectives.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Batch Actor Samples into Learner Updates",
@@ -926,7 +949,10 @@
         }
       ],
       "backlog_id": "PB-048",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "bound-convex-trust-step",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Build a Bidirectional-Prefix Causal-Suffix Attention Mask",
@@ -964,7 +990,10 @@
         }
       ],
       "backlog_id": "PB-050",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "diffusion-conditional-temporal-denoiser",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Build a Continual-Learning Task Sequence",
@@ -1040,7 +1069,10 @@
         }
       ],
       "backlog_id": "PB-054",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "gp-constant-velocity-factor",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Build a Joint-Space Smoothness Cost",
@@ -1059,7 +1091,10 @@
         }
       ],
       "backlog_id": "PB-055",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "joint-space-smoothness-cost",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Build a Pick Heatmap",
@@ -1428,7 +1463,10 @@
         }
       ],
       "backlog_id": "PB-074",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rma-privileged-latent-supervision",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build Query-to-Image Attention Masks",
@@ -1542,7 +1580,10 @@
         }
       ],
       "backlog_id": "PB-080",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "minimum-cost-tree-parent",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Choose Keyframes by Reconstruction Error",
@@ -1732,7 +1773,10 @@
         }
       ],
       "backlog_id": "PB-090",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "combine-motion-policies",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Combine Imitation and Task Rewards for Motion Control",
@@ -1751,7 +1795,10 @@
         }
       ],
       "backlog_id": "PB-091",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "motion-task-reward-blend",
+      "review_note": "The supplied motion term is an imitation reward; this shared component only combines aligned reward streams.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Combine Reprojection and Inertial Residuals in a Local Window",
@@ -1827,7 +1874,10 @@
         }
       ],
       "backlog_id": "PB-095",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "awq-activation-weighted-error",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Compare aligned and metric depth errors",
@@ -1941,7 +1991,10 @@
         }
       ],
       "backlog_id": "PB-101",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "cql-logged-sampled-value-gap",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compare Path Cost Across Sampling Budgets",
@@ -1960,7 +2013,10 @@
         }
       ],
       "backlog_id": "PB-102",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "planning-budget-comparison",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Compare Policy Latency Under Serving Settings",
@@ -2132,7 +2188,10 @@
         }
       ],
       "backlog_id": "PB-111",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deep-compression-storage-budget",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Compute a Conditional Flow Log-Likelihood",
@@ -2170,7 +2229,10 @@
         }
       ],
       "backlog_id": "PB-113",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "cql-discrete-conservative-penalty",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute a Contact-Based Manipulation Reward",
@@ -2303,7 +2365,10 @@
         }
       ],
       "backlog_id": "PB-120",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "drq-multiview-critic-loss",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute a Point-to-Plane Residual",
@@ -2341,7 +2406,10 @@
         }
       ],
       "backlog_id": "PB-122",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sphere-signed-distance-cost",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Compute an Adversarial Style Reward",
@@ -2360,7 +2428,10 @@
         }
       ],
       "backlog_id": "PB-123",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "amp-adversarial-style-reward",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute an Assistant-Only Visual-Instruction Loss",
@@ -2590,7 +2661,10 @@
         }
       ],
       "backlog_id": "PB-134",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "awq-groupwise-quantization",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Compute Inference Throughput from Query Traces",
@@ -2750,7 +2824,10 @@
         }
       ],
       "backlog_id": "PB-142",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deepmimic-pose-velocity-rewards",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute Retrieval Recall by Slice",
@@ -3024,7 +3101,10 @@
         }
       ],
       "backlog_id": "PB-156",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "amp-motion-discriminator-features",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Construct objectness and independent class targets",
@@ -3048,7 +3128,7 @@
     {
       "title": "Construct Offline Bellman Targets with Termination Masks",
       "normalized": "construct offline bellman targets with termination masks",
-      "existing_slug": null,
+      "existing_slug": "soft-value-bellman-target",
       "papers": [
         "2020-conservative-q-learning"
       ],
@@ -3062,7 +3142,9 @@
         }
       ],
       "backlog_id": "PB-158",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Reuse only one-step target arithmetic with supplied next-state values; this does not implement a CQL actor, critic or target-value estimator.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Construct Parallel Action-Chunk Targets",
@@ -3290,7 +3372,10 @@
         }
       ],
       "backlog_id": "PB-170",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "detr-decode-object-queries",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Decode Occupancy and Color from Hierarchical Scene Features",
@@ -3442,7 +3527,10 @@
         }
       ],
       "backlog_id": "PB-178",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deepmimic-phase-alignment",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Detect Stale Perception in a Control Window",
@@ -3499,7 +3587,10 @@
         }
       ],
       "backlog_id": "PB-181",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "nerf-rendered-color-gradients",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Encode a Discrete Six-DoF Action Target",
@@ -3651,7 +3742,10 @@
         }
       ],
       "backlog_id": "PB-189",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "diffusion-observation-window-encoder",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Enumerate Valid Joint-Angle Branches",
@@ -3689,7 +3783,10 @@
         }
       ],
       "backlog_id": "PB-191",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rma-latent-context-estimator",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Estimate Contact Patch Statistics",
@@ -3708,7 +3805,10 @@
         }
       ],
       "backlog_id": "PB-192",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "digit-contact-patch-statistics",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Estimate End-to-End Policy Memory",
@@ -3732,7 +3832,7 @@
     {
       "title": "Estimate Quantized VLA Backbone Memory",
       "normalized": "estimate quantized vla backbone memory",
-      "existing_slug": null,
+      "existing_slug": "openvla-quantized-serving-budget",
       "papers": [
         "2023-awq"
       ],
@@ -3746,7 +3846,9 @@
         }
       ],
       "backlog_id": "PB-194",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Estimate packed parameter bytes plus supplied runtime, activation and KV overhead and measured latency. This does not execute AWQ kernels or measure an actual device allocation.",
+      "independent_review": "research_curator and curriculum_continuation reviewed existing contract overlap"
     },
     {
       "title": "Evaluate a Batch of Trajectories with a Black-Box Cost",
@@ -3955,7 +4057,10 @@
         }
       ],
       "backlog_id": "PB-205",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "grounding-localization-phrase-metrics",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Evaluate mask drift, absence, and correction recovery",
@@ -4050,7 +4155,10 @@
         }
       ],
       "backlog_id": "PB-210",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "cql-offline-policy-support",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Phrase Grounding Recall",
@@ -4088,12 +4196,15 @@
         }
       ],
       "backlog_id": "PB-212",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rma-parameter-change-recovery",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Policy Robustness to Visual Shifts",
       "normalized": "evaluate policy robustness to visual shifts",
-      "existing_slug": null,
+      "existing_slug": "shift-bucket-performance",
       "papers": [
         "2020-data-regularized-q"
       ],
@@ -4107,7 +4218,9 @@
         }
       ],
       "backlog_id": "PB-213",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Group supplied comparable per-scenario errors by declared visual-shift buckets, preserving missing buckets. This diagnostic does not train a policy or reproduce DrQ robustness benchmarks.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Evaluate Retargeted Motion Feasibility",
@@ -4411,7 +4524,10 @@
         }
       ],
       "backlog_id": "PB-229",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "nearby-planning-tree-vertices",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Finite-Difference Gradient Check",
@@ -4450,7 +4566,10 @@
         }
       ],
       "backlog_id": "PB-231",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "detr-flatten-spatial-metadata",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Format Image-Prefix Language Sequences",
@@ -4507,7 +4626,10 @@
         }
       ],
       "backlog_id": "PB-234",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "grounding-bidirectional-cross-attention",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Fuse multi-resolution dense features",
@@ -4773,7 +4895,10 @@
         }
       ],
       "backlog_id": "PB-248",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dinov2-neighbor-feature-spreading",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Implement stable sigmoid focal loss",
@@ -4811,7 +4936,10 @@
         }
       ],
       "backlog_id": "PB-250",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "constant-jerk-segment",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Integrate a Depth Frame into a TSDF",
@@ -4868,7 +4996,10 @@
         }
       ],
       "backlog_id": "PB-253",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deepmimic-reference-pose",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Interpolate a Trajectory Between Support States",
@@ -4887,7 +5018,10 @@
         }
       ],
       "backlog_id": "PB-254",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "gp-support-interpolation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Interpolate coarse features onto fine points",
@@ -4944,7 +5078,10 @@
         }
       ],
       "backlog_id": "PB-257",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "linearized-collision-penalty",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Maintain object-specific video memory",
@@ -5306,7 +5443,10 @@
         }
       ],
       "backlog_id": "PB-276",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "smoothquant-channel-ranges",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Measure Pose and Reconstruction Error",
@@ -5633,7 +5773,10 @@
         }
       ],
       "backlog_id": "PB-293",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "exponential-trajectory-weights",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Normalize Heterogeneous Robot Observation Schemas",
@@ -6022,7 +6165,10 @@
         }
       ],
       "backlog_id": "PB-313",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "pullback-motion-metric",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Push Robot State into a Task Space",
@@ -6041,7 +6187,10 @@
         }
       ],
       "backlog_id": "PB-314",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "push-task-state",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Quantize Compressed Action Coefficients",
@@ -6079,7 +6228,10 @@
         }
       ],
       "backlog_id": "PB-316",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deep-compression-centroid-assignment",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Quantize Weights and Activations to Int8",
@@ -6098,7 +6250,10 @@
         }
       ],
       "backlog_id": "PB-317",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "smoothquant-int8-linear-layer",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Query Color and Density from a Coordinate MLP",
@@ -6212,7 +6367,10 @@
         }
       ],
       "backlog_id": "PB-323",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rank-motion-candidates",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Rank Reward Candidates by Rollout Evidence",
@@ -6250,7 +6408,10 @@
         }
       ],
       "backlog_id": "PB-325",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "vit-class-token-linear-head",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Reassemble tokens into feature maps",
@@ -6634,7 +6795,10 @@
         }
       ],
       "backlog_id": "PB-345",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sam-image-embedding-cache-key",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Rewire a Tree Without Creating Cycles",
@@ -6653,7 +6817,10 @@
         }
       ],
       "backlog_id": "PB-346",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rewire-planning-tree",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Roll Out a Latent Dynamics Sequence",
@@ -6710,7 +6877,10 @@
         }
       ],
       "backlog_id": "PB-349",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "perturbed-linear-rollouts",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root and research_curator contract; research_curator independent reference/case review"
     },
     {
       "title": "Route High-Level and Low-Level Supervision",
@@ -6862,7 +7032,10 @@
         }
       ],
       "backlog_id": "PB-357",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "bev-bilinear-camera-sampling",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Sample Descriptors at Keypoint Coordinates",
@@ -6919,7 +7092,10 @@
         }
       ],
       "backlog_id": "PB-360",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "nerf-hierarchical-depth-sampling",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Sample Informative Mapping Pixels",
@@ -7155,7 +7331,10 @@
         }
       ],
       "backlog_id": "PB-372",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "digit-predicted-contact-cost",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Score Task Relevance for Available Robot Skills",
@@ -7440,7 +7619,10 @@
         }
       ],
       "backlog_id": "PB-387",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "digit-reference-subtraction",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Synchronize Ego and Exo Camera Events",
@@ -7630,7 +7812,10 @@
         }
       ],
       "backlog_id": "PB-397",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rma-asynchronous-latent-age",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Transform an Action Chunk into Frequency Coefficients",
@@ -7706,7 +7891,10 @@
         }
       ],
       "backlog_id": "PB-401",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sam-transform-prompt-coordinates",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root author; research_curator independent contract/code/theory review"
     },
     {
       "title": "Update a Global Pose Graph",
@@ -7744,7 +7932,10 @@
         }
       ],
       "backlog_id": "PB-403",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "receding-horizon-control-update",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Update a Sampling-Based Planner",
@@ -8117,7 +8308,10 @@
         }
       ],
       "backlog_id": "PB-422",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "digit-capture-contract",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate a Teleoperation Demonstration",
@@ -8163,7 +8357,10 @@
         }
       ],
       "backlog_id": "PB-424",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "trajectory-derivative-audit",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent implementation and case review"
     },
     {
       "title": "Validate a Visual-Inertial Initialization",
@@ -8319,7 +8516,10 @@
         }
       ],
       "backlog_id": "PB-432",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "smoothquant-layer-error-report",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion independent reference/cases/source review"
     },
     {
       "title": "Validate Manipulation Task Observations",
@@ -8663,13 +8863,16 @@
         }
       ],
       "backlog_id": "PB-450",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rma-proprioceptive-history-window",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     }
   ],
-  "reviewed_reuse_count": 7,
-  "unreviewed_new_title_count": 431,
+  "reviewed_reuse_count": 11,
+  "unreviewed_new_title_count": 362,
   "staged_new_packages": 0,
   "staged_proposed_titles": 0,
-  "published_new_packages": 11,
-  "published_proposed_titles": 12
+  "published_new_packages": 75,
+  "published_proposed_titles": 77
 }

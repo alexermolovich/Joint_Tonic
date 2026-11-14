@@ -1,0 +1,79 @@
+{
+  "slug": "vit-class-token-linear-head",
+  "title": "Read a Normalized Class Token with a Linear Head",
+  "version": "1.0.0",
+  "number": 1002,
+  "difficulty": "Medium",
+  "domain": "Perception",
+  "topics": [
+    "2021-vision-transformer",
+    "vit-class-token-linear-head"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "class_token_logits",
+  "paperIds": [
+    "2021-vision-transformer"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "The class token summarizes a transformer sequence.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Model feature coordinates; no physical frame transform"
+    ],
+    "units": {
+      "features_logits": "dimensionless"
+    },
+    "axes": "B batch, L tokens, D channels, C output classes; token zero only",
+    "timestamp_assumptions": "Fixed supplied batch; cameras/observations are aligned by caller. No clock inference, state history or real-time guarantee.",
+    "batching": "Only explicitly declared dimensions; masks preserve original ordering."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-mechanism-oracle",
+      "boundary-and-invalid-input",
+      "maximum-advertised-dimensions",
+      "input-preservation-and-output-aliasing"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "83c97db88c1fa6775caa31e4675b532990d15de1d164e939793bc1dda7e5f470"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2010.11929"
+    ],
+    "implementation_urls": []
+  }
+}

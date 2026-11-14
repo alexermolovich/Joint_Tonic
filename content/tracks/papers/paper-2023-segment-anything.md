@@ -19,13 +19,15 @@
     "data engine"
   ],
   "runnable_problem_slugs": [
+    "sam-image-embedding-cache-key",
     "sam-point-prompt-encoding",
     "sam-box-prompt-encoding",
+    "sam-transform-prompt-coordinates",
     "sam-mask-ranking",
     "sam-stability-overlap-filter",
     "grounded-segmentation-failure-trace"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +60,7 @@ The implementation path follows **Encode and cache the image → Encode prompts 
 
 Source cards: [2023-segment-anything](../../../research/papers/vision-vlm-3d/2023-segment-anything.md).
 
-**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 7 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -80,7 +82,7 @@ Compute reusable spatial image features with a fixed preprocessing transform.
 
 [Study the mechanism and math](/projects/2023-segment-anything#paper-section-encode-and-cache-the-image).
 
-- **Proposed component, not runnable:** Reuse Image Embeddings Without Stale-Cache Errors.
+- **Runnable paper-associated component:** [Reuse Image Embeddings Without Stale-Cache Errors](/problems/sam-image-embedding-cache-key). An image embedding can be reused only when the image, encoder and preprocessing recipe agree.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,7 +96,7 @@ Represent positive/negative points, boxes, or masks for the decoder.
 
 - **Runnable paper-associated component:** [Encode Positive and Negative Point Prompts](/problems/sam-point-prompt-encoding). Encode supplied positive/negative point coordinates with random Fourier features and learned-type vectors.
 - **Runnable paper-associated component:** [Encode a Box Prompt with Positional Features](/problems/sam-box-prompt-encoding). Encode top-left and bottom-right box corners as distinct prompt tokens.
-- **Proposed component, not runnable:** Transform Prompt Coordinates Through Image Preprocessing.
+- **Runnable paper-associated component:** [Transform Prompt Coordinates Through Image Preprocessing](/problems/sam-transform-prompt-coordinates). Image preprocessing changes the coordinate system of a click or box corner.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

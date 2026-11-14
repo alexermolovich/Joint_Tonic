@@ -2,9 +2,9 @@
 
 Generated from `CURRICULUM.md`, published metadata, and existing draft folders. Refresh with `node scripts/update-authoring-status.mjs`. A complete file package is **not** an independent review or a published evaluator.
 
-Scope: **202 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
+Scope: **267 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
 
-Coverage: 202 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 209 published problems; some are supporting components rather than identical named roadmap entries.
+Coverage: 267 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 274 published problems; some are supporting components rather than identical named roadmap entries.
 
 ## Work and review lanes
 
@@ -247,3 +247,68 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Build Advantage-Weighted Action Weights](problems/iql-advantage-action-weights/) | 7.1 | Runnable |
 | [Validate an Offline Dataset Split](problems/iql-offline-dataset-split/) | 7.1 | Runnable |
 | [Train and Evaluate a Tiny PPO Joint Controller](problems/ppo-joint-controller-integration/) | 7.1 | Runnable |
+| [Compute a Conservative Q Penalty](problems/cql-discrete-conservative-penalty/) | 7.1 | Runnable |
+| [Compare Logged and Sampled Action Values](problems/cql-logged-sampled-value-gap/) | 7.1 | Runnable |
+| [Evaluate Offline Policy Support](problems/cql-offline-policy-support/) | 7.1 | Runnable |
+| [Apply a Seeded Random-Shift Augmentation](problems/drq-seeded-random-shift/) | 7.1 | Runnable |
+| [Average Augmented Bellman Targets](problems/drq-augmented-bellman-targets/) | 7.1 | Runnable |
+| [Compute a Multi-View Critic Regression Loss](problems/drq-multiview-critic-loss/) | 7.1 | Runnable |
+| [Interpolate a Reference Motion Pose](problems/deepmimic-reference-pose/) | 7.1 | Runnable |
+| [Detect Phase Misalignment in a Motion Clip](problems/deepmimic-phase-alignment/) | 7.1 | Runnable |
+| [Compute Pose and Velocity Imitation Rewards](problems/deepmimic-pose-velocity-rewards/) | 7.1 | Runnable |
+| [Combine Motion and Task Rewards](problems/motion-task-reward-blend/) | 7.1 | Runnable |
+| [Construct Motion Discriminator Features](problems/amp-motion-discriminator-features/) | 7.1 | Runnable |
+| [Compute an Adversarial Style Reward](problems/amp-adversarial-style-reward/) | 7.1 | Runnable |
+| [Build Privileged Dynamics-Latent Supervision](problems/rma-privileged-latent-supervision/) | 7.1 | Runnable |
+| [Window Proprioceptive History](problems/rma-proprioceptive-history-window/) | 7.1 | Runnable |
+| [Estimate a Latent Dynamics Context](problems/rma-latent-context-estimator/) | 7.1 | Runnable |
+| [Track the Age of an Asynchronous Adaptation Latent](problems/rma-asynchronous-latent-age/) | 7.1 | Runnable |
+| [Evaluate Policy Recovery After a Parameter Change](problems/rma-parameter-change-recovery/) | 7.1 | Runnable |
+| [Validate a Tactile Image Capture Contract](problems/digit-capture-contract/) | 7.2 | Runnable |
+| [Subtract a Tactile Reference Image](problems/digit-reference-subtraction/) | 7.2 | Runnable |
+| [Estimate Contact Patch Statistics](problems/digit-contact-patch-statistics/) | 7.2 | Runnable |
+| [Align Tactile Frames with Robot Actions](problems/digit-align-actions/) | 7.2 | Runnable |
+| [Score Predicted Tactile Contact Outcomes](problems/digit-predicted-contact-cost/) | 7.2 | Runnable |
+| [Integrate a Constant-Jerk Motion Segment](problems/constant-jerk-segment/) | 7.3 | Runnable |
+| [Validate a Trajectory Against Derivative Limits](problems/trajectory-derivative-audit/) | 7.3 | Runnable |
+| [Build a Joint-Space Smoothness Cost](problems/joint-space-smoothness-cost/) | 7.3 | Runnable |
+| [Compute a Signed-Distance Collision Cost](problems/sphere-signed-distance-cost/) | 7.3 | Runnable |
+| [Linearize a Signed-Distance Collision Penalty](problems/linearized-collision-penalty/) | 7.3 | Runnable |
+| [Bound a Sequential Convex Trust-Region Step](problems/bound-convex-trust-step/) | 7.3 | Runnable |
+| [Normalize Exponential Trajectory Cost Weights](problems/exponential-trajectory-weights/) | 7.3 | Runnable |
+| [Update a Receding-Horizon Control Sequence](problems/receding-horizon-control-update/) | 7.3 | Runnable |
+| [Find Nearby Planning Tree Vertices](problems/nearby-planning-tree-vertices/) | 7.3 | Runnable |
+| [Choose a Collision-Free Minimum-Cost Tree Parent](problems/minimum-cost-tree-parent/) | 7.3 | Runnable |
+| [Roll Out Perturbed Control Sequences](problems/perturbed-linear-rollouts/) | 7.3 | Runnable |
+| [Rewire a Tree Without Creating Cycles](problems/rewire-planning-tree/) | 7.3 | Runnable |
+| [Compare Path Cost Across Sampling Budgets](problems/planning-budget-comparison/) | 7.3 | Runnable |
+| [Build a Gaussian-Process Smoothness Factor](problems/gp-constant-velocity-factor/) | 7.3 | Runnable |
+| [Assemble Obstacle and Prior Residuals](problems/assemble-motion-residuals/) | 7.3 | Runnable |
+| [Interpolate a Trajectory Between Support States](problems/gp-support-interpolation/) | 7.3 | Runnable |
+| [Push Robot State into a Task Space](problems/push-task-state/) | 7.3 | Runnable |
+| [Pull Back a Local Motion Metric](problems/pullback-motion-metric/) | 7.3 | Runnable |
+| [Combine Competing Task-Space Accelerations](problems/combine-motion-policies/) | 7.3 | Runnable |
+| [Rank Multi-Seed Motion Trajectories](problems/rank-motion-candidates/) | 7.3 | Runnable |
+| [Measure Per-Channel Activation and Weight Ranges](problems/smoothquant-channel-ranges/) | 7.4 | Runnable |
+| [Apply an Equivalent Channel Rescaling](problems/smoothquant-equivalent-rescaling/) | 7.4 | Runnable |
+| [Quantize Weights and Activations to Int8](problems/smoothquant-int8-linear-layer/) | 7.4 | Runnable |
+| [Validate Layer Output Error After Smoothing](problems/smoothquant-layer-error-report/) | 7.4 | Runnable |
+| [Apply a Weight-Pruning Mask](problems/deep-compression-pruning-mask/) | 7.4 | Runnable |
+| [Quantize Shared Weight Centroids](problems/deep-compression-centroid-assignment/) | 7.4 | Runnable |
+| [Compute a Compressed Model Storage Budget](problems/deep-compression-storage-budget/) | 7.4 | Runnable |
+| [Compare Activation-Weighted Quantization Error](problems/awq-activation-weighted-error/) | 7.4 | Runnable |
+| [Compute Group-Wise Quantization Parameters](problems/awq-groupwise-quantization/) | 7.4 | Runnable |
+| [Calibrate and Evaluate a Smoothed Int8 Layer](problems/smoothquant-calibrated-layer-integration/) | 7.4 | Runnable |
+| [Decode Normalized Boxes and Classes from Object Queries](problems/detr-decode-object-queries/) | 7.5 | Runnable |
+| [Flatten Spatial Features with Position and Padding Metadata](problems/detr-flatten-spatial-metadata/) | 7.5 | Runnable |
+| [Read a Normalized Class Token with a Linear Head](problems/vit-class-token-linear-head/) | 7.5 | Runnable |
+| [Transform Prompt Coordinates Through Image Preprocessing](problems/sam-transform-prompt-coordinates/) | 7.5 | Runnable |
+| [Reuse Image Embeddings Without Stale-Cache Errors](problems/sam-image-embedding-cache-key/) | 7.5 | Runnable |
+| [Sample Calibrated Multi-Camera Feature Maps](problems/bev-bilinear-camera-sampling/) | 7.5 | Runnable |
+| [Sample Hierarchical Depth Intervals](problems/nerf-hierarchical-depth-sampling/) | 7.5 | Runnable |
+| [Differentiate Rendered Color on a Small Synthetic Field](problems/nerf-rendered-color-gradients/) | 7.5 | Runnable |
+| [Implement Nearest-Neighbor Feature-Spreading Regularization](problems/dinov2-neighbor-feature-spreading/) | 7.5 | Runnable |
+| [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](problems/grounding-bidirectional-cross-attention/) | 7.6 | Runnable |
+| [Evaluate Localization and Phrase Grounding Separately](problems/grounding-localization-phrase-metrics/) | 7.6 | Runnable |
+| [Encode Synchronized Observations for an Action Denoiser](problems/diffusion-observation-window-encoder/) | 7.6 | Runnable |
+| [Build a Conditional Action Denoiser](problems/diffusion-conditional-temporal-denoiser/) | 7.6 | Runnable |

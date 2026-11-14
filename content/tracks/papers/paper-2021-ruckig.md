@@ -17,10 +17,12 @@
     "ruckig"
   ],
   "runnable_problem_slugs": [
+    "trajectory-derivative-audit",
     "time-parameterized-trajectory",
-    "velocity-acceleration-command-limits"
+    "velocity-acceleration-command-limits",
+    "constant-jerk-segment"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +55,7 @@ The implementation path follows **Specify bounded endpoint states → Integrate 
 
 Source cards: [2021-ruckig](../../../research/papers/planning-control-ik/2021-ruckig.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -74,7 +76,7 @@ Provide position, velocity, acceleration, and directional limits.
 
 [Study the mechanism and math](/projects/2021-ruckig#paper-section-specify-bounded-endpoint-states).
 
-- **Proposed component, not runnable:** Validate a Trajectory Against Derivative Limits.
+- **Runnable paper-associated component:** [Validate a Trajectory Against Derivative Limits](/problems/trajectory-derivative-audit). Audit supplied trajectory derivative samples without claiming continuous-time feasibility.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +90,7 @@ Construct candidate switching profiles analytically.
 
 - **Runnable supporting prerequisite:** [Interpolate a Time-Parameterized Trajectory](/problems/time-parameterized-trajectory). Sample a piecewise-linear joint trajectory and its segment velocity at requested times.
 - **Runnable supporting prerequisite:** [Enforce Velocity and Acceleration Limits](/problems/velocity-acceleration-command-limits). Generate joint commands by projecting requested velocities into velocity and acceleration limits.
-- **Proposed component, not runnable:** Integrate a Constant-Jerk Motion Segment.
+- **Runnable paper-associated component:** [Integrate a Constant-Jerk Motion Segment](/problems/constant-jerk-segment). Integrate one constant-jerk segment for several rotational joints.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

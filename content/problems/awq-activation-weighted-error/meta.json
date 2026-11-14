@@ -1,0 +1,80 @@
+{
+  "slug": "awq-activation-weighted-error",
+  "title": "Compare Activation-Weighted Quantization Error",
+  "version": "1.0.0",
+  "number": 907,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "model-compression",
+    "2023-awq"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "compare_quantized_candidates",
+  "paperIds": [
+    "2023-awq"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compare Activation-Weighted Quantization Error",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Neural feature channels; no spatial frame transform"
+    ],
+    "units": {
+      "weight/output MSE": "dimensionless squared weight/feature units"
+    },
+    "axes": "X(N,C),W(C,D),candidates(K,C,D); diagnostics(K,),one chosen index.",
+    "timestamp_assumptions": "Offline fixed calibration batch; no timestamps",
+    "batching": "X(N,C),W(C,D),candidates(K,C,D); diagnostics(K,),one chosen index."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "e1f39bba24c3cf1d6371b2f5e225f0cd4b71b8bf7fdff845e9b6e690d47d3aa5"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full paper reproduction or hardware speed guarantee. Backlog PB-095",
+    "primary_urls": [
+      "https://arxiv.org/abs/2306.00978"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2023-awq.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

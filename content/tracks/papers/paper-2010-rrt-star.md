@@ -16,8 +16,13 @@
     "planning-control-ik",
     "rrt-star"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "nearby-planning-tree-vertices",
+    "minimum-cost-tree-parent",
+    "rewire-planning-tree",
+    "planning-budget-comparison"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Sample and extend → Choose a low-cost parent
 
 Source cards: [2010-rrt-star](../../../research/papers/planning-control-ik/2010-rrt-star.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +75,7 @@ Connect a new configuration toward a random sample.
 
 [Study the mechanism and math](/projects/2010-rrt-star#paper-section-sample-and-extend).
 
-- **Proposed component, not runnable:** Find Nearby Planning Tree Vertices.
+- **Runnable paper-associated component:** [Find Nearby Planning Tree Vertices](/problems/nearby-planning-tree-vertices). Find tree vertices inside an inclusive weighted configuration-space radius.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Compare collision-free connections within a shrinking neighborhood.
 
 [Study the mechanism and math](/projects/2010-rrt-star#paper-section-choose-a-low-cost-parent).
 
-- **Proposed component, not runnable:** Choose a Collision-Free Minimum-Cost Tree Parent.
+- **Runnable paper-associated component:** [Choose a Collision-Free Minimum-Cost Tree Parent](/problems/minimum-cost-tree-parent). Choose a parent from supplied path-feasible connections by cumulative cost.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +99,8 @@ Replace more expensive routes through the new vertex.
 
 [Study the mechanism and math](/projects/2010-rrt-star#paper-section-rewire-and-update-costs).
 
-- **Proposed component, not runnable:** Rewire a Tree Without Creating Cycles.
-- **Proposed component, not runnable:** Compare Path Cost Across Sampling Budgets.
+- **Runnable paper-associated component:** [Rewire a Tree Without Creating Cycles](/problems/rewire-planning-tree). Replace one planning-tree edge only if the proposed connection is feasible, cycle-free and strictly cheaper.
+- **Runnable paper-associated component:** [Compare Path Cost Across Sampling Budgets](/problems/planning-budget-comparison). Compare cumulative incumbent path costs across increasing sampling budgets, preserving missing observations.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

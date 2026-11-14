@@ -17,10 +17,15 @@
     "digit-tactile-sensor"
   ],
   "runnable_problem_slugs": [
+    "digit-capture-contract",
     "match-approximate-sensor-timestamps",
-    "detect-dropped-duplicated-sensor-frames"
+    "detect-dropped-duplicated-sensor-frames",
+    "digit-reference-subtraction",
+    "digit-contact-patch-statistics",
+    "digit-align-actions",
+    "digit-predicted-contact-cost"
   ],
-  "proposed_component_count": 5,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +58,7 @@ The implementation path follows **Capture contact deformation → Extract tactil
 
 Source cards: [2020-digit-tactile-sensor](../../../research/papers/humanoid-dexterity-tactile/2020-digit-tactile-sensor.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -74,7 +79,7 @@ Observe elastomer appearance under contact.
 
 [Study the mechanism and math](/projects/2020-digit-tactile-sensor#paper-section-capture-contact-deformation).
 
-- **Proposed component, not runnable:** Validate a Tactile Image Capture Contract.
+- **Runnable paper-associated component:** [Validate a Tactile Image Capture Contract](/problems/digit-capture-contract). A usable tactile frame needs reliable capture metadata as well as pixels.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,8 +93,8 @@ Use contact images or learned features for manipulation feedback.
 
 - **Runnable supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Associate each query with its nearest reference timestamp within a fixed tolerance.
 - **Runnable supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Report missing frame identifiers and repeated identifiers in an ordered sensor log.
-- **Proposed component, not runnable:** Subtract a Tactile Reference Image.
-- **Proposed component, not runnable:** Estimate Contact Patch Statistics.
+- **Runnable paper-associated component:** [Subtract a Tactile Reference Image](/problems/digit-reference-subtraction). Subtract a comparable unloaded reference to reveal optical change.
+- **Runnable paper-associated component:** [Estimate Contact Patch Statistics](/problems/digit-contact-patch-statistics). A contact candidate mask can be summarized by its area, center and spread in the image.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -101,8 +106,8 @@ Use learned tactile dynamics to choose manipulation actions.
 
 [Study the mechanism and math](/projects/2020-digit-tactile-sensor#paper-section-predict-and-control-contact).
 
-- **Proposed component, not runnable:** Align Tactile Frames with Robot Actions.
-- **Proposed component, not runnable:** Score Predicted Tactile Contact Outcomes.
+- **Runnable paper-associated component:** [Align Tactile Frames with Robot Actions](/problems/digit-align-actions). A frame must be paired with a command that was already active when the image was captured.
+- **Runnable paper-associated component:** [Score Predicted Tactile Contact Outcomes](/problems/digit-predicted-contact-cost). Candidate tactile predictions can be compared with a desired image before choosing a command.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

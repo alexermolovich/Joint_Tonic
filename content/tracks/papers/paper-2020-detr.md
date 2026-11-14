@@ -19,13 +19,15 @@
     "bipartite matching"
   ],
   "runnable_problem_slugs": [
+    "detr-flatten-spatial-metadata",
+    "detr-decode-object-queries",
     "detr-matching-cost",
     "detr-no-object-targets",
     "detr-hungarian-assignment",
     "detr-matched-training-losses",
     "detr-query-small-object-diagnostics"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +60,7 @@ The implementation path follows **Encode spatial features → Decode object quer
 
 Source cards: [2020-detr](../../../research/papers/vision-vlm-3d/2020-detr.md).
 
-**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 7 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -80,7 +82,7 @@ Combine image features with positions so attention retains location.
 
 [Study the mechanism and math](/projects/2020-detr#paper-section-encode-spatial-features).
 
-- **Proposed component, not runnable:** Flatten Spatial Features with Position and Padding Metadata.
+- **Runnable paper-associated component:** [Flatten Spatial Features with Position and Padding Metadata](/problems/detr-flatten-spatial-metadata). Flattening is bookkeeping with physical consequences: a feature vector, its position and its padding flag must continue to refer to the same image location.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -92,7 +94,7 @@ A fixed query set predicts categories and normalized boxes.
 
 [Study the mechanism and math](/projects/2020-detr#paper-section-decode-object-queries).
 
-- **Proposed component, not runnable:** Decode Normalized Boxes and Classes from Object Queries.
+- **Runnable paper-associated component:** [Decode Normalized Boxes and Classes from Object Queries](/problems/detr-decode-object-queries). A DETR query is a prediction slot, not a guaranteed object.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

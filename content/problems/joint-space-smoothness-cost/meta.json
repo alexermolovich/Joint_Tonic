@@ -1,0 +1,79 @@
+{
+  "slug": "joint-space-smoothness-cost",
+  "title": "Build a Joint-Space Smoothness Cost",
+  "version": "1.0.0",
+  "number": 802,
+  "difficulty": "Medium",
+  "domain": "Planning, control and geometry",
+  "topics": [
+    "planning-control",
+    "trajopt"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "smoothness_cost",
+  "paperIds": [
+    "2014-trajopt"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Compute a discrete weighted joint-step cost and its exact gradient.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared joint coordinates or a common right-handed world frame, as specified"
+    ],
+    "units": {
+      "values": "Radians, seconds, meters and corresponding derivatives; normalized spaces explicitly identified"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent numerical mechanism",
+      "Boundary and malformed inputs",
+      "Noncontiguous realistic scale and preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "fc03ec37b1ea93d7fccbbbd6824a9d30bd0051d575016fba8d22e74279780e6d"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://rll.berkeley.edu/trajopt/ijrr/"
+    ],
+    "implementation_urls": []
+  }
+}

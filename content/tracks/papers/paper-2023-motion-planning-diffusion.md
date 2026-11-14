@@ -19,7 +19,7 @@
   "runnable_problem_slugs": [
     "diffusion-action-noising"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +52,7 @@ The implementation path follows **Train a trajectory prior → Guide toward low 
 
 Source cards: [2023-motion-planning-diffusion](../../../research/papers/planning-control-ik/2023-motion-planning-diffusion.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -73,7 +73,6 @@ Learn denoising from feasible motion examples.
 [Study the mechanism and math](/projects/2023-motion-planning-diffusion#paper-section-train-a-trajectory-prior).
 
 - **Runnable supporting prerequisite:** [Add Noise to an Action Sequence](/problems/diffusion-action-noising). Gather one cumulative signal coefficient per batch item and broadcast over horizon/action axes; mix clean actions and supplied noise with square-root weights.
-- **Proposed component, not runnable:** Add Noise to a Joint-Space Path.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

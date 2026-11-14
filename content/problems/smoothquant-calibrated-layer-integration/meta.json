@@ -1,0 +1,87 @@
+{
+  "slug": "smoothquant-calibrated-layer-integration",
+  "title": "Calibrate and Evaluate a Smoothed Int8 Layer",
+  "version": "1.0.0",
+  "number": 909,
+  "difficulty": "Hard",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "model-compression",
+    "2022-smoothquant"
+  ],
+  "minutes": 60,
+  "framework": "NumPy",
+  "entrypoint": "evaluate_smoothing_pipeline",
+  "paperIds": [
+    "2022-smoothquant"
+  ],
+  "prerequisites": [
+    "smoothquant-channel-ranges",
+    "smoothquant-equivalent-rescaling",
+    "smoothquant-int8-linear-layer",
+    "smoothquant-layer-error-report"
+  ],
+  "visualization": "markdown",
+  "summary": "Compose held-out layer evaluation with calibration-only channel statistics, equivalent smoothing and int8 simulation.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Calibrated neural channels; no physical frame transform"
+    ],
+    "units": {
+      "features_weights": "dimensionless model coordinates",
+      "output_mse": "squared output feature units",
+      "absolute_tolerance": "output feature units"
+    },
+    "axes": "calibration(M,C),evaluation(N,C),weights(C,D),alphas(K,); scales(K,C),output_mse(K,),row_max_abs(K,N),accepted(K,),selected_output(N,D).",
+    "timestamp_assumptions": "Fixed offline calibration and evaluation splits; no timestamps or RNG",
+    "batching": "Rows are caller-ordered tokens; alpha candidates remain in supplied order."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "c14470a930ee6d399e9dad9308a5dba3e102def84bcdaac3eb77b21ac6236244"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded component; no full paper reproduction or hardware speed guarantee. Backlog PB-317",
+    "primary_urls": [
+      "https://arxiv.org/abs/2211.10438"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2022-smoothquant.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

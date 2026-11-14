@@ -1,0 +1,76 @@
+{
+  "slug": "cql-discrete-conservative-penalty",
+  "title": "Compute a Conservative Q Penalty",
+  "version": "1.0.0",
+  "number": 512,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2020-conservative-q-learning",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "conservative_penalty",
+  "paperIds": [
+    "2020-conservative-q-learning"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Conservative Q-learning compares values across the entire finite action set against values of actions that actually appear in the dataset.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Actions and image intensities are normalized and dimensionless. Q values and rewards use a fixed reward scale; squared losses use squared reward units."
+    },
+    "axes": "Batch, action, view and image axes are specified explicitly below",
+    "timestamp_assumptions": "All views in a row describe the same transition. No physical simulation or implicit coordinate conversion runs.",
+    "batching": "Batch, action, view and image axes are specified explicitly below"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "f986d541a506f6d021d1263ef3675a974576d8bf28e79eb25100f9aa7231c5c7"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component using supplied arrays; not a reproduction of trained policy performance or the full paper.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2006.04779"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2020-conservative-q-learning.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

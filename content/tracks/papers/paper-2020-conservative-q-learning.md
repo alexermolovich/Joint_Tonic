@@ -16,8 +16,13 @@
     "robot-learning-rl",
     "conservative-q-learning"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "soft-value-bellman-target",
+    "cql-discrete-conservative-penalty",
+    "cql-logged-sampled-value-gap",
+    "cql-offline-policy-support"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,13 @@ The implementation path follows **Fit logged transitions → Penalize unsupporte
 
 Source cards: [2020-conservative-q-learning](../../../research/papers/robot-learning-rl/2020-conservative-q-learning.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Fit logged transitions** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Compute an Entropy-Regularized Bellman Target](/problems/soft-value-bellman-target). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +75,7 @@ Construct Bellman targets from a fixed dataset.
 
 [Study the mechanism and math](/projects/2020-conservative-q-learning#paper-section-fit-logged-transitions).
 
-- **Proposed component, not runnable:** Construct Offline Bellman Targets with Termination Masks.
+- **Runnable supporting prerequisite:** [Compute an Entropy-Regularized Bellman Target](/problems/soft-value-bellman-target). One-step critic targets combine immediate reward with a value estimate of the next physical state.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +87,8 @@ Lower broad action values relative to dataset actions.
 
 [Study the mechanism and math](/projects/2020-conservative-q-learning#paper-section-penalize-unsupported-values).
 
-- **Proposed component, not runnable:** Compute a Conservative Q Penalty.
-- **Proposed component, not runnable:** Compare Logged and Sampled Action Values.
+- **Runnable paper-associated component:** [Compute a Conservative Q Penalty](/problems/cql-discrete-conservative-penalty). Conservative Q-learning compares values across the entire finite action set against values of actions that actually appear in the dataset.
+- **Runnable paper-associated component:** [Compare Logged and Sampled Action Values](/problems/cql-logged-sampled-value-gap). A critic can score sampled actions much higher than logged behavior.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Improve behavior while checking conservatism and coverage.
 
 [Study the mechanism and math](/projects/2020-conservative-q-learning#paper-section-extract-and-evaluate-a-policy).
 
-- **Proposed component, not runnable:** Evaluate Offline Policy Support.
+- **Runnable paper-associated component:** [Evaluate Offline Policy Support](/problems/cql-offline-policy-support). Offline action support is local to the state where an action was observed.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

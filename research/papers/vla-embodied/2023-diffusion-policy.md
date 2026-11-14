@@ -46,9 +46,9 @@ execution_flow:
       column: 0
       row: 0
       section: Observation conditioning
-      problem_slugs: []
-      planned_problems:
-        - Encode Synchronized Observations for an Action Denoiser
+      problem_slugs:
+        - diffusion-observation-window-encoder
+      planned_problems: []
     - id: forward-noising
       title: Noise a demonstration
       detail: >-
@@ -68,9 +68,9 @@ execution_flow:
       column: 1
       row: 0
       section: Conditional denoiser
-      problem_slugs: []
-      planned_problems:
-        - Build a Conditional Action Denoiser
+      problem_slugs:
+        - diffusion-conditional-temporal-denoiser
+      planned_problems: []
     - id: training-loss
       title: Fit the denoiser
       detail: >-
@@ -137,6 +137,8 @@ The graph separates **training** from **inference**. Training pairs observation 
 
 ### Observation conditioning
 
+**Implement this component:** [Encode Synchronized Observations for an Action Denoiser](/problems/diffusion-observation-window-encoder). An original linear observation encoder makes synchronization, pooling and mask contracts executable; it is a substitute for the trained CNN.
+
 At control time $t$, let $O_t$ contain the most recent $H_o$ observations. An observation can include camera images and a proprioceptive state such as joint positions. An encoder produces conditioning features
 
 $$
@@ -183,6 +185,8 @@ The padding mask is part of the educational batching contract. It prevents padde
 <!-- /joint-tonic-component -->
 
 ### Conditional denoiser
+
+**Implement this component:** [Build a Conditional Action Denoiser](/problems/diffusion-conditional-temporal-denoiser). An original one-block temporal cross-correlation/FiLM denoiser predicts noise; it is not the full trained U-Net or a reverse sampler.
 
 The network receives the corrupted chunk, its diffusion level, and the observation context:
 
@@ -266,6 +270,9 @@ Action-sequence generation can represent multimodal demonstrations while keeping
 
 ## Implement the components
 
+- [Encode Synchronized Observations for an Action Denoiser](/problems/diffusion-observation-window-encoder) — Medium.
+- [Build a Conditional Action Denoiser](/problems/diffusion-conditional-temporal-denoiser) — Hard.
+
 - [Sample an Action Trajectory with DDPM Steps](/problems/diffusion-ddpm-action-sampler)
 - [Budget Denoising Steps Against Control Frequency](/problems/diffusion-denoising-budget)
 
@@ -275,7 +282,7 @@ Runnable exercises are attached beside the relevant equations above and in the e
 - [Compute a Conditional Noise-Prediction Loss](/problems/diffusion-conditional-noise-loss)
 - [Execute a Receding-Horizon Action Window](/problems/diffusion-receding-horizon-window)
 
-Remaining proposed components: Encode Synchronized Observations for an Action Denoiser; Build a Conditional Action Denoiser. These are not published exercises; source preparation and a reviewed blueprint are still required.
+The observation encoder and temporal denoiser above are explicit teaching substitutes. Full trained-policy reproduction remains outside these bounded exercises.
 
 [Browse the curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md).
 

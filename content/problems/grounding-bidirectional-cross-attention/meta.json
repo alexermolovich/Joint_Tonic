@@ -1,0 +1,79 @@
+{
+  "slug": "grounding-bidirectional-cross-attention",
+  "title": "Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention",
+  "version": "1.0.0",
+  "number": 1009,
+  "difficulty": "Hard",
+  "domain": "VLM & VLA",
+  "topics": [
+    "2023-grounding-dino",
+    "grounding-bidirectional-cross-attention"
+  ],
+  "minutes": 45,
+  "framework": "NumPy",
+  "entrypoint": "bidirectional_context",
+  "paperIds": [
+    "2023-grounding-dino"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Image-to-text and text-to-image attention answer different questions.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Aligned projected image/text features for the same observation"
+    ],
+    "units": {
+      "features_weights": "dimensionless"
+    },
+    "axes": "B batches,P image tokens,T text tokens,D shared channels",
+    "timestamp_assumptions": "Fixed supplied batch; cameras/observations are aligned by caller. No clock inference, state history or real-time guarantee.",
+    "batching": "Only explicitly declared dimensions; masks preserve original ordering."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-mechanism-oracle",
+      "boundary-and-invalid-input",
+      "maximum-advertised-dimensions",
+      "input-preservation-and-output-aliasing"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "f62e73301532ea89cc047232214c40dd94e7b26983f443784d772bb5fbb2fafb"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2303.05499"
+    ],
+    "implementation_urls": []
+  }
+}

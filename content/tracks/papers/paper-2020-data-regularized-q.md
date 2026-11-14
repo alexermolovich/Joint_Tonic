@@ -16,8 +16,13 @@
     "robot-learning-rl",
     "data-regularized-q"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "drq-seeded-random-shift",
+    "drq-augmented-bellman-targets",
+    "drq-multiview-critic-loss",
+    "shift-bucket-performance"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,13 @@ The implementation path follows **Augment visual observations → Average augmen
 
 Source cards: [2020-data-regularized-q](../../../research/papers/robot-learning-rl/2020-data-regularized-q.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Augment visual observations** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +75,7 @@ Apply transformations intended to preserve action value.
 
 [Study the mechanism and math](/projects/2020-data-regularized-q#paper-section-augment-visual-observations).
 
-- **Proposed component, not runnable:** Apply a Seeded Random-Shift Augmentation.
+- **Runnable paper-associated component:** [Apply a Seeded Random-Shift Augmentation](/problems/drq-seeded-random-shift). Small translations should not alter which physical transition a stack of camera frames represents.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Reduce target variability across transformed successor views.
 
 [Study the mechanism and math](/projects/2020-data-regularized-q#paper-section-average-augmented-targets).
 
-- **Proposed component, not runnable:** Average Augmented Bellman Targets.
+- **Runnable paper-associated component:** [Average Augmented Bellman Targets](/problems/drq-augmented-bellman-targets). Several augmentations of one next observation estimate the same transition value.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +99,8 @@ Train the critic to agree across augmentations.
 
 [Study the mechanism and math](/projects/2020-data-regularized-q#paper-section-fit-multiple-current-views).
 
-- **Proposed component, not runnable:** Compute a Multi-View Critic Regression Loss.
-- **Proposed component, not runnable:** Evaluate Policy Robustness to Visual Shifts.
+- **Runnable paper-associated component:** [Compute a Multi-View Critic Regression Loss](/problems/drq-multiview-critic-loss). Each observed state should contribute equally even when some states have fewer usable augmented views.
+- **Runnable supporting prerequisite:** [Measure Performance Across Shift Buckets](/problems/shift-bucket-performance). Measure Performance Across Shift Buckets
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
