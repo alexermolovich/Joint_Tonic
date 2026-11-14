@@ -2,7 +2,7 @@
 {
   "schema_version": 1,
   "problem_id": "detr-decode-object-queries",
-  "content_version": "1.0.0",
+  "content_version": "1.0.1",
   "status": "implemented",
   "title": "Decode Normalized Boxes and Classes from Object Queries",
   "type": "function",
@@ -66,10 +66,11 @@
       "independent-mechanism-oracle",
       "boundary-and-invalid-input",
       "maximum-advertised-dimensions",
-      "input-preservation-and-output-aliasing"
+      "input-preservation-and-output-aliasing",
+      "oversized-signed-integer-scalar"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "f3e61f68bf02843840a6c5785cc0acd1542f39bc456dd5cac148f7ad5a2609b6"
+    "evaluator_sha256": "78ade265b35d72db723e58a76101e7efdfd0ecfee0912d3abb5d80eba37e75f0"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

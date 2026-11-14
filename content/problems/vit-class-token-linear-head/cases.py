@@ -57,4 +57,9 @@ def invalid(m):
  for index,value in [(0,np.zeros((1,0,2))),(1,f([1])),(3,np.ones((3,2))),(5,False),(5,0.)]:
   q=a.copy();q[index]=value;rejected(lambda:m.class_token_logits(*q))
 
-TESTS=[('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]
+def oversized_scalars(m):
+    for value in (10**1000, -(10**1000)):
+        values=args();values[-1]=value
+        rejected(lambda: m.class_token_logits(*values))
+
+TESTS=[('Oversized signed integer scalar','hidden',oversized_scalars),('Worked example 1','public',example1),('Worked example 2','public',example2),('Independent mechanism, boundaries, scale and preservation','hidden',oracle),('Documented invalid inputs','hidden',invalid)]

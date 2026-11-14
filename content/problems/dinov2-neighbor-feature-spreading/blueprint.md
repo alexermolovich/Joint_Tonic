@@ -2,7 +2,7 @@
 {
   "schema_version": 1,
   "problem_id": "dinov2-neighbor-feature-spreading",
-  "content_version": "1.0.0",
+  "content_version": "1.0.1",
   "status": "implemented",
   "title": "Implement Nearest-Neighbor Feature-Spreading Regularization",
   "type": "function",
@@ -65,10 +65,11 @@
       "independent-mechanism-oracle",
       "boundary-and-invalid-input",
       "maximum-advertised-dimensions",
-      "input-preservation-and-output-aliasing"
+      "input-preservation-and-output-aliasing",
+      "oversized-signed-integer-scalar"
     ],
     "performance_class": "none",
-    "evaluator_sha256": "d57b30628eefb900b42b4806c56a3adee7f7651a812ea44af321138070b614ee"
+    "evaluator_sha256": "e64011ee72f9b8d90d468fba136a414eec70ee462edb0981401c21122ddee3af"
   },
   "fixtures": {
     "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",

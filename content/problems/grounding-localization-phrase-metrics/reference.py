@@ -12,7 +12,7 @@ def check(ok):
     if not ok: raise ValueError("Contract violation")
 
 def real(x, low, high):
-    check(type(x) in (int,float) and math.isfinite(x) and low<=x<=high)
+    check(type(x) in (int,float) and low<=x<=high and math.isfinite(x))
     return x
 
 def integer(x, low, high):
