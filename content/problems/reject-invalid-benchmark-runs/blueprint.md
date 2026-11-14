@@ -60,7 +60,7 @@
       "deterministic reasons and preserved inputs"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "8b1771d6a8ffed26c505013b26ad87d731aac8c1669b17209a5d3d8238de7891"
+    "evaluator_sha256": "9af1f4ee346f1157f201d64fe30f8f140c710e9c1ca452d9b1387df5b257bcad"
   },
   "fixtures": {
     "source": "original synthetic examples",

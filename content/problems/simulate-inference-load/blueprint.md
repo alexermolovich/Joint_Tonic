@@ -60,7 +60,7 @@
       "large deterministic workload"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "d561e0656b69d5c67fbde8eda31b7f3fc7ee5cf05c0968c27610054d9ca74b82"
+    "evaluator_sha256": "313bceab5d0ff97ac7235f3388e274785644b2659732f39d801e79195797c21b"
   },
   "fixtures": {
     "source": "original synthetic examples",

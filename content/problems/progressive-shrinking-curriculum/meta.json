@@ -63,7 +63,7 @@
       "preservation",
       "scale"
     ],
-    "evaluator_sha256": "b6ca28ef31a4a6542a9731ecdcdc8629db17bae58232b1ceb537801e66958569",
+    "evaluator_sha256": "878a2d1d176f80992d2eecc618d1d5be57eaacc2520b7838530c335bec445a38",
     "performance_class": "none; no timing leaderboard"
   },
   "fixtures": {

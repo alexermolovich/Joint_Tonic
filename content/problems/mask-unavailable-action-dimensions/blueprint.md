@@ -60,7 +60,7 @@
       "shape/dtype/value bounds"
     ],
     "performance_class": "none; no timing leaderboard",
-    "evaluator_sha256": "2c349dd89bbacab917bed8bc169ee4f780381ac098d6b9275a15e6a21f7733a7"
+    "evaluator_sha256": "41095efc41add38fbc31a57b249ac66b732eb8eeefbcdfa96ba791ef445f3fd9"
   },
   "fixtures": {
     "source": "original synthetic examples",
