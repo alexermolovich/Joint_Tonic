@@ -1,22 +1,79 @@
 ---
 schema_version: 1
-paper_id: "2018-datasheets-for-datasets"
-title: "Datasheets for Datasets"
-authors: ["Gebru, Timnit","Morgenstern, Jamie","Vecchione, Briana","Vaughan, Jennifer Wortman","Wallach, Hanna","Daumé III, Hal","Crawford, Kate"]
+paper_id: 2018-datasheets-for-datasets
+title: Datasheets for Datasets
+authors:
+  - 'Gebru, Timnit'
+  - 'Morgenstern, Jamie'
+  - 'Vecchione, Briana'
+  - 'Vaughan, Jennifer Wortman'
+  - 'Wallach, Hanna'
+  - 'Daumé III, Hal'
+  - 'Crawford, Kate'
 year: 2018
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1803.09010"
-pdf_url: "https://arxiv.org/pdf/1803.09010"
-local_pdf: "./2018-datasheets-for-datasets.pdf"
-sha256: "c7f595988ee2c109631d5173fdae37ff1774c68ec17add51bd012f2a6e8792d0"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1803.09010'
+pdf_url: 'https://arxiv.org/pdf/1803.09010'
+local_pdf: ./2018-datasheets-for-datasets.pdf
+sha256: c7f595988ee2c109631d5173fdae37ff1774c68ec17add51bd012f2a6e8792d0
 bytes: 554802
 pages: 18
-topics: ["mlops-data-deployment","datasheets-for-datasets"]
-modalities: ["datasets","model-artifacts","logs","metrics"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Record collection context", "detail": "Describe motivation, population, acquisition, and permissions.", "column": 0, "row": 0, "section": "Record collection context", "problem_slugs": [], "planned_problems": ["Validate a Robot Dataset Datasheet", "Detect Missing Provenance Fields"]}, {"id": "stage-2", "title": "Describe composition and gaps", "detail": "Quantify coverage while preserving qualitative limitations.", "column": 1, "row": 0, "section": "Describe composition and gaps", "problem_slugs": ["infer-robot-episode-schema", "robot-feature-anomalies"], "planned_problems": ["Compute Collector and Task Coverage"]}, {"id": "stage-3", "title": "Publish maintenance guidance", "detail": "Document intended uses, distribution, updates, and known risks.", "column": 2, "row": 0, "section": "Publish maintenance guidance", "problem_slugs": ["record-artifact-lineage"], "planned_problems": ["Generate a Data-Use Risk Report"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "documented records"}, {"from": "stage-2", "to": "stage-3", "label": "dataset description"}]}
+topics:
+  - mlops-data-deployment
+  - datasheets-for-datasets
+modalities:
+  - datasets
+  - model-artifacts
+  - logs
+  - metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Record collection context
+      detail: 'Describe motivation, population, acquisition, and permissions.'
+      column: 0
+      row: 0
+      section: Record collection context
+      problem_slugs:
+        - robot-dataset-datasheet-schema
+      planned_problems: []
+    - id: stage-2
+      title: Describe composition and gaps
+      detail: Quantify coverage while preserving qualitative limitations.
+      column: 1
+      row: 0
+      section: Describe composition and gaps
+      problem_slugs:
+        - infer-robot-episode-schema
+        - robot-feature-anomalies
+      planned_problems:
+        - Compute Collector and Task Coverage
+    - id: stage-3
+      title: Publish maintenance guidance
+      detail: 'Document intended uses, distribution, updates, and known risks.'
+      column: 2
+      row: 0
+      section: Publish maintenance guidance
+      problem_slugs:
+        - record-artifact-lineage
+        - robot-data-use-risk-report
+      planned_problems: []
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: documented records
+    - from: stage-2
+      to: stage-3
+      label: dataset description
 ---
 
 ## Core paper explanation
@@ -34,8 +91,8 @@ For robotics, record embodiment, sensors, calibration, operators, environments, 
 
 **Component practice**
 
-- Validate a Robot Dataset Datasheet — unreviewed idea; contract and evaluator required.
-- Detect Missing Provenance Fields — unreviewed idea; contract and evaluator required.
+- Runnable component: [Validate a Robot Dataset Datasheet](/problems/robot-dataset-datasheet-schema). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Detect Missing Provenance Fields](/problems/robot-dataset-datasheet-schema). Uses the bounded contract; no full paper reproduction is claimed.
 
 ### Describe composition and gaps
 
@@ -75,7 +132,7 @@ These identifiers are opaque content digests, not numeric quantities. [Artifact 
 
 **Component practice**
 
-- Generate a Data-Use Risk Report — unreviewed idea; contract and evaluator required.
+- Runnable component: [Generate a Data-Use Risk Report](/problems/robot-data-use-risk-report). Uses the bounded contract; no full paper reproduction is claimed.
 
 ## Implement the components
 
@@ -84,16 +141,20 @@ Each execution-flow node links the matching runnable component or names its plan
 
 **Planned component problems:**
 
-- Validate a Robot Dataset Datasheet — unreviewed idea; contract and evaluator required.
-- Detect Missing Provenance Fields — unreviewed idea; contract and evaluator required.
+- Runnable component: [Validate a Robot Dataset Datasheet](/problems/robot-dataset-datasheet-schema). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Detect Missing Provenance Fields](/problems/robot-dataset-datasheet-schema). Uses the bounded contract; no full paper reproduction is claimed.
 - Compute Collector and Task Coverage — unreviewed idea; contract and evaluator required.
-- Generate a Data-Use Risk Report — unreviewed idea; contract and evaluator required.
+- Runnable component: [Generate a Data-Use Risk Report](/problems/robot-data-use-risk-report). Uses the bounded contract; no full paper reproduction is claimed.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
 
 ## Why this matters on a robot
 
 Robot data is inseparable from collection conditions. A dataset with many episodes may omit rare contacts, calibration drift, or recovery behavior; those gaps should be visible before model training.
+
+## Scope of the runnable operational components
+
+[The robot datasheet schema](/problems/robot-dataset-datasheet-schema) implements both missing-provenance detection and bounded field validation, distinguishing absence, malformed values and explicit unknowns. Its fields and issue codes are original teaching choices, not a standardized schema from the paper. [Declared data-use review flags](/problems/robot-data-use-risk-report) evaluates supplied intended/prohibited uses, embodiment coverage and declared license/consent information independently. An empty flag list does not establish legal authorization, actual consent, representative sampling or suitability.
 
 ## Sources and scope
 

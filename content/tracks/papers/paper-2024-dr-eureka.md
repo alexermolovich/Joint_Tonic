@@ -17,11 +17,13 @@
     "dr-eureka"
   ],
   "runnable_problem_slugs": [
+    "dreureka-reward-expression-program",
     "randomization-safety-bounds",
+    "dreureka-randomization-robustness",
     "sample-dynamics-distributions",
     "sim-to-real-robustness-gate"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +56,7 @@ The implementation path follows **Design a transfer-oriented reward → Probe ph
 
 Source cards: [2024-dr-eureka](../../../research/papers/robot-learning-rl/2024-dr-eureka.md).
 
-**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,7 +78,7 @@ Generate and evaluate rewards with explicit physical behavior requirements.
 
 [Study the mechanism and math](/projects/2024-dr-eureka#paper-section-design-a-transfer-oriented-reward).
 
-- **Proposed component, not runnable:** Validate a Generated Reward Program.
+- **Runnable paper-associated component:** [Validate a Generated Reward Program](/problems/dreureka-reward-expression-program). A small arithmetic reward language makes each generated term inspectable.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -89,7 +91,7 @@ Evaluate the initial policy under perturbed simulator parameters.
 [Study the mechanism and math](/projects/2024-dr-eureka#paper-section-probe-physics-sensitivity).
 
 - **Runnable supporting prerequisite:** [Choose Randomization Bounds from Safety Constraints](/problems/randomization-safety-bounds). Choose Randomization Bounds from Safety Constraints
-- **Proposed component, not runnable:** Compare Robustness Across Randomization Settings.
+- **Runnable paper-associated component:** [Compare Robustness Across Randomization Settings](/problems/dreureka-randomization-robustness). A physics setting can appear stronger merely because it was tested on easier rollout seeds.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -103,7 +105,6 @@ Sample varied dynamics and validate physical transfer.
 
 - **Runnable supporting prerequisite:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Convert reproducible unit draws into valid, explicitly typed per-episode physical parameter configurations.
 - **Runnable supporting prerequisite:** [Gate Sim-to-Real Release with Robustness Evidence](/problems/sim-to-real-robustness-gate). Gate Sim-to-Real Release with Robustness Evidence
-- **Proposed component, not runnable:** Sample a Bounded Dynamics Randomization Config.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

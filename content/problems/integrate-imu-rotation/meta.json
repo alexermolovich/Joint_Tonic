@@ -1,0 +1,81 @@
+{
+  "slug": "integrate-imu-rotation",
+  "title": "Integrate IMU Rotation Increments on SO3",
+  "version": "1.0.0",
+  "number": 827,
+  "difficulty": "Medium",
+  "domain": "Geometry and state estimation",
+  "topics": [
+    "geometry-calibration-slam",
+    "on-manifold-preintegration"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "integrate_imu_rotation",
+  "paperIds": [
+    "2015-on-manifold-preintegration"
+  ],
+  "prerequisites": [
+    "se3-exponential-logarithm"
+  ],
+  "visualization": "markdown",
+  "summary": "Integrate bias-corrected body angular velocities with right-multiplied SO(3) increments.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Right-handed camera, lidar, world or initial IMU frame as explicitly defined"
+    ],
+    "units": {
+      "values": "Meters, radians, seconds, pixels and declared derivatives; intensity dimensionless"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "8085e3aa974d16c19cc467182062d1b5084cb4043e9d4b55bf92194b56acd969"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/1512.02363"
+    ],
+    "implementation_urls": []
+  }
+}

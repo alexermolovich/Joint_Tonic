@@ -1,0 +1,81 @@
+{
+  "slug": "ray-recovery-reconciliation",
+  "title": "Recover Failed Worker Tasks Idempotently",
+  "version": "1.0.0",
+  "number": 910,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "operational-evidence",
+    "2017-ray"
+  ],
+  "minutes": 35,
+  "framework": "Python",
+  "entrypoint": "reconcile_task_attempts",
+  "paperIds": [
+    "2017-ray"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Recover Failed Worker Tasks Idempotently",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared robot/session/feature identities; no implicit transform"
+    ],
+    "units": {
+      "attempt": "dimensionless attempt ordinal",
+      "digest": "opaque SHA256 content identity"
+    },
+    "axes": "Task records keyed by task_id; unordered terminal events keyed by(task_id,attempt); lexical task output.",
+    "timestamp_assumptions": "Supplied synchronized integer timestamps only where present; no wall clock",
+    "batching": "Task records keyed by task_id; unordered terminal events keyed by(task_id,attempt); lexical task output."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "97abcf2eb02fce31cc7e42f13b572dde7a2866d46e4b3ac924ad2f5e3cbea4fa"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original operational teaching policy; no full paper API reproduction. Backlog PB-330",
+    "primary_urls": [
+      "https://arxiv.org/abs/1712.05889"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2017-ray.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

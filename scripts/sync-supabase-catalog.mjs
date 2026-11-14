@@ -2,9 +2,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { catalogSourceIdentity } from './canonical-source.mjs';
+import { prepareCatalogWorkspace } from './catalog-seed.mjs';
 const args=process.argv.slice(2);
-const digest=args.find(a=>a.startsWith('--runtime-image-digest='))?.split('=')[1]||process.env.WORKER_RUNTIME_IMAGE_DIGEST;
-if(!/^sha256:[a-f0-9]{64}$/.test(digest||'')||/^sha256:0+$/.test(digest))throw new Error('Supply the actual built worker image digest with --runtime-image-digest=sha256:… or WORKER_RUNTIME_IMAGE_DIGEST. No placeholder is generated.');
+const catalogOnly=args.includes('--catalog-only');
+if(catalogOnly&&args.some(a=>a.startsWith('--runtime-image-digest=')))throw new Error('Catalog-only publication must not assign an execution image.');
+if(args.includes('--prepare-cli-seed')&&(!catalogOnly||args.includes('--apply')))throw new Error('CLI seed preparation requires --catalog-only and cannot be combined with --apply.');
+const digest=catalogOnly?null:args.find(a=>a.startsWith('--runtime-image-digest='))?.split('=')[1]||process.env.WORKER_RUNTIME_IMAGE_DIGEST;
+if(!catalogOnly&&(!/^sha256:[a-f0-9]{64}$/.test(digest||'')||/^sha256:0+$/.test(digest)))throw new Error('Supply an actual built worker image digest, or use --catalog-only to publish account-storage identities with execution unavailable. No placeholder is generated.');
 const catalog=fs.readdirSync('content/problems').sort().map(slug=>{
  const dir=path.join('content/problems',slug);const meta=JSON.parse(fs.readFileSync(path.join(dir,'meta.json'),'utf8'));
  const source=catalogSourceIdentity(dir);
@@ -13,11 +17,12 @@ const catalog=fs.readdirSync('content/problems').sort().map(slug=>{
  if(meta.grading?.evaluator_sha256!==undefined&&meta.grading.evaluator_sha256!==evaluator)throw new Error(`${slug}: declared evaluator hash is stale. Run node scripts/check-evaluator-hashes.mjs --write and review the provenance correction before publishing.`);
  const contract=meta.execution_contract;
  const qualified=contract?.protocol==='data-only-functions-v1'&&contract.semantics==='value-only'&&typeof contract.reviewed_by==='string'&&contract.reviewed_by.trim().length>0;
- return {slug,version:{version:meta.version,title:meta.title,difficulty:meta.difficulty,domain:meta.domain,topics:meta.topics||[],paper_ids:meta.paperIds||[],metadata:{...meta,fixture_sha256:evaluator,grading_protocol:qualified?'data-only-functions-v1':'native-local-v1',catalog_source_digest:source.contentSha256},content_sha256:source.contentSha256,evaluator_version:evaluator,runtime_image_digest:digest,state:'published'}};
+ return {slug,version:{version:meta.version,title:meta.title,difficulty:meta.difficulty,domain:meta.domain,topics:meta.topics||[],paper_ids:meta.paperIds||[],metadata:{...meta,fixture_sha256:evaluator,grading_protocol:catalogOnly?'unavailable':qualified?'data-only-functions-v1':'native-local-v1',catalog_source_digest:source.contentSha256},content_sha256:source.contentSha256,evaluator_version:evaluator,runtime_image_digest:digest,state:'published'}};
 });
 if(!args.includes('--apply')){
  fs.mkdirSync('.local',{recursive:true});fs.writeFileSync('.local/supabase-catalog-plan.json',JSON.stringify(catalog,null,2)+'\n');
  console.log(JSON.stringify({event:'catalog_plan_ready',count:catalog.length,path:'.local/supabase-catalog-plan.json',applied:false}));
+ if(args.includes('--prepare-cli-seed'))console.log(JSON.stringify({event:'catalog_cli_workspace_ready',path:prepareCatalogWorkspace(catalog),applied:false}));
 }else{
  const url=process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL;
  const key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;

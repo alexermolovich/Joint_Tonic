@@ -46,9 +46,9 @@ execution_flow:
       column: 0
       row: 0
       section: Design a transfer-oriented reward
-      problem_slugs: []
-      planned_problems:
-        - Validate a Generated Reward Program
+      problem_slugs:
+        - dreureka-reward-expression-program
+      planned_problems: []
     - id: stage-2
       title: Probe physics sensitivity
       detail: Evaluate the initial policy under perturbed simulator parameters.
@@ -57,8 +57,8 @@ execution_flow:
       section: Probe physics sensitivity
       problem_slugs:
         - randomization-safety-bounds
-      planned_problems:
-        - Compare Robustness Across Randomization Settings
+        - dreureka-randomization-robustness
+      planned_problems: []
     - id: stage-3
       title: Train with generated randomization
       detail: Sample varied dynamics and validate physical transfer.
@@ -68,8 +68,7 @@ execution_flow:
       problem_slugs:
         - sample-dynamics-distributions
         - sim-to-real-robustness-gate
-      planned_problems:
-        - Sample a Bounded Dynamics Randomization Config
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -92,7 +91,7 @@ Follow the data through the mechanism. Training objectives and inference behavio
 Candidate policies optimize $J(\pi;r)=\mathbb E[\sum_t\gamma^tr(s_t,a_t)]$. Reward instructions can discourage undesirable behavior, but a penalty is not a hard physical constraint. Preserve the independent success metric used to select candidates.
 
 
-**Planned exercise:** Validate a Generated Reward Program.
+**Implement this component:** [Validate a Generated Reward Program](/problems/dreureka-reward-expression-program).
 
 
 ### Probe physics sensitivity
@@ -123,7 +122,7 @@ The table supplies a static trace and textual alternative; all other parameters 
 For parameter setting $\theta$, estimate $S(\theta)=\mathbb E[\mathrm{success}\mid\pi,\theta]$. The resulting reward-aware physics priors inform plausible randomization ranges. A policy failing at a parameter value does not prove that value is physically impossible.
 
 
-**Planned exercise:** Compare Robustness Across Randomization Settings.
+**Implement this component:** [Compare Robustness Across Randomization Settings](/problems/dreureka-randomization-robustness).
 
 
 ### Train with generated randomization
@@ -133,16 +132,16 @@ The robust-training objective is $\mathbb E_{\theta\sim p_\psi(\theta),\tau\sim\
 
 **Runnable component:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions). Apply provided bounded parameter distributions; language-generated priors and real-robot transfer are separate tasks.
 
-**Planned exercise:** Sample a Bounded Dynamics Randomization Config.
+**Implement this component:** [Sample a Bounded Dynamics Randomization Config](/problems/sample-dynamics-distributions). Original deterministic bounded configuration generator: recorded unit-interval draws map to log-uniform positive mass, friction and gain plus discrete delay ticks/seconds, fixed per episode. It does not construct learned reward-aware priors, run adaptive search or validate physics.
 
 
 ## Implement the components
 
 Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Design a transfer-oriented reward:** Validate a Generated Reward Program (planned).
-- **Probe physics sensitivity:** Compare Robustness Across Randomization Settings (planned).
-- **Train with generated randomization:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions) (runnable component); Sample a Bounded Dynamics Randomization Config (planned).
+- **Design a transfer-oriented reward:** [Validate a Generated Reward Program](/problems/dreureka-reward-expression-program).
+- **Probe physics sensitivity:** [Compare Robustness Across Randomization Settings](/problems/dreureka-randomization-robustness).
+- **Train with generated randomization:** [Sample Mass, Friction, Delay, and Gain Distributions](/problems/sample-dynamics-distributions) (runnable component); [Sample a Bounded Dynamics Randomization Config](/problems/sample-dynamics-distributions).
 
 ## Why this matters on a robot
 

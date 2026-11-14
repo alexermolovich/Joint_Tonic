@@ -20,9 +20,11 @@
     "validate-robot-episodes",
     "window-episode-without-crossing-boundaries",
     "build-robot-sequence-validity-masks",
-    "graph-throughput-jitter"
+    "rllib-weighted-learner-gradients",
+    "graph-throughput-jitter",
+    "rllib-policy-version-staleness"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -55,7 +57,7 @@ The implementation path follows **Collect policy experience → Aggregate algori
 
 Source cards: [2017-rllib](../../../research/papers/mlops-data-deployment/2017-rllib.md).
 
-**Available now:** 0 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 4 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -93,7 +95,7 @@ Combine samples or gradients according to the chosen RL method.
 
 - **Runnable supporting prerequisite:** [Window an Episode Without Crossing Boundaries](/problems/window-episode-without-crossing-boundaries). Generate fixed-length row-index windows wholly contained in individual contiguous episodes.
 - **Runnable supporting prerequisite:** [Build Padding and Validity Masks for Robot Sequences](/problems/build-robot-sequence-validity-masks). Build valid-token and causal-attention masks for padded robot episodes.
-- **Proposed component, not runnable:** Aggregate Weighted Learner Gradients.
+- **Runnable paper-associated component:** [Aggregate Weighted Learner Gradients](/problems/rllib-weighted-learner-gradients). Aggregate Weighted Learner Gradients
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -106,7 +108,7 @@ Update workers and monitor policy lag.
 [Study the mechanism and math](/projects/2017-rllib#paper-section-distribute-new-parameters).
 
 - **Runnable supporting prerequisite:** [Measure Throughput and Jitter Across a ROS-Style Graph](/problems/graph-throughput-jitter). Measure Throughput and Jitter Across a ROS-Style Graph
-- **Proposed component, not runnable:** Track Policy Version Staleness.
+- **Runnable paper-associated component:** [Track Policy Version Staleness](/problems/rllib-policy-version-staleness). Track Policy Version Staleness
 - **Proposed component, not runnable:** Measure Sampling and Learning Throughput.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.

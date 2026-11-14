@@ -17,9 +17,11 @@
     "ray"
   ],
   "runnable_problem_slugs": [
-    "training-pipeline-topological-order"
+    "training-pipeline-topological-order",
+    "ray-immutable-object-locations",
+    "ray-recovery-reconciliation"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +54,7 @@ The implementation path follows **Build task dependencies → Schedule and move 
 
 Source cards: [2017-ray](../../../research/papers/mlops-data-deployment/2017-ray.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -84,7 +86,7 @@ Place work according to resources and object locality.
 
 [Study the mechanism and math](/projects/2017-ray#paper-section-schedule-and-move-data).
 
-- **Proposed component, not runnable:** Track Immutable Artifact References.
+- **Runnable paper-associated component:** [Track Immutable Artifact References](/problems/ray-immutable-object-locations). Track Immutable Artifact References
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -96,7 +98,7 @@ Use object lineage and task metadata to reconstruct failed work.
 
 [Study the mechanism and math](/projects/2017-ray#paper-section-recover-and-trace-execution).
 
-- **Proposed component, not runnable:** Recover Failed Worker Tasks Idempotently.
+- **Runnable paper-associated component:** [Recover Failed Worker Tasks Idempotently](/problems/ray-recovery-reconciliation). Recover Failed Worker Tasks Idempotently
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

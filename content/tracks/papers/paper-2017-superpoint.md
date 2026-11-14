@@ -16,8 +16,13 @@
     "geometry-calibration-slam",
     "superpoint"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "homographic-keypoint-adaptation",
+    "keypoint-repeatability",
+    "homography-descriptor-targets",
+    "sample-keypoint-descriptors"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,13 @@ The implementation path follows **Adapt point detections → Supervise descripto
 
 Source cards: [2017-superpoint](../../../research/papers/geometry-calibration-slam/2017-superpoint.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Adapt point detections** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Apply Homographic Keypoint Adaptation](/problems/homographic-keypoint-adaptation). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,8 +75,8 @@ Aggregate detections across synthetic homographies.
 
 [Study the mechanism and math](/projects/2017-superpoint#paper-section-adapt-point-detections).
 
-- **Proposed component, not runnable:** Apply Homographic Keypoint Adaptation.
-- **Proposed component, not runnable:** Evaluate Keypoint Repeatability.
+- **Runnable paper-associated component:** [Apply Homographic Keypoint Adaptation](/problems/homographic-keypoint-adaptation). Aggregate detector probability maps into a reference image using known projective warps.
+- **Runnable paper-associated component:** [Evaluate Keypoint Repeatability](/problems/keypoint-repeatability). Evaluate symmetric nearest-point repeatability within the shared image region.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -83,7 +88,7 @@ Use known geometric correspondence to separate matches and nonmatches.
 
 [Study the mechanism and math](/projects/2017-superpoint#paper-section-supervise-descriptors).
 
-- **Proposed component, not runnable:** Build Homography-Supervised Descriptor Correspondence Targets.
+- **Runnable paper-associated component:** [Build Homography-Supervised Descriptor Correspondence Targets](/problems/homography-descriptor-targets). Create geometric correspondence labels for descriptor-grid centers using a known homography.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +100,7 @@ Suppress nearby peaks and sample normalized descriptors.
 
 [Study the mechanism and math](/projects/2017-superpoint#paper-section-extract-usable-features).
 
-- **Proposed component, not runnable:** Sample Descriptors at Keypoint Coordinates.
+- **Runnable paper-associated component:** [Sample Descriptors at Keypoint Coordinates](/problems/sample-keypoint-descriptors). Interpolate descriptor vectors at image keypoints with an explicit image-to-grid mapping.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

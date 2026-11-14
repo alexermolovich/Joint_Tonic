@@ -1,0 +1,83 @@
+{
+  "slug": "lidar-feature-residuals",
+  "title": "Compute Point-to-Line and Point-to-Plane Scan Residuals",
+  "version": "1.0.0",
+  "number": 823,
+  "difficulty": "Medium",
+  "domain": "Geometry and state estimation",
+  "topics": [
+    "geometry-calibration-slam",
+    "lio-sam"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "scan_residuals",
+  "paperIds": [
+    "2020-lio-sam",
+    "2021-fast-lio-2"
+  ],
+  "prerequisites": [
+    "se3-transform-points"
+  ],
+  "visualization": "markdown",
+  "summary": "Compute signed point-to-plane and unsigned point-to-line residuals after transforming scan features into the map frame.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Right-handed camera, lidar, world or initial IMU frame as explicitly defined"
+    ],
+    "units": {
+      "values": "Meters, radians, seconds, pixels and declared derivatives; intensity dimensionless"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "9a8f1e29748c9ab00527dd8631b86ee9a68ea158c4a503d97abd47850f9ba4d2"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2007.00258",
+      "https://arxiv.org/abs/2107.06829"
+    ],
+    "implementation_urls": []
+  }
+}

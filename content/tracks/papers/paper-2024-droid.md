@@ -17,9 +17,11 @@
     "droid"
   ],
   "runnable_problem_slugs": [
-    "validate-robot-episodes"
+    "droid-calibration-lineage-audit",
+    "validate-robot-episodes",
+    "droid-scene-collector-split"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +54,7 @@ The implementation path follows **Collect calibrated multi-view episodes → Val
 
 Source cards: [2024-droid](../../../research/papers/mlops-data-deployment/2024-droid.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -72,7 +74,7 @@ Record robot behavior together with synchronized sensor context.
 
 [Study the mechanism and math](/projects/2024-droid#paper-section-collect-calibrated-multi-view-episodes).
 
-- **Proposed component, not runnable:** Audit Data and Calibration Lineage.
+- **Runnable paper-associated component:** [Audit Data and Calibration Lineage](/problems/droid-calibration-lineage-audit). Audit Data and Calibration Lineage
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,7 +99,7 @@ Measure whether diverse collection improves held-out behavior.
 
 [Study the mechanism and math](/projects/2024-droid#paper-section-train-and-evaluate-across-environments).
 
-- **Proposed component, not runnable:** Split Demonstrations by Scene and Collector.
+- **Runnable paper-associated component:** [Split Demonstrations by Scene and Collector](/problems/droid-scene-collector-split). Split Demonstrations by Scene and Collector
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

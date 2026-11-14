@@ -1,0 +1,21 @@
+# Audit Data and Calibration Lineage
+
+## Contract
+
+`audit_calibration_lineage(episodes, calibrations) -> list[tuple[str, str]]`. Both are Python lists with 0..10000 records and unique IDs within each list. Episode exact fields: episode_id, session_id, robot_id, calibration_id, calibration_sha256, start_ns, end_ns. Calibration exact fields: calibration_id, session_id, robot_id, sha256, valid_from_ns, valid_until_ns. All timestamps are built-in ints in 0..2^63-1; require start<end and valid_from<valid_until. Intervals are half-open on one synchronized clock; no timezone/offset inference. Validate all supplied records even when unused.
+
+For each episode with unknown calibration ID return only(episode_id,"unknown_calibration"). Otherwise independently emit session_mismatch, robot_mismatch, digest_mismatch, validity_gap when identities differ or the episode interval is not wholly contained in the calibration validity interval. Equality at both contained boundaries passes. Return unique tuples sorted lexicographically. Multiple declared calibration records may overlap because episode IDs select one explicitly. Digest equality compares supplied commitments; no transform or actual byte content is verified. Work O(E+C) plus issue sorting.
+
+## Common operational contract
+
+Identifiers are ASCII strings matching [a-z][a-z0-9_-]{0,31}; digests are exactly 64 lowercase hexadecimal characters. Unless the task explicitly reports malformed field values as issues, invalid argument types, fields, bounds, IDs or unknown references raise ValueError. Built-in integer scalars exclude bool. Preserve all input arrays/records and return fresh containers. No network, filesystem reads, wall clock, randomness or physical robot commands are used. These are original bounded operational policies inspired by the source paper, not its released API or a certification.
+
+## Worked examples
+
+Calibration k(session s, robot r, hash"1"*64, valid[0,10)) and episode a(s, r, k, samehash,[0,10)) yields[].
+
+The same calibration with episode b(session other, robot r, k, hash"2"*64,[9,11)) yields[(b,"digest_mismatch"),(b,"session_mismatch"),(b,"validity_gap")].
+
+## Source and scope
+
+Original bounded component inspired by [2024-droid](https://arxiv.org/abs/2403.12945). It does not reproduce the full paper or establish hardware safety or data-use authorization.

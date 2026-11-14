@@ -126,7 +126,10 @@
         }
       ],
       "backlog_id": "PB-006",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "eureka-reward-component-diagnostics",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Aggregate Seeded Benchmark Returns",
@@ -183,7 +186,10 @@
         }
       ],
       "backlog_id": "PB-009",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rllib-weighted-learner-gradients",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Align Actions and Images in a Video Window",
@@ -357,7 +363,10 @@
         }
       ],
       "backlog_id": "PB-018",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "first-order-imu-bias-correction",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Apply a Seeded Random-Shift Augmentation",
@@ -480,7 +489,10 @@
         }
       ],
       "backlog_id": "PB-024",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "tdmpc2-groupwise-simnorm",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Apply Homographic Keypoint Adaptation",
@@ -499,7 +511,10 @@
         }
       ],
       "backlog_id": "PB-025",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "homographic-keypoint-adaptation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Apply Paired-Image Self and Cross Attention",
@@ -518,7 +533,10 @@
         }
       ],
       "backlog_id": "PB-026",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "paired-linear-image-attention",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Apply Recurrent Dense Correspondence and Confidence Updates",
@@ -556,7 +574,10 @@
         }
       ],
       "backlog_id": "PB-028",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "se3-exponential-logarithm",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Apply Tanh Action Log-Probability Correction",
@@ -734,7 +755,10 @@
         }
       ],
       "backlog_id": "PB-037",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "associate-local-map-planes",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Attach Text-Scoring and Box Heads to Spatial Vision Tokens",
@@ -772,7 +796,10 @@
         }
       ],
       "backlog_id": "PB-039",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "droid-calibration-lineage-audit",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Average Augmented Bellman Targets",
@@ -1050,7 +1077,10 @@
         }
       ],
       "backlog_id": "PB-053",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "feature-matching-score-matrix",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Build a Gaussian-Process Smoothness Factor",
@@ -1269,7 +1299,10 @@
         }
       ],
       "backlog_id": "PB-064",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "tdmpc2-distributional-ensemble-targets",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build Gaussian Covariances from Rotation and Scale",
@@ -1307,7 +1340,10 @@
         }
       ],
       "backlog_id": "PB-066",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "homography-descriptor-targets",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Build Image-Text Matching Pairs",
@@ -1368,7 +1404,10 @@
         }
       ],
       "backlog_id": "PB-069",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreamer-continuation-lambda-returns",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Build Leakage-Safe Temporal Splits",
@@ -2054,7 +2093,10 @@
         }
       ],
       "backlog_id": "PB-104",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreureka-randomization-robustness",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compare Schedules with Reproducible Latency Measurement",
@@ -2150,7 +2192,10 @@
         }
       ],
       "backlog_id": "PB-109",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreamer-balanced-latent-loss",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Compute a Binary Grasp-Quality Loss",
@@ -2387,7 +2432,10 @@
         }
       ],
       "backlog_id": "PB-121",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "lidar-feature-residuals",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Compute a Signed-Distance Collision Cost",
@@ -2538,7 +2586,10 @@
         }
       ],
       "backlog_id": "PB-128",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "exposure-photometric-residual",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Compute an Interquartile Mean Benchmark Score",
@@ -2805,7 +2856,10 @@
         }
       ],
       "backlog_id": "PB-141",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "lidar-feature-residuals",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Compute Pose and Velocity Imitation Rewards",
@@ -3044,7 +3098,10 @@
         }
       ],
       "backlog_id": "PB-153",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dual-softmax-coarse-matches",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Construct Contrastive Pair Labels",
@@ -3451,7 +3508,10 @@
         }
       ],
       "backlog_id": "PB-174",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "deskew-lidar-points",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Detect an Invalid Interaction Transition",
@@ -3489,7 +3549,10 @@
         }
       ],
       "backlog_id": "PB-176",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robot-dataset-datasheet-schema",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Detect Paused or Corrupted Action Segments",
@@ -3508,7 +3571,10 @@
         }
       ],
       "backlog_id": "PB-177",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "roboturk-action-segments",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Detect Phase Misalignment in a Motion Clip",
@@ -3723,7 +3789,10 @@
         }
       ],
       "backlog_id": "PB-188",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreamer-symlog-twohot-targets",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Encode Synchronized Observations for an Action Denoiser",
@@ -4038,7 +4107,10 @@
         }
       ],
       "backlog_id": "PB-204",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "keypoint-repeatability",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Evaluate Localization and Phrase Grounding Separately",
@@ -4429,7 +4501,10 @@
         }
       ],
       "backlog_id": "PB-224",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "extract-mutual-feature-matches",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Filter Geometrically Inconsistent Matches",
@@ -4448,7 +4523,10 @@
         }
       ],
       "backlog_id": "PB-225",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sampson-epipolar-match-gate",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Filter Noisy Captions by Agreement",
@@ -4743,7 +4821,10 @@
         }
       ],
       "backlog_id": "PB-240",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robot-data-use-risk-report",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Generate default boxes at multiple scales",
@@ -4977,7 +5058,10 @@
         }
       ],
       "backlog_id": "PB-252",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "integrate-imu-rotation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Interpolate a Reference Motion Pose",
@@ -5731,7 +5815,10 @@
         }
       ],
       "backlog_id": "PB-291",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "log-sinkhorn-assignments",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Normalize Batched Advantages",
@@ -5967,7 +6054,10 @@
         }
       ],
       "backlog_id": "PB-303",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "preintegrate-imu-translation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Preserve Feasible Start and Goal Conditions",
@@ -6389,7 +6479,10 @@
         }
       ],
       "backlog_id": "PB-324",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "eureka-rank-rollout-candidates",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Read a Normalized Class Token with a Linear Head",
@@ -6506,7 +6599,10 @@
         }
       ],
       "backlog_id": "PB-330",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "ray-recovery-reconciliation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Refine a Match in a Local Window",
@@ -6525,7 +6621,10 @@
         }
       ],
       "backlog_id": "PB-331",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "local-window-match-expectation",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Reintegrate Geometry After a Pose Correction",
@@ -6582,7 +6681,10 @@
         }
       ],
       "backlog_id": "PB-334",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dustbin-partial-assignment",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Repair an Infeasible Planned Segment",
@@ -6839,7 +6941,10 @@
         }
       ],
       "backlog_id": "PB-347",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "tdmpc2-latent-dynamics-sequence",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Roll Out Imagined Latent Trajectories",
@@ -6858,7 +6963,10 @@
         }
       ],
       "backlog_id": "PB-348",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreamer-imagined-latent-rollout",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Roll Out Perturbed Control Sequences",
@@ -6942,7 +7050,7 @@
     {
       "title": "Sample a Bounded Dynamics Randomization Config",
       "normalized": "sample a bounded dynamics randomization config",
-      "existing_slug": null,
+      "existing_slug": "sample-dynamics-distributions",
       "papers": [
         "2024-dr-eureka"
       ],
@@ -6956,7 +7064,9 @@
         }
       ],
       "backlog_id": "PB-353",
-      "status": "proposed-contract-review"
+      "status": "reused-bounded-component",
+      "review_note": "Original deterministic bounded configuration generator: recorded unit-interval draws map to log-uniform positive mass, friction and gain plus discrete delay ticks/seconds, fixed per episode. It does not construct learned reward-aware priors, run adaptive search or validate physics.",
+      "independent_review": "research_curator semantic audit; root independent existing-contract approval"
     },
     {
       "title": "Sample a correlation pyramid around flow estimates",
@@ -7054,7 +7164,10 @@
         }
       ],
       "backlog_id": "PB-358",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "sample-keypoint-descriptors",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory"
     },
     {
       "title": "Sample Hand Dynamics Randomization",
@@ -7266,7 +7379,10 @@
         }
       ],
       "backlog_id": "PB-369",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "tdmpc2-candidate-trajectory-scores",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Score Chained Task Success",
@@ -7467,7 +7583,10 @@
         }
       ],
       "backlog_id": "PB-379",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "select-gradient-image-points",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Select memory frames under a fixed budget",
@@ -7543,7 +7662,10 @@
         }
       ],
       "backlog_id": "PB-383",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "droid-scene-collector-split",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Stop a Skill Sequence at Completion",
@@ -7755,7 +7877,10 @@
         }
       ],
       "backlog_id": "PB-394",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "ray-immutable-object-locations",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Track Object-State Preconditions",
@@ -7793,7 +7918,10 @@
         }
       ],
       "backlog_id": "PB-396",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "rllib-policy-version-staleness",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Track the Age of an Asynchronous Adaptation Latent",
@@ -7954,7 +8082,10 @@
         }
       ],
       "backlog_id": "PB-404",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "tdmpc2-weighted-elite-planner",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Update a Temperature Objective (later SAC extension)",
@@ -8091,7 +8222,10 @@
         }
       ],
       "backlog_id": "PB-411",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "dreureka-reward-expression-program",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate a Hand-Object Pose Sequence",
@@ -8148,7 +8282,10 @@
         }
       ],
       "backlog_id": "PB-414",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robot-model-card-schema",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Validate a Navigation Episode",
@@ -8205,7 +8342,10 @@
         }
       ],
       "backlog_id": "PB-417",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "eureka-reward-output-contract",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; perception_completion code and source scope"
     },
     {
       "title": "Validate a Robot Dataset Datasheet",
@@ -8224,7 +8364,10 @@
         }
       ],
       "backlog_id": "PB-418",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "robot-dataset-datasheet-schema",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "research_curator contract/source; perception_completion 910-914 or root 915-919 independent code/cases"
     },
     {
       "title": "Validate a Robot-Controller-Task Configuration",
@@ -8805,7 +8948,10 @@
         }
       ],
       "backlog_id": "PB-447",
-      "status": "proposed-contract-review"
+      "status": "published",
+      "implementation_slug": "warp-calibrated-pixels",
+      "review_note": "Reviewed bounded implementation; no full-paper reproduction claim.",
+      "independent_review": "root contract; research_curator independent code/cases/theory review"
     },
     {
       "title": "Warp images and evaluate endpoint error",
@@ -8869,10 +9015,10 @@
       "independent_review": "root contract; perception_completion code and source scope"
     }
   ],
-  "reviewed_reuse_count": 11,
-  "unreviewed_new_title_count": 362,
+  "reviewed_reuse_count": 12,
+  "unreviewed_new_title_count": 313,
   "staged_new_packages": 0,
   "staged_proposed_titles": 0,
-  "published_new_packages": 75,
-  "published_proposed_titles": 77
+  "published_new_packages": 121,
+  "published_proposed_titles": 125
 }

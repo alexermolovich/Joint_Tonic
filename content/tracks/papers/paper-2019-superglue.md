@@ -16,8 +16,13 @@
     "geometry-calibration-slam",
     "superglue"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "feature-matching-score-matrix",
+    "log-sinkhorn-assignments",
+    "dustbin-partial-assignment",
+    "extract-mutual-feature-matches"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,15 @@ The implementation path follows **Refine contextual descriptors → Solve partia
 
 Source cards: [2019-superglue](../../../research/papers/geometry-calibration-slam/2019-superglue.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Refine contextual descriptors** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Build a Feature-Matching Score Matrix](/problems/feature-matching-score-matrix). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Normalize Assignments with Sinkhorn Iterations](/problems/log-sinkhorn-assignments). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Reject Unmatched Features with Dustbins](/problems/dustbin-partial-assignment). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +77,7 @@ Alternate within-image and cross-image attention.
 
 [Study the mechanism and math](/projects/2019-superglue#paper-section-refine-contextual-descriptors).
 
-- **Proposed component, not runnable:** Build a Feature-Matching Score Matrix.
+- **Runnable paper-associated component:** [Build a Feature-Matching Score Matrix](/problems/feature-matching-score-matrix). Compute pairwise scores from two supplied sets of learned image descriptors.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,8 +89,8 @@ Include unmatched dustbins and normalize transport mass.
 
 [Study the mechanism and math](/projects/2019-superglue#paper-section-solve-partial-assignment).
 
-- **Proposed component, not runnable:** Normalize Assignments with Sinkhorn Iterations.
-- **Proposed component, not runnable:** Reject Unmatched Features with Dustbins.
+- **Runnable paper-associated component:** [Normalize Assignments with Sinkhorn Iterations](/problems/log-sinkhorn-assignments). Normalize a positive transport assignment by alternating row and column updates in log space.
+- **Runnable paper-associated component:** [Reject Unmatched Features with Dustbins](/problems/dustbin-partial-assignment). Give unmatched image features their own transport capacity and diagnose dustbin-dominant assignments.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,7 +102,7 @@ Keep confident mutual assignments and train unmatched outcomes.
 
 [Study the mechanism and math](/projects/2019-superglue#paper-section-extract-and-supervise-matches).
 
-- **Proposed component, not runnable:** Extract Mutual Matches and Unmatched Labels from Transport Scores.
+- **Runnable paper-associated component:** [Extract Mutual Matches and Unmatched Labels from Transport Scores](/problems/extract-mutual-feature-matches). Extract confident reciprocal feature assignments with deterministic ties and explicit unmatched labels.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -17,10 +17,13 @@
     "on-manifold-preintegration"
   ],
   "runnable_problem_slugs": [
+    "integrate-imu-rotation",
     "match-approximate-sensor-timestamps",
-    "estimate-clock-offset-paired-events"
+    "estimate-clock-offset-paired-events",
+    "preintegrate-imu-translation",
+    "first-order-imu-bias-correction"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +56,7 @@ The implementation path follows **Integrate relative rotation → Integrate velo
 
 Source cards: [2015-on-manifold-preintegration](../../../research/papers/geometry-calibration-slam/2015-on-manifold-preintegration.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +64,9 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply SE(3) Exponential and Logarithm Maps](/problems/se3-exponential-logarithm). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -74,7 +80,7 @@ Accumulate bias-corrected angular increments.
 
 [Study the mechanism and math](/projects/2015-on-manifold-preintegration#paper-section-integrate-relative-rotation).
 
-- **Proposed component, not runnable:** Integrate IMU Rotation Increments on SO3.
+- **Runnable paper-associated component:** [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation). Integrate bias-corrected body angular velocities with right-multiplied SO(3) increments.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +94,7 @@ Accumulate specific force in the starting body frame.
 
 - **Runnable supporting prerequisite:** [Match Approximate Sensor Timestamps](/problems/match-approximate-sensor-timestamps). Associate each query with its nearest reference timestamp within a fixed tolerance.
 - **Runnable supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Estimate a constant clock offset from corresponding event timestamps using a robust median.
-- **Proposed component, not runnable:** Preintegrate Bias-Corrected IMU Velocity and Position.
+- **Runnable paper-associated component:** [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation). Preintegrate accelerometer velocity and position increments in the initial keyframe body frame.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -100,8 +106,8 @@ Compare predicted state change with preintegrated measurements.
 
 [Study the mechanism and math](/projects/2015-on-manifold-preintegration#paper-section-form-a-keyframe-factor).
 
+- **Runnable paper-associated component:** [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction). Apply supplied first-order bias Jacobians to an existing preintegrated measurement.
 - **Proposed component, not runnable:** Propagate Preintegration Covariance.
-- **Proposed component, not runnable:** Apply a First-Order Bias Correction.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

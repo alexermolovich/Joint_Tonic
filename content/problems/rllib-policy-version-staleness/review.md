@@ -1,0 +1,9 @@
+# Independent review and verification
+
+Status: reviewed and implemented. Author: curriculum_continuation. Source/contract reviewer: research_curator. Independent reference/cases/theory reviewer: perception_completion.
+
+Reviewed mechanisms include immutable identity and success reconciliation, idempotent replica sets, exact version lag and sample-weighted gradients, transitive scene/collector isolation, complete half-open calibration coverage, distinct missing/unknown/invalid provenance, independent declared-use flags, explicit model-card evidence denominators and corruption-separated command-pause runs. Operational rules are original bounded policies, not exact released APIs or legal/hardware safety certification. The shared datasheet package covers both schema validation and missing-provenance detection.
+
+Actual bubblewrap checks across these ten packages:20 public Run families and50 full Submit families passed. All10 starters and10 plausible mechanism mutants were rejected with actual failed test results. Mutants covered later-failure overwriting committed success, replica undercounting, int64 weighted-lag overflow, unweighted gradient means, missing collector connectivity, partial rather than complete calibration coverage, unknown-versus-invalid collapse, ignored explicit prohibition, suppressed second metric anomaly and float timestamp duration loss. Tests cover independent oracles, realistic scale, complete invalid-input checks, input preservation and exact large-integer boundaries. All51 Theory equations render with strict KaTeX; original worked traces include exact returned issue codes and sorted flags.
+
+Runtime Python3.12.3/NumPy2.2.4, local bubblewrap,18s wall,10s CPU,4096MiB address-space budget,64KiB output,no network. Source is UTF8 with LF endings; metadata hashes match shipped evaluator bytes. OCI image remains pending and these native-local contracts are not automatically production-qualified. No worker changes.

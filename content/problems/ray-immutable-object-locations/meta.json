@@ -1,0 +1,81 @@
+{
+  "slug": "ray-immutable-object-locations",
+  "title": "Track Immutable Artifact References",
+  "version": "1.0.0",
+  "number": 911,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "operational-evidence",
+    "2017-ray"
+  ],
+  "minutes": 35,
+  "framework": "Python",
+  "entrypoint": "track_artifact_locations",
+  "paperIds": [
+    "2017-ray"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Track Immutable Artifact References",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared robot/session/feature identities; no implicit transform"
+    ],
+    "units": {
+      "size_bytes/physical_bytes": "bytes",
+      "nodes": "replica location identities"
+    },
+    "axes": "Ordered event stream; output one immutable artifact row with a sorted node set.",
+    "timestamp_assumptions": "Supplied synchronized integer timestamps only where present; no wall clock",
+    "batching": "Ordered event stream; output one immutable artifact row with a sorted node set."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "8137ba6576b182cb6ee31786f3048f7ca9d2b4037c662187102c86fb4e8ca112"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original operational teaching policy; no full paper API reproduction. Backlog PB-394",
+    "primary_urls": [
+      "https://arxiv.org/abs/1712.05889"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2017-ray.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

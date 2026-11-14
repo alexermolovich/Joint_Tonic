@@ -1,0 +1,76 @@
+{
+  "slug": "dreureka-randomization-robustness",
+  "title": "Compare Robustness Across Randomization Settings",
+  "version": "1.0.0",
+  "number": 538,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2024-dr-eureka",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "randomization_robustness",
+  "paperIds": [
+    "2024-dr-eureka"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "A physics setting can appear stronger merely because it was tested on easier rollout seeds.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Reward contributions and independent progress/success metrics are dimensionless and already normalized."
+    },
+    "axes": "Batch, rollout, time and component axes are defined in the contract",
+    "timestamp_assumptions": "Observations are recorded rollout steps; paired comparisons share seed identity by column. No coordinate transform or simulator execution is implicit.",
+    "batching": "Batch, rollout, time and component axes are defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "d05161cb1b3889ef473d8e58aa9c152ef7c191d9fe8acb6c0017ff74f101db19"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded reward-design diagnostic or arithmetic teaching language. It does not reproduce language-model search, policy training or real-robot transfer.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2406.01967"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2024-dr-eureka.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

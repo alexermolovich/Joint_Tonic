@@ -8,4 +8,4 @@ Catalog preparation now rejects non-LF evaluator bytes and stale declared hashes
 
 Validation: four focused tests cover LF/CRLF equivalence, lone-CR normalization, UTF-8/BOM/newline preservation, binary identity, actual source changes, minimal metadata/blueprint repair and all 274 checkpoint packages. All declared hashes match after repair; 22 legacy packages have no declared hash and continue to use runtime-derived lineage. Content/schema validation passes. No `cases.py` or reference-code semantic diff is present, and no unchanged numerical evaluator was rerun.
 
-Main-worker review and merge are still required. The final commit and exact diff are supplied in the agent handoff; this document makes no claim of a remote PR or merge.
+Main reviewed the source/canonicalization/catalog guards and focused regression evidence, then merged `b587b37` in `fc5e5d3`. Main normalized the existing evaluator checkout and reran the four tests successfully across the then-current 300 packages. This records a local branch merge; no remote issue or PR was created.

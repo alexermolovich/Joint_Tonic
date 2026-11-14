@@ -1,22 +1,75 @@
 ---
 schema_version: 1
-paper_id: "2021-fast-lio-2"
-title: "FAST-LIO2: Fast Direct LiDAR-inertial Odometry"
-authors: ["Xu, Wei","Cai, Yixi","He, Dongjiao","Lin, Jiarong","Zhang, Fu"]
+paper_id: 2021-fast-lio-2
+title: 'FAST-LIO2: Fast Direct LiDAR-inertial Odometry'
+authors:
+  - 'Xu, Wei'
+  - 'Cai, Yixi'
+  - 'He, Dongjiao'
+  - 'Lin, Jiarong'
+  - 'Zhang, Fu'
 year: 2021
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/2107.06829"
-pdf_url: "https://arxiv.org/pdf/2107.06829"
-local_pdf: "./2021-fast-lio-2.pdf"
-sha256: "ba5072e06e75dec5222bcb528143f3aa3238d6f6692bac1e22a9fe1bc55a15dd"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/2107.06829'
+pdf_url: 'https://arxiv.org/pdf/2107.06829'
+local_pdf: ./2021-fast-lio-2.pdf
+sha256: ba5072e06e75dec5222bcb528143f3aa3238d6f6692bac1e22a9fe1bc55a15dd
 bytes: 13481318
 pages: 19
-topics: ["geometry-calibration-slam","fast-lio-2"]
-modalities: ["camera","imu","lidar","poses"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Propagate the inertial state","detail":"Predict pose, velocity, biases, and covariance.","column":0,"row":0,"section":"Propagate the inertial state","problem_slugs":[],"planned_problems":["Propagate an Error-State IMU Mean and Covariance"]},{"id":"stage-2","title":"Iterate point-to-map updates","detail":"Use raw-point geometric residuals without a feature-extraction stage.","column":1,"row":0,"section":"Iterate point-to-map updates","problem_slugs":[],"planned_problems":["Associate Scan Points with Local Map Planes","Compute a Point-to-Plane Residual"]},{"id":"stage-3","title":"Maintain the local map","detail":"Update an incremental spatial index.","column":2,"row":0,"section":"Maintain the local map","problem_slugs":[],"planned_problems":["Update an Incremental Local Map"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"predicted state"},{"from":"stage-2","to":"stage-3","label":"corrected scan pose"}]}
+topics:
+  - geometry-calibration-slam
+  - fast-lio-2
+modalities:
+  - camera
+  - imu
+  - lidar
+  - poses
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Propagate the inertial state
+      detail: 'Predict pose, velocity, biases, and covariance.'
+      column: 0
+      row: 0
+      section: Propagate the inertial state
+      problem_slugs: []
+      planned_problems:
+        - Propagate an Error-State IMU Mean and Covariance
+    - id: stage-2
+      title: Iterate point-to-map updates
+      detail: Use raw-point geometric residuals without a feature-extraction stage.
+      column: 1
+      row: 0
+      section: Iterate point-to-map updates
+      problem_slugs:
+        - associate-local-map-planes
+        - lidar-feature-residuals
+      planned_problems: []
+    - id: stage-3
+      title: Maintain the local map
+      detail: Update an incremental spatial index.
+      column: 2
+      row: 0
+      section: Maintain the local map
+      problem_slugs: []
+      planned_problems:
+        - Update an Incremental Local Map
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: predicted state
+    - from: stage-2
+      to: stage-3
+      label: corrected scan pose
 ---
 
 ## Core paper explanation
@@ -36,7 +89,7 @@ where $F,G$ are linearized transition/noise Jacobians and $Q$ the discretized pr
 
 
 
-**Planned component problem:** Propagate an Error-State IMU Mean and Covariance. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
+**Planned component problems:** Propagate an Error-State IMU Mean and Covariance. These remain unreviewed implementation ideas without runnable exercises.
 
 ### Iterate point-to-map updates
 
@@ -45,24 +98,24 @@ $$K=PH^\top(HPH^\top+R_z)^{-1}.$$
 $H$ is the residual Jacobian and $R_z$ measurement covariance. The actual iterated manifold filter relinearizes and uses an efficient state-dimension formulation; this equation is the Kalman measurement-update core.
 
 
-**Planned component problems:** Associate Scan Points with Local Map Planes; Compute a Point-to-Plane Residual. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Associate Scan Points with Local Map Planes](/problems/associate-local-map-planes) · [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals). Each exercise states its bounded numerical and frame conventions; it does not reproduce the complete estimator.
 
 ### Maintain the local map
 
 The ikd-Tree supports adding transformed points, deleting points outside the local region, and downsampling. Map resolution trades geometric detail against computation. Timestamped deskewing and lidar–IMU extrinsics remain necessary even though handcrafted feature extraction is removed.
 
 
-**Planned component problems:** Update an Incremental Local Map. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Planned component problems:** Update an Incremental Local Map. These remain unreviewed implementation ideas without runnable exercises.
 
 ## Implement the components
 
 - **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-**Planned components:**
+**Runnable components and remaining ideas:**
 
 - Propagate an Error-State IMU Mean and Covariance.
-- Associate Scan Points with Local Map Planes.
-- Compute a Point-to-Plane Residual.
+- [Associate Scan Points with Local Map Planes](/problems/associate-local-map-planes) — runnable bounded component.
+- [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals) — runnable bounded component.
 - Update an Incremental Local Map.
 
 [Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.

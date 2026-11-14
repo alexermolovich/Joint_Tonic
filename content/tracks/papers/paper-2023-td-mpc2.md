@@ -16,8 +16,14 @@
     "robot-learning-rl",
     "td-mpc2"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 5,
+  "runnable_problem_slugs": [
+    "tdmpc2-groupwise-simnorm",
+    "tdmpc2-latent-dynamics-sequence",
+    "tdmpc2-distributional-ensemble-targets",
+    "tdmpc2-candidate-trajectory-scores",
+    "tdmpc2-weighted-elite-planner"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +56,7 @@ The implementation path follows **Learn normalized latent dynamics → Fit rewar
 
 Source cards: [2023-td-mpc2](../../../research/papers/robot-learning-rl/2023-td-mpc2.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 5 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 5 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,8 +76,8 @@ Predict future representations and task signals.
 
 [Study the mechanism and math](/projects/2023-td-mpc2#paper-section-learn-normalized-latent-dynamics).
 
-- **Proposed component, not runnable:** Roll Out a Latent Dynamics Sequence.
-- **Proposed component, not runnable:** Apply Groupwise SimNorm to Latent States.
+- **Runnable paper-associated component:** [Apply Groupwise SimNorm to Latent States](/problems/tdmpc2-groupwise-simnorm). SimNorm turns each small latent block into a probability simplex.
+- **Runnable paper-associated component:** [Roll Out a Latent Dynamics Sequence](/problems/tdmpc2-latent-dynamics-sequence). Planning repeatedly feeds a predicted latent into the next transition.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -83,7 +89,7 @@ Use distributional regression and an ensemble of critics.
 
 [Study the mechanism and math](/projects/2023-td-mpc2#paper-section-fit-rewards-and-values).
 
-- **Proposed component, not runnable:** Build Distributional Reward and Ensemble-Value Targets.
+- **Runnable paper-associated component:** [Build Distributional Reward and Ensemble-Value Targets](/problems/tdmpc2-distributional-ensemble-targets). A target critic ensemble can reduce optimistic bootstrapping, while transformed two-hot targets keep large returns from becoming arbitrary regression scales.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -95,8 +101,8 @@ Evaluate action sequences in latent space and bootstrap the tail.
 
 [Study the mechanism and math](/projects/2023-td-mpc2#paper-section-plan-and-execute-one-action).
 
-- **Proposed component, not runnable:** Score Candidate Action Trajectories.
-- **Proposed component, not runnable:** Update a Sampling-Based Planner.
+- **Runnable paper-associated component:** [Score Candidate Action Trajectories](/problems/tdmpc2-candidate-trajectory-scores). A candidate plan earns predicted rewards until its first terminal transition.
+- **Runnable paper-associated component:** [Update a Sampling-Based Planner](/problems/tdmpc2-weighted-elite-planner). A sampling planner concentrates its next proposal around high-scoring candidate sequences.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

@@ -8,4 +8,4 @@ The affected packages are `detr-decode-object-queries`, `vit-class-token-linear-
 
 Validation: reproduced the original exception through all four public entrypoints; actual bubblewrap Run passed 8 public cases and Submit passed 20 case families, including positive/negative oversized integers. Reintroducing the original helper failed the new evaluator in all four packages. The content/schema validator passed 274 problems and 157 paper cards in the isolated base worktree. `git diff --check` passed. No hosted resources or learner data were touched.
 
-Main-agent exact-diff review and merge remain pending. Branch: `codex/oversized-scalar-validation`. The separate canonical-hash fix does not modify these four packages; their digests use UTF-8/LF evaluator bytes.
+Main reviewed the exact code/test/version diff and merged branch `codex/oversized-scalar-validation` in `f4c5b05`. The separate canonical-hash fix does not modify these four packages; their digests use UTF-8/LF evaluator bytes. This records a local branch merge, not a GitHub PR merge.

@@ -61,9 +61,9 @@ execution_flow:
       column: 1
       row: 0
       section: Apply a tangent update
-      problem_slugs: []
-      planned_problems:
-        - Apply SE(3) Exponential and Logarithm Maps
+      problem_slugs:
+        - se3-exponential-logarithm
+      planned_problems: []
     - id: linearize
       title: Linearize an estimation residual
       detail: >-
@@ -119,7 +119,7 @@ This is a right perturbation, so the increment is local to the current pose. A l
 
 For a pure local x translation of0.1m after a90-degree rotation about world z, right composition moves the world point by0.1m along world y. Left composition with a world-x increment moves it along world x. This is a convention test, not merely a numerical tolerance.
 
-Planned component: **Apply SE(3) Exponential and Logarithm Maps**. This is a research candidate awaiting a reviewed blueprint.
+Implement [Apply SE(3) Exponential and Logarithm Maps](/problems/se3-exponential-logarithm). The exercise supports a stated principal-angle range and explicitly excludes the ambiguous pi branch.
 
 ### Linearize an estimation residual
 
@@ -131,7 +131,7 @@ $$
 \qquad P_y\approx J P_\xi J^\top.
 $$
 
-$P_\xi$ is tangent-space covariance; its translation, rotation and cross blocks carry corresponding squared or mixed units. A finite-difference check must perturb T on the same side used in the derivation. Finite-Difference Gradient Check remains a planned curriculum component; the linear Kalman prerequisite is available below.
+$P_\xi$ is tangent-space covariance; its translation, rotation and cross blocks carry corresponding squared or mixed units. A finite-difference check must perturb T on the same side used in the derivation. [Finite-Difference Gradient Check](/problems/finite-difference-gradient-check) is a runnable numerical prerequisite; a pose-residual Jacobian must still use the same perturbation side as its derivation. The linear Kalman prerequisite is available below.
 
 | Convention | Increment coordinates | Update |
 |---|---|---|
@@ -149,7 +149,7 @@ Mixing left/right Jacobians can make an estimator appear stable near identity an
 
 ## Implement the components
 
-The linked pose exercises are available now. Exponential/log maps and estimator residuals are planned research components; none is a claim to reproduce a full SLAM or filtering system. This card summarizes selected mechanisms from the versioned technical report rather than its complete formula catalog.
+The linked pose exercises and bounded exponential/logarithm maps are available now. General estimator residuals remain further implementation work; none of these exercises claims to reproduce a full SLAM or filtering system. This card summarizes selected mechanisms from the versioned technical report rather than its complete formula catalog.
 
 
 ## Sources and scope

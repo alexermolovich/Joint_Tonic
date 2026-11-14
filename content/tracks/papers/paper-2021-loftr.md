@@ -16,8 +16,13 @@
     "geometry-calibration-slam",
     "loftr"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "paired-linear-image-attention",
+    "dual-softmax-coarse-matches",
+    "local-window-match-expectation",
+    "sampson-epipolar-match-gate"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +55,16 @@ The implementation path follows **Condition dense features → Select coarse mat
 
 Source cards: [2021-loftr](../../../research/papers/geometry-calibration-slam/2021-loftr.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Condition dense features** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Build a Feature-Matching Score Matrix](/problems/feature-matching-score-matrix). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Extract Mutual Matches and Unmatched Labels from Transport Scores](/problems/extract-mutual-feature-matches). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Construct Coarse Correspondence Candidates](/problems/dual-softmax-coarse-matches). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Refine a Match in a Local Window](/problems/local-window-match-expectation). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -70,7 +78,7 @@ Use self-attention and cross-attention across image grids.
 
 [Study the mechanism and math](/projects/2021-loftr#paper-section-condition-dense-features).
 
-- **Proposed component, not runnable:** Apply Paired-Image Self and Cross Attention.
+- **Runnable paper-associated component:** [Apply Paired-Image Self and Cross Attention](/problems/paired-linear-image-attention). Apply a bounded paired-image self-attention stage followed by simultaneous cross-attention.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +90,7 @@ Normalize pair similarities and retain confident mutual pairs.
 
 [Study the mechanism and math](/projects/2021-loftr#paper-section-select-coarse-matches).
 
-- **Proposed component, not runnable:** Construct Coarse Correspondence Candidates.
+- **Runnable paper-associated component:** [Construct Coarse Correspondence Candidates](/problems/dual-softmax-coarse-matches). Construct coarse correspondences with masked dual-softmax confidence and reciprocal choices.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +102,8 @@ Estimate subpixel correspondence inside fine windows.
 
 [Study the mechanism and math](/projects/2021-loftr#paper-section-refine-local-positions).
 
-- **Proposed component, not runnable:** Refine a Match in a Local Window.
-- **Proposed component, not runnable:** Filter Geometrically Inconsistent Matches.
+- **Runnable paper-associated component:** [Refine a Match in a Local Window](/problems/local-window-match-expectation). Refine target keypoint positions using a probability distribution over a supplied local descriptor window.
+- **Runnable paper-associated component:** [Filter Geometrically Inconsistent Matches](/problems/sampson-epipolar-match-gate). Reject correspondences inconsistent with a supplied fundamental matrix using a first-order Sampson error.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

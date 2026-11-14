@@ -45,9 +45,9 @@ execution_flow:
       column: 0
       row: 0
       section: Generate reward candidates
-      problem_slugs: []
-      planned_problems:
-        - Validate a Reward Function Contract
+      problem_slugs:
+        - eureka-reward-output-contract
+      planned_problems: []
     - id: stage-2
       title: Train and evaluate policies
       detail: Optimize each reward and score behavior with an independent task metric.
@@ -56,8 +56,8 @@ execution_flow:
       section: Train and evaluate policies
       problem_slugs:
         - validation-loss-rollout-ranking
-      planned_problems:
-        - Rank Reward Candidates by Rollout Evidence
+        - eureka-rank-rollout-candidates
+      planned_problems: []
     - id: stage-3
       title: Reflect and revise
       detail: >-
@@ -66,9 +66,9 @@ execution_flow:
       column: 2
       row: 0
       section: Reflect and revise
-      problem_slugs: []
-      planned_problems:
-        - Aggregate Reward-Component Diagnostics
+      problem_slugs:
+        - eureka-reward-component-diagnostics
+      planned_problems: []
   edges:
     - from: stage-1
       to: stage-2
@@ -91,7 +91,7 @@ Follow the data through the mechanism. Training objectives and inference behavio
 A candidate reward is a program $r_k(s,a,s')$. It must use available state variables and return finite values with the expected batch shape. Executability and sensible scaling are prerequisites, not evidence that the reward expresses the intended task.
 
 
-**Planned exercise:** Validate a Reward Function Contract.
+**Implement this component:** [Validate a Reward Function Contract](/problems/eureka-reward-output-contract).
 
 
 ### Train and evaluate policies
@@ -122,7 +122,7 @@ The table is a static text alternative to the selection flow; no animation is ne
 The inner loop learns $\pi_k\approx\arg\max_\pi\mathbb E[\sum_t\gamma^tr_k]$. The outer loop compares $M(\pi_k)$ using a task metric $M$, which should remain independent of reward scale. This bilevel view explains the method without claiming exact optimization.
 
 
-**Planned exercise:** Rank Reward Candidates by Rollout Evidence.
+**Implement this component:** [Rank Reward Candidates by Rollout Evidence](/problems/eureka-rank-rollout-candidates).
 
 
 ### Reflect and revise
@@ -130,16 +130,16 @@ The inner loop learns $\pi_k\approx\arg\max_\pi\mathbb E[\sum_t\gamma^tr_k]$. Th
 Feedback includes which terms activate, saturate, or fail to correlate with success. Keep reward code, prompts, simulator version, seeds, and evaluation outcomes together. A larger shaped reward alone is not proof of a better policy.
 
 
-**Planned exercise:** Aggregate Reward-Component Diagnostics.
+**Implement this component:** [Aggregate Reward-Component Diagnostics](/problems/eureka-reward-component-diagnostics).
 
 
 ## Implement the components
 
 Exercises are attached to the corresponding execution stages and mathematical explanations above. Runnable links implement only their stated component scope. Planned titles are original authoring ideas, not reviewed contracts, runnable tasks, or claims of a reproduced paper. They enter the approved curriculum only through blueprint review.
 
-- **Generate reward candidates:** Validate a Reward Function Contract (planned).
-- **Train and evaluate policies:** Rank Reward Candidates by Rollout Evidence (planned).
-- **Reflect and revise:** Aggregate Reward-Component Diagnostics (planned).
+- **Generate reward candidates:** [Validate a Reward Function Contract](/problems/eureka-reward-output-contract).
+- **Train and evaluate policies:** [Rank Reward Candidates by Rollout Evidence](/problems/eureka-rank-rollout-candidates).
+- **Reflect and revise:** [Aggregate Reward-Component Diagnostics](/problems/eureka-reward-component-diagnostics).
 
 ## Why this matters on a robot
 

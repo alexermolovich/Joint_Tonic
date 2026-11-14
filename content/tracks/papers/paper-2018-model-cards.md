@@ -17,10 +17,11 @@
     "model-cards"
   ],
   "runnable_problem_slugs": [
+    "robot-model-card-schema",
     "edge-inference-release-gate",
     "slice-infrastructure-release-gate"
   ],
-  "proposed_component_count": 2,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +54,7 @@ The implementation path follows **Identify the model and use → Evaluate meanin
 
 Source cards: [2018-model-cards](../../../research/papers/mlops-data-deployment/2018-model-cards.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 1 paper-associated runnable component; 2 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -74,7 +75,7 @@ Record version, training context, and supported deployment conditions.
 
 [Study the mechanism and math](/projects/2018-model-cards#paper-section-identify-the-model-and-use).
 
-- **Proposed component, not runnable:** Validate a Model Card Schema.
+- **Runnable paper-associated component:** [Validate a Model Card Schema](/problems/robot-model-card-schema). Validate a Model Card Schema
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

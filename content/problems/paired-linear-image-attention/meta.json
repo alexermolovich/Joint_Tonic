@@ -1,0 +1,79 @@
+{
+  "slug": "paired-linear-image-attention",
+  "title": "Apply Paired-Image Self and Cross Attention",
+  "version": "1.0.0",
+  "number": 838,
+  "difficulty": "Hard",
+  "domain": "Geometry and state estimation",
+  "topics": [
+    "geometry-calibration-slam",
+    "loftr"
+  ],
+  "minutes": 40,
+  "framework": "NumPy",
+  "entrypoint": "paired_attention",
+  "paperIds": [
+    "2021-loftr"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Apply a bounded paired-image self-attention stage followed by simultaneous cross-attention.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": null,
+    "image_status": "pending-image-build; local bubblewrap baseline",
+    "platform": "linux-x86_64-cpu",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    },
+    "baseline_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "budget_status": "actual shared worker caps; per-process address-space limit"
+  },
+  "physical_contract": {
+    "frames": [
+      "Image pixel coordinates x right, y down; feature channels dimensionless"
+    ],
+    "units": {
+      "values": "Pixels for geometry, dimensionless confidence and descriptors"
+    },
+    "axes": "Explicitly defined below; feature axes do not imply physical directions.",
+    "timestamp_assumptions": "Inputs describe one synchronized observation unless the contract explicitly defines history. No clock estimation.",
+    "batching": "Only dimensions explicitly named in the function contract are supported."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-06,
+    "atol": 1e-07,
+    "public_case_families": [
+      "Two worked examples",
+      "Minimal supported input"
+    ],
+    "hidden_case_families": [
+      "Independent mechanism checks",
+      "Boundary and invalid inputs",
+      "Input preservation"
+    ],
+    "performance_class": "none",
+    "evaluator_sha256": "ec525c46af5a6245a9246807dc0b7b38192aa3f3778db7e314a6b1501862813e"
+  },
+  "fixtures": {
+    "source": "original synthetic examples in examples.md; future generated fixtures use declared seed",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "Original bounded teaching component; no source code or figures copied. Systems diagnostics are teaching contracts, not paper benchmark claims.",
+    "primary_urls": [
+      "https://arxiv.org/abs/2104.00680"
+    ],
+    "implementation_urls": []
+  }
+}

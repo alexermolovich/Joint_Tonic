@@ -1,0 +1,76 @@
+{
+  "slug": "dreamer-continuation-lambda-returns",
+  "title": "Build Lambda-Return Targets",
+  "version": "1.0.0",
+  "number": 541,
+  "difficulty": "Medium",
+  "domain": "Robot Learning",
+  "topics": [
+    "2023-dreamerv3",
+    "policy-components"
+  ],
+  "minutes": 30,
+  "framework": "NumPy",
+  "entrypoint": "imagined_lambda_returns",
+  "paperIds": [
+    "2023-dreamerv3"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "An imagined transition may continue only with some predicted probability.",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "image_digest": "pending-local-worker-build",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared normalized action/feature coordinates; no implicit frame conversion"
+    ],
+    "units": {
+      "values": "Latents and normalized actions are dimensionless. Rewards/values use a fixed caller-declared dimensionless reward scale; KL is measured in nats."
+    },
+    "axes": "Batch, categorical-group, category, rollout-time and latent axes are defined in the contract",
+    "timestamp_assumptions": "Each ordered index is one fixed caller-declared control interval. Predicted continuation is a probability, not an elapsed duration. No implicit frame conversion.",
+    "batching": "Batch, categorical-group, category, rollout-time and latent axes are defined in the contract"
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-07,
+    "atol": 1e-09,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "documented-boundaries",
+      "invalid-inputs",
+      "independent-invariants"
+    ],
+    "performance_class": "cpu",
+    "evaluator_sha256": "7217eaaf53ce2ef27ff6dc21680ad43ec8dadf41fb7c2a580edb1d15b33332fd"
+  },
+  "fixtures": {
+    "source": "original-synthetic",
+    "license": "CC0-1.0",
+    "version_or_hash": "synthetic-v1-seed-20261113"
+  },
+  "provenance": {
+    "authoring_notes": "A bounded component with supplied tensors. Prediction loss inputs and deterministic imagined dynamics do not reproduce the complete trained recurrent stochastic world model, actor or benchmark.",
+    "primary_urls": [
+      "https://arxiv.org/html/2301.04104v2"
+    ],
+    "paper_card": "research/papers/robot-learning-rl/2023-dreamerv3.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

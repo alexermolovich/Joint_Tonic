@@ -426,6 +426,8 @@ The new experimental `data-only-functions-v1` grader keeps test code and expecte
 
 The browser cannot upload solved flags or manufacture submission history. Those records come from server-owned immutable jobs, evaluations and progress. The evaluator callback checks published content/runtime/fixture identity before recording a solve. Hosted use requires applied migrations and real published catalog versions; the public URL and publishable key alone do not apply a schema or publish versions.
 
+Account storage may precede evaluator hosting. A published catalog-only version has a null runtime image and explicit `grading_protocol: "unavailable"`; it supports owner-scoped drafts, notes and bookmarks while trusted evaluation remains disabled. Never invent an image digest to enable account storage. The existing evaluation RPC rejects unavailable/null-runtime versions. Assigning a qualified runtime later requires a new immutable semantic version, preserving the older version's text and provenance rather than rewriting its identity.
+
 ### 12.3 Core entities
 
 - `User`, `Problem`, `ProblemVersion`, `Track`, `TrackVersion`, `TrackStep`.

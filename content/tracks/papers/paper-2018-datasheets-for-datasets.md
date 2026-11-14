@@ -17,11 +17,13 @@
     "datasheets-for-datasets"
   ],
   "runnable_problem_slugs": [
+    "robot-dataset-datasheet-schema",
     "infer-robot-episode-schema",
     "robot-feature-anomalies",
-    "record-artifact-lineage"
+    "record-artifact-lineage",
+    "robot-data-use-risk-report"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 1,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -54,7 +56,7 @@ The implementation path follows **Record collection context → Describe composi
 
 Source cards: [2018-datasheets-for-datasets](../../../research/papers/mlops-data-deployment/2018-datasheets-for-datasets.md).
 
-**Available now:** 0 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 3 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -76,8 +78,7 @@ Describe motivation, population, acquisition, and permissions.
 
 [Study the mechanism and math](/projects/2018-datasheets-for-datasets#paper-section-record-collection-context).
 
-- **Proposed component, not runnable:** Validate a Robot Dataset Datasheet.
-- **Proposed component, not runnable:** Detect Missing Provenance Fields.
+- **Runnable paper-associated component:** [Validate a Robot Dataset Datasheet](/problems/robot-dataset-datasheet-schema). Validate a Robot Dataset Datasheet
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -104,7 +105,7 @@ Document intended uses, distribution, updates, and known risks.
 [Study the mechanism and math](/projects/2018-datasheets-for-datasets#paper-section-publish-maintenance-guidance).
 
 - **Runnable supporting prerequisite:** [Record Dataset, Transform, Model, and Evaluator Lineage](/problems/record-artifact-lineage). Build a dependency-complete provenance record for one artifact while preserving the identity of every upstream input.
-- **Proposed component, not runnable:** Generate a Data-Use Risk Report.
+- **Runnable paper-associated component:** [Generate a Data-Use Risk Report](/problems/robot-data-use-risk-report). Generate a Data-Use Risk Report
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

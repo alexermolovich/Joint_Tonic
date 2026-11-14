@@ -18,9 +18,11 @@
   ],
   "runnable_problem_slugs": [
     "interpolate-pose-slerp",
-    "trace-perception-frame-graph"
+    "trace-perception-frame-graph",
+    "deskew-lidar-points",
+    "lidar-feature-residuals"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -53,7 +55,7 @@ The implementation path follows **Deskew lidar measurements → Align local scan
 
 Source cards: [2020-lio-sam](../../../research/papers/geometry-calibration-slam/2020-lio-sam.md).
 
-**Available now:** 0 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 2 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -61,6 +63,8 @@ Read the input contracts and locally defined mathematics in the source explanati
 
 - **Supporting prerequisite:** [Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Compose and Invert Coordinate Transforms](/problems/compose-frame-transforms). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -76,7 +80,7 @@ Move points captured at different times into one scan frame.
 
 - **Runnable supporting prerequisite:** [Interpolate a Pose with SLERP](/problems/interpolate-pose-slerp). Interpolate translation linearly and orientation along the shortest quaternion arc.
 - **Runnable supporting prerequisite:** [Trace Frames Through a Robot Perception Graph](/problems/trace-perception-frame-graph). Resolve a rigid transform between two frames in a validated acyclic frame forest.
-- **Proposed component, not runnable:** Deskew a Lidar Scan with Motion Estimates.
+- **Runnable paper-associated component:** [Deskew a Lidar Scan with Motion Estimates](/problems/deskew-lidar-points). Express points captured at different instants in one reference lidar frame using supplied per-point poses.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -88,7 +92,7 @@ Match edge and surface features against a local map.
 
 [Study the mechanism and math](/projects/2020-lio-sam#paper-section-align-local-scan-features).
 
-- **Proposed component, not runnable:** Compute Point-to-Line and Point-to-Plane Scan Residuals.
+- **Runnable paper-associated component:** [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals). Compute signed point-to-plane and unsigned point-to-line residuals after transforming scan features into the map frame.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

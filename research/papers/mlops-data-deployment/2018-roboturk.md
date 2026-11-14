@@ -1,22 +1,90 @@
 ---
 schema_version: 1
-paper_id: "2018-roboturk"
-title: "RoboTurk: A Crowdsourcing Platform for Robotic Skill Learning through Imitation"
-authors: ["Mandlekar, Ajay","Zhu, Yuke","Garg, Animesh","Booher, Jonathan","Spero, Max","Tung, Albert","Gao, Julian","Emmons, John","Gupta, Anchit","Orbay, Emre","Savarese, Silvio","Fei-Fei, Li"]
+paper_id: 2018-roboturk
+title: >-
+  RoboTurk: A Crowdsourcing Platform for Robotic Skill Learning through
+  Imitation
+authors:
+  - 'Mandlekar, Ajay'
+  - 'Zhu, Yuke'
+  - 'Garg, Animesh'
+  - 'Booher, Jonathan'
+  - 'Spero, Max'
+  - 'Tung, Albert'
+  - 'Gao, Julian'
+  - 'Emmons, John'
+  - 'Gupta, Anchit'
+  - 'Orbay, Emre'
+  - 'Savarese, Silvio'
+  - 'Fei-Fei, Li'
 year: 2018
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1811.02790"
-pdf_url: "https://arxiv.org/pdf/1811.02790"
-local_pdf: "./2018-roboturk.pdf"
-sha256: "2298863a8e3aa917506ae8583cadc6741a557eb9809f976101a4fd3119c3303d"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1811.02790'
+pdf_url: 'https://arxiv.org/pdf/1811.02790'
+local_pdf: ./2018-roboturk.pdf
+sha256: 2298863a8e3aa917506ae8583cadc6741a557eb9809f976101a4fd3119c3303d
 bytes: 3606292
 pages: 15
-topics: ["mlops-data-deployment","roboturk"]
-modalities: ["datasets","model-artifacts","logs","metrics"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Map operator motion", "detail": "Translate mobile-device motion into a robot control reference.", "column": 0, "row": 0, "section": "Map operator motion", "problem_slugs": ["se3-transform-points", "trace-perception-frame-graph", "velocity-acceleration-command-limits"], "planned_problems": ["Map Operator Motion into a Robot Control Frame"]}, {"id": "stage-2", "title": "Stream control and feedback", "detail": "Run a session with synchronized actions and visual observations.", "column": 1, "row": 0, "section": "Stream control and feedback", "problem_slugs": ["estimate-clock-offset-paired-events", "detect-dropped-duplicated-sensor-frames"], "planned_problems": ["Detect Paused or Corrupted Action Segments"]}, {"id": "stage-3", "title": "Curate demonstrations", "detail": "Store complete episodes and task outcomes for learning.", "column": 2, "row": 0, "section": "Curate demonstrations", "problem_slugs": ["validate-robot-episodes"], "planned_problems": ["Validate a Teleoperation Demonstration", "Compute Collector and Task Coverage"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "operator commands"}, {"from": "stage-2", "to": "stage-3", "label": "session trajectories"}]}
+topics:
+  - mlops-data-deployment
+  - roboturk
+modalities:
+  - datasets
+  - model-artifacts
+  - logs
+  - metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Map operator motion
+      detail: Translate mobile-device motion into a robot control reference.
+      column: 0
+      row: 0
+      section: Map operator motion
+      problem_slugs:
+        - se3-transform-points
+        - trace-perception-frame-graph
+        - velocity-acceleration-command-limits
+      planned_problems:
+        - Map Operator Motion into a Robot Control Frame
+    - id: stage-2
+      title: Stream control and feedback
+      detail: Run a session with synchronized actions and visual observations.
+      column: 1
+      row: 0
+      section: Stream control and feedback
+      problem_slugs:
+        - estimate-clock-offset-paired-events
+        - detect-dropped-duplicated-sensor-frames
+        - roboturk-action-segments
+      planned_problems: []
+    - id: stage-3
+      title: Curate demonstrations
+      detail: Store complete episodes and task outcomes for learning.
+      column: 2
+      row: 0
+      section: Curate demonstrations
+      problem_slugs:
+        - validate-robot-episodes
+      planned_problems:
+        - Validate a Teleoperation Demonstration
+        - Compute Collector and Task Coverage
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: operator commands
+    - from: stage-2
+      to: stage-3
+      label: session trajectories
 ---
 
 ## Core paper explanation
@@ -64,7 +132,7 @@ A frame captured at 10.00 s and displayed at 10.18 s is 0.18 s old. A second fra
 
 **Component practice**
 
-- Detect Paused or Corrupted Action Segments — unreviewed idea; contract and evaluator required.
+- Runnable component: [Detect Paused or Corrupted Action Segments](/problems/roboturk-action-segments). Uses the bounded contract; no full paper reproduction is claimed.
 
 ### Curate demonstrations
 
@@ -87,7 +155,7 @@ Each execution-flow node links the matching runnable component or names its plan
 **Planned component problems:**
 
 - Map Operator Motion into a Robot Control Frame — unreviewed idea; contract and evaluator required.
-- Detect Paused or Corrupted Action Segments — unreviewed idea; contract and evaluator required.
+- Runnable component: [Detect Paused or Corrupted Action Segments](/problems/roboturk-action-segments). Uses the bounded contract; no full paper reproduction is claimed.
 - Validate a Teleoperation Demonstration — unreviewed idea; contract and evaluator required.
 - Compute Collector and Task Coverage — unreviewed idea; contract and evaluator required.
 
@@ -96,6 +164,10 @@ These bounded exercises do not claim to reproduce the complete paper or its benc
 ## Why this matters on a robot
 
 Accessible teleoperation can broaden demonstration coverage. Network jitter, operator differences, and controller saturation change the recorded action distribution; retain these collection conditions instead of flattening all trajectories into identical examples.
+
+## Scope of the runnable operational components
+
+[Action-segment reporting](/problems/roboturk-action-segments) treats missing observations, nonfinite commands and out-of-range commands as corruption, then finds sufficiently long contiguous near-zero command runs. It subtracts integer nanosecond timestamps and does not assume a sample period. This original joint-velocity-log curation exercise is not RoboTurk's exact phone/controller mapping and cannot determine whether a pause was intentional or physically safe.
 
 ## Sources and scope
 

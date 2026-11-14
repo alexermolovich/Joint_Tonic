@@ -45,9 +45,9 @@ execution_flow:
       column: 0
       row: 0
       section: Identify the model and use
-      problem_slugs: []
-      planned_problems:
-        - Validate a Model Card Schema
+      problem_slugs:
+        - robot-model-card-schema
+      planned_problems: []
     - id: stage-2
       title: Evaluate meaningful slices
       detail: Report metrics by conditions relevant to intended use.
@@ -91,7 +91,7 @@ A robotics release should identify weights, preprocessing, action decoder, train
 
 **Component practice**
 
-- Validate a Model Card Schema — unreviewed idea; contract and evaluator required.
+- Runnable component: [Validate a Model Card Schema](/problems/robot-model-card-schema). Uses the bounded contract; no full paper reproduction is claimed.
 
 ### Evaluate meaningful slices
 
@@ -123,7 +123,7 @@ Runnable components and supporting prerequisites are attached to their matching 
 
 **Planned component problems:**
 
-- Validate a Model Card Schema — unreviewed idea; contract and evaluator required.
+- Runnable component: [Validate a Model Card Schema](/problems/robot-model-card-schema). Uses the bounded contract; no full paper reproduction is claimed.
 - Aggregate Metrics by Operational Slice — unreviewed idea; contract and evaluator required.
 
 These exercises implement their stated contracts, not a complete paper reproduction.
@@ -132,6 +132,10 @@ These exercises implement their stated contracts, not a complete paper reproduct
 ## Why this matters on a robot
 
 A model card helps determine whether a policy evaluated on one robot and camera is suitable elsewhere. Aggregate success can conceal critical weak slices; documentation should preserve those limitations rather than imply universal reliability.
+
+## Scope of the runnable operational components
+
+[The robot model-card schema](/problems/robot-model-card-schema) binds four supplied serving-artifact identities and checks declared slice evidence. It reports missing slices, zero denominators and impossible success counts without imposing an invented performance threshold. The record schema and exact issue codes are original teaching policy. Completeness is not approval, and supplied digests do not verify actual artifact bytes.
 
 ## Sources and scope
 

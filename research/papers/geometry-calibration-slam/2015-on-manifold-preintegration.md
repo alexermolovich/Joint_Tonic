@@ -1,22 +1,76 @@
 ---
 schema_version: 1
-paper_id: "2015-on-manifold-preintegration"
-title: "On-Manifold Preintegration for Real-Time Visual-Inertial Odometry"
-authors: ["Forster, Christian","Carlone, Luca","Dellaert, Frank","Scaramuzza, Davide"]
+paper_id: 2015-on-manifold-preintegration
+title: On-Manifold Preintegration for Real-Time Visual-Inertial Odometry
+authors:
+  - 'Forster, Christian'
+  - 'Carlone, Luca'
+  - 'Dellaert, Frank'
+  - 'Scaramuzza, Davide'
 year: 2015
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1512.02363"
-pdf_url: "https://arxiv.org/pdf/1512.02363"
-local_pdf: "./2015-on-manifold-preintegration.pdf"
-sha256: "214b8bee53e1fb6218c1cec1352d74c24951feec815517e6a0cc6dfcf1fd8f32"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1512.02363'
+pdf_url: 'https://arxiv.org/pdf/1512.02363'
+local_pdf: ./2015-on-manifold-preintegration.pdf
+sha256: 214b8bee53e1fb6218c1cec1352d74c24951feec815517e6a0cc6dfcf1fd8f32
 bytes: 3816161
 pages: 21
-topics: ["geometry-calibration-slam","on-manifold-preintegration"]
-modalities: ["camera","imu","lidar","poses"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title":"Core execution flow","description":"Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.","nodes":[{"id":"stage-1","title":"Integrate relative rotation","detail":"Accumulate bias-corrected angular increments.","column":0,"row":0,"section":"Integrate relative rotation","problem_slugs":[],"planned_problems":["Integrate IMU Rotation Increments on SO3"]},{"id":"stage-2","title":"Integrate velocity and position","detail":"Accumulate specific force in the starting body frame.","column":1,"row":0,"section":"Integrate velocity and position","problem_slugs":["match-approximate-sensor-timestamps","estimate-clock-offset-paired-events"],"planned_problems":["Preintegrate Bias-Corrected IMU Velocity and Position"]},{"id":"stage-3","title":"Form a keyframe factor","detail":"Compare predicted state change with preintegrated measurements.","column":2,"row":0,"section":"Form a keyframe factor","problem_slugs":[],"planned_problems":["Propagate Preintegration Covariance","Apply a First-Order Bias Correction"]}],"edges":[{"from":"stage-1","to":"stage-2","label":"relative rotations"},{"from":"stage-2","to":"stage-3","label":"preintegrated measurements"}]}
+topics:
+  - geometry-calibration-slam
+  - on-manifold-preintegration
+modalities:
+  - camera
+  - imu
+  - lidar
+  - poses
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Integrate relative rotation
+      detail: Accumulate bias-corrected angular increments.
+      column: 0
+      row: 0
+      section: Integrate relative rotation
+      problem_slugs:
+        - integrate-imu-rotation
+      planned_problems: []
+    - id: stage-2
+      title: Integrate velocity and position
+      detail: Accumulate specific force in the starting body frame.
+      column: 1
+      row: 0
+      section: Integrate velocity and position
+      problem_slugs:
+        - match-approximate-sensor-timestamps
+        - estimate-clock-offset-paired-events
+        - preintegrate-imu-translation
+      planned_problems: []
+    - id: stage-3
+      title: Form a keyframe factor
+      detail: Compare predicted state change with preintegrated measurements.
+      column: 2
+      row: 0
+      section: Form a keyframe factor
+      problem_slugs:
+        - first-order-imu-bias-correction
+      planned_problems:
+        - Propagate Preintegration Covariance
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: relative rotations
+    - from: stage-2
+      to: stage-3
+      label: preintegrated measurements
 ---
 
 ## Core paper explanation
@@ -34,7 +88,7 @@ $$\Delta R_{i,k+1}=\Delta R_{ik}\operatorname{Exp}((\omega_k-b_g)\Delta t).$$
 $\operatorname{Exp}$ maps a rotation vector into SO(3). Multiplication order follows this body-frame convention.
 
 
-**Planned component problems:** Integrate IMU Rotation Increments on SO3. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation). Each exercise states its bounded numerical and frame conventions; it does not reproduce the complete estimator.
 
 ### Integrate velocity and position
 
@@ -46,7 +100,7 @@ These first-order discrete updates show the mechanism. Covariance and bias Jacob
 
 
 
-**Planned component problem:** Preintegrate Bias-Corrected IMU Velocity and Position. This is an unreviewed implementation idea for the mechanism above, not a runnable exercise; its precise contract and evaluator must be reviewed before publication.
+**Implement these components:** [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation). Each exercise states its bounded numerical and frame conventions; it does not reproduce the complete estimator.
 
 The relative rotation $\Delta R_{ik}\in\mathbb R^{3\times3}$ maps the sample-$k$ body frame into the keyframe-$i$ body frame. The three-vectors $\Delta v_{ik}$ and $\Delta p_{ik}$ are expressed in that fixed keyframe frame, in meters per second and meters; $\Delta t$ is in seconds. Initialize them to zero and the relative rotation to identity. Gravity is deliberately absent from these preintegrated quantities and appears when forming the world-state residual.
 
@@ -60,18 +114,20 @@ $$r_v=R_i^\top(v_j-v_i-g\Delta t_{ij})-\Delta v_{ij}.$$
 Rotation, position, and bias residuals complete the factor; whiten with the propagated covariance. Small bias changes use analytic first-order correction, while large changes may require reintegration.
 
 
-**Planned component problems:** Propagate Preintegration Covariance; Apply a First-Order Bias Correction. These are planned work, not runnable links; titles without a reviewed blueprint remain unreviewed ideas.
+**Implement these components:** [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction). Each exercise states its bounded numerical and frame conventions; it does not reproduce the complete estimator.
+
+**Planned component problems:** Propagate Preintegration Covariance. These remain unreviewed implementation ideas without runnable exercises.
 
 ## Implement the components
 
 - **Related implementation skill:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). This isolates a supporting mechanism, not this paper's complete method.
 
-**Planned components:**
+**Runnable components and remaining ideas:**
 
-- Integrate IMU Rotation Increments on SO3.
-- Preintegrate Bias-Corrected IMU Velocity and Position.
+- [Integrate IMU Rotation Increments on SO3](/problems/integrate-imu-rotation) — runnable bounded component.
+- [Preintegrate Bias-Corrected IMU Velocity and Position](/problems/preintegrate-imu-translation) — runnable bounded component.
 - Propagate Preintegration Covariance.
-- Apply a First-Order Bias Correction.
+- [Apply a First-Order Bias Correction](/problems/first-order-imu-bias-correction) — runnable bounded component.
 
 [Browse the planned curriculum](https://github.com/alexermolovich/Joint_Tonic/blob/main/CURRICULUM.md). Planned titles require a reviewed contract and evaluator before becoming runnable.
 

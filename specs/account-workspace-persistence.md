@@ -28,9 +28,25 @@ The RPC verifies the aggregate verdict against the trusted test summaries. Its i
 
 ## Provisioning and remaining deployment requirements
 
-The migration files are prepared; **they have not been applied to hosted Supabase**. Browser sync requires all migrations and published catalog rows. The hosted CLI is not logged in, and the Linux execution host has not been selected.
+All four migrations through `20261114040000_catalog_without_execution.sql` were applied to the authorized hosted project on 2026-11-14. CLI migration history confirms the remote versions. Anonymous REST smoke checks returned the public catalog successfully and denied private draft reads and trusted evaluation RPC calls. The Linux execution host has not been selected.
 
-1. Authenticate the Supabase CLI and link the intended project using the user's normal login/database credentials. Review the migration diff before applying it.
+Browser draft/note/bookmark sync can start before evaluator hosting. Publish immutable catalog-only rows with null `runtime_image_digest` and explicit `metadata.grading_protocol: "unavailable"`. The database constraint rejects missing/null protocol declarations and execution protocols without an image. The trusted evaluation RPC rejects these catalog-only rows even for a service-role caller. A later qualified execution identity requires a new semantic version; existing published rows are never silently upgraded.
+
+For catalog-only publication using the already authenticated CLI, without extracting a service credential:
+
+```text
+node scripts/check-evaluator-hashes.mjs
+node scripts/sync-supabase-catalog.mjs --catalog-only --prepare-cli-seed
+npx supabase --workdir .local/supabase-catalog-publish link --project-ref <authorized-project-ref>
+npx supabase --workdir .local/supabase-catalog-publish db push --include-seed --dry-run
+npx supabase --workdir .local/supabase-catalog-publish db push --include-seed --yes
+```
+
+The generated workspace and seed stay under ignored `.local/`; the normal local Supabase configuration remains unchanged. Review the plan and dry run before application. The seed is one transaction, accepts idempotent matching versions and rejects any immutable identity conflict. It includes public metadata and hashes, never hidden test contents or reference solutions. Source text must be valid UTF-8 and evaluator bytes canonical LF.
+
+Production execution remains a separate sequence:
+
+1. Keep the intended project linked through the user's normal CLI authentication. Review future migration diffs before applying them.
 2. Build and qualify the isolated worker image. Obtain its actual immutable OCI digest; never invent a placeholder. Production eligibility requires a reviewed `execution_contract` with protocol `data-only-functions-v1`, semantics `value-only`, and a nonempty `reviewed_by`. Existing native problems are not automatically qualified: mutation, aliasing, dtype/device and autograd contracts need a compatible verified execution boundary. Catalog metadata otherwise records `native-local-v1`.
 3. Prepare a catalog plan with `node scripts/sync-supabase-catalog.mjs --runtime-image-digest=sha256:<actual-built-digest>`. It writes `.local/supabase-catalog-plan.json` and performs no remote mutation by default.
 4. Once approved for application, use the same command with `--apply` and server-only `SUPABASE_URL` plus `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`. Existing immutable versions are checked, never silently replaced. A mismatching content/evaluator/image identity requires a reviewed new semantic version. Catalog publication alone does not qualify a problem for production execution; the worker must enforce its qualification allowlist.
@@ -56,6 +72,6 @@ npm install --prefix .local/persistence-db-test --no-save --package-lock=false @
 node scripts/check-persistence-sql.mjs
 ```
 
-That check executes all migrations and 44 SQL assertions using actual PostgreSQL roles, RLS and PL/pgSQL, with minimal Supabase Auth stubs and local assertion wrappers. It is not a hosted Supabase integration test or the pgTAP extension itself. Hosted gateway/configuration, live email delivery, actual OCI image publication, and a deployed evaluator remain unverified until provisioning.
+That check executes all migrations and 49 SQL assertions using actual PostgreSQL roles, RLS and PL/pgSQL, with minimal Supabase Auth stubs and local assertion wrappers. It also verifies generated catalog insertion, idempotent retry, literal text handling and immutable-conflict rejection. It is not the pgTAP extension itself. All four hosted migrations and 321 catalog-only versions were applied and verified on 2026-11-14. Each remote version matches its planned content/evaluator identity; anonymous catalog reads succeed while drafts and the trusted evaluation RPC reject anonymous access. These are separate hosted checks; live signed-in persistence, email delivery, actual OCI image publication and a deployed evaluator need their own evidence.
 
 References: [Supabase getUser](https://supabase.com/docs/reference/javascript/auth-getuser), [database functions and privileges](https://supabase.com/docs/guides/database/functions).

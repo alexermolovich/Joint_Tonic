@@ -2,9 +2,9 @@
 
 Generated from `CURRICULUM.md`, published metadata, and existing draft folders. Refresh with `node scripts/update-authoring-status.mjs`. A complete file package is **not** an independent review or a published evaluator.
 
-Scope: **267 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
+Scope: **314 named curriculum problems**, plus the four integration capstone sequences. The corpus has 156 distinct papers; not every collected paper has an approved problem in this roadmap. Additional ideas attached to paper flow nodes remain unreviewed until promoted through a blueprint.
 
-Coverage: 267 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 274 published problems; some are supporting components rather than identical named roadmap entries.
+Coverage: 314 named entries map directly to published tasks; 0 have independently reviewed drafts; 0 have draft packages awaiting review; 0 have earlier plans; 0 remain queued. The application has 321 published problems; some are supporting components rather than identical named roadmap entries.
 
 ## Work and review lanes
 
@@ -264,6 +264,20 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Estimate a Latent Dynamics Context](problems/rma-latent-context-estimator/) | 7.1 | Runnable |
 | [Track the Age of an Asynchronous Adaptation Latent](problems/rma-asynchronous-latent-age/) | 7.1 | Runnable |
 | [Evaluate Policy Recovery After a Parameter Change](problems/rma-parameter-change-recovery/) | 7.1 | Runnable |
+| [Validate a Reward Function Contract](problems/eureka-reward-output-contract/) | 7.1 | Runnable |
+| [Aggregate Reward-Component Diagnostics](problems/eureka-reward-component-diagnostics/) | 7.1 | Runnable |
+| [Rank Reward Candidates by Rollout Evidence](problems/eureka-rank-rollout-candidates/) | 7.1 | Runnable |
+| [Validate a Generated Reward Program](problems/dreureka-reward-expression-program/) | 7.1 | Runnable |
+| [Compare Robustness Across Randomization Settings](problems/dreureka-randomization-robustness/) | 7.1 | Runnable |
+| [Compute a Balanced Latent-Model Loss](problems/dreamer-balanced-latent-loss/) | 7.1 | Runnable |
+| [Encode Symlog Two-Hot Reward Targets](problems/dreamer-symlog-twohot-targets/) | 7.1 | Runnable |
+| [Build Lambda-Return Targets](problems/dreamer-continuation-lambda-returns/) | 7.1 | Runnable |
+| [Roll Out Imagined Latent Trajectories](problems/dreamer-imagined-latent-rollout/) | 7.1 | Runnable |
+| [Apply Groupwise SimNorm to Latent States](problems/tdmpc2-groupwise-simnorm/) | 7.1 | Runnable |
+| [Roll Out a Latent Dynamics Sequence](problems/tdmpc2-latent-dynamics-sequence/) | 7.1 | Runnable |
+| [Build Distributional Reward and Ensemble-Value Targets](problems/tdmpc2-distributional-ensemble-targets/) | 7.1 | Runnable |
+| [Score Candidate Action Trajectories](problems/tdmpc2-candidate-trajectory-scores/) | 7.1 | Runnable |
+| [Update a Sampling-Based Planner](problems/tdmpc2-weighted-elite-planner/) | 7.1 | Runnable |
 | [Validate a Tactile Image Capture Contract](problems/digit-capture-contract/) | 7.2 | Runnable |
 | [Subtract a Tactile Reference Image](problems/digit-reference-subtraction/) | 7.2 | Runnable |
 | [Estimate Contact Patch Statistics](problems/digit-contact-patch-statistics/) | 7.2 | Runnable |
@@ -289,26 +303,59 @@ Drafts live under `content/planned/` with `blueprint.md`, `statement.md`, `theor
 | [Pull Back a Local Motion Metric](problems/pullback-motion-metric/) | 7.3 | Runnable |
 | [Combine Competing Task-Space Accelerations](problems/combine-motion-policies/) | 7.3 | Runnable |
 | [Rank Multi-Seed Motion Trajectories](problems/rank-motion-candidates/) | 7.3 | Runnable |
-| [Measure Per-Channel Activation and Weight Ranges](problems/smoothquant-channel-ranges/) | 7.4 | Runnable |
-| [Apply an Equivalent Channel Rescaling](problems/smoothquant-equivalent-rescaling/) | 7.4 | Runnable |
-| [Quantize Weights and Activations to Int8](problems/smoothquant-int8-linear-layer/) | 7.4 | Runnable |
-| [Validate Layer Output Error After Smoothing](problems/smoothquant-layer-error-report/) | 7.4 | Runnable |
-| [Apply a Weight-Pruning Mask](problems/deep-compression-pruning-mask/) | 7.4 | Runnable |
-| [Quantize Shared Weight Centroids](problems/deep-compression-centroid-assignment/) | 7.4 | Runnable |
-| [Compute a Compressed Model Storage Budget](problems/deep-compression-storage-budget/) | 7.4 | Runnable |
-| [Compare Activation-Weighted Quantization Error](problems/awq-activation-weighted-error/) | 7.4 | Runnable |
-| [Compute Group-Wise Quantization Parameters](problems/awq-groupwise-quantization/) | 7.4 | Runnable |
-| [Calibrate and Evaluate a Smoothed Int8 Layer](problems/smoothquant-calibrated-layer-integration/) | 7.4 | Runnable |
-| [Decode Normalized Boxes and Classes from Object Queries](problems/detr-decode-object-queries/) | 7.5 | Runnable |
-| [Flatten Spatial Features with Position and Padding Metadata](problems/detr-flatten-spatial-metadata/) | 7.5 | Runnable |
-| [Read a Normalized Class Token with a Linear Head](problems/vit-class-token-linear-head/) | 7.5 | Runnable |
-| [Transform Prompt Coordinates Through Image Preprocessing](problems/sam-transform-prompt-coordinates/) | 7.5 | Runnable |
-| [Reuse Image Embeddings Without Stale-Cache Errors](problems/sam-image-embedding-cache-key/) | 7.5 | Runnable |
-| [Sample Calibrated Multi-Camera Feature Maps](problems/bev-bilinear-camera-sampling/) | 7.5 | Runnable |
-| [Sample Hierarchical Depth Intervals](problems/nerf-hierarchical-depth-sampling/) | 7.5 | Runnable |
-| [Differentiate Rendered Color on a Small Synthetic Field](problems/nerf-rendered-color-gradients/) | 7.5 | Runnable |
-| [Implement Nearest-Neighbor Feature-Spreading Regularization](problems/dinov2-neighbor-feature-spreading/) | 7.5 | Runnable |
-| [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](problems/grounding-bidirectional-cross-attention/) | 7.6 | Runnable |
-| [Evaluate Localization and Phrase Grounding Separately](problems/grounding-localization-phrase-metrics/) | 7.6 | Runnable |
-| [Encode Synchronized Observations for an Action Denoiser](problems/diffusion-observation-window-encoder/) | 7.6 | Runnable |
-| [Build a Conditional Action Denoiser](problems/diffusion-conditional-temporal-denoiser/) | 7.6 | Runnable |
+| [Select High-Gradient Image Points](problems/select-gradient-image-points/) | 7.4 | Runnable |
+| [Warp a Point Between Calibrated Frames](problems/warp-calibrated-pixels/) | 7.4 | Runnable |
+| [Compute an Exposure-Corrected Photometric Residual](problems/exposure-photometric-residual/) | 7.4 | Runnable |
+| [Compute Point-to-Line and Point-to-Plane Scan Residuals](problems/lidar-feature-residuals/) | 7.4 | Runnable |
+| [Associate Scan Points with Local Map Planes](problems/associate-local-map-planes/) | 7.4 | Runnable |
+| [Deskew a Lidar Scan with Motion Estimates](problems/deskew-lidar-points/) | 7.4 | Runnable |
+| [Apply SE(3) Exponential and Logarithm Maps](problems/se3-exponential-logarithm/) | 7.4 | Runnable |
+| [Integrate IMU Rotation Increments on SO3](problems/integrate-imu-rotation/) | 7.4 | Runnable |
+| [Preintegrate Bias-Corrected IMU Velocity and Position](problems/preintegrate-imu-translation/) | 7.4 | Runnable |
+| [Apply a First-Order Bias Correction](problems/first-order-imu-bias-correction/) | 7.4 | Runnable |
+| [Apply Homographic Keypoint Adaptation](problems/homographic-keypoint-adaptation/) | 7.4 | Runnable |
+| [Evaluate Keypoint Repeatability](problems/keypoint-repeatability/) | 7.4 | Runnable |
+| [Build Homography-Supervised Descriptor Correspondence Targets](problems/homography-descriptor-targets/) | 7.4 | Runnable |
+| [Sample Descriptors at Keypoint Coordinates](problems/sample-keypoint-descriptors/) | 7.4 | Runnable |
+| [Build a Feature-Matching Score Matrix](problems/feature-matching-score-matrix/) | 7.4 | Runnable |
+| [Normalize Assignments with Sinkhorn Iterations](problems/log-sinkhorn-assignments/) | 7.4 | Runnable |
+| [Reject Unmatched Features with Dustbins](problems/dustbin-partial-assignment/) | 7.4 | Runnable |
+| [Extract Mutual Matches and Unmatched Labels from Transport Scores](problems/extract-mutual-feature-matches/) | 7.4 | Runnable |
+| [Apply Paired-Image Self and Cross Attention](problems/paired-linear-image-attention/) | 7.4 | Runnable |
+| [Construct Coarse Correspondence Candidates](problems/dual-softmax-coarse-matches/) | 7.4 | Runnable |
+| [Refine a Match in a Local Window](problems/local-window-match-expectation/) | 7.4 | Runnable |
+| [Filter Geometrically Inconsistent Matches](problems/sampson-epipolar-match-gate/) | 7.4 | Runnable |
+| [Measure Per-Channel Activation and Weight Ranges](problems/smoothquant-channel-ranges/) | 7.5 | Runnable |
+| [Apply an Equivalent Channel Rescaling](problems/smoothquant-equivalent-rescaling/) | 7.5 | Runnable |
+| [Quantize Weights and Activations to Int8](problems/smoothquant-int8-linear-layer/) | 7.5 | Runnable |
+| [Validate Layer Output Error After Smoothing](problems/smoothquant-layer-error-report/) | 7.5 | Runnable |
+| [Apply a Weight-Pruning Mask](problems/deep-compression-pruning-mask/) | 7.5 | Runnable |
+| [Quantize Shared Weight Centroids](problems/deep-compression-centroid-assignment/) | 7.5 | Runnable |
+| [Compute a Compressed Model Storage Budget](problems/deep-compression-storage-budget/) | 7.5 | Runnable |
+| [Compare Activation-Weighted Quantization Error](problems/awq-activation-weighted-error/) | 7.5 | Runnable |
+| [Compute Group-Wise Quantization Parameters](problems/awq-groupwise-quantization/) | 7.5 | Runnable |
+| [Calibrate and Evaluate a Smoothed Int8 Layer](problems/smoothquant-calibrated-layer-integration/) | 7.5 | Runnable |
+| [Recover Failed Worker Tasks Idempotently](problems/ray-recovery-reconciliation/) | 7.5 | Runnable |
+| [Track Immutable Artifact References](problems/ray-immutable-object-locations/) | 7.5 | Runnable |
+| [Track Policy Version Staleness](problems/rllib-policy-version-staleness/) | 7.5 | Runnable |
+| [Aggregate Weighted Learner Gradients](problems/rllib-weighted-learner-gradients/) | 7.5 | Runnable |
+| [Split Demonstrations by Scene and Collector](problems/droid-scene-collector-split/) | 7.5 | Runnable |
+| [Audit Data and Calibration Lineage](problems/droid-calibration-lineage-audit/) | 7.5 | Runnable |
+| [Validate a Robot Dataset Datasheet](problems/robot-dataset-datasheet-schema/) | 7.5 | Runnable |
+| [Generate a Data-Use Risk Report](problems/robot-data-use-risk-report/) | 7.5 | Runnable |
+| [Validate a Model Card Schema](problems/robot-model-card-schema/) | 7.5 | Runnable |
+| [Detect Paused or Corrupted Action Segments](problems/roboturk-action-segments/) | 7.5 | Runnable |
+| [Decode Normalized Boxes and Classes from Object Queries](problems/detr-decode-object-queries/) | 7.6 | Runnable |
+| [Flatten Spatial Features with Position and Padding Metadata](problems/detr-flatten-spatial-metadata/) | 7.6 | Runnable |
+| [Read a Normalized Class Token with a Linear Head](problems/vit-class-token-linear-head/) | 7.6 | Runnable |
+| [Transform Prompt Coordinates Through Image Preprocessing](problems/sam-transform-prompt-coordinates/) | 7.6 | Runnable |
+| [Reuse Image Embeddings Without Stale-Cache Errors](problems/sam-image-embedding-cache-key/) | 7.6 | Runnable |
+| [Sample Calibrated Multi-Camera Feature Maps](problems/bev-bilinear-camera-sampling/) | 7.6 | Runnable |
+| [Sample Hierarchical Depth Intervals](problems/nerf-hierarchical-depth-sampling/) | 7.6 | Runnable |
+| [Differentiate Rendered Color on a Small Synthetic Field](problems/nerf-rendered-color-gradients/) | 7.6 | Runnable |
+| [Implement Nearest-Neighbor Feature-Spreading Regularization](problems/dinov2-neighbor-feature-spreading/) | 7.6 | Runnable |
+| [Fit a Tiny Coordinate-Feature Radiance Field](problems/nerf-tiny-field-training/) | 7.6 | Runnable |
+| [Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention](problems/grounding-bidirectional-cross-attention/) | 7.7 | Runnable |
+| [Evaluate Localization and Phrase Grounding Separately](problems/grounding-localization-phrase-metrics/) | 7.7 | Runnable |
+| [Encode Synchronized Observations for an Action Denoiser](problems/diffusion-observation-window-encoder/) | 7.7 | Runnable |
+| [Build a Conditional Action Denoiser](problems/diffusion-conditional-temporal-denoiser/) | 7.7 | Runnable |

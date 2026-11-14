@@ -1,0 +1,82 @@
+{
+  "slug": "roboturk-action-segments",
+  "title": "Detect Paused or Corrupted Action Segments",
+  "version": "1.0.0",
+  "number": 919,
+  "difficulty": "Medium",
+  "domain": "Robotics MLOps",
+  "topics": [
+    "robotics-mlops",
+    "operational-evidence",
+    "2018-roboturk"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "action_segment_report",
+  "paperIds": [
+    "2018-roboturk"
+  ],
+  "prerequisites": [],
+  "visualization": "markdown",
+  "summary": "Detect Paused or Corrupted Action Segments",
+  "runtime": {
+    "language": "python",
+    "python": "3.12.3",
+    "runtime_id": "python-3.12.3-numpy-2.2.4-torch-2.6.0-cpu-bwrap-v2",
+    "image_digest": null,
+    "image_status": "pending OCI build; local bubblewrap baseline",
+    "dependencies": {
+      "numpy": "2.2.4"
+    },
+    "limits": {
+      "wall_seconds": 18,
+      "cpu_seconds": 10,
+      "memory_mb": 4096,
+      "output_kb": 64
+    }
+  },
+  "physical_contract": {
+    "frames": [
+      "Declared robot/session/feature identities; no implicit transform"
+    ],
+    "units": {
+      "times_ns/duration_ns/min_duration_ns": "integer nanoseconds on one synchronized clock",
+      "actions/max_command/deadband": "radians per second in supplied joint axes",
+      "min_samples": "sample count"
+    },
+    "axes": "times(T,),actions(T,D),observed(T,),limits(D,),flags(T,); segments use half-open sample indices.",
+    "timestamp_assumptions": "Supplied synchronized integer timestamps only where present; no wall clock",
+    "batching": "times(T,),actions(T,D),observed(T,),limits(D,),flags(T,); segments use half-open sample indices."
+  },
+  "grading": {
+    "mode": "numerical",
+    "seed": 20261114,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "public_case_families": [
+      "two-worked-examples"
+    ],
+    "hidden_case_families": [
+      "independent-oracle",
+      "edge-shapes",
+      "invalid-contract",
+      "preservation",
+      "scale"
+    ],
+    "performance_class": "none; no timing leaderboard",
+    "evaluator_sha256": "f23bbb968348a964bf3d78414c729b56f30fdb9b8b396dae376480c79d4b68b2"
+  },
+  "fixtures": {
+    "source": "original synthetic fixtures",
+    "license": "CC0-1.0",
+    "version_or_hash": "original-synthetic-v1"
+  },
+  "provenance": {
+    "authoring_notes": "Original operational teaching policy; no full paper API reproduction. Backlog PB-177",
+    "primary_urls": [
+      "https://arxiv.org/abs/1811.02790"
+    ],
+    "paper_card": "research/papers/mlops-data-deployment/2018-roboturk.md",
+    "manifest": "research/manifests/expansion-150.md"
+  }
+}

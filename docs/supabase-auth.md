@@ -1,6 +1,6 @@
 # Supabase login and accounts
 
-The localhost website can now use the user-supplied hosted Supabase Auth project. The evaluator remains local. Login itself needs no privileged key. Saved account work additionally requires the reviewed database migrations and published content catalog described in [account workspace persistence](../specs/account-workspace-persistence.md). Those hosted changes have not been applied.
+The localhost website uses the user-supplied hosted Supabase Auth project. The evaluator remains local. Login itself needs no privileged key. The four reviewed database migrations were applied to the authorized hosted project on 2026-11-14 using the user's authenticated WSL Supabase CLI. The same deployment published 321 catalog-only problem versions, verified against local source/evaluator hashes. The catalog is described in [account workspace persistence](../specs/account-workspace-persistence.md); catalog-only identities explicitly keep hosted execution unavailable.
 
 ## Local configuration
 

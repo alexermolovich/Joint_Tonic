@@ -22,10 +22,11 @@
     "compose-frame-transforms",
     "normalize-multiply-quaternions",
     "interpolate-pose-slerp",
+    "se3-exponential-logarithm",
     "kalman-filter-measurement-update",
     "finite-difference-gradient-check"
   ],
-  "proposed_component_count": 1,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -58,7 +59,7 @@ The implementation path follows **Represent a pose â†’ Apply a tangent update â†
 
 Source cards: [2018-micro-lie-theory](../../../research/papers/geometry-calibration-slam/2018-micro-lie-theory.md).
 
-**Available now:** 0 paper-associated runnable components; 5 supporting runnable components. **Proposed:** 1 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 1 paper-associated runnable component; 5 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -96,7 +97,7 @@ Apply a tangent update. See the original explanation and component status below.
 
 [Study the mechanism and math](/projects/2018-micro-lie-theory#paper-section-apply-a-tangent-update).
 
-- **Proposed component, not runnable:** Apply SE(3) Exponential and Logarithm Maps.
+- **Runnable paper-associated component:** [Apply SE(3) Exponential and Logarithm Maps](/problems/se3-exponential-logarithm). Compute an SE(3) exponential and principal logarithm with explicit translation/rotation coupling.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

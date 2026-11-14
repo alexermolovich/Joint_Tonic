@@ -6,7 +6,7 @@
 
 This is the single navigational tree for topics, tracks, and named problems. It describes practical components to implement; it does not imply full reproduction of every paper. Each future problem begins as a Markdown file based on `research/templates/problem-blueprint.md`.
 
-Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **274 runnable packages** at this release checkpoint: 77 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
+Baseline inventory: **190 implemented named problems** across **38 topic/track groups**, plus three supporting exercises. The catalog has grown to **321 runnable packages** at this release checkpoint: 124 reviewed paper additions and four bounded capstone integrations extend the baseline. `MVP_10.md` retains the original vertical-slice commitment. See [baseline verification](content/CURRICULUM_COMPLETION.md) and [release work](docs/RELEASE_PLAN.md).
 
 The original ten launch problems are grouped in three local learning paths: **Build YOLO Detection Components** (five geometry/perception problems), **Build VLM & VLA Components** (three alignment/action/diffusion problems), and **Validate Robot Datasets & Edge Models** (two MLOps problems). These names describe implemented components; they do not imply full model training or paper reproduction. Stable route slugs remain `robot-perception-foundations`, `vision-to-action`, and `robot-mlops`.
 
@@ -462,6 +462,20 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Estimate a Latent Dynamics Context
 - `[paper]` Track the Age of an Asynchronous Adaptation Latent
 - `[paper]` Evaluate Policy Recovery After a Parameter Change
+- `[paper]` Validate a Reward Function Contract
+- `[paper]` Aggregate Reward-Component Diagnostics
+- `[paper]` Rank Reward Candidates by Rollout Evidence
+- `[paper]` Validate a Generated Reward Program
+- `[paper]` Compare Robustness Across Randomization Settings
+- `[paper]` Compute a Balanced Latent-Model Loss
+- `[paper]` Encode Symlog Two-Hot Reward Targets
+- `[paper]` Build Lambda-Return Targets
+- `[paper]` Roll Out Imagined Latent Trajectories
+- `[paper]` Apply Groupwise SimNorm to Latent States
+- `[paper]` Roll Out a Latent Dynamics Sequence
+- `[paper]` Build Distributional Reward and Ensemble-Value Targets
+- `[paper]` Score Candidate Action Trajectories
+- `[paper]` Update a Sampling-Based Planner
 
 ### 7.2 Tactile Manipulation
 
@@ -494,7 +508,32 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Combine Competing Task-Space Accelerations
 - `[paper]` Rank Multi-Seed Motion Trajectories
 
-### 7.4 Robotics MLOps
+### 7.4 Geometry and state estimation
+
+- `[paper]` Select High-Gradient Image Points
+- `[paper]` Warp a Point Between Calibrated Frames
+- `[paper]` Compute an Exposure-Corrected Photometric Residual
+- `[paper]` Compute Point-to-Line and Point-to-Plane Scan Residuals
+- `[paper]` Associate Scan Points with Local Map Planes
+- `[paper]` Deskew a Lidar Scan with Motion Estimates
+- `[paper]` Apply SE(3) Exponential and Logarithm Maps
+- `[paper]` Integrate IMU Rotation Increments on SO3
+- `[paper]` Preintegrate Bias-Corrected IMU Velocity and Position
+- `[paper]` Apply a First-Order Bias Correction
+- `[paper]` Apply Homographic Keypoint Adaptation
+- `[paper]` Evaluate Keypoint Repeatability
+- `[paper]` Build Homography-Supervised Descriptor Correspondence Targets
+- `[paper]` Sample Descriptors at Keypoint Coordinates
+- `[paper]` Build a Feature-Matching Score Matrix
+- `[paper]` Normalize Assignments with Sinkhorn Iterations
+- `[paper]` Reject Unmatched Features with Dustbins
+- `[paper]` Extract Mutual Matches and Unmatched Labels from Transport Scores
+- `[paper]` Apply Paired-Image Self and Cross Attention
+- `[paper]` Construct Coarse Correspondence Candidates
+- `[paper]` Refine a Match in a Local Window
+- `[paper]` Filter Geometrically Inconsistent Matches
+
+### 7.5 Robotics MLOps
 
 - `[paper]` Measure Per-Channel Activation and Weight Ranges
 - `[paper]` Apply an Equivalent Channel Rescaling
@@ -506,8 +545,18 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Compare Activation-Weighted Quantization Error
 - `[paper]` Compute Group-Wise Quantization Parameters
 - `[paper]` Calibrate and Evaluate a Smoothed Int8 Layer
+- `[paper]` Recover Failed Worker Tasks Idempotently
+- `[paper]` Track Immutable Artifact References
+- `[paper]` Track Policy Version Staleness
+- `[paper]` Aggregate Weighted Learner Gradients
+- `[paper]` Split Demonstrations by Scene and Collector
+- `[paper]` Audit Data and Calibration Lineage
+- `[paper]` Validate a Robot Dataset Datasheet
+- `[paper]` Generate a Data-Use Risk Report
+- `[paper]` Validate a Model Card Schema
+- `[paper]` Detect Paused or Corrupted Action Segments
 
-### 7.5 Perception
+### 7.6 Perception
 
 - `[paper]` Decode Normalized Boxes and Classes from Object Queries
 - `[paper]` Flatten Spatial Features with Position and Padding Metadata
@@ -518,8 +567,9 @@ The user authorized the remaining paper backlog after the original 190-problem c
 - `[paper]` Sample Hierarchical Depth Intervals
 - `[paper]` Differentiate Rendered Color on a Small Synthetic Field
 - `[paper]` Implement Nearest-Neighbor Feature-Spreading Regularization
+- `[paper]` Fit a Tiny Coordinate-Feature Radiance Field
 
-### 7.6 VLM & VLA
+### 7.7 VLM & VLA
 
 - `[paper]` Fuse Masked Image and Text Tokens with Bidirectional Cross-Attention
 - `[paper]` Evaluate Localization and Phrase Grounding Separately

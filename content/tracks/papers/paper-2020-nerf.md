@@ -5,7 +5,7 @@
   "slug": "paper-2020-nerf",
   "paper_id": "2020-nerf",
   "title": "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis",
-  "status": "planned",
+  "status": "bounded-integration-available",
   "primary_url": "https://arxiv.org/abs/2003.08934",
   "source_cards": [
     "research/papers/vision-vlm-3d/2020-nerf.md"
@@ -26,7 +26,8 @@
     "nerf-alpha-compositing",
     "nerf-render-color-depth",
     "nerf-pose-residual-diagnostics",
-    "nerf-rendered-color-gradients"
+    "nerf-rendered-color-gradients",
+    "nerf-tiny-field-training"
   ],
   "proposed_component_count": 0,
   "source_flow_node_count": 3,
@@ -44,8 +45,9 @@
       "node": "stage-3"
     }
   ],
-  "integration_status": "proposed",
-  "assessment_status": "proposed"
+  "integration_status": "runnable",
+  "assessment_status": "runnable",
+  "integration_problem_slug": "nerf-tiny-field-training"
 }
 ---
 
@@ -61,7 +63,7 @@ The implementation path follows **Construct camera rays → Query the radiance f
 
 Source cards: [2020-nerf](../../../research/papers/vision-vlm-3d/2020-nerf.md).
 
-**Available now:** 8 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 9 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,6 +72,9 @@ Read the input contracts and locally defined mathematics in the source explanati
 - **Supporting prerequisite:** [Project Camera Points into Pixels](/problems/project-camera-points). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Compute Transmittance and Alpha Compositing Weights](/problems/nerf-alpha-compositing). Its own contract remains authoritative; it does not implement the entire paper.
 - **Supporting prerequisite:** [Sample Hierarchical Depth Intervals](/problems/nerf-hierarchical-depth-sampling). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Encode 3D Positions with Fourier Features](/problems/nerf-fourier-features). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Render Color and Expected Depth Along a Ray](/problems/nerf-render-color-depth). Its own contract remains authoritative; it does not implement the entire paper.
+- **Supporting prerequisite:** [Differentiate Rendered Color on a Small Synthetic Field](/problems/nerf-rendered-color-gradients). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -113,6 +118,7 @@ Accumulate visible colors in depth order and compare rendered pixels.
 - **Runnable paper-associated component:** [Render Color and Expected Depth Along a Ray](/problems/nerf-render-color-depth). Render Color and Expected Depth Along a Ray
 - **Runnable paper-associated component:** [Detect Bad Poses with Reprojection and Render Residuals](/problems/nerf-pose-residual-diagnostics). Compute separate per-view geometric and photometric residual summaries with explicit missing-data flags.
 - **Runnable paper-associated component:** [Differentiate Rendered Color on a Small Synthetic Field](/problems/nerf-rendered-color-gradients). Increasing one sample's density makes its own color more visible and hides everything behind it.
+- **Runnable paper-associated component:** [Fit a Tiny Coordinate-Feature Radiance Field](/problems/nerf-tiny-field-training). Train a shared affine density/color field through volume rendering, then evaluate held-out rays.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -123,24 +129,30 @@ Accumulate visible colors in depth order and compare rendered pixels.
 
 ## Integration exercise
 
-**Proposed exercise — not runnable yet.** Define two analytic camera rays with a few known density/color samples. Compose stratified sample placement, alpha/transmittance weights and RGB plus conditional foreground depth rendering. A coordinate-feature encoder may feed a small analytic field; training a photorealistic scene is outside this integration.
+**Runnable bounded integration:** [Fit a Tiny Coordinate-Feature Radiance Field](/problems/nerf-tiny-field-training). This exercises its declared synthetic contract, not the full paper benchmark.
 
-The integration boundary is a small perception component pipeline with supplied model outputs or tiny original weights; pretrained feature quality and paper-scale training are outside this exercise. Treat any stubbed learned stage as a named fixture, never as measured model capability. Author original synthetic data and record its generation rules; external datasets or assets need a separate provenance and license review.
+Reproduce a small executable image-to-field learning loop: supplied coordinate features feed a shared density/color function, ordered volume rendering produces RGB, and analytic image gradients update the field. Finish by rendering held-out rays.
 
-Deliver an executable fixture generator, the component wiring, a compact expected-output trace and a report of the remaining differences from [the paper](/projects/2020-nerf). Proposed pieces must pass blueprint review and isolated evaluation before this integration becomes an available exercise.
+The integration uses an affine, view-independent field, fixed supplied samples, synthetic data and an explicit clipped SGD recipe. It omits the deep NeRF MLP, coarse/fine network training, view-direction conditioning, real camera datasets and headline benchmark comparisons. The separate hierarchical sampler is a stretch exercise, not an implicit feature of this task.
+
+Before starting, check that you can explain why density attenuates downstream color and background. Use the renderer and gradient problems to diagnose that prerequisite. Keep one scene coordinate convention, normalized ray directions, metric intervals and linear RGB throughout.
 
 ## Evaluation and failure analysis
 
-**Proposed assessment — not runnable yet.** Compare color against the exact weighted sum and separate background-only rays from rays with valid foreground depth. Check zero density and nearly opaque samples, and state that conditional depth differs from an unnormalized expected depth moment.
+**Runnable assessment:** public/hidden cases for the linked integration.
 
-Use one clean baseline and a separately recorded fault case: permute an input ordering, corrupt one coordinate convention, or remove a valid observation; check the method-specific invariance or rejection rule. Identify the affected stage and report its intermediate evidence. Do not average away the failing case.
+Run checks a zero-error field and one analytically worked SGD update. Submit adds an independent scalar renderer, finite-difference parameter gradients, an active global-clipping case, held-out data isolation, maximum shapes, zero-step behavior and malformed inputs. Passing validates the declared bounded training loop; it is not evidence that a real scene has been reconstructed.
 
-Before grading, define an independent oracle, exact-versus-tolerant comparisons, allowed dtypes/devices, empty/minimal cases, invalid-input behavior and resource bounds. Compare failure detection and mathematical correctness separately from timing. A synthetic result establishes only the declared component contract; paper benchmark scores and physical safety require their own protocol.
+Inspect training loss and held-out RGB MSE separately. Change only evaluation targets and verify that learned parameters and training traces stay identical. Compare a bright background with a black one to expose missing background gradients. Inspect clipping norms; frequent clipping can mask a poor scale or learning-rate choice. Image agreement alone does not certify surface geometry, free space or robot safety.
+
+Record the limitations of fixed features and sample locations. A future extension can compare supplied hierarchical samples or a deeper field, but it must introduce a reviewed contract and its own reproducibility evidence.
 
 ## Reproducibility deliverable
 
-**Proposed final artifact:** an original implementation/model card for **NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis** containing the source revision, exercised and stubbed stages, and an explicit list of omitted paper experiments.
+**Runnable project deliverable:** save the following report in the integration exercise’s Notes. The report is learner-authored, not automatically certified.
 
-Record image/ray/box conventions, normalization, feature widths, class mapping, numeric tolerances and fixture seed. Pin problem/content versions, code revision, Python/dependency versions, evaluator identity, deterministic seeds and fixture hashes. Include the baseline/fault report and runtime observations. If any component updates parameters, record the update count and trainable state; otherwise state that no model was trained.
+Record the problem/content version, Python/NumPy versions, coordinate-feature definition, scene frame, normalized ray convention, metric interval units, RGB preprocessing, exact synthetic fixture identity, initial weights/bias, step count, learning rate and gradient-clipping rule. The function draws no random values; record the seed used by any upstream fixture generator.
 
-Package the fixture and expected trace with a machine-readable manifest. Replaying the same manifest must recover the same evidence within declared tolerances. Record limitations and the next unimplemented mechanism; completion of this proposal must not be labeled full-paper reproduction. Research PDFs remain local reference inputs, with canonical sources linked rather than redistributed.
+Report training loss before/after updates, raw gradient norms and held-out RGB MSE. State that evaluation data was excluded from optimization and selection. Describe the affine/view-independent field, fixed samples and clipped SGD as deviations from the source paper. Record compute and wall time without extrapolating toy results to full NeRF training or physical safety.
+
+Source: [NeRF](https://arxiv.org/abs/2003.08934). Code, explanations and synthetic fixtures are original; local source PDFs remain authoring references.

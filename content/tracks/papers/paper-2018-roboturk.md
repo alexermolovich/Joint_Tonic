@@ -22,9 +22,10 @@
     "velocity-acceleration-command-limits",
     "estimate-clock-offset-paired-events",
     "detect-dropped-duplicated-sensor-frames",
+    "roboturk-action-segments",
     "validate-robot-episodes"
   ],
-  "proposed_component_count": 4,
+  "proposed_component_count": 3,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -57,7 +58,7 @@ The implementation path follows **Map operator motion → Stream control and fee
 
 Source cards: [2018-roboturk](../../../research/papers/mlops-data-deployment/2018-roboturk.md).
 
-**Available now:** 0 paper-associated runnable components; 6 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 1 paper-associated runnable component; 6 supporting runnable components. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -99,7 +100,7 @@ Run a session with synchronized actions and visual observations.
 
 - **Runnable supporting prerequisite:** [Estimate Clock Offset from Paired Events](/problems/estimate-clock-offset-paired-events). Estimate a constant clock offset from corresponding event timestamps using a robust median.
 - **Runnable supporting prerequisite:** [Detect Dropped and Duplicated Sensor Frames](/problems/detect-dropped-duplicated-sensor-frames). Report missing frame identifiers and repeated identifiers in an ordered sensor log.
-- **Proposed component, not runnable:** Detect Paused or Corrupted Action Segments.
+- **Runnable paper-associated component:** [Detect Paused or Corrupted Action Segments](/problems/roboturk-action-segments). Detect Paused or Corrupted Action Segments
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

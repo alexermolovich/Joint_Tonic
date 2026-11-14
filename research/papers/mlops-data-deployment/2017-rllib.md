@@ -1,22 +1,83 @@
 ---
 schema_version: 1
-paper_id: "2017-rllib"
-title: "RLlib: Abstractions for Distributed Reinforcement Learning"
-authors: ["Liang, Eric","Liaw, Richard","Moritz, Philipp","Nishihara, Robert","Fox, Roy","Goldberg, Ken","Gonzalez, Joseph E.","Jordan, Michael I.","Stoica, Ion"]
+paper_id: 2017-rllib
+title: 'RLlib: Abstractions for Distributed Reinforcement Learning'
+authors:
+  - 'Liang, Eric'
+  - 'Liaw, Richard'
+  - 'Moritz, Philipp'
+  - 'Nishihara, Robert'
+  - 'Fox, Roy'
+  - 'Goldberg, Ken'
+  - 'Gonzalez, Joseph E.'
+  - 'Jordan, Michael I.'
+  - 'Stoica, Ion'
 year: 2017
-venue_or_status: "Author-deposited arXiv manuscript; final venue not asserted by this acquisition card."
-primary_url: "https://arxiv.org/abs/1712.09381"
-pdf_url: "https://arxiv.org/pdf/1712.09381"
-local_pdf: "./2017-rllib.pdf"
-sha256: "649512fc136a33c38c3e2a30fe5e6418ea14998efca43cfb6bc5c774423bcb0c"
+venue_or_status: >-
+  Author-deposited arXiv manuscript; final venue not asserted by this
+  acquisition card.
+primary_url: 'https://arxiv.org/abs/1712.09381'
+pdf_url: 'https://arxiv.org/pdf/1712.09381'
+local_pdf: ./2017-rllib.pdf
+sha256: 649512fc136a33c38c3e2a30fe5e6418ea14998efca43cfb6bc5c774423bcb0c
 bytes: 1183491
 pages: 10
-topics: ["mlops-data-deployment","rllib"]
-modalities: ["datasets","model-artifacts","logs","metrics"]
-track_role: "supporting"
-open_access_status: "open-access-preprint"
-redistribution_note: "Research copy only; verify the source license before redistribution."
-execution_flow: {"title": "Core execution flow", "description": "Follow the data through the mechanism. Training objectives and inference behavior are distinguished in the linked explanations.", "nodes": [{"id": "stage-1", "title": "Collect policy experience", "detail": "Run environment workers with explicit policy snapshots.", "column": 0, "row": 0, "section": "Collect policy experience", "problem_slugs": ["validate-robot-episodes"], "planned_problems": ["Batch Actor Samples into Learner Updates"]}, {"id": "stage-2", "title": "Aggregate algorithm updates", "detail": "Combine samples or gradients according to the chosen RL method.", "column": 1, "row": 0, "section": "Aggregate algorithm updates", "problem_slugs": ["window-episode-without-crossing-boundaries", "build-robot-sequence-validity-masks"], "planned_problems": ["Aggregate Weighted Learner Gradients"]}, {"id": "stage-3", "title": "Distribute new parameters", "detail": "Update workers and monitor policy lag.", "column": 2, "row": 0, "section": "Distribute new parameters", "problem_slugs": ["graph-throughput-jitter"], "planned_problems": ["Track Policy Version Staleness", "Measure Sampling and Learning Throughput"]}], "edges": [{"from": "stage-1", "to": "stage-2", "label": "versioned batches"}, {"from": "stage-2", "to": "stage-3", "label": "learner update"}]}
+topics:
+  - mlops-data-deployment
+  - rllib
+modalities:
+  - datasets
+  - model-artifacts
+  - logs
+  - metrics
+track_role: supporting
+open_access_status: open-access-preprint
+redistribution_note: Research copy only; verify the source license before redistribution.
+execution_flow:
+  title: Core execution flow
+  description: >-
+    Follow the data through the mechanism. Training objectives and inference
+    behavior are distinguished in the linked explanations.
+  nodes:
+    - id: stage-1
+      title: Collect policy experience
+      detail: Run environment workers with explicit policy snapshots.
+      column: 0
+      row: 0
+      section: Collect policy experience
+      problem_slugs:
+        - validate-robot-episodes
+      planned_problems:
+        - Batch Actor Samples into Learner Updates
+    - id: stage-2
+      title: Aggregate algorithm updates
+      detail: Combine samples or gradients according to the chosen RL method.
+      column: 1
+      row: 0
+      section: Aggregate algorithm updates
+      problem_slugs:
+        - window-episode-without-crossing-boundaries
+        - build-robot-sequence-validity-masks
+        - rllib-weighted-learner-gradients
+      planned_problems: []
+    - id: stage-3
+      title: Distribute new parameters
+      detail: Update workers and monitor policy lag.
+      column: 2
+      row: 0
+      section: Distribute new parameters
+      problem_slugs:
+        - graph-throughput-jitter
+        - rllib-policy-version-staleness
+      planned_problems:
+        - Measure Sampling and Learning Throughput
+  edges:
+    - from: stage-1
+      to: stage-2
+      label: versioned batches
+    - from: stage-2
+      to: stage-3
+      label: learner update
 ---
 
 ## Core paper explanation
@@ -60,7 +121,7 @@ Practice the sample contract with [episode-safe windows](/problems/window-episod
 
 **Component practice**
 
-- Aggregate Weighted Learner Gradients — unreviewed idea; contract and evaluator required.
+- Runnable component: [Aggregate Weighted Learner Gradients](/problems/rllib-weighted-learner-gradients). Uses the bounded contract; no full paper reproduction is claimed.
 
 
 ### Distribute new parameters
@@ -81,7 +142,7 @@ A batch can have high throughput and large policy lag simultaneously. Ten thousa
 
 **Component practice**
 
-- Track Policy Version Staleness — unreviewed idea; contract and evaluator required.
+- Runnable component: [Track Policy Version Staleness](/problems/rllib-policy-version-staleness). Uses the bounded contract; no full paper reproduction is claimed.
 - Measure Sampling and Learning Throughput — unreviewed idea; contract and evaluator required.
 
 
@@ -94,8 +155,8 @@ Each execution-flow node links the matching runnable component or names its plan
 **Planned component problems:**
 
 - Batch Actor Samples into Learner Updates — unreviewed idea; contract and evaluator required.
-- Aggregate Weighted Learner Gradients — unreviewed idea; contract and evaluator required.
-- Track Policy Version Staleness — unreviewed idea; contract and evaluator required.
+- Runnable component: [Aggregate Weighted Learner Gradients](/problems/rllib-weighted-learner-gradients). Uses the bounded contract; no full paper reproduction is claimed.
+- Runnable component: [Track Policy Version Staleness](/problems/rllib-policy-version-staleness). Uses the bounded contract; no full paper reproduction is claimed.
 - Measure Sampling and Learning Throughput — unreviewed idea; contract and evaluator required.
 
 These bounded exercises do not claim to reproduce the complete paper or its benchmark results.
@@ -103,6 +164,10 @@ These bounded exercises do not claim to reproduce the complete paper or its benc
 ## Why this matters on a robot
 
 Reusable sampling and optimization interfaces help scale robot learning experiments. Silent policy-version mismatch, incompatible action spaces, and inconsistent episode-end handling can invalidate an otherwise healthy distributed run.
+
+## Scope of the runnable operational components
+
+[Sample-weighted gradient aggregation](/problems/rllib-weighted-learner-gradients) combines supplied mean gradients using valid transition counts and marks a zero-count result as no evidence. It does not transport gradients or perform an optimizer update. [Policy staleness reporting](/problems/rllib-policy-version-staleness) distinguishes future versions from excessive lag, retains exact integer differences and weights summaries by sample counts. Its lag threshold is a supplied teaching policy, not an on-policy correction algorithm or an RLlib API guarantee.
 
 ## Sources and scope
 

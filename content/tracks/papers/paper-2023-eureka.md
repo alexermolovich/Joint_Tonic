@@ -17,9 +17,12 @@
     "eureka"
   ],
   "runnable_problem_slugs": [
-    "validation-loss-rollout-ranking"
+    "eureka-reward-output-contract",
+    "validation-loss-rollout-ranking",
+    "eureka-rank-rollout-candidates",
+    "eureka-reward-component-diagnostics"
   ],
-  "proposed_component_count": 3,
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -52,7 +55,7 @@ The implementation path follows **Generate reward candidates → Train and evalu
 
 Source cards: [2023-eureka](../../../research/papers/robot-learning-rl/2023-eureka.md).
 
-**Available now:** 0 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 3 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 3 paper-associated runnable components; 1 supporting runnable component. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -72,7 +75,7 @@ Use task description and environment code to propose executable rewards.
 
 [Study the mechanism and math](/projects/2023-eureka#paper-section-generate-reward-candidates).
 
-- **Proposed component, not runnable:** Validate a Reward Function Contract.
+- **Runnable paper-associated component:** [Validate a Reward Function Contract](/problems/eureka-reward-output-contract). A reward callback needs a measurable interface before it can guide learning.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -85,7 +88,7 @@ Optimize each reward and score behavior with an independent task metric.
 [Study the mechanism and math](/projects/2023-eureka#paper-section-train-and-evaluate-policies).
 
 - **Runnable supporting prerequisite:** [Compare Validation Loss with Rollout Success](/problems/validation-loss-rollout-ranking). Expose when offline-loss ordering disagrees with the ordering of observed rollout success.
-- **Proposed component, not runnable:** Rank Reward Candidates by Rollout Evidence.
+- **Runnable paper-associated component:** [Rank Reward Candidates by Rollout Evidence](/problems/eureka-rank-rollout-candidates). Select a trained candidate using held-out task behavior, not the numerical scale of its training reward.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -97,7 +100,7 @@ Use learning curves and reward-component statistics to improve candidates.
 
 [Study the mechanism and math](/projects/2023-eureka#paper-section-reflect-and-revise).
 
-- **Proposed component, not runnable:** Aggregate Reward-Component Diagnostics.
+- **Runnable paper-associated component:** [Aggregate Reward-Component Diagnostics](/problems/eureka-reward-component-diagnostics). A reward can be numerically valid yet be dominated by a constant or oversized component.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

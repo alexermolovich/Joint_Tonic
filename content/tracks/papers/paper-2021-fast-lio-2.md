@@ -16,8 +16,11 @@
     "geometry-calibration-slam",
     "fast-lio-2"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "associate-local-map-planes",
+    "lidar-feature-residuals"
+  ],
+  "proposed_component_count": 2,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,13 +53,13 @@ The implementation path follows **Propagate the inertial state → Iterate point
 
 Source cards: [2021-fast-lio-2](../../../research/papers/geometry-calibration-slam/2021-fast-lio-2.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 2 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 2 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
 Read the input contracts and locally defined mathematics in the source explanation. Before starting, trace one small input through **Propagate the inertial state** and identify the shapes, masks, units, coordinate frames and time conventions that apply. This is a robotics diagnostic, not a general Python or mathematics course.
 
-There is no independently runnable prerequisite mapped for this source yet. Use the source-card notation and stage contracts as the diagnostic; prerequisite exercises must be authored and reviewed before being presented as runnable.
+- **Supporting prerequisite:** [Apply an SE(3) Transform to Batched Points](/problems/se3-transform-points). Its own contract remains authoritative; it does not implement the entire paper.
 
 ## Ordered mechanisms and component tasks
 
@@ -82,8 +85,8 @@ Use raw-point geometric residuals without a feature-extraction stage.
 
 [Study the mechanism and math](/projects/2021-fast-lio-2#paper-section-iterate-point-to-map-updates).
 
-- **Proposed component, not runnable:** Associate Scan Points with Local Map Planes.
-- **Proposed component, not runnable:** Compute a Point-to-Plane Residual.
+- **Runnable paper-associated component:** [Associate Scan Points with Local Map Planes](/problems/associate-local-map-planes). Associate each deskewed world-frame scan query with a deterministic local plane fitted to nearby map points.
+- **Runnable paper-associated component:** [Compute Point-to-Line and Point-to-Plane Scan Residuals](/problems/lidar-feature-residuals). Compute signed point-to-plane and unsigned point-to-line residuals after transforming scan features into the map frame.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 

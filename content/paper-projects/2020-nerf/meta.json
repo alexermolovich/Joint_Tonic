@@ -1,0 +1,41 @@
+{
+  "slug": "2020-nerf",
+  "title": "Train a Tiny Radiance Field",
+  "summary": "Build coordinate features, render ordered samples, differentiate image error and train a shared bounded field.",
+  "version": "1.0.0",
+  "integrationProblemSlug": "nerf-tiny-field-training",
+  "paperIds": [
+    "2020-nerf"
+  ],
+  "stages": [
+    {
+      "title": "Represent scene coordinates",
+      "description": "Build the fixed Fourier-feature basis; the integration consumes supplied features in one shared scene convention.",
+      "problemSlugs": [
+        "nerf-fourier-features"
+      ]
+    },
+    {
+      "title": "Render ordered ray samples",
+      "description": "Track opacity, exclusive transmittance and background before interpreting pixel error.",
+      "problemSlugs": [
+        "nerf-alpha-compositing",
+        "nerf-render-color-depth"
+      ]
+    },
+    {
+      "title": "Differentiate occlusion and color",
+      "description": "Include downstream samples and background in the density gradient.",
+      "problemSlugs": [
+        "nerf-rendered-color-gradients"
+      ]
+    },
+    {
+      "title": "Train and evaluate the shared field",
+      "description": "Use the explicit affine field and clipped SGD recipe with a separate held-out ray batch.",
+      "problemSlugs": [
+        "nerf-tiny-field-training"
+      ]
+    }
+  ]
+}

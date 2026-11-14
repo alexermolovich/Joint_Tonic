@@ -16,8 +16,13 @@
     "robot-learning-rl",
     "dreamerv3"
   ],
-  "runnable_problem_slugs": [],
-  "proposed_component_count": 4,
+  "runnable_problem_slugs": [
+    "dreamer-balanced-latent-loss",
+    "dreamer-symlog-twohot-targets",
+    "dreamer-continuation-lambda-returns",
+    "dreamer-imagined-latent-rollout"
+  ],
+  "proposed_component_count": 0,
   "source_flow_node_count": 3,
   "source_flow_nodes": [
     {
@@ -50,7 +55,7 @@ The implementation path follows **Learn latent dynamics → Represent diverse ta
 
 Source cards: [2023-dreamerv3](../../../research/papers/robot-learning-rl/2023-dreamerv3.md).
 
-**Available now:** 0 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 4 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
+**Available now:** 4 paper-associated runnable components; 0 supporting runnable components. **Proposed:** 0 distinct component ideas, plus integration and assessment. A planned title can be a reviewed blueprint or an unreviewed idea; its presence is not a publication promise.
 
 ## Prerequisites and diagnostic
 
@@ -70,7 +75,7 @@ Combine recurrent state with stochastic posterior and prior representations.
 
 [Study the mechanism and math](/projects/2023-dreamerv3#paper-section-learn-latent-dynamics).
 
-- **Proposed component, not runnable:** Compute a Balanced Latent-Model Loss.
+- **Runnable paper-associated component:** [Compute a Balanced Latent-Model Loss](/problems/dreamer-balanced-latent-loss). The dynamics prior should learn to predict the posterior, while the posterior should become easier to predict without discarding useful information.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -82,7 +87,7 @@ Use signed logarithmic transforms and distributional targets.
 
 [Study the mechanism and math](/projects/2023-dreamerv3#paper-section-represent-diverse-target-scales).
 
-- **Proposed component, not runnable:** Encode Symlog Two-Hot Reward Targets.
+- **Runnable paper-associated component:** [Encode Symlog Two-Hot Reward Targets](/problems/dreamer-symlog-twohot-targets). A signed logarithm compresses large reward magnitudes without losing their sign.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
@@ -94,8 +99,8 @@ Roll out latent states and train actor/critic from predicted returns.
 
 [Study the mechanism and math](/projects/2023-dreamerv3#paper-section-improve-behavior-in-imagination).
 
-- **Proposed component, not runnable:** Build Lambda-Return Targets.
-- **Proposed component, not runnable:** Roll Out Imagined Latent Trajectories.
+- **Runnable paper-associated component:** [Build Lambda-Return Targets](/problems/dreamer-continuation-lambda-returns). An imagined transition may continue only with some predicted probability.
+- **Runnable paper-associated component:** [Roll Out Imagined Latent Trajectories](/problems/dreamer-imagined-latent-rollout). Start imagination from one known latent state and propagate using actions and learned dynamics only.
 
 **Step evidence:** retain a small input/output trace and the invariant described in the linked explanation. Before implementing a proposed task, write and review its blueprint with explicit shapes, units, frames, examples, tolerances and failure behavior.
 
