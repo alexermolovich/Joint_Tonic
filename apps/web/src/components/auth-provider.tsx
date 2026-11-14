@@ -33,7 +33,9 @@ export function AuthProvider({ children, problemVersions }: { children: ReactNod
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, [problemVersions]);
-  return <AuthContext.Provider value={state}><WorkspaceSyncEvents/><Fragment key={state.ready ? state.user?.id ?? "guest" : "pending"}>{children}</Fragment></AuthContext.Provider>;
+  // Pending identity has no private workspace. Keep guest UI mounted when Auth
+  // confirms no session; actual account changes still remount to isolate drafts.
+  return <AuthContext.Provider value={state}><WorkspaceSyncEvents/><Fragment key={state.user?.id ?? "guest"}>{children}</Fragment></AuthContext.Provider>;
 }
 
 export function useAuth() { return useContext(AuthContext); }
