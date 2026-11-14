@@ -1,0 +1,23 @@
+{
+  "slug": "validate-robot-episodes",
+  "title": "Validate a Multimodal Robot Episode Schema",
+  "version": "1.0.0",
+  "number": 9,
+  "difficulty": "Hard",
+  "domain": "MLOps",
+  "topics": [
+    "robot-data",
+    "schema-validation",
+    "sensor-timing"
+  ],
+  "minutes": 70,
+  "framework": "NumPy",
+  "entrypoint": "validate_episodes",
+  "paperIds": [
+    "2019-data-validation-for-ml",
+    "2023-open-x-embodiment"
+  ],
+  "prerequisites": [],
+  "visualization": "schema",
+  "summary": "A signal's missing fraction is missing_rows / T. A timestamp must be finite numeric, and each valid adjacent pair must strictly increase."
+}

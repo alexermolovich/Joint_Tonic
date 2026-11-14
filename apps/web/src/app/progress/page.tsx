@@ -1,0 +1,1 @@
+import{ProgressPage}from"@/components/personal-pages";import{getProblems,tracks}from"@/lib/content";export const metadata={title:"Your workspace"};export default function Page(){return <ProgressPage problems={getProblems()} tracks={tracks}/>}

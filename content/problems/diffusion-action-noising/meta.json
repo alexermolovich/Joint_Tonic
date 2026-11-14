@@ -1,0 +1,22 @@
+{
+  "slug": "diffusion-action-noising",
+  "title": "Add Noise to an Action Sequence",
+  "version": "1.0.0",
+  "number": 8,
+  "difficulty": "Medium",
+  "domain": "Robot learning",
+  "topics": [
+    "diffusion",
+    "action-sequences",
+    "masking"
+  ],
+  "minutes": 45,
+  "framework": "PyTorch",
+  "entrypoint": "diffuse_actions",
+  "paperIds": [
+    "2023-diffusion-policy"
+  ],
+  "prerequisites": [],
+  "visualization": "diffusion",
+  "summary": "Gather one cumulative signal coefficient per batch item and broadcast over horizon/action axes; mix clean actions and supplied noise with square-root weights."
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "clip-symmetric-loss",
+  "title": "Compute Symmetric CLIP Contrastive Loss",
+  "version": "1.0.0",
+  "number": 6,
+  "difficulty": "Medium",
+  "domain": "VLM",
+  "topics": [
+    "contrastive-learning",
+    "embeddings",
+    "temperature"
+  ],
+  "minutes": 40,
+  "framework": "PyTorch",
+  "entrypoint": "clip_loss",
+  "paperIds": [
+    "2021-clip"
+  ],
+  "prerequisites": [],
+  "visualization": "clip",
+  "summary": "Normalize rows, form image/text dot-product logits divided by temperature, and average cross-entropy in both directions."
+}

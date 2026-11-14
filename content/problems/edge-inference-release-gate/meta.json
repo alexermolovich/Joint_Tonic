@@ -1,0 +1,23 @@
+{
+  "slug": "edge-inference-release-gate",
+  "title": "Gate an Edge Model with Accuracy and Latency",
+  "version": "1.0.0",
+  "number": 10,
+  "difficulty": "Hard",
+  "domain": "MLOps",
+  "topics": [
+    "deployment-gates",
+    "latency",
+    "benchmarking"
+  ],
+  "minutes": 65,
+  "framework": "NumPy",
+  "entrypoint": "release_gate",
+  "paperIds": [
+    "2019-mlperf-inference",
+    "2017-ml-test-score"
+  ],
+  "prerequisites": [],
+  "visualization": "benchmark",
+  "summary": "Linear interpolated latency quantiles; accuracy=correct/N; sequential throughput=1000*N/sum(latency_ms). Gate each hardware independently; compare baseline-current slice accuracy to max_slice_drop."
+}

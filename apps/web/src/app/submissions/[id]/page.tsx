@@ -1,0 +1,1 @@
+import{SubmissionPage}from"@/components/personal-pages";import{getProblems}from"@/lib/content";export default async function Page({params}:{params:Promise<{id:string}>}){const{id}=await params;return <SubmissionPage id={id} problems={getProblems()}/>}

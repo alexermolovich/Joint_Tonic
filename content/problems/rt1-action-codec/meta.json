@@ -1,0 +1,22 @@
+{
+  "slug": "rt1-action-codec",
+  "title": "Quantize and Decode Robot Actions",
+  "version": "1.0.0",
+  "number": 7,
+  "difficulty": "Medium",
+  "domain": "VLA",
+  "topics": [
+    "action-tokenization",
+    "quantization",
+    "robot-actions"
+  ],
+  "minutes": 35,
+  "framework": "NumPy",
+  "entrypoint": "action_codec",
+  "paperIds": [
+    "2022-rt-1"
+  ],
+  "prerequisites": [],
+  "visualization": "codec",
+  "summary": "Scale to [0,1], take floor(bins * scaled), clamp bin IDs to [0,bins-1], add offset, reconstruct bin centers."
+}

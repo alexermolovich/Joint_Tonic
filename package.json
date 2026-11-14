@@ -1,0 +1,41 @@
+{
+  "name": "joint-tonic",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "web": "next dev apps/web --hostname 127.0.0.1",
+    "build": "next build apps/web",
+    "start": "next start apps/web --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
+    "validate": "node scripts/validate-content.mjs",
+    "test:problems": "python apps/worker/check_references.py",
+    "test": "npm run validate && npm run test:problems",
+    "worker": "python apps/worker/server.py",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "4.7.0",
+    "@supabase/supabase-js": "2.57.4",
+    "gray-matter": "4.0.3",
+    "katex": "0.16.22",
+    "lucide-react": "0.468.0",
+    "monaco-editor": "0.52.2",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-markdown": "10.1.0",
+    "rehype-katex": "7.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-math": "6.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0",
+    "@types/node": "22.15.30",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "supabase": "2.58.5",
+    "typescript": "5.8.3"
+  }
+}

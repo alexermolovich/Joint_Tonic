@@ -1,0 +1,3 @@
+import{notFound}from"next/navigation";import{getProblem,tracks}from"@/lib/content";import{ProblemWorkspace}from"@/components/workspace";
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const{slug}=await params;return{title:getProblem(slug)?.title||"Problem"}}
+export default async function Page({params,searchParams}:{params:Promise<{slug:string}>;searchParams:Promise<{track?:string}>}){const{slug}=await params;const query=await searchParams;const problem=getProblem(slug);if(!problem)notFound();const track=tracks.find(t=>t.slug===query.track&&t.slugs.includes(slug));const nextSlug=track?.slugs[track.slugs.indexOf(slug)+1];return <ProblemWorkspace problem={problem} track={track} nextSlug={nextSlug}/>}
