@@ -386,7 +386,7 @@ Required human-authored material: summary, prompt, theory, examples, hints, solu
 
 ## 12. Technical architecture
 
-The website and evaluator remain **local-server only**. The user has authorized connecting this localhost application to their supplied hosted Supabase project for email/password Auth and account metadata. This narrow exception does not authorize Vercel deployment, remote schema migrations, or moving learner execution to hosted functions. The production control-plane target is Vercel plus Supabase; code and migrations must remain compatible with that target.
+The user has begun Vercel deployment of the web application and authorized fixing its build configuration. The website may run locally or as a Vercel web preview, with the supplied Supabase project for email/password Auth and account metadata. The evaluator and MuJoCo service remain local-only; this web deployment does not authorize remote database migrations or learner execution in hosted functions. Repository-root Vercel builds use apps/web/.next and the packaging contract in docs/vercel-web.md.
 
 ### 12.1 Applications
 

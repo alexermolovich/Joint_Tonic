@@ -16,4 +16,5 @@ test-results/
 research/papers/*.pdf
 research/papers/**/*.pdf
 apps/web/public/monaco/
+/public/
 *.tsbuildinfo

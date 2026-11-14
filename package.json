@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "web": "next dev apps/web --hostname 127.0.0.1",
-    "build": "next build apps/web",
+    "build": "node scripts/prepare-web-assets.mjs && next build apps/web",
     "start": "next start apps/web --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
     "validate": "node scripts/validate-content.mjs",

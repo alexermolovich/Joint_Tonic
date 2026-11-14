@@ -29,8 +29,8 @@ In order:
 
 ## Environment and deployment boundary
 
-- The website and evaluator remain local-server only. The user has authorized the supplied hosted Supabase project for email/password Auth and account display metadata; local Supabase remains supported. See docs/supabase-auth.md.
-- Outside the authorized hosted Auth/account flow, do not deploy to Vercel, create or mutate hosted Supabase resources, run remote migrations, or add production secrets unless the user explicitly requests the deployment phase. This account slice needs only a publishable key; never use a secret/service-role key in the browser.
+- The user has started Vercel web deployment and authorized its build repair. The website may run locally or on Vercel; the evaluator and MuJoCo remain local-only. Hosted Supabase is authorized for email/password Auth and account display metadata; local Supabase remains supported. See docs/supabase-auth.md and docs/vercel-web.md.
+- Outside the authorized Vercel web build/deployment and hosted Auth/account flow, do not create or mutate hosted Supabase resources, run remote migrations, deploy evaluator/simulator services, or add production secrets unless the user explicitly requests that phase. This account slice needs only a publishable key; never use a secret/service-role key in the browser.
 - Keep the web/control plane compatible with Vercel and database/auth/storage compatible with Supabase.
 - Never run untrusted learner code in Vercel Functions, Vercel Edge Functions, Supabase Edge Functions, or PostgreSQL. Use the separate sandbox-worker interface defined in `SPEC.md`.
 - Local development must work without hosted credentials. Keep environment-specific configuration outside problem content and evaluator logic.
